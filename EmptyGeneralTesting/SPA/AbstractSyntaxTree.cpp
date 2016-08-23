@@ -1,3 +1,4 @@
+
 // Maintained by: Kai Lin
 //
 // Accessed by:
@@ -5,3 +6,14 @@
 //
 // Uses:
 // - TNode
+
+#include "AbstractSyntaxTree.h" 
+
+AbstractSyntaxTree::AbstractSyntaxTree()
+{
+}
+
+
+AbstractSyntaxTree::~AbstractSyntaxTree()
+{
+}
