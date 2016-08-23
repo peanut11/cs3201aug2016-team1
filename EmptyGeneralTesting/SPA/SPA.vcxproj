@@ -15,6 +15,14 @@
     <ClCompile Include="..\source\Parser.cpp" />
     <ClCompile Include="..\source\PKB.cpp" />
     <ClCompile Include="..\source\TNode.cpp" />
+    <ClCompile Include="AbstractSyntaxTree.cpp" />
+    <ClCompile Include="Frontend.cpp" />
+    <ClCompile Include="ProgramConvertor.cpp" />
+    <ClCompile Include="ProgramValidator.cpp" />
+    <ClCompile Include="QueryEvaluator.cpp" />
+    <ClCompile Include="QueryPreprocessor.cpp" />
+    <ClCompile Include="QueryProcessor.cpp" />
+    <ClCompile Include="QueryTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\PKB.h" />
