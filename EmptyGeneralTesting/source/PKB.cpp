@@ -1,3 +1,10 @@
+// Maintained by: Kai Lin
+//
+// Facade of:
+// - AbstractSyntaxTree
+// - VarTable
+// - StmtTable
+
 #pragma once
 
 #include<stdio.h>
