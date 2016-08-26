@@ -29,6 +29,10 @@
     <ClInclude Include="..\source\Parser.h" />
     <ClInclude Include="..\source\PKB.h" />
     <ClInclude Include="..\source\TNode.h" />
+    <ClInclude Include="QueryPreProcessor.h" />
+    <ClInclude Include="RelArgsType.h" />
+    <ClInclude Include="RelObject.h" />
+    <ClInclude Include="RelObjectType.h" />
     <ClInclude Include="StringTokenizer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

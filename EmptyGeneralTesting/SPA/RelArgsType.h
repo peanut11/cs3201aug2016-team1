@@ -1,0 +1,9 @@
+#pragma once
+enum RelArgsType {
+	SYNONYM_PROC,
+	SYNONYM_PROG_LINE,
+	SYNONYM_STMT,
+	STRING,
+	INTEGER,
+	UNDERSCORE
+};
