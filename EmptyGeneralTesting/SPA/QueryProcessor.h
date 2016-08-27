@@ -2,46 +2,27 @@
 #include<stdio.h>
 #include <iostream>
 
+#include "QueryPreProcessor.h"
 #include "QueryEvaluator.h"
 
 class QueryProcessor {
 
 	static QueryProcessor *_instance;
 
+	QueryPreProcessor *mPreProcessor;
 	QueryEvaluator *mEvaluator;
 
-
-	void init() {
-		mEvaluator = QueryEvaluator::getInstance();
-		// do other initialization here
-	}
+	void init();
 
 public:
-	/*
-	Singleton
-	*/
-	static QueryProcessor *getInstance()
-	{
-		if (!_instance)
-			_instance = new QueryProcessor;
-		return _instance;
-	}
-
-	/*
-	Evaluate QueryTree
-	*/
-	void evaluate() {
-
-		try {
-			// call QueryEvaulator and evaluate QueryTree
-			this->mEvaluator->evaluate();
-		}
-		catch (std::runtime_error e) {
-			std::cout << e.what() << std::endl;
-		}
+	
+	static QueryProcessor *getInstance();
+	void evaluate();
+	QueryPreProcessor *getQueryPreProcessor();
+	QueryEvaluator *getQueryEvaluator();
 
 
-	}
+	
 
 
 

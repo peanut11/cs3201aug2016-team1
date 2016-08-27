@@ -19,6 +19,12 @@
     <Filter Include="Header Files\enumerate">
       <UniqueIdentifier>{221dd401-7847-46f4-91cf-eed287109156}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\table">
+      <UniqueIdentifier>{b61d5d21-d6ab-40e3-a7ff-f4eed0f1db61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\table">
+      <UniqueIdentifier>{e52505eb-6f55-4a8e-a9cb-243a22cf1402}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\DesignExtractor.cpp">
@@ -60,6 +66,9 @@
     <ClCompile Include="StringTokenizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RelTable.cpp">
+      <Filter>Source Files\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\PKB.h">
@@ -86,11 +95,14 @@
     <ClInclude Include="RelArgsType.h">
       <Filter>Header Files\enumerate</Filter>
     </ClInclude>
-    <ClInclude Include="QueryEvaluator .h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="QueryProcessor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryEvaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RelTable.h">
+      <Filter>Header Files\table</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

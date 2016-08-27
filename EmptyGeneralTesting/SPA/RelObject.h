@@ -1,8 +1,8 @@
 #pragma once
 #include<stdio.h>
 #include <vector>
-#include "RelObjectType.h";
-#include "RelArgsType.h";
+#include "RelObjectType.h"
+#include "RelArgsType.h"
 
 
 class RelObject {

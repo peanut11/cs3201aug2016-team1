@@ -23,18 +23,20 @@
     <ClCompile Include="QueryPreprocessor.cpp" />
     <ClCompile Include="QueryProcessor.cpp" />
     <ClCompile Include="QueryTree.cpp" />
+    <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Parser.h" />
     <ClInclude Include="..\source\PKB.h" />
     <ClInclude Include="..\source\TNode.h" />
-    <ClInclude Include="QueryEvaluator .h" />
+    <ClInclude Include="QueryEvaluator.h" />
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
     <ClInclude Include="RelArgsType.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelObjectType.h" />
+    <ClInclude Include="RelTable.h" />
     <ClInclude Include="StringTokenizer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
