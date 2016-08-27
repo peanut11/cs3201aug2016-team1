@@ -9,7 +9,7 @@ class QueryProcessor {
 	static QueryProcessor *_instance;
 
 	QueryEvaluator *mEvaluator;
-	
+
 
 	void init() {
 		mEvaluator = QueryEvaluator::getInstance();
@@ -40,10 +40,10 @@ public:
 			std::cout << e.what() << std::endl;
 		}
 
-		
+
 	}
 
-	
+
 
 
 };

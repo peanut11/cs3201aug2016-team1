@@ -8,7 +8,7 @@ class QueryEvaluator {
 
 	static QueryEvaluator *_instance;
 
-public: 
+public:
 	/*
 	Singleton
 	*/
