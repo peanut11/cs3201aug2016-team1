@@ -95,6 +95,9 @@
     <ClInclude Include="RelArgsType.h">
       <Filter>Header Files\enumerate</Filter>
     </ClInclude>
+    <ClInclude Include="ProgramValidator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="QueryProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -29,6 +29,9 @@
     <ClCompile Include="TestAST.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestProgramValidator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="TestStringTokenizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
