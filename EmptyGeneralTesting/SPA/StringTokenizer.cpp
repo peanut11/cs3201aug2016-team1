@@ -5,6 +5,8 @@
 #include <cctype>
 #include "StringTokenizer.h"
 
+const std::string StringTokenizer::EMPTY_TOKEN = "";
+
 bool StringTokenizer::isDelimiter(char ch) {
 	const std::string DELIMITERS = "{=+-*};\n";
 	return DELIMITERS.find(ch) != std::string::npos;
@@ -51,7 +53,24 @@ std::string StringTokenizer::nextToken() {
 		return NEXT_TOKEN;
 
 	} else {
-		const std::string EMPTY_TOKEN = "";
 		return EMPTY_TOKEN;
 	}
+}
+
+std::string StringTokenizer::peekNextToken() {
+	if (!tokens.empty()) {
+		return tokens.front();
+	} else {
+		return EMPTY_TOKEN;
+	}
+}
+
+void StringTokenizer::popNextToken() {
+	if (!tokens.empty()) {
+		tokens.pop_front();
+	}
+}
+
+void StringTokenizer::returnToken(std::string token) {
+	tokens.push_front(token);
 }

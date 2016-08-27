@@ -10,6 +10,8 @@
 #include <deque>
 
 class StringTokenizer {
+	static const std::string EMPTY_TOKEN;
+
 	std::deque<std::string> tokens;
 	bool isDelimiter(char ch);
 
@@ -18,4 +20,8 @@ public:
 	int countTokens();
 	bool hasMoreTokens();
 	std::string nextToken();
+
+	std::string peekNextToken();
+	void popNextToken();
+	void returnToken(std::string);
 };
