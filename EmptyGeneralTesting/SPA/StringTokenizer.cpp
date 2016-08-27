@@ -6,6 +6,10 @@
 #include "StringTokenizer.h"
 
 const std::string StringTokenizer::INVALID_CHARACTER = "Invalid character: ";
+bool StringTokenizer::isDelimiter(char ch) {
+	const std::string DELIMITERS = "{=+-*};\n";
+	return DELIMITERS.find(ch) != std::string::npos;
+}
 
 StringTokenizer::StringTokenizer(std::string str) {
 	const std::string delimiters = "{=+-*};\n";

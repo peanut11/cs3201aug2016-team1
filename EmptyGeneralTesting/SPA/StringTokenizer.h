@@ -12,6 +12,7 @@
 class StringTokenizer {
 	std::deque<std::string> tokens;
 	static const std::string INVALID_CHARACTER;
+	bool isDelimiter(char ch);
 
 public:
 	StringTokenizer(std::string str);
