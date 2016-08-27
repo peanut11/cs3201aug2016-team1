@@ -45,7 +45,13 @@ bool StringTokenizer::hasMoreTokens() {
 }
 
 std::string StringTokenizer::nextToken() {
-	std::string token = tokens.front();
-	tokens.pop_front();
-	return token;
+	if (!tokens.empty()) {
+		const std::string NEXT_TOKEN = tokens.front();
+		tokens.pop_front();
+		return NEXT_TOKEN;
+
+	} else {
+		const std::string EMPTY_TOKEN = "";
+		return EMPTY_TOKEN;
+	}
 }
