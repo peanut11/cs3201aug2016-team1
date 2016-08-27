@@ -5,36 +5,32 @@
 #include <cctype>
 #include "StringTokenizer.h"
 
-const std::string StringTokenizer::INVALID_CHARACTER = "Invalid character: ";
 bool StringTokenizer::isDelimiter(char ch) {
 	const std::string DELIMITERS = "{=+-*};\n";
 	return DELIMITERS.find(ch) != std::string::npos;
 }
 
 StringTokenizer::StringTokenizer(std::string str) {
-	const std::string delimiters = "{=+-*};\n";
-	const std::string space = " ";
+	const std::string WHITESPACE = " ";
 	std::string buffer = "";
 
 	for (unsigned int i = 0; i < str.length(); i++) {
-		std::string ch = std::string(1, str.at(i));
-		bool chIsDelimiter = (delimiters.find(ch) != std::string::npos);
+		char ch = str.at(i);
+		std::string charString = std::string(1, ch);
 
-		if (chIsDelimiter || ch == space) {
+		if (std::isspace(ch) || isDelimiter(ch)) {
 			if (buffer.length() != 0) {
 				tokens.push_back(buffer);
 				buffer.clear();
 			}
-
-			if (chIsDelimiter) {
-				tokens.push_back(ch);
+			if (isDelimiter(ch)) {
+				tokens.push_back(charString);
 			}
 		} else {
-			char character = ch.at(0);
-			if (std::isalnum(character)) {
-				buffer.append(ch);
+			if (std::isalnum(ch)) {
+				buffer.append(charString);
 			} else {
-				throw std::runtime_error(INVALID_CHARACTER + ch);
+				throw std::runtime_error("Invalid character: " + charString);
 			}
 		}
 	}
