@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "TNode.h"
+#include "../SPA/AbstractSyntaxTree.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,9 +10,11 @@ namespace UnitTesting
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(TestSingleton)
 		{
-			// TODO: Your test code here
+			AbstractSyntaxTree* ast0 = AbstractSyntaxTree::getInstance();
+			AbstractSyntaxTree* ast1 = AbstractSyntaxTree::getInstance();
+			Assert::IsTrue(ast0 == ast1);
 		}
 
 	};

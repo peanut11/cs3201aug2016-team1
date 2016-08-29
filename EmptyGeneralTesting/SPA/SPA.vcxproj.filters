@@ -25,6 +25,9 @@
     <Filter Include="Source Files\table">
       <UniqueIdentifier>{e52505eb-6f55-4a8e-a9cb-243a22cf1402}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Exceptions">
+      <UniqueIdentifier>{d06f54cb-873e-43d7-8a78-46ec1138b1ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\DesignExtractor.cpp">
