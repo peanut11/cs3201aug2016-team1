@@ -107,5 +107,11 @@
     <ClInclude Include="RelTable.h">
       <Filter>Header Files\table</Filter>
     </ClInclude>
+    <ClInclude Include="AbstractSyntaxTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ public:
 		nodeTypeVariable, nodeTypeConstant, nodeTypePlus };
 
 	TNode(TNodeType nodeType);	
-	// NodeType: program, procedure, variable, constant
+	// NodeType: procedure, variable, constant
 	TNode(TNodeType nodeType, int nameIndex);
 
 	TNodeType getNodeType();
