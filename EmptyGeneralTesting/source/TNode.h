@@ -1,4 +1,6 @@
 // Maintained by: Kai Lin & Ngoc Khanh
+#ifndef TNODE_H
+#define TNODE_H
 using namespace std;
 
 class TNode
@@ -19,3 +21,5 @@ private:
 	TNodeType mNodeType;
 	int mNameIndex;
 };
+
+#endif

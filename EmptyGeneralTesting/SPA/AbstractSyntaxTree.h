@@ -1,3 +1,4 @@
+#include <string>
 #include "../source/TNode.h"
 typedef short PROC;
 
@@ -10,12 +11,12 @@ class AbstractSyntaxTree
 public:
 	static AbstractSyntaxTree *getInstance();
 
-	TNode* createRootProgNode(PROC progName);
+	TNode* createRootProgNode(string progName);
 	TNode* createNode(TNode::TNodeType nodeType);
 	TNode* createNode(TNode::TNodeType nodeType, int nameIndex);
 private:
 	static AbstractSyntaxTree *_instance;
 	TNode* mRootNode;
-	PROC mProgramName;
+	string mProgramName;
 };
 

@@ -21,7 +21,7 @@ AbstractSyntaxTree *AbstractSyntaxTree::getInstance()
 	return _instance;
 }
 
-TNode * AbstractSyntaxTree::createRootProgNode(PROC progName)
+TNode * AbstractSyntaxTree::createRootProgNode(string progName)
 {
 	// assumes this function will only be called once 
 	// and doesn't check if root already exists
