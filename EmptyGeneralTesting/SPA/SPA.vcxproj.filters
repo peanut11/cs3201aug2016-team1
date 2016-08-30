@@ -125,6 +125,9 @@
     <ClInclude Include="QueryValidator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="QueryTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

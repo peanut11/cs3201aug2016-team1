@@ -38,6 +38,7 @@
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
     <ClInclude Include="EntityType.h" />
+    <ClInclude Include="QueryTree.h" />
     <ClInclude Include="QueryValidator.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelObjectType.h" />
