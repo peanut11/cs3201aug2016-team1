@@ -25,6 +25,7 @@
     <ClCompile Include="QueryTree.cpp" />
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
+    <ClCompile Include="SynonymTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Parser.h" />
@@ -40,6 +41,8 @@
     <ClInclude Include="RelObjectType.h" />
     <ClInclude Include="RelTable.h" />
     <ClInclude Include="StringTokenizer.h" />
+    <ClInclude Include="SynonymObject.h" />
+    <ClInclude Include="SynonymTable.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

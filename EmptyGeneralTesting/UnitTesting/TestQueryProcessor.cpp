@@ -19,8 +19,12 @@ namespace UnitTesting
 		TEST_METHOD(TestQueryProcessor_init){
 
 			QueryProcessor *processor = QueryProcessor::getInstance();
-			//int currentSize = processor->getQueryPreProcessor()->getRelationshipTable()->size();
-			//Assert::AreEqual(currentSize, 1);
+
+			int currentRelSize = processor->getQueryPreProcessor()->getRelationshipTable()->size();
+			Assert::AreEqual(currentRelSize, 1);
+
+			int currentSynonymSize = processor->getQueryPreProcessor()->getSynonymTable()->size();
+			Assert::AreEqual(currentSynonymSize, 2);
 
 		}
 
