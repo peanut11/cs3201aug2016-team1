@@ -15,7 +15,7 @@ public:
 		str.append("z = 3;").append("\n");
 		str.append("call Second; }");
 
-		StringTokenizer st = StringTokenizer(str);
+		StringTokenizer st = StringTokenizer(str, PROGRAM_VALIDATOR);
 
 		Assert::AreEqual(st.nextToken(), std::string("procedure"));
 		Assert::AreEqual(st.nextToken(), std::string("First"));
@@ -59,7 +59,7 @@ public:
 		str.append("y = z + 2;").append("\n");
 		str.append("x = x * y + z; }");
 
-		StringTokenizer st = StringTokenizer(str);
+		StringTokenizer st = StringTokenizer(str, PROGRAM_VALIDATOR);
 
 		Assert::AreEqual(st.nextToken(), std::string("procedure"));
 		Assert::AreEqual(st.nextToken(), std::string("Second"));
