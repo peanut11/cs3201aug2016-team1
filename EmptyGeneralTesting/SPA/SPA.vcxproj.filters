@@ -72,6 +72,9 @@
     <ClCompile Include="SynonymTable.cpp">
       <Filter>Source Files\table</Filter>
     </ClCompile>
+    <ClCompile Include="QueryValidator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\PKB.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="EntityType.h">
       <Filter>Header Files\enumerate</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryValidator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

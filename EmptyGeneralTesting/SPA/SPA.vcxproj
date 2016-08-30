@@ -23,6 +23,7 @@
     <ClCompile Include="QueryPreprocessor.cpp" />
     <ClCompile Include="QueryProcessor.cpp" />
     <ClCompile Include="QueryTree.cpp" />
+    <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
@@ -37,6 +38,7 @@
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
     <ClInclude Include="EntityType.h" />
+    <ClInclude Include="QueryValidator.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelObjectType.h" />
     <ClInclude Include="RelTable.h" />

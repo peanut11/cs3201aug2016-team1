@@ -171,6 +171,7 @@
     <ClCompile Include="TestAST.cpp" />
     <ClCompile Include="TestProgramValidator.cpp" />
     <ClCompile Include="TestQueryProcessor.cpp" />
+    <ClCompile Include="TestQueryValidator.cpp" />
     <ClCompile Include="TestStringTokenizer.cpp" />
     <ClCompile Include="TestTNode.cpp" />
   </ItemGroup>
