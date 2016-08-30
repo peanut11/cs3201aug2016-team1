@@ -1,20 +1,20 @@
 #pragma once
 #include <string>
 
-#include "RelArgsType.h"
+#include "EntityType.h"
 
 class SynonymObject {
-	RelArgsType type;
+	EntityType type;
 	std::string synonym;
 
 public:
 	
-	SynonymObject(RelArgsType type, std::string synonym) {
+	SynonymObject(EntityType type, std::string synonym) {
 		this->type = type;
 		this->synonym = synonym;
 	}
 
-	RelArgsType getType() {
+	EntityType getType() {
 		return this->type;
 	}
 

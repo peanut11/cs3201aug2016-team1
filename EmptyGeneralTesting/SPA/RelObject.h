@@ -2,19 +2,19 @@
 #include<stdio.h>
 #include <vector>
 #include "RelObjectType.h"
-#include "RelArgsType.h"
+#include "EntityType.h"
 
 
 class RelObject {
 	
 	RelObjectType type;
-	std::vector<RelArgsType> argsOneTypes;
-	std::vector<RelArgsType> argsTwoTypes;
+	std::vector<EntityType> argsOneTypes;
+	std::vector<EntityType> argsTwoTypes;
 	int numOfArgs;
 
 public:
 
-	RelObject(RelObjectType type, std::vector<RelArgsType> argsOneTypes, std::vector<RelArgsType> argsTwoTypes, int numOfArgs) {
+	RelObject(RelObjectType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
 		this->type = type;
 		this->argsOneTypes = argsOneTypes;
 		this->argsTwoTypes = argsTwoTypes;
@@ -25,11 +25,11 @@ public:
 		return this->type;
 	}
 
-	std::vector<RelArgsType> getArgsOneTypes() {
+	std::vector<EntityType> getArgsOneTypes() {
 		return this->argsOneTypes;
 	}
 
-	std::vector<RelArgsType> getArgsTwoTypes() {
+	std::vector<EntityType> getArgsTwoTypes() {
 		return this->argsTwoTypes;
 	}
 

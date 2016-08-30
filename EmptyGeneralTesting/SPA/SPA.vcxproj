@@ -36,7 +36,7 @@
     <ClInclude Include="QueryEvaluator.h" />
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
-    <ClInclude Include="RelArgsType.h" />
+    <ClInclude Include="EntityType.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelObjectType.h" />
     <ClInclude Include="RelTable.h" />

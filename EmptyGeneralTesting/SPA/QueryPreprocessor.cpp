@@ -33,26 +33,26 @@ void QueryPreProcessor::init() {
 void QueryPreProcessor::populateRelationshipTable() {
 
 	RelObject object = this->createRelationshipObject(RelObjectType::CALLS,
-	{ RelArgsType::SYNONYM_PROC, RelArgsType::STRING, RelArgsType::UNDERSCORE },
-	{ RelArgsType::SYNONYM_PROC, RelArgsType::STRING, RelArgsType::UNDERSCORE },
+	{ EntityType::PROCEDURE, EntityType::VARIABLE, EntityType::WILDCARD },
+	{ EntityType::PROCEDURE, EntityType::VARIABLE, EntityType::WILDCARD },
 		2);
 
 	this->mRelTable->insert(object);
 }
 
 void QueryPreProcessor::populateSynonymTable() {
-	SynonymObject object = this->createSynonymObject(RelArgsType::SYNONYM_PROC, "p");
+	SynonymObject object = this->createSynonymObject(EntityType::PROCEDURE, "p");
 	this->mSynonymTable->insert(object);
-	object = this->createSynonymObject(RelArgsType::SYNONYM_ASSIGN, "a1");
+	object = this->createSynonymObject(EntityType::ASSIGN, "a1");
 	this->mSynonymTable->insert(object);
 }
 
-SynonymObject QueryPreProcessor::createSynonymObject(RelArgsType type, std::string synonym) {
+SynonymObject QueryPreProcessor::createSynonymObject(EntityType type, std::string synonym) {
 	SynonymObject object = SynonymObject(type, synonym);
 	return object;
 }
 
-RelObject QueryPreProcessor::createRelationshipObject(RelObjectType type, std::vector<RelArgsType> argsOneTypes, std::vector<RelArgsType> argsTwoTypes, int numOfArgs) {
+RelObject QueryPreProcessor::createRelationshipObject(RelObjectType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
 	RelObject object = RelObject(type, argsOneTypes, argsTwoTypes, numOfArgs);
 	return object;
 }

@@ -95,9 +95,6 @@
     <ClInclude Include="RelObjectType.h">
       <Filter>Header Files\enumerate</Filter>
     </ClInclude>
-    <ClInclude Include="RelArgsType.h">
-      <Filter>Header Files\enumerate</Filter>
-    </ClInclude>
     <ClInclude Include="ProgramValidator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="SynonymObject.h">
       <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityType.h">
+      <Filter>Header Files\enumerate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
