@@ -32,7 +32,7 @@ namespace UnitTesting
 			std::string str = "procedure p;"; // Select p such that p.procName=\"First\"
 			//str.append("procedure p").append("\n");
 
-			StringTokenizer st = StringTokenizer(str);
+			StringTokenizer st = StringTokenizer(str, QUERY_PREPROCESSOR);
 			Assert::AreEqual(st.nextToken(), std::string("procedure"));
 			Assert::AreEqual(st.nextToken(), std::string("p"));
 		}

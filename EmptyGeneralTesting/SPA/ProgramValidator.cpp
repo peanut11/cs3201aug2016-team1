@@ -120,6 +120,6 @@ bool ProgramValidator::isConstValue(std::string str) {
 }
 
 bool ProgramValidator::isValidProgram(std::string str) {
-	st = StringTokenizer(str);
+	st = StringTokenizer(str, PROGRAM_VALIDATOR);
 	return isValidSyntax();
 }

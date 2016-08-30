@@ -9,14 +9,20 @@
 #include <string>
 #include <deque>
 
+enum DelimiterMode {
+	PROGRAM_VALIDATOR,
+	QUERY_PREPROCESSOR
+};
+
 class StringTokenizer {
 	static const std::string EMPTY_TOKEN;
 
 	std::deque<std::string> tokens;
+	std::string delimiters;
 	bool isDelimiter(char ch);
 
 public:
-	StringTokenizer(std::string str);
+	StringTokenizer(std::string str, DelimiterMode mode);
 	int countTokens();
 	bool hasMoreTokens();
 	std::string nextToken();

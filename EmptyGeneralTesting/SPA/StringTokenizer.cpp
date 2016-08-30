@@ -8,12 +8,24 @@
 const std::string StringTokenizer::EMPTY_TOKEN = "";
 
 bool StringTokenizer::isDelimiter(char ch) {
-	const std::string DELIMITERS = "{=+-*};\n";
-	return DELIMITERS.find(ch) != std::string::npos;
+	return delimiters.find(ch) != std::string::npos;
 }
 
-StringTokenizer::StringTokenizer(std::string str) {
+StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 	const std::string WHITESPACE = " ";
+	
+	switch(mode) {
+	case PROGRAM_VALIDATOR:
+		delimiters = "{=+-*};\n";
+		break;
+	case QUERY_PREPROCESSOR:
+		delimiters = "(,);\n";
+		break;
+	default:
+		delimiters = "";
+		break;
+	}
+
 	std::string buffer = "";
 
 	for (unsigned int i = 0; i < str.length(); i++) {
