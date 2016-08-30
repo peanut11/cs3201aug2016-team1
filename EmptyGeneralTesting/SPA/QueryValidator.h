@@ -9,7 +9,7 @@ class QueryValidator {
 
 	static QueryValidator *_instance;
 
-	StringTokenizer st = StringTokenizer("");
+	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
 	//bool isValidSyntax();
 	bool isMatch(std::string s1, std::string s2);
 	
@@ -34,6 +34,7 @@ public:
 	bool isSynonymDelcaration(std::string str);
 	bool isEndOfSynonymDeclaration(std::string str); // end
 
+	bool isValidQuery(std::string str);
 	/*
 	
 	bool isInteger(std::string str);

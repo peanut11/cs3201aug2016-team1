@@ -17,12 +17,50 @@ QueryValidator *QueryValidator::getInstance()
 
 }
 
+bool QueryValidator::isValidQuery(std::string str) {
+	st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
+	/*
+	if (!st.hasMoreTokens()) {
+		return false;
+	}
+	*/
+	return isSynonymDelcaration(st.nextToken());
+}
+
 bool QueryValidator::isSynonymDelcaration(std::string str) {
 	bool isUnderProc = true;
 	bool isValid = false;
 	bool isSelectSyntax = isMatch(str, QueryValidator::SYNTAX_SELECT);
 	bool isProcedureSyntax = isMatch(str, QueryValidator::SYNTAX_PROCEDURE);
 
+	while (isUnderProc) {
+
+		if (!st.hasMoreTokens()) {
+			return false;
+		}
+
+		std::string nextToken = st.nextToken();
+
+
+
+		if (isMatch(nextToken, ";")) { // end of procedure
+			isUnderProc = false;
+			return isValid;
+		}
+
+		if (isName(nextToken)) { // is a synonym
+			isValid = true;
+		}
+
+		if (isMatch(nextToken, ",") && isName(st.peekNextToken())) { // ,[synonym] -> there's more synonym
+			isValid = true;
+		}
+
+	}
+
+	return isValid;
+
+	/*
 	if (isSelectSyntax || !isProcedureSyntax) return false;
 
 	st.nextToken();
@@ -47,7 +85,7 @@ bool QueryValidator::isSynonymDelcaration(std::string str) {
 	}
 
 	return isValid;
-
+	*/
 }
 
 bool QueryValidator::isMatch(std::string s1, std::string s2) {
