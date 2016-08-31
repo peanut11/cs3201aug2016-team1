@@ -9,6 +9,8 @@ class SynonymObject {
 
 public:
 	
+	SynonymObject() {}
+
 	SynonymObject(EntityType type, std::string synonym) {
 		this->type = type;
 		this->synonym = synonym;
@@ -20,5 +22,14 @@ public:
 
 	std::string getSynonym() {
 		return this->synonym;
+	}
+
+	std::string getTypeString() {
+		switch (this->type) {
+		case PROCEDURE:
+			return "Procedure";
+		case ASSIGN:
+			return "Assign";
+		}
 	}
 };

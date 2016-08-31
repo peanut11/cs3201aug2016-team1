@@ -9,7 +9,10 @@ class SynonymTable {
 public:
 	static SynonymTable *getInstance();
 
+	void clearAll();
+
 	SynonymObject getObject(int index);
+	std::string toString();
 	int insert(SynonymObject object);
 	int size();
 };

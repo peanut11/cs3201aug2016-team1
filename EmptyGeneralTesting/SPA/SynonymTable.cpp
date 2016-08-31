@@ -13,6 +13,10 @@ SynonymTable *SynonymTable::getInstance()
 	return _instance;
 }
 
+void SynonymTable::clearAll() {
+	synonymObjects.clear();
+}
+
 /*
 Insert a new object into RelObjects vector
 Return the index of the new object*/
@@ -30,6 +34,13 @@ SynonymObject SynonymTable::getObject(int index) {
 	return this->synonymObjects.at(index);
 }
 
+std::string SynonymTable::toString() {
+	std::string output = "";
+	for (auto value : this->synonymObjects) {
+		output.append(value.getTypeString() + " - " + value.getSynonym() + "\n");
+	}
+	return output;
+}
 
 /*
 Get the size of table

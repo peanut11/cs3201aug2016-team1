@@ -12,5 +12,6 @@ enum EntityType {
 	TIMES,
 	VARIABLE,			// variable (string)
 	CONSTANT,			// constant (integer)
-	WILDCARD			// wildcard
+	WILDCARD,			// wildcard
+	INVALID
 };

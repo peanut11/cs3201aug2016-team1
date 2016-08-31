@@ -1,20 +1,27 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "StringTokenizer.h"
+#include "EntityType.h"
+#include "SynonymTable.h"
+#include "SynonymObject.h"
 
 class QueryValidator {
 
 	static const std::string SYNTAX_PROCEDURE;
+	static const std::string SYNTAX_ASSIGN;
 	static const std::string SYNTAX_SELECT;
+	static const std::string SYNTAX_NEXT_LINE;
 
 	static QueryValidator *_instance;
+	SynonymTable *mSynonymTable;
 
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
-	//bool isValidSyntax();
-	bool isMatch(std::string s1, std::string s2);
-	
 
-	
+	EntityType getSyntaxEntityType(std::string syntax);
+	std::string getEntitySyntax(std::string str);
+
+	bool isMatch(std::string s1, std::string s2);
 	bool isSelect(std::string str);
 	bool isBoolean(std::string str); // BOOLEAN
 	bool isSuchThat(std::string str); // match such+that
@@ -25,28 +32,36 @@ class QueryValidator {
 	bool isWith(std::string str);
 
 	bool isExpression(std::string str);
-	bool isProcedure(std::string str);
-	bool isName(std::string str);
+
+	// Synonym declaration
+	//bool isDeclareProcedure(std::string str);	// procedure
+	bool isStmt(std::string str);		// stmt
+	bool isWhile(std::string str);		// while
+	bool isIf(std::string str);			// if
+	//bool isDeclareAssign(std::string str);		// assign
+	bool isVariable(std::string str);	// variable
+	bool isConstant(std::string str);	// constant
+	bool isName(std::string str);		
+
+	bool isDeclareEntity(std::string str);
+
+
+
+	/*
+	stmt s, s1; assign a, a1, a2; while w, w1; if ifstmt, iftstmt1; procedure p; variable v; constant c;
+prog_line n, n1, n2;
+	*/
 
 public:
 	static QueryValidator *getInstance();
 
-	bool isSynonymDelcaration(std::string str);
-	bool isEndOfSynonymDeclaration(std::string str); // end
+	void clearSynonymTable();
 
+	// Return methods
+	SynonymTable *getSynonymTable();
+	std::string getEntityTypeString(EntityType type);
 	bool isValidQuery(std::string str);
-	/*
 	
-	bool isInteger(std::string str);
 	
-	bool isStmtLst(std::string str);
-	bool isStmt(std::string str);
-	bool isWhile(std::string str);
-	bool isAssign(std::string str);
-	bool isExpr(std::string str);
-	bool isFactor(std::string str);
-	bool isVarName(std::string str);
-	bool isConstValue(std::string str);
-	*/
 
 };
