@@ -15,27 +15,19 @@
 using namespace std;
 
 #include "PKB.h"
-#include "TNode.h"
 
-//int PKB::setProcTo(AbstractSyntaxTree::getInstance)(PROC p, TNode* r) {
-//	return NULL;
-//}
-
-//TNode* PKB::getRoot(AbstractSyntaxTree::getInstance) (PROC p){
-//	return NULL;
-//}
-
-TNode * PKB::createVariableNode(VAR varNameIndex)
+// create AST Nodes
+TNode * PKB::createVariableNode(AbstractSyntaxTree ast, VAR varNameIndex)
 {
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeVariable, varNameIndex);
+	return ast.createNode(VARIABLE, varNameIndex);
 }
 
-TNode * PKB::createConstantNode(CONST constantValue)
+TNode * PKB::createConstantNode(AbstractSyntaxTree ast, CONST constantValue)
 {
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeVariable, constantValue);
+	return ast.createNode(CONSTANT, constantValue);
 }
 
-TNode * PKB::createPlusNode()
+TNode * PKB::createNode(AbstractSyntaxTree ast, EntityType nodeType)
 {
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypePlus);
+	return ast.createNode(nodeType);
 }

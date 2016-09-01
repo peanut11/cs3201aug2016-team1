@@ -4,9 +4,9 @@
 
 #include<stdio.h>
 #include <iostream>
-#include <string>
 #include <vector>
 #include "../SPA/AbstractSyntaxTree.h"
+#include "../SPA/EntityType.h"
 
 using namespace std;
 typedef short PROC; // index of procedure name in ProcTable
@@ -21,8 +21,8 @@ public:
 	static VarTable* varTable; 
 	
 	// creating AST Nodes
-	static TNode* createVariableNode(VAR varNameIndex);
-	static TNode* createConstantNode(CONST constantValue);
-	static TNode* createPlusNode();
+	static TNode* createVariableNode(AbstractSyntaxTree ast, VAR varNameIndex);
+	static TNode* createConstantNode(AbstractSyntaxTree ast, CONST constantValue);
+	static TNode* createNode(AbstractSyntaxTree ast, EntityType);
 
 };
