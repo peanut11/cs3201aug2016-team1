@@ -1,24 +1,22 @@
 // Maintained by: Kai Lin & Ngoc Khanh
+#include "../SPA/EntityType.h"
+
 #ifndef TNODE_H
 #define TNODE_H
-using namespace std;
 
 class TNode
 {
 
 public:
-	enum TNodeType { nodeTypeProgram, nodeTypeProcedure, nodeTypeStmtLstDefault, 
-		nodeTypeStmtLstThen, nodeTypeStmtLstElse, nodeTypeAssign, nodeTypeWhile, 
-		nodeTypeVariable, nodeTypeConstant, nodeTypePlus };
 
-	TNode(TNodeType nodeType);	
+	TNode(EntityType nodeType);	
 	// NodeType: procedure, variable, constant
-	TNode(TNodeType nodeType, int nameIndex);
+	TNode(EntityType nodeType, int nameIndex);
 
-	TNodeType getNodeType();
+	EntityType getNodeType();
 	int getNameIndex();
 private:
-	TNodeType mNodeType;
+	EntityType mNodeType;
 	int mNameIndex;
 };
 
