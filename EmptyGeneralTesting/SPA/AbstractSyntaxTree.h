@@ -6,8 +6,8 @@ class AbstractSyntaxTree
 
 public:
 
-	TNode* createNode(TNode::TNodeType nodeType);
-	TNode* createNode(TNode::TNodeType nodeType, int nameIndex);
+	TNode* createNode(EntityType nodeType);
+	TNode* createNode(EntityType nodeType, int nameIndex);
 private:
 	
 };

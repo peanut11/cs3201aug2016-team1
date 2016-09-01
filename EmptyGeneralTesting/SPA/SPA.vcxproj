@@ -24,9 +24,12 @@
     <ClCompile Include="QueryProcessor.cpp" />
     <ClCompile Include="QueryTree.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
+    <ClCompile Include="RefTable.cpp" />
     <ClCompile Include="RelTable.cpp" />
+    <ClCompile Include="StmtTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
+    <ClCompile Include="VarTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Parser.h" />
@@ -40,12 +43,15 @@
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="QueryTree.h" />
     <ClInclude Include="QueryValidator.h" />
+    <ClInclude Include="RefTable.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelObjectType.h" />
     <ClInclude Include="RelTable.h" />
+    <ClInclude Include="StmtTable.h" />
     <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymTable.h" />
+    <ClInclude Include="VarTable.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

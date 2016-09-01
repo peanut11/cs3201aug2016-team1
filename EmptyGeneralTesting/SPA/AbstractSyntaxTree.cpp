@@ -9,12 +9,12 @@
 
 #include "AbstractSyntaxTree.h" 
 
-TNode* AbstractSyntaxTree::createNode(TNode::TNodeType nodeType)
+TNode* AbstractSyntaxTree::createNode(EntityType nodeType)
 {
 	return new TNode(nodeType);
 }
 
-TNode * AbstractSyntaxTree::createNode(TNode::TNodeType nodeType, int nameIndex)
+TNode * AbstractSyntaxTree::createNode(EntityType nodeType, int nameIndex)
 {
 	return new TNode(nodeType, nameIndex);
 }
