@@ -15,8 +15,8 @@ typedef int CONST;
 typedef int PROC_INDEX; // Index of procedure name in ProcTable
 typedef int STMT_NUM; 
 typedef int VAR_INDEX;  // Index of variable name in VarTable and constant value
-typedef std::map<VAR_NAME, VAR_INDEX> REF_TABLE; 
-typedef std::string VAR_NAME;
+typedef std::string VAR_NAME; 
+typedef std::map<VAR_NAME, VAR_INDEX> REF_TABLE;
 typedef std::vector<std::vector<STMT_NUM>[2]> VAR_TABLE;
 typedef std::vector<std::vector<VAR_INDEX>[RelationshipType::TOTAL_COUNT]> STMT_TABLE;
 
@@ -39,10 +39,10 @@ public:
 	std::vector<CONST> getAllConstantValues(); 
 	std::vector<VAR_NAME> getAllVarNames();
 	AssignTree getAssign(STMT_NUM stmt);
-	std::vector<STMT_NUM> getStmts(VAR_INDEX var, RelationshipType rel); // Get from varTable
-	std::vector<VAR_INDEX> getVars(STMT_NUM stmt, RelationshipType rel); // E.g. USES, MODIFIES
-	std::vector<STMT_NUM> getStmts(STMT_NUM stmt, RelationshipType rel); // E.g. FOLLOWS, PARENTS
-	std::vector<STMT_NUM> getStmts(EntityType stmtType);                 // E.g. WHILE
+	std::vector<STMT_NUM> getStmts(VAR_INDEX var, RelationshipType rel);
+	std::vector<VAR_INDEX> getVars(STMT_NUM stmt, RelationshipType relIsMU); // MU: ModifiesUses
+	std::vector<STMT_NUM> getStmts(RelationshipType relNotMU, STMT_NUM stmt);
+	std::vector<STMT_NUM> getStmts(EntityType stmtType);
 
 	bool putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var);
 	bool putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt);

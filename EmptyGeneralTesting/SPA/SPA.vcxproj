@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AssignmentTree.cpp" />
+    <ClCompile Include="AssignTree.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -29,7 +29,7 @@
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssignmentTree.h" />
+    <ClInclude Include="AssignTree.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PKB.h" />

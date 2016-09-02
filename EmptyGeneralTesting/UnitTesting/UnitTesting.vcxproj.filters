@@ -44,10 +44,10 @@
     <ClCompile Include="Tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestAssignmentTree.cpp">
+    <ClCompile Include="TestNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestNode.cpp">
+    <ClCompile Include="TestAssignTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

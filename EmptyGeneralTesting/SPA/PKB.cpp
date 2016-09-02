@@ -43,20 +43,20 @@ std::vector<STMT_NUM> PKB::getStmts(VAR_INDEX var, RelationshipType rel) {
 	return varTable[var][rel];
 }
 
-std::vector<VAR_INDEX> PKB::getVars(STMT_NUM stmt, RelationshipType rel) {
-	if (rel != MODIFIES && rel != USES) {
+std::vector<VAR_INDEX> PKB::getVars(STMT_NUM stmt, RelationshipType relIsMU) {
+	if (relIsMU != MODIFIES && relIsMU != USES) {
 		throw ERROR;
 	}
 
-	return stmtTable[stmt][rel];
+	return stmtTable[stmt][relIsMU];
 }
 
-std::vector<STMT_NUM> PKB::getStmts(STMT_NUM stmt, RelationshipType rel) {
-	if (rel == MODIFIES || rel == USES) {
+std::vector<STMT_NUM> PKB::getStmts(RelationshipType relNotMU, STMT_NUM stmt) {
+	if (relNotMU == MODIFIES || relNotMU == USES) {
 		throw ERROR;
 	}
 
-	return stmtTable[stmt][rel];
+	return stmtTable[stmt][relNotMU];
 }
 
 std::vector<STMT_NUM> PKB::getStmts(EntityType stmtType) {
@@ -64,7 +64,7 @@ std::vector<STMT_NUM> PKB::getStmts(EntityType stmtType) {
 
 	for (STMT_NUM i = 0; i < stmtTable.size(); i++) {
 		if (stmtTypeTable[i] == stmtType) {
-			stmts.push_back[i];
+			stmts.push_back(i);
 		}
 	}
 
