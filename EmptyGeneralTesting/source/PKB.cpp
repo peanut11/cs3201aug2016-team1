@@ -15,55 +15,19 @@
 using namespace std;
 
 #include "PKB.h"
-#include "TNode.h"
 
-//int PKB::setProcTo(AbstractSyntaxTree::getInstance)(PROC p, TNode* r) {
-//	return NULL;
-//}
-
-//TNode* PKB::getRoot(AbstractSyntaxTree::getInstance) (PROC p){
-//	return NULL;
-//}
-
-
-// creating AST with root node
-TNode * PKB::createAST(string progName) {
-	AbstractSyntaxTree * ast = AbstractSyntaxTree::getInstance();
-	return ast->createRootProgNode(progName);
+// create AST Nodes
+TNode * PKB::createVariableNode(AbstractSyntaxTree ast, VAR varNameIndex)
+{
+	return ast.createNode(VARIABLE, varNameIndex);
 }
 
-// creating ASTNodes
-TNode * PKB::createProcNode(PROC procNameIndex)
+TNode * PKB::createConstantNode(AbstractSyntaxTree ast, CONST constantValue)
 {
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeProcedure, (int)procNameIndex);
+	return ast.createNode(CONSTANT, constantValue);
 }
 
-TNode * PKB::createStmtLstNode()
+TNode * PKB::createNode(AbstractSyntaxTree ast, EntityType nodeType)
 {
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeStmtLstDefault);
-}
-
-TNode * PKB::createAssignNode()
-{
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeAssign);
-}
-
-TNode * PKB::createWhileNode()
-{
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeWhile);
-}
-
-TNode * PKB::createVariableNode(VAR varNameIndex)
-{
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeVariable, varNameIndex);
-}
-
-TNode * PKB::createConstantNode(CONST constantValue)
-{
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypeVariable, constantValue);
-}
-
-TNode * PKB::createPlusNode()
-{
-	return AbstractSyntaxTree::getInstance()->createNode(TNode::nodeTypePlus);
+	return ast.createNode(nodeType);
 }

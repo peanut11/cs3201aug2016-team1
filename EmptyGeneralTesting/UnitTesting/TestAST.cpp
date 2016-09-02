@@ -10,11 +10,9 @@ namespace UnitTesting
 	{
 	public:
 		
-		TEST_METHOD(TestSingleton)
+		TEST_METHOD(Test)
 		{
-			AbstractSyntaxTree* ast0 = AbstractSyntaxTree::getInstance();
-			AbstractSyntaxTree* ast1 = AbstractSyntaxTree::getInstance();
-			Assert::IsTrue(ast0 == ast1);
+			
 		}
 
 	};

@@ -9,19 +9,20 @@
 
 #include "TNode.h"
 
-TNode::TNode(TNodeType nodeType)
+TNode::TNode(EntityType nodeType)
 {
+	//assumes Entity type is valid. ie only assign related
 	mNodeType = nodeType;
 }
 
 
-TNode::TNode(TNodeType nodeType, int nameIndex)
+TNode::TNode(EntityType nodeType, int nameIndex)
 {
 	mNodeType = nodeType;
 	mNameIndex = nameIndex;
 }
 
-TNode::TNodeType TNode::getNodeType()
+EntityType TNode::getNodeType()
 {
 	return mNodeType;
 }

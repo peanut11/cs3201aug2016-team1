@@ -8,34 +8,13 @@
 // - TNode
 
 #include "AbstractSyntaxTree.h" 
-using namespace std;
 
-AbstractSyntaxTree *AbstractSyntaxTree::_instance;
-/*
-Singleton
-*/
-AbstractSyntaxTree *AbstractSyntaxTree::getInstance()
-{
-	if (!_instance)
-		_instance = new AbstractSyntaxTree;
-	return _instance;
-}
-
-TNode * AbstractSyntaxTree::createRootProgNode(string progName)
-{
-	// assumes this function will only be called once 
-	// and doesn't check if root already exists
-	mRootNode = new TNode(TNode::nodeTypeProgram);
-	mProgramName = progName;
-	return mRootNode;
-}
-
-TNode* AbstractSyntaxTree::createNode(TNode::TNodeType nodeType)
+TNode* AbstractSyntaxTree::createNode(EntityType nodeType)
 {
 	return new TNode(nodeType);
 }
 
-TNode * AbstractSyntaxTree::createNode(TNode::TNodeType nodeType, int nameIndex)
+TNode * AbstractSyntaxTree::createNode(EntityType nodeType, int nameIndex)
 {
 	return new TNode(nodeType, nameIndex);
 }

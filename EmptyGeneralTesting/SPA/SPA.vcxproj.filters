@@ -75,6 +75,15 @@
     <ClCompile Include="QueryValidator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RefTable.cpp">
+      <Filter>Source Files\table</Filter>
+    </ClCompile>
+    <ClCompile Include="StmtTable.cpp">
+      <Filter>Source Files\table</Filter>
+    </ClCompile>
+    <ClCompile Include="VarTable.cpp">
+      <Filter>Source Files\table</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\PKB.h">
@@ -130,6 +139,14 @@
     </ClInclude>
     <ClInclude Include="ClauseType.h">
       <Filter>Header Files\enumerate</Filter>
+    <ClInclude Include="RefTable.h">
+      <Filter>Header Files\table</Filter>
+    </ClInclude>
+    <ClInclude Include="StmtTable.h">
+      <Filter>Header Files\table</Filter>
+    </ClInclude>
+    <ClInclude Include="VarTable.h">
+      <Filter>Header Files\table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
