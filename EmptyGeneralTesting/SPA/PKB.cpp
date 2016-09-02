@@ -21,14 +21,7 @@ std::vector<Constant> PKB::getAllConstantValues() {
 }
 
 std::vector<VarName> PKB::getAllVarNames() {
-	std::vector<VarName> varNames;
-
-	for (RefTable::const_iterator it = refTable.begin(); it != refTable.end(); it++) {
-		std::string key = it->first;
-		varNames.push_back(key);
-	}
-
-	return varNames;
+	return refTable;
 }
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
