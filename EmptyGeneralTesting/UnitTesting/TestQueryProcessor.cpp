@@ -6,7 +6,7 @@
 #include "../SPA/QueryEvaluator.h"
 #include "../SPA/RelTable.h"
 #include "../SPA/RelObject.h"
-#include "../SPA/RelObjectType.h"
+#include "../SPA/RelationshipType.h"
 #include "../SPA/EntityType.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

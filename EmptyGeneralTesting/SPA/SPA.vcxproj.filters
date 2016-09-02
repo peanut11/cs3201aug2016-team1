@@ -1,153 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\model">
-      <UniqueIdentifier>{b5b86bb4-029a-4fee-a849-cdfe666c5ee7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\enumerate">
-      <UniqueIdentifier>{221dd401-7847-46f4-91cf-eed287109156}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\table">
-      <UniqueIdentifier>{b61d5d21-d6ab-40e3-a7ff-f4eed0f1db61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\table">
-      <UniqueIdentifier>{e52505eb-6f55-4a8e-a9cb-243a22cf1402}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="..\source\DesignExtractor.cpp" />
+    <ClCompile Include="..\source\Parser.cpp" />
+    <ClCompile Include="..\source\PKB.cpp" />
+    <ClCompile Include="..\source\TNode.cpp" />
+    <ClCompile Include="AbstractSyntaxTree.cpp" />
+    <ClCompile Include="Frontend.cpp" />
+    <ClCompile Include="ProgramConvertor.cpp" />
+    <ClCompile Include="ProgramValidator.cpp" />
+    <ClCompile Include="QueryEvaluator.cpp" />
+    <ClCompile Include="QueryPreprocessor.cpp" />
+    <ClCompile Include="QueryProcessor.cpp" />
+    <ClCompile Include="QueryTree.cpp" />
+    <ClCompile Include="QueryValidator.cpp" />
+    <ClCompile Include="RefTable.cpp" />
+    <ClCompile Include="RelTable.cpp" />
+    <ClCompile Include="StmtTable.cpp" />
+    <ClCompile Include="StringTokenizer.cpp" />
+    <ClCompile Include="SynonymTable.cpp" />
+    <ClCompile Include="VarTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\DesignExtractor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\Parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\PKB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\TNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ProgramValidator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ProgramConvertor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Frontend.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AbstractSyntaxTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryPreprocessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryEvaluator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryProcessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StringTokenizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RelTable.cpp">
-      <Filter>Source Files\table</Filter>
-    </ClCompile>
-    <ClCompile Include="SynonymTable.cpp">
-      <Filter>Source Files\table</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryValidator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RefTable.cpp">
-      <Filter>Source Files\table</Filter>
-    </ClCompile>
-    <ClCompile Include="StmtTable.cpp">
-      <Filter>Source Files\table</Filter>
-    </ClCompile>
-    <ClCompile Include="VarTable.cpp">
-      <Filter>Source Files\table</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\source\PKB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\TNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StringTokenizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryPreProcessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RelObject.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
-    <ClInclude Include="RelObjectType.h">
-      <Filter>Header Files\enumerate</Filter>
-    </ClInclude>
-    <ClInclude Include="ProgramValidator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryProcessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryEvaluator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RelTable.h">
-      <Filter>Header Files\table</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractSyntaxTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SynonymTable.h">
-      <Filter>Header Files\table</Filter>
-    </ClInclude>
-    <ClInclude Include="SynonymObject.h">
-      <Filter>Header Files\model</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityType.h">
-      <Filter>Header Files\enumerate</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryValidator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClauseType.h">
-      <Filter>Header Files\enumerate</Filter>
-    <ClInclude Include="RefTable.h">
-      <Filter>Header Files\table</Filter>
-    </ClInclude>
-    <ClInclude Include="StmtTable.h">
-      <Filter>Header Files\table</Filter>
-    </ClInclude>
-    <ClInclude Include="VarTable.h">
-      <Filter>Header Files\table</Filter>
-    </ClInclude>
+    <ClInclude Include="..\source\Parser.h" />
+    <ClInclude Include="..\source\PKB.h" />
+    <ClInclude Include="..\source\TNode.h" />
+    <ClInclude Include="AbstractSyntaxTree.h" />
+    <ClInclude Include="ClauseType.h" />
+    <ClInclude Include="ProgramValidator.h" />
+    <ClInclude Include="QueryEvaluator.h" />
+    <ClInclude Include="QueryPreProcessor.h" />
+    <ClInclude Include="QueryProcessor.h" />
+    <ClInclude Include="EntityType.h" />
+    <ClInclude Include="QueryTree.h" />
+    <ClInclude Include="QueryValidator.h" />
+    <ClInclude Include="RefTable.h" />
+    <ClInclude Include="RelObject.h" />
+    <ClInclude Include="RelTable.h" />
+    <ClInclude Include="StmtTable.h" />
+    <ClInclude Include="StringTokenizer.h" />
+    <ClInclude Include="SynonymObject.h" />
+    <ClInclude Include="SynonymTable.h" />
+    <ClInclude Include="VarTable.h" />
+    <ClInclude Include="RelationshipType.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

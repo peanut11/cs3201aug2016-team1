@@ -46,7 +46,7 @@
     <ClInclude Include="QueryValidator.h" />
     <ClInclude Include="RefTable.h" />
     <ClInclude Include="RelObject.h" />
-    <ClInclude Include="RelObjectType.h" />
+    <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
     <ClInclude Include="StmtTable.h" />
     <ClInclude Include="StringTokenizer.h" />

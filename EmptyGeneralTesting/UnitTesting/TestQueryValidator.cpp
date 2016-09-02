@@ -93,19 +93,12 @@ public:
 	TEST_METHOD(TestQueryValidator_Select_Only) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string str1 = "procedure p;assign a;\nSelect p";
-		Assert::IsTrue(validator->isValidQuery(str1));
-		Assert::AreEqual("Select", validator->getNextToken().c_str());
-		Assert::AreEqual("p", validator->getNextToken().c_str());
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a;\nSelect p"));
 		Assert::AreEqual(validator->getSynonymTable()->size(), 2);
-
-
-
-		//Assert::IsFalse(validator->isDeclaredSynonym("r"));
-		//Assert::IsTrue(validator->isDeclaredSynonym("p"));
-		//Assert::IsTrue(validator->isDeclaredSynonym("a"));
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-		
+		validator->clearSynonymTable();
+
+		Assert::IsFalse(validator->isValidQuery("procedure p;assign a;\nSelect"));
 		validator->clearSynonymTable();
 
 	}

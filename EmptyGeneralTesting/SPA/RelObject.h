@@ -1,27 +1,27 @@
 #pragma once
 #include<stdio.h>
 #include <vector>
-#include "RelObjectType.h"
+#include "RelationshipType.h"
 #include "EntityType.h"
 
 
 class RelObject {
 	
-	RelObjectType type;
+	RelationshipType type;
 	std::vector<EntityType> argsOneTypes;
 	std::vector<EntityType> argsTwoTypes;
 	int numOfArgs;
 
 public:
 
-	RelObject(RelObjectType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
+	RelObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
 		this->type = type;
 		this->argsOneTypes = argsOneTypes;
 		this->argsTwoTypes = argsTwoTypes;
 		this->numOfArgs = numOfArgs;
 	}
 
-	RelObjectType getRelObjectType() {
+	RelationshipType getRelObjectType() {
 		return this->type;
 	}
 

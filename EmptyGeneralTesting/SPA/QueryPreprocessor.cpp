@@ -32,7 +32,7 @@ void QueryPreProcessor::init() {
 
 void QueryPreProcessor::populateRelationshipTable() {
 
-	RelObject object = this->createRelationshipObject(RelObjectType::CALLS,
+	RelObject object = this->createRelationshipObject(RelationshipType::CALLS,
 	{ EntityType::PROCEDURE, EntityType::VARIABLE, EntityType::WILDCARD },
 	{ EntityType::PROCEDURE, EntityType::VARIABLE, EntityType::WILDCARD },
 		2);
@@ -52,7 +52,7 @@ SynonymObject QueryPreProcessor::createSynonymObject(EntityType type, std::strin
 	return object;
 }
 
-RelObject QueryPreProcessor::createRelationshipObject(RelObjectType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
+RelObject QueryPreProcessor::createRelationshipObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
 	RelObject object = RelObject(type, argsOneTypes, argsTwoTypes, numOfArgs);
 	return object;
 }

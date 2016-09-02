@@ -4,7 +4,7 @@
 #include "SynonymObject.h"
 #include "RelTable.h"
 #include "RelObject.h"
-#include "RelObjectType.h"
+#include "RelationshipType.h"
 #include "EntityType.h"
 
 class QueryPreProcessor {
@@ -17,7 +17,7 @@ class QueryPreProcessor {
 	void populateRelationshipTable();
 	void populateSynonymTable();
 	SynonymObject createSynonymObject(EntityType type, std::string synonym);
-	RelObject createRelationshipObject(RelObjectType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs);
+	RelObject createRelationshipObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs);
 	
 
 

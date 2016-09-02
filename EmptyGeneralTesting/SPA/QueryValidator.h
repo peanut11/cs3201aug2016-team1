@@ -20,6 +20,8 @@ class QueryValidator {
 	static const std::string SYNTAX_CALL;
 
 	static const std::string SYNTAX_SELECT;
+	static const std::string SYNTAX_SUCH;
+	static const std::string SYNTAX_THAT;
 	static const std::string SYNTAX_SUCH_THAT;
 	static const std::string SYNTAX_WITH;
 	static const std::string SYNTAX_AND;

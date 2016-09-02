@@ -14,6 +14,8 @@ const std::string QueryValidator::SYNTAX_VARIABLE = "variable";
 const std::string QueryValidator::SYNTAX_CONSTANT = "constant";
 const std::string QueryValidator::SYNTAX_PROG_LINE = "prog_line";
 const std::string QueryValidator::SYNTAX_SELECT = "Select";
+const std::string QueryValidator::SYNTAX_SUCH = "such";
+const std::string QueryValidator::SYNTAX_THAT = "that";
 const std::string QueryValidator::SYNTAX_SUCH_THAT = "such that";
 const std::string QueryValidator::SYNTAX_WITH = "with";
 const std::string QueryValidator::SYNTAX_AND = "and";
@@ -48,7 +50,7 @@ bool QueryValidator::isValidQuery(std::string str) {
 	st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
 
 	// validate both synonym declaration & select clause string
-	return isDeclaration(st.nextToken()); // && isSelect(st.hasMoreTokens() ? st.nextToken() : "")
+	return isDeclaration(st.nextToken()) && isSelect(st.hasMoreTokens() ? st.nextToken() : "");  //
 
 }
 
@@ -123,10 +125,7 @@ bool QueryValidator::isDeclaration(std::string str) {
 }
 
 bool QueryValidator::isSelect(std::string str) {
-	return isMatch(str, QueryValidator::SYNTAX_SELECT); //  && isDeclaredSynonym(st.nextToken())
-		
-
-	/*
+	
 	bool isUnderSelect = true;
 	bool isValid = false;
 	bool hasSelectOnce = false;
@@ -145,23 +144,33 @@ bool QueryValidator::isSelect(std::string str) {
 		std::string nextToken = st.nextToken();
 
 		if (isMatch(nextToken, QueryValidator::SYNTAX_SELECT) && hasSelectOnce) {
-			// next string is "Select" again & already had "Select" previous
+			// next string is "Select" again & already had "Select" previously
 			// cannot have more than 1 "Select"
 			return false;
 		}
+
+		if (isMatch(nextToken, QueryValidator::SYNTAX_SUCH) && isMatch(st.peekNextToken(), QueryValidator::SYNTAX_THAT)) {
+			// first token = such & next token =  that
+			previousClauseType = ClauseType::SUCH_THAT;
+		}
+
+
 		
 		switch (previousClauseType) {
 
 		case ClauseType::SELECT:
 			isValid = isDeclaredSynonym(nextToken);
-			break;
+			break; 
 
+		case ClauseType::SUCH_THAT:	
+
+			break;
 		}
 
 	}
 
 	return isValid;
-	*/
+	
 }
 
 bool QueryValidator::isMatch(std::string s1, std::string s2) {

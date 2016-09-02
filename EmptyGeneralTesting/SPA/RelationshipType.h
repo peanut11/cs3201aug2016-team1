@@ -1,4 +1,4 @@
 #pragma once
-enum RelObjectType {
+enum RelationshipType {
 	CALLS, CALLSSTAR, MODIFIES, PARENT, PARENTSTAR, FOLLOWS, FOLLOWSSTAR
 };
