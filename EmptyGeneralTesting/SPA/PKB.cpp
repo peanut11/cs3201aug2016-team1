@@ -16,14 +16,14 @@ PKB* PKB::getInstance() {
 	return theOne;
 }
 
-std::vector<CONST> PKB::getAllConstantValues() {
+std::vector<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
 
-std::vector<VAR_NAME> PKB::getAllVarNames() {
-	std::vector<VAR_NAME> varNames;
+std::vector<VarName> PKB::getAllVarNames() {
+	std::vector<VarName> varNames;
 
-	for (REF_TABLE::iterator it = refTable.begin(); it != refTable.end(); it++) {
+	for (RefTable::const_iterator it = refTable.begin(); it != refTable.end(); it++) {
 		std::string key = it->first;
 		varNames.push_back(key);
 	}
@@ -31,7 +31,7 @@ std::vector<VAR_NAME> PKB::getAllVarNames() {
 	return varNames;
 }
 
-AssignTree PKB::getAssign(STMT_NUM stmt) {
+AssignTree PKB::getAssign(StmtNumber stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
 		throw ERROR;
 	}
@@ -39,40 +39,56 @@ AssignTree PKB::getAssign(STMT_NUM stmt) {
 	return assignTrees[stmt];
 }
 
-std::vector<STMT_NUM> PKB::getStmts(VAR_INDEX var, RelationshipType rel) {
-	return varTable[var][rel];
+std::vector<StmtNumber> PKB::getStmts(RelationshipType rel, VarIndex varIndex) {
+	return varTable[varIndex][rel];
 }
 
-std::vector<VAR_INDEX> PKB::getVars(STMT_NUM stmt, RelationshipType relIsMU) {
-	if (relIsMU != MODIFIES && relIsMU != USES) {
-		throw ERROR;
-	}
-
-	return stmtTable[stmt][relIsMU];
-}
-
-std::vector<STMT_NUM> PKB::getStmts(RelationshipType relNotMU, STMT_NUM stmt) {
+std::vector<StmtNumber> PKB::getStmts(StmtNumber stmt, RelationshipType relNotMU) {
 	if (relNotMU == MODIFIES || relNotMU == USES) {
 		throw ERROR;
 	}
 
-	return stmtTable[stmt][relNotMU];
+	return stmtStmtTable[stmt][relNotMU];
 }
 
-std::vector<STMT_NUM> PKB::getStmts(EntityType stmtType) {
-	std::vector<STMT_NUM> stmts;
+std::vector<StmtNumber> PKB::getStmts(EntityType stmtType) {
+	std::vector<StmtNumber> stmts;
 
-	for (STMT_NUM i = 0; i < stmtTable.size(); i++) {
+	for (StmtNumber i = 0; i < stmtStmtTable.size(); i++) {
 		if (stmtTypeTable[i] == stmtType) {
 			stmts.push_back(i);
 		}
 	}
 
-	return std::vector<STMT_NUM>();
+	return std::vector<StmtNumber>();
 }
 
-bool PKB::putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var) {
-	if (dest > stmtTable.size()) {
+VarIndex PKB::getVarIndex(VarName varName) {
+	RefTable::const_iterator it = refTable.find(varName);
+	int varIndex;
+	
+	if (it == refTable.end()) {
+		varIndex = varTable.size();
+		VarRow newRow = VarRow();
+		varTable.push_back(newRow);
+		refTable[varName] = varIndex;
+	} else {
+		varIndex = it->second;
+	}
+
+	return varIndex;
+}
+
+std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType relIsMU) {
+	if (relIsMU != MODIFIES && relIsMU != USES) {
+		throw ERROR;
+	}
+
+	return stmtVarTable[stmt][relIsMU];
+}
+
+bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {
+	if (dest > stmtVarTable.size()) {
 		throw ERROR;
 	}
 
@@ -80,14 +96,14 @@ bool PKB::putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var) {
 		throw ERROR;
 	}
 
-	const int prevSize = stmtTable[dest][rel].size();
-	stmtTable[dest][rel].push_back(var);
+	const int prevSize = stmtVarTable[dest][rel].size();
+	stmtVarTable[dest][rel].push_back(varIndex);
 
-	return (prevSize + 1 == stmtTable[dest][rel].size());
+	return (prevSize + 1 == stmtVarTable[dest][rel].size());
 }
 
-bool PKB::putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt) {
-	if (dest > stmtTable.size()) {
+bool PKB::putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt) {
+	if (dest > stmtStmtTable.size()) {
 		throw ERROR;
 	}
 
@@ -95,13 +111,13 @@ bool PKB::putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt) {
 		throw ERROR;
 	}
 
-	const int prevSize = stmtTable[dest][rel].size();
-	stmtTable[dest][rel].push_back(stmt);
+	const int prevSize = stmtStmtTable[dest][rel].size();
+	stmtStmtTable[dest][rel].push_back(stmt);
 
-	return (prevSize + 1 == stmtTable[dest][rel].size());
+	return (prevSize + 1 == stmtStmtTable[dest][rel].size());
 }
 
-bool PKB::putAssign(STMT_NUM dest, AssignTree tree) {
+bool PKB::putAssign(StmtNumber dest, AssignTree tree) {
 	while (dest > assignTrees.size()) {
 		assignTrees.push_back(AssignTree());
 	}

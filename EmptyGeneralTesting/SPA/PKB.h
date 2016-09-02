@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <array>
 #include <iostream>
 #include <map>
 #include <string>
@@ -11,14 +12,18 @@
 #include "EntityType.h"
 #include "RelationshipType.h"
 
-typedef int CONST; 
-typedef int PROC_INDEX; // Index of procedure name in ProcTable
-typedef int STMT_NUM; 
-typedef int VAR_INDEX;  // Index of variable name in VarTable and constant value
-typedef std::string VAR_NAME; 
-typedef std::map<VAR_NAME, VAR_INDEX> REF_TABLE;
-typedef std::vector<std::vector<STMT_NUM>[2]> VAR_TABLE;
-typedef std::vector<std::vector<VAR_INDEX>[RelationshipType::TOTAL_COUNT]> STMT_TABLE;
+typedef int Constant; 
+typedef int ProcIndex; // Index of procedure name in ProcTable
+typedef int ProgLineNumber;
+typedef unsigned int StmtNumber;
+typedef int VarIndex;  // Index of variable name in VarTable and constant value
+typedef std::string VarName;
+typedef std::map<VarName, VarIndex> RefTable;
+typedef std::vector<std::string> ProgLine;
+typedef std::vector<StmtNumber> VarEntry;
+typedef std::vector<VarIndex> StmtVarRow[2];
+typedef std::vector<StmtNumber> StmtStmtRow[RelationshipType::TOTAL_COUNT-2];
+typedef std::array<VarEntry, 2> VarRow;
 
 class PKB {
 private:
@@ -26,25 +31,27 @@ private:
 	static PKB* theOne;
 	PKB();
 	
-	std::vector<AssignTree> assignTrees;
-	REF_TABLE refTable; 
-	STMT_TABLE stmtTable;
-	std::vector<EntityType> stmtTypeTable;
-	VAR_TABLE varTable;
-	std::vector<CONST> constants;
+	RefTable refTable; 
+	std::vector<AssignTree>  assignTrees;
+	std::vector<Constant>    constants;
+	std::vector<StmtVarRow>  stmtVarTable;
+	std::vector<StmtStmtRow> stmtStmtTable;
+	std::vector<EntityType>  stmtTypeTable;
+	std::vector<VarRow>      varTable;
 
 public:
 	static PKB* getInstance();
 
-	std::vector<CONST> getAllConstantValues(); 
-	std::vector<VAR_NAME> getAllVarNames();
-	AssignTree getAssign(STMT_NUM stmt);
-	std::vector<STMT_NUM> getStmts(VAR_INDEX var, RelationshipType rel);
-	std::vector<VAR_INDEX> getVars(STMT_NUM stmt, RelationshipType relIsMU); // MU: ModifiesUses
-	std::vector<STMT_NUM> getStmts(RelationshipType relNotMU, STMT_NUM stmt);
-	std::vector<STMT_NUM> getStmts(EntityType stmtType);
+	std::vector<Constant>   getAllConstantValues();
+	std::vector<VarName>    getAllVarNames(); 
+	AssignTree              getAssign(StmtNumber stmt);
+	std::vector<StmtNumber> getStmts(RelationshipType rel, VarIndex varIndex);
+	std::vector<StmtNumber> getStmts(StmtNumber stmt, RelationshipType relNotMU);
+	std::vector<StmtNumber> getStmts(EntityType stmtType);
+	VarIndex                getVarIndex(VarName varName);
+	std::vector<VarIndex>   getVars(StmtNumber stmt, RelationshipType relIsMU); // MU: ModifiesUses
 
-	bool putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var);
-	bool putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt);
-	bool putAssign(STMT_NUM dest, AssignTree tree);
+	bool putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex);
+	bool putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt);
+	bool putAssign(StmtNumber dest, AssignTree tree);
 };
