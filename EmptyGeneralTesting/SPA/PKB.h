@@ -2,27 +2,49 @@
 
 #pragma once
 
-#include<stdio.h>
 #include <iostream>
+#include <map>
+#include <string>
 #include <vector>
+
 #include "AssignmentTree.h"
 #include "EntityType.h"
+#include "RelationshipType.h"
 
-using namespace std;
-typedef short PROC; // index of procedure name in ProcTable
-typedef int VAR, CONST; //index of variable name in VarTable and constant value
-
-class Node;
-
-class VarTable;  // no need to #include "VarTable.h" as all I need is pointer
+typedef int CONST; 
+typedef int PROC_INDEX; // Index of procedure name in ProcTable
+typedef int STMT_NUM; 
+typedef int VAR_INDEX;  // Index of variable name in VarTable and constant value
+typedef std::map<VAR_NAME, VAR_INDEX> REF_TABLE; 
+typedef std::string VAR_NAME;
+typedef std::vector<std::vector<STMT_NUM>[2]> VAR_TABLE;
+typedef std::vector<std::vector<VAR_INDEX>[RelationshipType::TOTAL_COUNT]> STMT_TABLE;
 
 class PKB {
-public:
-	static VarTable* varTable; 
+private:
+	static const std::runtime_error ERROR;
+	static PKB* theOne;
+	PKB();
 	
-	// creating AST Nodes
-	static Node* createVariableNode(AssignmentTree ast, VAR varNameIndex);
-	static Node* createConstanNode(AssignmentTree ast, CONST constantValue);
-	static Node* createNode(AssignmentTree ast, EntityType);
+	std::vector<AssignmentTree> assignmentTrees;
+	REF_TABLE refTable; 
+	STMT_TABLE stmtTable;
+	std::vector<EntityType> stmtTypeTable;
+	VAR_TABLE varTable;
+	std::vector<CONST> constants;
 
+public:
+	static PKB* getInstance();
+
+	std::vector<CONST> getAllConstantValues(); 
+	std::vector<VAR_NAME> getAllVarNames();
+	AssignmentTree getAssign(STMT_NUM stmt);
+	std::vector<STMT_NUM> getStmts(VAR_INDEX var, RelationshipType rel); // Get from varTable
+	std::vector<VAR_INDEX> getVars(STMT_NUM stmt, RelationshipType rel); // E.g. USES, MODIFIES
+	std::vector<STMT_NUM> getStmts(STMT_NUM stmt, RelationshipType rel); // E.g. FOLLOWS, PARENTS
+	std::vector<STMT_NUM> getStmts(EntityType stmtType);                 // E.g. WHILE
+
+	bool putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var);
+	bool putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt);
+	bool putAssign(STMT_NUM dest, AssignmentTree tree);
 };

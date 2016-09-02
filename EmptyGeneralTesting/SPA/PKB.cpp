@@ -1,32 +1,112 @@
 // Maintained by: Kai Lin
 //
 // Facade of:
-// - AbstractSyntaxTree
-// - VarTable
+// - AssignmentTrees
 // - StmtTable
-
-#pragma once
-
-#include <iostream>
-#include <string>
-#include <vector>
-
-using namespace std;
+// - VarTable
 
 #include "PKB.h"
 
-// create AST Nodes
-Node * PKB::createVariableNode(AssignmentTree ast, VAR varNameIndex)
-{
-	return ast.createNode(VARIABLE, varNameIndex);
+const std::runtime_error PKB::ERROR = std::runtime_error("");
+
+PKB* PKB::getInstance() {
+	if (theOne == nullptr) {
+		theOne = new PKB();
+	}
+	return theOne;
 }
 
-Node * PKB::createConstanNode(AssignmentTree ast, CONST constantValue)
-{
-	return ast.createNode(CONSTANT, constantValue);
+std::vector<CONST> PKB::getAllConstantValues() {
+	return constants;
 }
 
-Node * PKB::createNode(AssignmentTree ast, EntityType nodeType)
-{
-	return ast.createNode(nodeType);
+std::vector<VAR_NAME> PKB::getAllVarNames() {
+	std::vector<VAR_NAME> varNames;
+
+	for (REF_TABLE::iterator it = refTable.begin(); it != refTable.end(); it++) {
+		std::string key = it->first;
+		varNames.push_back(key);
+	}
+
+	return varNames;
+}
+
+AssignmentTree PKB::getAssign(STMT_NUM stmt) {
+	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
+		throw ERROR;
+	}
+
+	return assignmentTrees[stmt];
+}
+
+std::vector<STMT_NUM> PKB::getStmts(VAR_INDEX var, RelationshipType rel) {
+	return varTable[var][rel];
+}
+
+std::vector<VAR_INDEX> PKB::getVars(STMT_NUM stmt, RelationshipType rel) {
+	if (rel != MODIFIES && rel != USES) {
+		throw ERROR;
+	}
+
+	return stmtTable[stmt][rel];
+}
+
+std::vector<STMT_NUM> PKB::getStmts(STMT_NUM stmt, RelationshipType rel) {
+	if (rel == MODIFIES || rel == USES) {
+		throw ERROR;
+	}
+
+	return stmtTable[stmt][rel];
+}
+
+std::vector<STMT_NUM> PKB::getStmts(EntityType stmtType) {
+	std::vector<STMT_NUM> stmts;
+
+	for (STMT_NUM i = 0; i < stmtTable.size(); i++) {
+		if (stmtTypeTable[i] == stmtType) {
+			stmts.push_back[i];
+		}
+	}
+
+	return std::vector<STMT_NUM>();
+}
+
+bool PKB::putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var) {
+	if (dest > stmtTable.size()) {
+		throw ERROR;
+	}
+
+	if (rel != MODIFIES && rel != USES) {
+		throw ERROR;
+	}
+
+	const int prevSize = stmtTable[dest][rel].size();
+	stmtTable[dest][rel].push_back(var);
+
+	return (prevSize + 1 == stmtTable[dest][rel].size());
+}
+
+bool PKB::putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt) {
+	if (dest > stmtTable.size()) {
+		throw ERROR;
+	}
+
+	if (rel == MODIFIES || rel == USES) {
+		throw ERROR;
+	}
+
+	const int prevSize = stmtTable[dest][rel].size();
+	stmtTable[dest][rel].push_back(stmt);
+
+	return (prevSize + 1 == stmtTable[dest][rel].size());
+}
+
+bool PKB::putAssign(STMT_NUM dest, AssignmentTree tree) {
+	while (dest > assignmentTrees.size()) {
+		assignmentTrees.push_back(AssignmentTree());
+	}
+
+	assignmentTrees.push_back(tree);
+
+	return (dest + 1 == assignmentTrees.size());
 }
