@@ -64,19 +64,29 @@ std::vector<StmtNumber> PKB::getStmts(EntityType stmtType) {
 }
 
 VarIndex PKB::getVarIndex(VarName varName) {
-	RefTable::const_iterator it = refTable.find(varName);
-	int varIndex;
+	RefMap::const_iterator it = refMap.find(varName);
+	VarIndex varIndex;
 	
-	if (it == refTable.end()) {
+	if (it == refMap.end()) {
 		varIndex = varTable.size();
 		VarRow newRow = VarRow();
 		varTable.push_back(newRow);
-		refTable[varName] = varIndex;
+		refTable.push_back(varName);
+		refMap[varName] = varIndex;
 	} else {
 		varIndex = it->second;
 	}
 
 	return varIndex;
+}
+
+VarName PKB::getVarName(VarIndex varIndex) {
+	if (varIndex >= refTable.size()) {
+		throw ERROR;
+	}
+
+	VarName varName = refTable[varIndex];
+	return varName;
 }
 
 std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType relIsMU) {

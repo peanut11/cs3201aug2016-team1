@@ -15,10 +15,10 @@
 typedef int Constant; 
 typedef int ProcIndex; // Index of procedure name in ProcTable
 typedef int ProgLineNumber;
-typedef unsigned int StmtNumber;
 typedef int VarIndex;  // Index of variable name in VarTable and constant value
+typedef unsigned int StmtNumber;
 typedef std::string VarName;
-typedef std::map<VarName, VarIndex> RefTable;
+typedef std::map<VarName, VarIndex> RefMap;
 typedef std::vector<std::string> ProgLine;
 typedef std::vector<StmtNumber> VarEntry;
 typedef std::vector<VarIndex> StmtVarRow[2];
@@ -31,9 +31,10 @@ private:
 	static PKB* theOne;
 	PKB();
 	
-	RefTable refTable; 
 	std::vector<AssignTree>  assignTrees;
 	std::vector<Constant>    constants;
+	RefMap                   refMap;
+	std::vector<VarName>     refTable;
 	std::vector<StmtVarRow>  stmtVarTable;
 	std::vector<StmtStmtRow> stmtStmtTable;
 	std::vector<EntityType>  stmtTypeTable;
@@ -49,6 +50,7 @@ public:
 	std::vector<StmtNumber> getStmts(StmtNumber stmt, RelationshipType relNotMU);
 	std::vector<StmtNumber> getStmts(EntityType stmtType);
 	VarIndex                getVarIndex(VarName varName);
+	VarName                 getVarName(VarIndex varIndex);
 	std::vector<VarIndex>   getVars(StmtNumber stmt, RelationshipType relIsMU); // MU: ModifiesUses
 
 	bool putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex);
