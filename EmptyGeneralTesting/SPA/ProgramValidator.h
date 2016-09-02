@@ -5,7 +5,7 @@
 #include "StringTokenizer.h"
 
 class ProgramValidator {
-	StringTokenizer st = StringTokenizer("", PROGRAM_VALIDATOR);
+	StringTokenizer st = StringTokenizer("", DelimiterMode::PARSER);
 	bool isValidSyntax();
 	bool isMatch(std::string s1, std::string s2);
 

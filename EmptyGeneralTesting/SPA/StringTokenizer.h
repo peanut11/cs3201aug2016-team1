@@ -10,7 +10,7 @@
 #include <deque>
 
 enum DelimiterMode {
-	PROGRAM_VALIDATOR,
+	PARSER,
 	QUERY_PREPROCESSOR
 };
 

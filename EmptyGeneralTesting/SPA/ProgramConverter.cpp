@@ -13,5 +13,5 @@ ProgramConverter::ProgramConverter() {
 }
 
 void ProgramConverter::convert(std::string program, AssignmentTree& asTree, VarTable& varTable) {
-	StringTokenizer tokenizer = StringTokenizer(program, PROGRAM_VALIDATOR);
+	StringTokenizer tokenizer = StringTokenizer(program, DelimiterMode::PARSER);
 }

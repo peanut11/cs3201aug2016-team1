@@ -15,7 +15,7 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 	const std::string WHITESPACE = " ";
 	
 	switch(mode) {
-	case PROGRAM_VALIDATOR:
+	case PARSER:
 		delimiters = "{=+-*};\n";
 		break;
 	case QUERY_PREPROCESSOR:
