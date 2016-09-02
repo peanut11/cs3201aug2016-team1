@@ -33,6 +33,7 @@
     <ClInclude Include="..\source\PKB.h" />
     <ClInclude Include="..\source\TNode.h" />
     <ClInclude Include="AbstractSyntaxTree.h" />
+    <ClInclude Include="ClauseType.h" />
     <ClInclude Include="ProgramValidator.h" />
     <ClInclude Include="QueryEvaluator.h" />
     <ClInclude Include="QueryPreProcessor.h" />

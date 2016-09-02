@@ -17,14 +17,45 @@ void SynonymTable::clearAll() {
 	synonymObjects.clear();
 }
 
+
+
 /*
 Insert a new object into RelObjects vector
 Return the index of the new object*/
-int SynonymTable::insert(SynonymObject object) {
-	synonymObjects.push_back(object);
-	return synonymObjects.size() - 1; // last index of the object
+bool SynonymTable::insert(SynonymObject object) {
+
+	if (contains(object)) {
+		throw std::runtime_error("SynonymTable insert duplicate object synonym = " + object.getSynonym());
+		return false;
+	}
+
+	synonymObjects.push_back(object); 
+	return true; // insert successfully;
+	//return synonymObjects.size() - 1; // last index of the object
 }
 
+/*
+Check if synonym is inside the table
+Return	@true	if contains
+@false	does not contains
+*/
+bool SynonymTable::contains(SynonymObject object) {
+	for (auto value : this->synonymObjects) {
+		if (value.getSynonym() == object.getSynonym()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool SynonymTable::contains(std::string synonym) {
+	for (auto value : this->synonymObjects) {
+		if (value.getSynonym().compare(synonym) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
 
 SynonymObject SynonymTable::getObject(int index) {
 	if (index >= this->synonymObjects.size() || index < 0) {

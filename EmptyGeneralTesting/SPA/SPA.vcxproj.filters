@@ -128,6 +128,9 @@
     <ClInclude Include="QueryTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClauseType.h">
+      <Filter>Header Files\enumerate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

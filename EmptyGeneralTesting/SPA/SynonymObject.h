@@ -27,9 +27,21 @@ public:
 	std::string getTypeString() {
 		switch (this->type) {
 		case PROCEDURE:
-			return "Procedure";
+			return "procedure";
 		case ASSIGN:
-			return "Assign";
+			return "assign";
+		case IF:
+			return "if";
+		case STMT:
+			return "stmt";
+		case VARIABLE:
+			return "variable";
+		case CONSTANT:
+			return "constant";
+		case PROGRAM_LINE:
+			return "prog_line";
+		case CALL:
+			return "call";
 		}
 	}
 };

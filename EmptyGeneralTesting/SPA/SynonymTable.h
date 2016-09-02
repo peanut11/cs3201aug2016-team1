@@ -5,6 +5,7 @@
 class SynonymTable {
 	static SynonymTable* _instance;
 	std::vector<SynonymObject> synonymObjects;
+	
 
 public:
 	static SynonymTable *getInstance();
@@ -13,6 +14,8 @@ public:
 
 	SynonymObject getObject(int index);
 	std::string toString();
-	int insert(SynonymObject object);
+	bool insert(SynonymObject object);
+	bool contains(SynonymObject object);
+	bool contains(std::string synonym);
 	int size();
 };
