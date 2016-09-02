@@ -12,9 +12,9 @@ private:
 
 public:
 	ProgramConverter();
-	void convert(std::string);
-	bool isAssignment(std::vector<std::string> line);
-	bool updateAssignmentInAssignmentTrees(std::vector<std::string> line, int lineNum);
-	bool updateAssignmentInVarTable(std::vector<std::string> line, int lineNum);
-	bool updateStmtInStmtTable(std::vector<std::string> line, int lineNum);
+	void convert(std::string source);
+	bool isAssignment(ProgLine line);
+	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
+	bool updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum);
+	bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
 };

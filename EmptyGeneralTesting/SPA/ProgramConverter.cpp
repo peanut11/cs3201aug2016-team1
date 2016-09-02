@@ -12,12 +12,12 @@ ProgramConverter::ProgramConverter() {
 	pkb = PKB::getInstance();
 }
 
-void ProgramConverter::convert(std::string program) {
-	StringTokenizer st = StringTokenizer(program, DelimiterMode::PARSER);
-	int numLines = 0;
+void ProgramConverter::convert(std::string source) {
+	StringTokenizer st = StringTokenizer(source, DelimiterMode::PARSER);
+	ProgLineNumber numLines = 0;
 
-	for (int lineNum = 1; lineNum < numLines; lineNum++) {
-		std::vector<std::string> currentLine;
+	for (ProgLineNumber lineNum = 1; lineNum < numLines; lineNum++) {
+		ProgLine currentLine;
 
 		updateStmtInStmtTable(currentLine, lineNum);                 // Aaron
 
@@ -29,12 +29,12 @@ void ProgramConverter::convert(std::string program) {
 }
 
 // Aaron
-bool ProgramConverter::isAssignment(std::vector<std::string> line) {
+bool ProgramConverter::isAssignment(ProgLine line) {
 	return false;
 }
 
 // Ngoc Khanh
-bool ProgramConverter::updateAssignmentInAssignmentTrees(std::vector<std::string> line, int lineNum) {
+bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
 	AssignTree tree = AssignTree();
 	pkb->putAssign(lineNum, tree);
 
@@ -42,15 +42,17 @@ bool ProgramConverter::updateAssignmentInAssignmentTrees(std::vector<std::string
 }
 
 // Kai Lin
-bool ProgramConverter::updateAssignmentInVarTable(std::vector<std::string> line, int lineNum) {
-	VAR_INDEX var = 0;
-	pkb->putVar(lineNum, MODIFIES, var);
-	pkb->putVar(lineNum, USES, var);
+bool ProgramConverter::updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum) {
+	VarName varName = "varName";
+	VarIndex varIndex = pkb->getVarIndex(varName);
+
+	pkb->putVar(lineNum, MODIFIES, varIndex);
+	pkb->putVar(lineNum, USES, varIndex);
 
 	return false;
 }
 
 // Aaron
-bool ProgramConverter::updateStmtInStmtTable(std::vector<std::string> line, int lineNum) {
+bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
 	return false;
 }
