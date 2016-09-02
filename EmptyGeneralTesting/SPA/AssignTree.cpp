@@ -7,14 +7,14 @@
 // Uses:
 // - Node
 
-#include "AssignmentTree.h" 
+#include "AssignTree.h" 
 
-Node* AssignmentTree::createNode(EntityType nodeType)
+Node* AssignTree::createNode(EntityType nodeType)
 {
 	return new Node(nodeType);
 }
 
-Node * AssignmentTree::createNode(EntityType nodeType, int nameIndex)
+Node * AssignTree::createNode(EntityType nodeType, int nameIndex)
 {
 	return new Node(nodeType, nameIndex);
 }

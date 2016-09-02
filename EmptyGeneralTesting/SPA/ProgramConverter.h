@@ -1,11 +1,11 @@
 #pragma once
 
-#include "AssignmentTree.h"
-#include "PKB.h"
 #include <string>
+
+#include "AssignTree.h"
+#include "PKB.h"
 
 class ProgramConverter {
 public:
 	ProgramConverter();
-	void convert(std::string, AssignmentTree&, VarTable&);
 };

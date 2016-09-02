@@ -1,7 +1,7 @@
 #include "Node.h"
 
 #pragma once
-class AssignmentTree
+class AssignTree
 {
 
 public:

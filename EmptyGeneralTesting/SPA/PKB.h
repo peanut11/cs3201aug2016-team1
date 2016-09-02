@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "AssignmentTree.h"
+#include "AssignTree.h"
 #include "EntityType.h"
 #include "RelationshipType.h"
 
@@ -26,7 +26,7 @@ private:
 	static PKB* theOne;
 	PKB();
 	
-	std::vector<AssignmentTree> assignmentTrees;
+	std::vector<AssignTree> assignTrees;
 	REF_TABLE refTable; 
 	STMT_TABLE stmtTable;
 	std::vector<EntityType> stmtTypeTable;
@@ -38,7 +38,7 @@ public:
 
 	std::vector<CONST> getAllConstantValues(); 
 	std::vector<VAR_NAME> getAllVarNames();
-	AssignmentTree getAssign(STMT_NUM stmt);
+	AssignTree getAssign(STMT_NUM stmt);
 	std::vector<STMT_NUM> getStmts(VAR_INDEX var, RelationshipType rel); // Get from varTable
 	std::vector<VAR_INDEX> getVars(STMT_NUM stmt, RelationshipType rel); // E.g. USES, MODIFIES
 	std::vector<STMT_NUM> getStmts(STMT_NUM stmt, RelationshipType rel); // E.g. FOLLOWS, PARENTS
@@ -46,5 +46,5 @@ public:
 
 	bool putVar(STMT_NUM dest, RelationshipType rel, VAR_INDEX var);
 	bool putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt);
-	bool putAssign(STMT_NUM dest, AssignmentTree tree);
+	bool putAssign(STMT_NUM dest, AssignTree tree);
 };

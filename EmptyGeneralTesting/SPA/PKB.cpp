@@ -31,12 +31,12 @@ std::vector<VAR_NAME> PKB::getAllVarNames() {
 	return varNames;
 }
 
-AssignmentTree PKB::getAssign(STMT_NUM stmt) {
+AssignTree PKB::getAssign(STMT_NUM stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
 		throw ERROR;
 	}
 
-	return assignmentTrees[stmt];
+	return assignTrees[stmt];
 }
 
 std::vector<STMT_NUM> PKB::getStmts(VAR_INDEX var, RelationshipType rel) {
@@ -101,12 +101,12 @@ bool PKB::putStmt(STMT_NUM dest, RelationshipType rel, STMT_NUM stmt) {
 	return (prevSize + 1 == stmtTable[dest][rel].size());
 }
 
-bool PKB::putAssign(STMT_NUM dest, AssignmentTree tree) {
-	while (dest > assignmentTrees.size()) {
-		assignmentTrees.push_back(AssignmentTree());
+bool PKB::putAssign(STMT_NUM dest, AssignTree tree) {
+	while (dest > assignTrees.size()) {
+		assignTrees.push_back(AssignTree());
 	}
 
-	assignmentTrees.push_back(tree);
+	assignTrees.push_back(tree);
 
-	return (dest + 1 == assignmentTrees.size());
+	return (dest + 1 == assignTrees.size());
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../SPA/AssignmentTree.h"
+#include "../SPA/AssignTree.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
