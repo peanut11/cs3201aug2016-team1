@@ -48,6 +48,10 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 			}
 		}
 	}
+
+	if (!buffer.empty()) {
+		tokens.push_back(buffer);
+	}
 }
 
 int StringTokenizer::countTokens() {
