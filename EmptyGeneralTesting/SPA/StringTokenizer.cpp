@@ -19,7 +19,7 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 		delimiters = "{=+-*};\n";
 		break;
 	case QUERY_PREPROCESSOR:
-		delimiters = "(,.);\n";
+		delimiters = "(,.);\n\"";
 		break;
 	default:
 		delimiters = "";
