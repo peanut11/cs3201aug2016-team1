@@ -4,7 +4,7 @@
 // - Parser
 //
 // Constructs:
-// - AssignTNode
+// - AssignNode
 #include "ProgramConverter.h"
 #include "StringTokenizer.h"
 
@@ -12,6 +12,6 @@ ProgramConverter::ProgramConverter() {
 
 }
 
-void ProgramConverter::convert(std::string program, AbstractSyntaxTree& asTree, VarTable& varTable) {
+void ProgramConverter::convert(std::string program, AssignmentTree& asTree, VarTable& varTable) {
 	StringTokenizer tokenizer = StringTokenizer(program, PROGRAM_VALIDATOR);
 }

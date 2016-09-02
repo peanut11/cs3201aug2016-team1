@@ -7,27 +7,27 @@
 // Used by:
 // - DesignExtractor
 
-#include "TNode.h"
+#include "Node.h"
 
-TNode::TNode(EntityType nodeType)
+Node::Node(EntityType nodeType)
 {
 	//assumes Entity type is valid. ie only assign related
 	mNodeType = nodeType;
 }
 
 
-TNode::TNode(EntityType nodeType, int nameIndex)
+Node::Node(EntityType nodeType, int nameIndex)
 {
 	mNodeType = nodeType;
 	mNameIndex = nameIndex;
 }
 
-EntityType TNode::getNodeType()
+EntityType Node::geNodeType()
 {
 	return mNodeType;
 }
 
-int TNode::getNameIndex()
+int Node::getNameIndex()
 {
 	return mNameIndex;
 }

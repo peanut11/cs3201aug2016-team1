@@ -5,7 +5,7 @@
 //
 // Uses:
 // - QueryTree
-//   - QueryTNode
+//   - QueryNode
 #include "QueryEvaluator.h"
 
 QueryEvaluator *QueryEvaluator::_instance;

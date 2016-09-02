@@ -11,32 +11,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\DesignExtractor.cpp" />
-    <ClCompile Include="..\source\Parser.cpp" />
-    <ClCompile Include="..\source\PKB.cpp" />
-    <ClCompile Include="..\source\TNode.cpp" />
-    <ClCompile Include="AbstractSyntaxTree.cpp" />
+    <ClCompile Include="AssignmentTree.cpp" />
+    <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="Frontend.cpp" />
-    <ClCompile Include="ProgramConvertor.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="PKB.cpp" />
+    <ClCompile Include="ProgramConverter.cpp" />
     <ClCompile Include="ProgramValidator.cpp" />
     <ClCompile Include="QueryEvaluator.cpp" />
     <ClCompile Include="QueryPreprocessor.cpp" />
     <ClCompile Include="QueryProcessor.cpp" />
     <ClCompile Include="QueryTree.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
-    <ClCompile Include="RefTable.cpp" />
     <ClCompile Include="RelTable.cpp" />
-    <ClCompile Include="StmtTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
-    <ClCompile Include="VarTable.cpp" />
+    <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\Parser.h" />
-    <ClInclude Include="..\source\PKB.h" />
-    <ClInclude Include="..\source\TNode.h" />
-    <ClInclude Include="AbstractSyntaxTree.h" />
+    <ClInclude Include="AssignmentTree.h" />
     <ClInclude Include="ClauseType.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="PKB.h" />
+    <ClInclude Include="ProgramConverter.h" />
     <ClInclude Include="ProgramValidator.h" />
     <ClInclude Include="QueryEvaluator.h" />
     <ClInclude Include="QueryPreProcessor.h" />
@@ -44,15 +41,13 @@
     <ClInclude Include="EntityType.h" />
     <ClInclude Include="QueryTree.h" />
     <ClInclude Include="QueryValidator.h" />
-    <ClInclude Include="RefTable.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
-    <ClInclude Include="StmtTable.h" />
     <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymTable.h" />
-    <ClInclude Include="VarTable.h" />
+    <ClInclude Include="Node.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

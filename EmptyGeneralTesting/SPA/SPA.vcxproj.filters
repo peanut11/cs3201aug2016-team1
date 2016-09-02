@@ -1,50 +1,135 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\source\DesignExtractor.cpp" />
-    <ClCompile Include="..\source\Parser.cpp" />
-    <ClCompile Include="..\source\PKB.cpp" />
-    <ClCompile Include="..\source\TNode.cpp" />
-    <ClCompile Include="AbstractSyntaxTree.cpp" />
-    <ClCompile Include="Frontend.cpp" />
-    <ClCompile Include="ProgramConvertor.cpp" />
-    <ClCompile Include="ProgramValidator.cpp" />
-    <ClCompile Include="QueryEvaluator.cpp" />
-    <ClCompile Include="QueryPreprocessor.cpp" />
-    <ClCompile Include="QueryProcessor.cpp" />
-    <ClCompile Include="QueryTree.cpp" />
-    <ClCompile Include="QueryValidator.cpp" />
-    <ClCompile Include="RefTable.cpp" />
-    <ClCompile Include="RelTable.cpp" />
-    <ClCompile Include="StmtTable.cpp" />
-    <ClCompile Include="StringTokenizer.cpp" />
-    <ClCompile Include="SynonymTable.cpp" />
-    <ClCompile Include="VarTable.cpp" />
+    <ClCompile Include="StringTokenizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryEvaluator.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryPreprocessor.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryProcessor.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryTree.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryValidator.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="SynonymTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="Frontend.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="AssignmentTree.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="RelTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgramValidator.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="DesignExtractor.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgramConverter.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
+    <ClCompile Include="PKB.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\Parser.h" />
-    <ClInclude Include="..\source\PKB.h" />
-    <ClInclude Include="..\source\TNode.h" />
-    <ClInclude Include="AbstractSyntaxTree.h" />
-    <ClInclude Include="ClauseType.h" />
-    <ClInclude Include="ProgramValidator.h" />
-    <ClInclude Include="QueryEvaluator.h" />
-    <ClInclude Include="QueryPreProcessor.h" />
-    <ClInclude Include="QueryProcessor.h" />
-    <ClInclude Include="EntityType.h" />
-    <ClInclude Include="QueryTree.h" />
-    <ClInclude Include="QueryValidator.h" />
-    <ClInclude Include="RefTable.h" />
-    <ClInclude Include="RelObject.h" />
-    <ClInclude Include="RelTable.h" />
-    <ClInclude Include="StmtTable.h" />
-    <ClInclude Include="StringTokenizer.h" />
-    <ClInclude Include="SynonymObject.h" />
-    <ClInclude Include="SynonymTable.h" />
-    <ClInclude Include="VarTable.h" />
-    <ClInclude Include="RelationshipType.h" />
+    <ClInclude Include="ClauseType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RelationshipType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringTokenizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryValidator.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryTree.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryProcessor.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryPreProcessor.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryEvaluator.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymTable.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgramValidator.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="AssignmentTree.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="RelTable.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="RelObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="PKB.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgramConverter.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{f3527f04-9863-4684-96b0-0f039588d519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4163b687-8a59-4bc7-9db4-18859aacafab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PKB">
+      <UniqueIdentifier>{42dae67a-043f-416a-ab86-103c0f3b8a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\QP">
+      <UniqueIdentifier>{ffd46167-094d-46e1-9e92-701b8a5506c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PKB">
+      <UniqueIdentifier>{77313aa7-abe1-46b8-a0b9-77f23f3a50a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\QP">
+      <UniqueIdentifier>{0f988552-6cdf-451f-bd8c-dc05c7894e79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

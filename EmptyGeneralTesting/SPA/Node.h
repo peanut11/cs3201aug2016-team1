@@ -1,19 +1,19 @@
 // Maintained by: Kai Lin & Ngoc Khanh
 #include "../SPA/EntityType.h"
 
-#ifndef TNODE_H
-#define TNODE_H
+#ifndef NODE_H
+#define NODE_H
 
-class TNode
+class Node
 {
 
 public:
 
-	TNode(EntityType nodeType);	
+	Node(EntityType nodeType);	
 	// NodeType: procedure, variable, constant
-	TNode(EntityType nodeType, int nameIndex);
+	Node(EntityType nodeType, int nameIndex);
 
-	EntityType getNodeType();
+	EntityType geNodeType();
 	int getNameIndex();
 private:
 	EntityType mNodeType;

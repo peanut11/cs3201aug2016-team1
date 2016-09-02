@@ -29,9 +29,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestAST.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestProgramValidator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -41,13 +38,16 @@
     <ClCompile Include="TestQueryProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestTNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestQueryValidator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Tools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAssignmentTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

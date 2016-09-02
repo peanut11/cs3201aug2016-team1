@@ -5,7 +5,7 @@
 //
 // Constructs:
 // - QueryTree
-//   - QueryTNode
+//   - QueryNode
 
 #include "QueryPreProcessor.h"
 
