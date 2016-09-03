@@ -8,20 +8,12 @@
 
 #include "QueryTree.h" 
 
-void QueryTree::storeResultType()
+SelectObject QueryTree::getSelect()
 {
+	return select;
 }
 
-std::vector<std::string> QueryTree::getResultType()
+std::vector<ClauseObject> QueryTree::getClauses()
 {
-	return std::vector<std::string>();
-}
-
-std::vector<std::string> QueryTree::getRelationships()
-{
-	return std::vector<std::string>();
-}
-
-void QueryTree::storeRelationships()
-{
+	return clauses;
 }
