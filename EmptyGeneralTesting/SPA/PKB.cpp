@@ -121,6 +121,7 @@ bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {
 
 	const int prevSize = stmtTable[dest][rel].size();
 	stmtTable[dest][rel].push_back(varIndex);
+	varTable[varIndex][rel].push_back(dest);
 
 	return (prevSize + 1 == stmtTable[dest][rel].size());
 }
