@@ -24,12 +24,14 @@
     <ClCompile Include="QueryTree.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelTable.cpp" />
+    <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssignTree.h" />
+    <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PKB.h" />
@@ -44,6 +46,7 @@
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
+    <ClInclude Include="SelectObject.h" />
     <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymTable.h" />
