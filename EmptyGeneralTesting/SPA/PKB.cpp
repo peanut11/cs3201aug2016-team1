@@ -56,12 +56,12 @@ std::vector<StmtNumber> PKB::getStmts(RelationshipType rel, VarIndex varIndex) {
 	return varTable[varIndex][rel];
 }
 
-std::vector<StmtNumber> PKB::getStmts(StmtNumber stmt, RelationshipType relNotMU) {
-	if (relNotMU == MODIFIES || relNotMU == USES) {
+std::vector<StmtNumber> PKB::getStmts(StmtNumber stmt, RelationshipType stmtRel) {
+	if (stmtRel == MODIFIES || stmtRel == USES) {
 		throw ERROR;
 	}
 
-	return stmtTable[stmt][relNotMU];
+	return stmtTable[stmt][stmtRel];
 }
 
 std::vector<StmtNumber> PKB::getStmts(EntityType stmtType) {
@@ -102,12 +102,12 @@ VarName PKB::getVarName(VarIndex varIndex) {
 	return varName;
 }
 
-std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType relIsMU) {
-	if (relIsMU != MODIFIES && relIsMU != USES) {
+std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType modifiesOrUses) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw ERROR;
 	}
 
-	return stmtTable[stmt][relIsMU];
+	return stmtTable[stmt][modifiesOrUses];
 }
 
 bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {

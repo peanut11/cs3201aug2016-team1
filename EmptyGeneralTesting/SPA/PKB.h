@@ -44,21 +44,23 @@ private:
 public:
 	static PKB* getInstance();
 
-	std::vector<Constant>   getAllConstantValues();
-	std::vector<VarName>    getAllVarNames();
-	AssignTree              getAssign(StmtNumber stmt);
-	std::vector<StmtNumber> getStmts(RelationshipType rel, VarIndex varIndex);
-	std::vector<StmtNumber> getStmts(StmtNumber stmt, RelationshipType relNotMU);
-	std::vector<StmtNumber> getStmts(EntityType stmtType);
-	VarIndex                getVarIndex(VarName varName);
-	VarName                 getVarName(VarIndex varIndex);
-	std::vector<VarIndex>   getVars(StmtNumber stmt, RelationshipType relIsMU); // MU: ModifiesUses
+	// Indexing
+	VarIndex getVarIndex(VarName varName);
+	VarName getVarName(VarIndex varIndex);
 
-	bool putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex);
+	// API used by Parser
+	bool putAssign(StmtNumber dest, AssignTree tree); 
 	bool putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt);
-	bool putAssign(StmtNumber dest, AssignTree tree);
+	bool putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex);
 
 	// API used by QP
 	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
 	bool is(StmtNumber stmt, RelationshipType rel, VarOrStmt item);    // E.g. is(1,MODIFIES,2)
+	AssignTree              getAssign(StmtNumber stmt);
+	std::vector<Constant>   getAllConstantValues();
+	std::vector<VarName>    getAllVarNames();
+	std::vector<StmtNumber> getStmts(EntityType stmtType);
+	std::vector<StmtNumber> getStmts(RelationshipType rel, VarIndex varIndex);
+	std::vector<StmtNumber> getStmts(StmtNumber stmt, RelationshipType stmtRel);
+	std::vector<VarIndex>   getVars(StmtNumber stmt, RelationshipType modifiesOrUses);
 };
