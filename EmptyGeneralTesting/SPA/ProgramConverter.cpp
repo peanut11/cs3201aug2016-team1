@@ -58,7 +58,8 @@ ProgLine ProgramConverter::nextLine() {
 }
 
 bool ProgramConverter::isAssignment(ProgLine line) {
-	return line[2] == "=";
+	const std::string SECOND_TOKEN = line[1];
+	return SECOND_TOKEN == "=";
 }
 
 bool ProgramConverter::isLineEnding(std::string str) {
