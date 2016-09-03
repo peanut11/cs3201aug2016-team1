@@ -134,6 +134,11 @@ bool PKB::putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt) {
 		throw ERROR;
 	}
 
+	if (rel == FOLLOWS || rel == PARENT) {
+		const int OFFSET = 1;
+		stmtTable[dest][rel + OFFSET].push_back(stmt);
+	}
+
 	const int prevSize = stmtTable[dest][rel].size();
 	stmtTable[dest][rel].push_back(stmt);
 
