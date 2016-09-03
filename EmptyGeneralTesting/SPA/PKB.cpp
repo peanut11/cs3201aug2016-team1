@@ -41,13 +41,13 @@ std::vector<StmtNumber> PKB::getStmts(StmtNumber stmt, RelationshipType relNotMU
 		throw ERROR;
 	}
 
-	return stmtStmtTable[stmt][relNotMU];
+	return stmtTable[stmt][relNotMU];
 }
 
 std::vector<StmtNumber> PKB::getStmts(EntityType stmtType) {
 	std::vector<StmtNumber> stmts;
 
-	for (StmtNumber i = 0; i < stmtStmtTable.size(); i++) {
+	for (StmtNumber i = 0; i < stmtTable.size(); i++) {
 		if (stmtTypeTable[i] == stmtType) {
 			stmts.push_back(i);
 		}
@@ -87,11 +87,11 @@ std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType relIsMU) {
 		throw ERROR;
 	}
 
-	return stmtVarTable[stmt][relIsMU];
+	return stmtTable[stmt][relIsMU];
 }
 
 bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {
-	if (dest > stmtVarTable.size()) {
+	if (dest > stmtTable.size()) {
 		throw ERROR;
 	}
 
@@ -99,14 +99,14 @@ bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {
 		throw ERROR;
 	}
 
-	const int prevSize = stmtVarTable[dest][rel].size();
-	stmtVarTable[dest][rel].push_back(varIndex);
+	const int prevSize = stmtTable[dest][rel].size();
+	stmtTable[dest][rel].push_back(varIndex);
 
-	return (prevSize + 1 == stmtVarTable[dest][rel].size());
+	return (prevSize + 1 == stmtTable[dest][rel].size());
 }
 
 bool PKB::putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt) {
-	if (dest > stmtStmtTable.size()) {
+	if (dest > stmtTable.size()) {
 		throw ERROR;
 	}
 
@@ -114,10 +114,10 @@ bool PKB::putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt) {
 		throw ERROR;
 	}
 
-	const int prevSize = stmtStmtTable[dest][rel].size();
-	stmtStmtTable[dest][rel].push_back(stmt);
+	const int prevSize = stmtTable[dest][rel].size();
+	stmtTable[dest][rel].push_back(stmt);
 
-	return (prevSize + 1 == stmtStmtTable[dest][rel].size());
+	return (prevSize + 1 == stmtTable[dest][rel].size());
 }
 
 bool PKB::putAssign(StmtNumber dest, AssignTree tree) {

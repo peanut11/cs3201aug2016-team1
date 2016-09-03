@@ -13,16 +13,16 @@
 #include "RelationshipType.h"
 
 typedef int Constant; 
-typedef int ProcIndex; // Index of procedure name in ProcTable
-typedef int ProgLineNumber;
-typedef int VarIndex;  // Index of variable name in VarTable and constant value
-typedef unsigned int StmtNumber;
+typedef int ProcIndex;        // Index of procedure name in ProcTable
+typedef unsigned int VarOrStmt;
+typedef VarOrStmt ProgLineNumber;
+typedef VarOrStmt VarIndex;   // Index of variable/constant in VarTable
+typedef VarOrStmt StmtNumber; // StmtNumber == ProgLineNumber
 typedef std::string VarName;
 typedef std::map<VarName, VarIndex> RefMap;
 typedef std::vector<std::string> ProgLine;
 typedef std::vector<StmtNumber> VarEntry;
-typedef std::vector<VarIndex> StmtVarRow[2];
-typedef std::vector<StmtNumber> StmtStmtRow[RelationshipType::TOTAL_COUNT-2];
+typedef std::vector<VarOrStmt> StmtRow[RelationshipType::TOTAL_COUNT];
 typedef std::array<VarEntry, 2> VarRow;
 
 class PKB {
@@ -31,20 +31,19 @@ private:
 	static PKB* theOne;
 	PKB();
 	
-	std::vector<AssignTree>  assignTrees;
-	std::vector<Constant>    constants;
-	RefMap                   refMap;
-	std::vector<VarName>     refTable;
-	std::vector<StmtVarRow>  stmtVarTable;
-	std::vector<StmtStmtRow> stmtStmtTable;
-	std::vector<EntityType>  stmtTypeTable;
-	std::vector<VarRow>      varTable;
+	std::vector<AssignTree> assignTrees;
+	std::vector<Constant>   constants;
+	RefMap                  refMap;
+	std::vector<VarName>    refTable;
+	std::vector<StmtRow>    stmtTable;
+	std::vector<EntityType> stmtTypeTable;
+	std::vector<VarRow>     varTable;
 
 public:
 	static PKB* getInstance();
 
 	std::vector<Constant>   getAllConstantValues();
-	std::vector<VarName>    getAllVarNames(); 
+	std::vector<VarName>    getAllVarNames();
 	AssignTree              getAssign(StmtNumber stmt);
 	std::vector<StmtNumber> getStmts(RelationshipType rel, VarIndex varIndex);
 	std::vector<StmtNumber> getStmts(StmtNumber stmt, RelationshipType relNotMU);
