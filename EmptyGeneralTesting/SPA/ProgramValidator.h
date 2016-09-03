@@ -1,7 +1,8 @@
 #pragma once
 
-#include <stack>
+#include <cctype>
 #include <string>
+
 #include "StringTokenizer.h"
 
 class ProgramValidator {
