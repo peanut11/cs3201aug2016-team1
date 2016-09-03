@@ -39,6 +39,8 @@ private:
 	std::vector<EntityType> stmtTypeTable;
 	std::vector<VarRow>     varTable;
 
+	bool contains(std::vector<VarOrStmt> vec, VarOrStmt item);
+
 public:
 	static PKB* getInstance();
 
@@ -55,4 +57,8 @@ public:
 	bool putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex);
 	bool putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt);
 	bool putAssign(StmtNumber dest, AssignTree tree);
+
+	// API used by QP
+	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
+	bool is(StmtNumber stmt, RelationshipType rel, VarOrStmt item);    // E.g. is(1,MODIFIES,2)
 };

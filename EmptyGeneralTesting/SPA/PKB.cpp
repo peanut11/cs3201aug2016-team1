@@ -9,11 +9,31 @@
 
 const std::runtime_error PKB::ERROR = std::runtime_error("");
 
+bool PKB::contains(std::vector<VarOrStmt> vec, VarOrStmt item) {
+	for (std::vector<VarOrStmt>::const_iterator it = vec.begin(); it < vec.end(); it++) {
+		if (*it == item) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 PKB* PKB::getInstance() {
 	if (theOne == nullptr) {
 		theOne = new PKB();
 	}
+
 	return theOne;
+}
+
+
+bool PKB::is(StmtNumber stmt, RelationshipType rel, VarOrStmt item) {
+	return contains(stmtTable[stmt][rel], item);
+}
+
+bool PKB::is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB) {
+	return contains(stmtTable[stmtA][rel], stmtB);
 }
 
 std::vector<Constant> PKB::getAllConstantValues() {
