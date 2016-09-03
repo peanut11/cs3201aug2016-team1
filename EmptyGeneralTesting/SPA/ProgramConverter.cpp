@@ -134,7 +134,18 @@ bool ProgramConverter::updateAssignmentInVarTable(ProgLine line, ProgLineNumber 
 	return false;
 }
 
-// Aaron
 bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
-	return false;
+	bool success;
+
+	if (currentParent != 0) {
+		success = pkb->putStmt(lineNum, PARENT, currentParent);
+	}
+
+	if (currentLeader != 0) {
+		success = pkb->putStmt(lineNum, FOLLOWS, currentLeader) && success;
+	}
+
+	currentLeader = lineNum;
+
+	return success;
 }
