@@ -13,12 +13,11 @@ ProgramConverter::ProgramConverter() {
 }
 
 void ProgramConverter::convert(std::string source) {
-	StringTokenizer st = StringTokenizer(source, DelimiterMode::PARSER);
-	ProgLineNumber numLines = 0;
+	st = StringTokenizer(source, DelimiterMode::PARSER);
+	ProgLine currentLine;
 
-	for (ProgLineNumber lineNum = 1; lineNum < numLines; lineNum++) {
-		ProgLine currentLine;
-
+	while (!(currentLine = nextLine()).empty()) {
+		ProgLineNumber lineNum = lineCount;
 		updateStmtInStmtTable(currentLine, lineNum);                 // Aaron
 
 		if (isAssignment(currentLine)) {
@@ -28,9 +27,45 @@ void ProgramConverter::convert(std::string source) {
 	}
 }
 
-// Aaron
+// Returns:     The next ProgLine if exist, or an empty ProgLine.
+// Guarantees:  If the return is not empty, lineCount == lineNum.
+// Consequence: If the return is empty, it is end of the Program.
+ProgLine ProgramConverter::nextLine() {
+	if (!st.hasMoreTokens()) {
+		return ProgLine();
+	}
+
+	ProgLine line;
+	std::string token = st.nextToken();
+
+	while (isLineEnding(token) && st.hasMoreTokens()) {
+		token = st.nextToken();
+	}
+
+	st.returnToken(token);
+	
+	while (st.hasMoreTokens() && !isLineEnding(token = st.nextToken())) {
+		line.push_back(token);
+	}
+
+	if (line.empty()) {
+		return nextLine();
+	}
+
+	lineCount++;
+
+	return line;
+}
+
 bool ProgramConverter::isAssignment(ProgLine line) {
-	return false;
+	return line[2] == "=";
+}
+
+bool ProgramConverter::isLineEnding(std::string str) {
+	const std::string LINE_ENDINGS = "{;}\n"; 
+	char ch = str[0];
+
+	return LINE_ENDINGS.find(ch) != std::string::npos;
 }
 
 // Ngoc Khanh
