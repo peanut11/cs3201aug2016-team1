@@ -10,6 +10,9 @@
 
 ProgramConverter::ProgramConverter() {
 	pkb = PKB::getInstance();
+	currentLeader = 0;
+	currentParent = 0;
+	lineCount = 0;
 }
 
 void ProgramConverter::convert(std::string source) {
@@ -17,6 +20,25 @@ void ProgramConverter::convert(std::string source) {
 	ProgLine currentLine;
 
 	while (!(currentLine = nextLine()).empty()) {
+		const std::string FIRST_TOKEN = currentLine[0];
+
+		if (isEnterParent(FIRST_TOKEN)) {
+			currentLeader = 0; 
+			currentParent = lineCount;
+			continue;
+
+		} else if (isExitParent(FIRST_TOKEN)) {
+			currentLeader = currentParent;
+			std::vector<StmtNumber> parentVec = pkb->getStmts(currentParent, PARENT);
+
+			if (parentVec.empty()) {
+				currentParent = 0;
+			} else {
+				currentParent = parentVec[0];
+			}
+			continue;
+		}
+
 		ProgLineNumber lineNum = lineCount;
 		updateStmtInStmtTable(currentLine, lineNum);                 // Aaron
 
@@ -27,9 +49,15 @@ void ProgramConverter::convert(std::string source) {
 	}
 }
 
-// Returns:     The next ProgLine if exist, or an empty ProgLine.
-// Guarantees:  If the return is not empty, lineCount == lineNum.
-// Consequence: If the return is empty, it is end of the Program.
+// Possible return values:
+// 1. The next ProgLine if it exists.
+// 2. A ProgLine containing either only "{" or "}".
+// 3. An empty ProgLine, which implies end of the Program.
+//
+// Guarantees:
+// 1. lineCount == lineNum.
+// 2. lineCount is not incremented.
+// 3. lineCount is not incremented.
 ProgLine ProgramConverter::nextLine() {
 	if (!st.hasMoreTokens()) {
 		return ProgLine();
@@ -42,9 +70,19 @@ ProgLine ProgramConverter::nextLine() {
 		token = st.nextToken();
 	}
 
+	if (isEnterParent(token) || isExitParent(token)) {
+		line.push_back(token);
+		return line;
+	}
+
 	st.returnToken(token);
 	
 	while (st.hasMoreTokens() && !isLineEnding(token = st.nextToken())) {
+		if (isEnterParent(token) || isExitParent(token)) {
+			st.returnToken(token);
+			return line;
+		}
+
 		line.push_back(token);
 	}
 
@@ -62,8 +100,16 @@ bool ProgramConverter::isAssignment(ProgLine line) {
 	return SECOND_TOKEN == "=";
 }
 
+bool ProgramConverter::isEnterParent(std::string str) {
+	return str == "{";
+}
+
+bool ProgramConverter::isExitParent(std::string str) {
+	return str == "}";
+}
+
 bool ProgramConverter::isLineEnding(std::string str) {
-	const std::string LINE_ENDINGS = "{;}\n"; 
+	const std::string LINE_ENDINGS = ";\n";
 	char ch = str[0];
 
 	return LINE_ENDINGS.find(ch) != std::string::npos;

@@ -10,10 +10,14 @@ class ProgramConverter {
 private:
 	PKB* pkb;
 	StringTokenizer st;
+	ProgLineNumber currentParent;
+	ProgLineNumber currentLeader; 
 	ProgLineNumber lineCount;
 
 	ProgLine nextLine();
 	bool isAssignment(ProgLine line);
+	bool isEnterParent(std::string str);
+	bool isExitParent(std::string str);
 	bool isLineEnding(std::string str);
 	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
 	bool updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum);
