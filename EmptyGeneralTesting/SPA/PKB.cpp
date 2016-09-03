@@ -126,8 +126,8 @@ bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {
 	return (prevSize + 1 == stmtTable[dest][rel].size());
 }
 
-bool PKB::putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt) {
-	if (dest > stmtTable.size()) {
+bool PKB::putStmt(StmtNumber before, RelationshipType rel, StmtNumber after) {
+	if (before > stmtTable.size()) {
 		throw ERROR;
 	}
 
@@ -135,15 +135,20 @@ bool PKB::putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt) {
 		throw ERROR;
 	}
 
-	if (rel == FOLLOWS || rel == PARENT) {
-		const int OFFSET = 1;
-		stmtTable[dest][rel + OFFSET].push_back(stmt);
+	const int prevSize = stmtTable[before][rel].size();
+
+	if (rel == FOLLOWS || rel == FOLLOWED_BY) {
+		stmtTable[after][FOLLOWS].push_back(before);
+		stmtTable[before][FOLLOWED_BY].push_back(after);
+
+	} else if (rel == PARENT || rel == PARENT_OF) {
+		stmtTable[after][PARENT].push_back(before);
+		stmtTable[before][PARENT_OF].push_back(after);
 	}
 
-	const int prevSize = stmtTable[dest][rel].size();
-	stmtTable[dest][rel].push_back(stmt);
+	stmtTable[before][rel].push_back(after);
 
-	return (prevSize + 1 == stmtTable[dest][rel].size());
+	return (prevSize + 1 == stmtTable[before][rel].size());
 }
 
 bool PKB::putAssign(StmtNumber dest, AssignTree tree) {
