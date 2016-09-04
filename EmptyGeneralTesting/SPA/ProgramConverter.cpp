@@ -163,15 +163,12 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 	{
 		if (isVarName(str)) {
 			VarName varName = str;
-			VarIndex varIndex = pkb->getVarIndex(varName); 
-			
-			// assumes will definitely get a valid index
 
 			if (isRHS) {
-				res = pkb->putVarForStmt(lineNum, USES, varIndex);
+				res = pkb->putVarForStmt(lineNum, USES, varName);
 			}
 			else {
-				res = pkb->putVarForStmt(lineNum, MODIFIES, varIndex);
+				res = pkb->putVarForStmt(lineNum, MODIFIES, varName);
 			}
 			
 			if (!res) return res; //returns immediately if false

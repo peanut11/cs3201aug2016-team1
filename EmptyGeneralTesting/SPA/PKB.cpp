@@ -67,8 +67,8 @@ AssignTree PKB::getAssign(StmtNumber stmt) {
 	return assignTrees[stmt];
 }
 
-std::vector<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
-	return varTable[varIndex][rel];
+std::vector<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
+	return varTable[getVarIndex(varName)][rel];
 }
 
 std::vector<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
@@ -124,9 +124,10 @@ std::vector<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modif
 	return stmtTable[stmt][modifiesOrUses];
 }
 
-bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarIndex varIndex) {
+bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) {
 	bool success; 
 	int prevSize;
+	VarIndex varIndex = getVarIndex(varName);
 
 	if (rel != MODIFIES && rel != USES) {
 		throw ERROR;

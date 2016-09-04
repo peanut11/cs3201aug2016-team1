@@ -52,7 +52,7 @@ public:
 	// API used by Parser
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
-	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarIndex varIndex);
+	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
 
 	// API used by QP
 	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
@@ -62,7 +62,7 @@ public:
 	std::vector<Constant>   getAllConstantValues();
 	std::vector<VarName>    getAllVarNames();
 	std::vector<StmtNumber> getStmtsByType(EntityType stmtType);
-	std::vector<StmtNumber> getStmtsByVar(RelationshipType rel, VarIndex varIndex);
+	std::vector<StmtNumber> getStmtsByVar(RelationshipType rel, VarName varName);
 	std::vector<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
 	std::vector<VarIndex>   getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 };
