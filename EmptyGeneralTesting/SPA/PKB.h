@@ -49,9 +49,9 @@ public:
 	VarName getVarName(VarIndex varIndex);
 
 	// API used by Parser
-	bool putAssign(StmtNumber dest, AssignTree tree); 
-	bool putStmt(StmtNumber dest, RelationshipType rel, StmtNumber stmt);
-	bool putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex);
+	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
+	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
+	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarIndex varIndex);
 
 	// API used by QP
 	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
@@ -59,8 +59,8 @@ public:
 	AssignTree              getAssign(StmtNumber stmt);
 	std::vector<Constant>   getAllConstantValues();
 	std::vector<VarName>    getAllVarNames();
-	std::vector<StmtNumber> getStmts(EntityType stmtType);
-	std::vector<StmtNumber> getStmts(RelationshipType rel, VarIndex varIndex);
-	std::vector<StmtNumber> getStmts(StmtNumber stmt, RelationshipType stmtRel);
-	std::vector<VarIndex>   getVars(StmtNumber stmt, RelationshipType modifiesOrUses);
+	std::vector<StmtNumber> getStmtsByType(EntityType stmtType);
+	std::vector<StmtNumber> getStmtsByVar(RelationshipType rel, VarIndex varIndex);
+	std::vector<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
+	std::vector<VarIndex>   getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 };
