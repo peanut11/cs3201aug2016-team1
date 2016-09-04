@@ -17,17 +17,25 @@ ProgramConverter::ProgramConverter() {
 
 void ProgramConverter::convert(std::string source) {
 	st = StringTokenizer(source, DelimiterMode::PARSER);
+	lineCount = 0;
 	ProgLine currentLine;
 
 	while (!(currentLine = nextLine()).empty()) {
 		const std::string FIRST_TOKEN = currentLine[0];
 
+		if (FIRST_TOKEN == "procedure") {
+			currentLeader = 0;
+			currentParent = 0;
+			continue;
+		}
+
 		if (isEnterParent(FIRST_TOKEN)) {
-			currentLeader = 0; 
+			currentLeader = 0;
 			currentParent = lineCount;
 			continue;
+		}
 
-		} else if (isExitParent(FIRST_TOKEN)) {
+		if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
 			std::vector<StmtNumber> parentVec = pkb->getStmtsByStmt(currentParent, PARENT);
 
@@ -80,17 +88,19 @@ ProgLine ProgramConverter::nextLine() {
 	while (st.hasMoreTokens() && !isLineEnding(token = st.nextToken())) {
 		if (isEnterParent(token) || isExitParent(token)) {
 			st.returnToken(token);
-			return line;
+			break;
+		} else {
+			line.push_back(token);
 		}
-
-		line.push_back(token);
 	}
 
 	if (line.empty()) {
 		return nextLine();
 	}
-
-	lineCount++;
+	
+	if (line[0] != "procedure") {
+		lineCount++;
+	}
 
 	return line;
 }
