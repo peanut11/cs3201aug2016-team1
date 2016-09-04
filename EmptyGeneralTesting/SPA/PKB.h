@@ -46,7 +46,7 @@ public:
 	static PKB* getInstance();
 
 	// Indexing
-	VarIndex getVarIndex(VarName varName);
+	VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
 	VarName getVarName(VarIndex varIndex);
 
 	// API used by Parser

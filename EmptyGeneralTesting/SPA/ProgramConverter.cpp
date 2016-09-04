@@ -165,7 +165,7 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 			VarName varName = str;
 			VarIndex varIndex = pkb->getVarIndex(varName); 
 			
-			// assumes will deifnitely get a valid index
+			// assumes will definitely get a valid index
 
 			if (isRHS) {
 				res = pkb->putVarForStmt(lineNum, USES, varIndex);
@@ -176,8 +176,8 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 			
 			if (!res) return res; //returns immediately if false
 		}
-		else { // assumes string '='
-			isRHS = true;
+		else { 
+			if(str=="=") isRHS = true; //ignores the rest of the signs
 		}
 	}
 	
