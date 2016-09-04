@@ -154,12 +154,30 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 		throw ERROR;
 	}
 
-
-	if (rel == FOLLOWS || rel == FOLLOWED_BY) {
-
-	} else if (rel == PARENT || rel == PARENT_OF) {
+	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
+		stmtTable.push_back(StmtRow());
 	}
 
+	int prevSize = stmtTable[stmtA][rel].size();
+
+	prevSize = stmtTable[stmtA][rel].size();
+	stmtTable[stmtA][rel].push_back(stmtB);
+	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
+
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
+		const int OFFSET = 1;
+		int supplementaryRel;
+
+		if (rel == FOLLOWS || rel == PARENT) {
+			supplementaryRel = rel + OFFSET;
+		} else {
+			supplementaryRel = rel - OFFSET;
+		}
+
+		prevSize = stmtTable[stmtB][supplementaryRel].size();
+		stmtTable[stmtB][supplementaryRel].push_back(stmtA);
+		success = (prevSize + 1 == stmtTable[stmtB][supplementaryRel].size()) && success;
+	}
 
 	return success;
 }
