@@ -122,11 +122,27 @@ std::vector<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modif
 
 bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarIndex varIndex) {
 	bool success; 
+	int prevSize;
 
 	if (rel != MODIFIES && rel != USES) {
 		throw ERROR;
 	}
+	
+	while (stmt >= stmtTable.size()) {
+		stmtTable.push_back(StmtRow());
+	}
 
+	while (varIndex >= varTable.size()) {
+		varTable.push_back(VarRow());
+	}
+	
+	prevSize = stmtTable[stmt][rel].size();
+	stmtTable[stmt][rel].push_back(varIndex);
+	success = (prevSize + 1 == stmtTable[stmt][rel].size());
+
+	prevSize = varTable[varIndex][rel].size();
+	varTable[varIndex][rel].push_back(stmt);
+	success = (prevSize + 1 == varTable[varIndex][rel].size()) && success;
 
 	return success;
 }
@@ -138,12 +154,30 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 		throw ERROR;
 	}
 
-
-	if (rel == FOLLOWS || rel == FOLLOWED_BY) {
-
-	} else if (rel == PARENT || rel == PARENT_OF) {
+	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
+		stmtTable.push_back(StmtRow());
 	}
 
+	int prevSize = stmtTable[stmtA][rel].size();
+
+	prevSize = stmtTable[stmtA][rel].size();
+	stmtTable[stmtA][rel].push_back(stmtB);
+	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
+
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
+		const int OFFSET = 1;
+		int supplementaryRel;
+
+		if (rel == FOLLOWS || rel == PARENT) {
+			supplementaryRel = rel + OFFSET;
+		} else {
+			supplementaryRel = rel - OFFSET;
+		}
+
+		prevSize = stmtTable[stmtB][supplementaryRel].size();
+		stmtTable[stmtB][supplementaryRel].push_back(stmtA);
+		success = (prevSize + 1 == stmtTable[stmtB][supplementaryRel].size()) && success;
+	}
 
 	return success;
 }
