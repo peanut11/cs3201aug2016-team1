@@ -5,9 +5,22 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTesting {
+	
 	TEST_CLASS(TestProgramConverter) {
-public:
+		
+	TEST_CLASS_INITIALIZE(initialize) {
+		std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
+		ProgramConverter pc = ProgramConverter();
+		pc.convert(str);
+	};
+
+	/*TEST_METHOD_CLEANUP(destruct) {
+		PKB* pkb = PKB::getInstance();
+		delete pkb;
+	};*/
+
+public:
 	TEST_METHOD(TestConvert_ProcSecond) {
 		std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
@@ -16,10 +29,10 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_CheckRefTable) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 		
 		PKB* pkb = PKB::getInstance();
 		std::vector<std::string> expected;
@@ -29,8 +42,8 @@ public:
 		expected.push_back("y");
 		std::vector<std::string> actual;
 		actual = pkb->getAllVarNames();
-		//Assert::AreEqual(expected.size(), actual.size());
-		bool res = true;
+		
+		bool res = expected.size() == actual.size();
 		for (int i = 0; i < expected.size(); i++) {
 			res = (expected[i] == actual[i]) && res;
 		}
@@ -38,10 +51,10 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtModifies) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("x");
@@ -49,10 +62,10 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtDoesNotModifies) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("i");
@@ -60,10 +73,10 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtUses) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("i");
@@ -71,10 +84,10 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtDoesNotUse) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("i");
@@ -82,10 +95,10 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtModifiesAndUses) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("z");
@@ -95,14 +108,56 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtWithConstants) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		pc.convert(str);
+		pc.convert(str);*/
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("0");
 		Assert::IsFalse(pkb->is(1, USES, x));
+	}
+	
+	TEST_METHOD(TestUpdateAssignmentInTable_VarModifiedBy) {
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
+
+		ProgramConverter pc = ProgramConverter();
+		pc.convert(str);*/
+
+		PKB* pkb = PKB::getInstance();
+		
+		std::vector<StmtNumber> output = pkb->getStmtsByVar(MODIFIES, "x");
+		std::vector<StmtNumber> expectedOutput;
+		StmtNumber stmtNo = 1;
+		expectedOutput.push_back(stmtNo);
+
+		bool res = expectedOutput.size() == output.size();
+		for (int i = 0; i < expectedOutput.size(); i++)
+		{
+			res = (expectedOutput[i] == output[i]) && res;
+		}
+		Assert::IsTrue(res);
+	}
+
+	TEST_METHOD(TestUpdateAssignmentInTable_VarUsedBy) {
+		/*std::string str = Tools::readFile("prototype_procedure_Second.txt");
+
+		ProgramConverter pc = ProgramConverter();
+		pc.convert(str);*/
+
+		PKB* pkb = PKB::getInstance();
+
+		std::vector<StmtNumber> output = pkb->getStmtsByVar(USES, "x");
+		std::vector<StmtNumber> expectedOutput;
+		StmtNumber stmtNo = 4;
+		expectedOutput.push_back(stmtNo);
+
+		bool res = expectedOutput.size() == output.size();
+		for (int i = 0; i < expectedOutput.size(); i++)
+		{
+			res = (expectedOutput[i] == output[i]) && res;
+		}
+		Assert::IsTrue(res);
 	}
 	};
 }
