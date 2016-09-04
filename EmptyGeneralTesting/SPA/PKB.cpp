@@ -47,6 +47,10 @@ bool PKB::is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB) {
 	return contains(stmtTable[stmtA][rel], stmtB);
 }
 
+bool PKB::isVarExist(VarName varName) {
+	return (refMap.find(varName) != refMap.end());
+}
+
 std::vector<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
