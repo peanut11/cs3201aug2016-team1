@@ -20,7 +20,7 @@ private:
 	bool isExitParent(std::string str);
 	bool isLineEnding(std::string str);
 	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
-	bool updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum);
+	bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
 	bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
 
 public:

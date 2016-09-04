@@ -71,7 +71,7 @@ int ProgramConverter::convert(std::string source) {
 
 		if (isAssignment(currentLine)) {
 			updateAssignmentInAssignmentTrees(currentLine, lineNum); // Ngoc Khanh
-			updateAssignmentInVarTable(currentLine, lineNum);        // Kai Lin
+			updateAssignmentInTable(currentLine, lineNum);        // Kai Lin
 		}
 	}
 
@@ -155,7 +155,7 @@ bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLine
 }
 
 // Kai Lin
-bool ProgramConverter::updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum) {
+bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {
 
 	bool isRHS = false;
 	bool res = true;
