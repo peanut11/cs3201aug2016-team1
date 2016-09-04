@@ -34,7 +34,7 @@ ProgramConverter::ProgramConverter() {
 	lineCount = 0;
 }
 
-void ProgramConverter::convert(std::string source) {
+int ProgramConverter::convert(std::string source) {
 	st = StringTokenizer(source, DelimiterMode::PARSER);
 	lineCount = 0;
 	ProgLine currentLine;
@@ -74,6 +74,8 @@ void ProgramConverter::convert(std::string source) {
 			updateAssignmentInVarTable(currentLine, lineNum);        // Kai Lin
 		}
 	}
+
+	return lineCount;
 }
 
 // Possible return values:
