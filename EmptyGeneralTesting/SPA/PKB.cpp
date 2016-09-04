@@ -9,6 +9,8 @@
 
 const std::runtime_error PKB::ERROR = std::runtime_error("");
 
+PKB* PKB::theOne = nullptr;
+
 bool PKB::contains(std::vector<VarOrStmt> vec, VarOrStmt item) {
 	for (std::vector<VarOrStmt>::const_iterator it = vec.begin(); it < vec.end(); it++) {
 		if (*it == item) {
@@ -27,6 +29,15 @@ PKB* PKB::getInstance() {
 	return theOne;
 }
 
+PKB::PKB() {
+	assignTrees = std::vector<AssignTree>();
+	constants = std::vector<Constant>();
+	refMap = RefMap();
+	refTable = std::vector<VarName>();
+	stmtTable = std::vector<StmtRow>();
+	stmtTypeTable = std::vector<EntityType>();
+	varTable = std::vector<VarRow>();
+}
 
 bool PKB::is(StmtNumber stmt, RelationshipType rel, VarOrStmt item) {
 	return contains(stmtTable[stmt][rel], item);
