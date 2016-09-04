@@ -29,7 +29,7 @@ void ProgramConverter::convert(std::string source) {
 
 		} else if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
-			std::vector<StmtNumber> parentVec = pkb->getStmts(currentParent, PARENT);
+			std::vector<StmtNumber> parentVec = pkb->getStmtsByStmt(currentParent, PARENT);
 
 			if (parentVec.empty()) {
 				currentParent = 0;
@@ -118,7 +118,7 @@ bool ProgramConverter::isLineEnding(std::string str) {
 // Ngoc Khanh
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
 	AssignTree tree = AssignTree();
-	pkb->putAssign(lineNum, tree);
+	pkb->putAssignForStmt(lineNum, tree);
 
 	return false;
 }
@@ -128,21 +128,21 @@ bool ProgramConverter::updateAssignmentInVarTable(ProgLine line, ProgLineNumber 
 	VarName varName = "varName";
 	VarIndex varIndex = pkb->getVarIndex(varName);
 
-	pkb->putVar(lineNum, MODIFIES, varIndex);
-	pkb->putVar(lineNum, USES, varIndex);
+	pkb->putVarForStmt(lineNum, MODIFIES, varIndex);
+	pkb->putVarForStmt(lineNum, USES, varIndex);
 
 	return false;
 }
 
 bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
-	bool success;
+	bool success = true;
 
 	if (currentParent != 0) {
-		success = pkb->putStmt(lineNum, PARENT, currentParent);
+		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent);
 	}
 
 	if (currentLeader != 0) {
-		success = pkb->putStmt(lineNum, FOLLOWS, currentLeader) && success;
+		success = pkb->putStmtForStmt(lineNum, FOLLOWS, currentLeader) && success;
 	}
 
 	currentLeader = lineNum;
