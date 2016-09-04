@@ -8,10 +8,11 @@ namespace UnitTesting {
 	TEST_CLASS(TestProgramConverter) {
 public:
 
-	TEST_METHOD(TestConvert) {
-	}
+	TEST_METHOD(TestConvert_ProcSecond) {
+		std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
-	TEST_METHOD(TestConvert2) {
+		ProgramConverter pc = ProgramConverter();
+		Assert::AreEqual(5, pc.convert(str));
 	}
 
 	};
