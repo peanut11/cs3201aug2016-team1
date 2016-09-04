@@ -122,11 +122,27 @@ std::vector<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modif
 
 bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarIndex varIndex) {
 	bool success; 
+	int prevSize;
 
 	if (rel != MODIFIES && rel != USES) {
 		throw ERROR;
 	}
+	
+	while (stmt >= stmtTable.size()) {
+		stmtTable.push_back(StmtRow());
+	}
 
+	while (varIndex >= varTable.size()) {
+		varTable.push_back(VarRow());
+	}
+	
+	prevSize = stmtTable[stmt][rel].size();
+	stmtTable[stmt][rel].push_back(varIndex);
+	success = (prevSize + 1 == stmtTable[stmt][rel].size());
+
+	prevSize = varTable[varIndex][rel].size();
+	varTable[varIndex][rel].push_back(stmt);
+	success = (prevSize + 1 == varTable[varIndex][rel].size()) && success;
 
 	return success;
 }

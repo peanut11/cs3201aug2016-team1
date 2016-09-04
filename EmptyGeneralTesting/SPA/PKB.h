@@ -22,7 +22,8 @@ typedef std::string VarName;
 typedef std::map<VarName, VarIndex> RefMap;
 typedef std::vector<std::string> ProgLine;
 typedef std::vector<StmtNumber> VarEntry;
-typedef std::vector<VarOrStmt> StmtRow[RelationshipType::TOTAL_COUNT];
+typedef std::vector<VarOrStmt> StmtEntry;
+typedef std::array<StmtEntry, RelationshipType::TOTAL_COUNT> StmtRow;
 typedef std::array<VarEntry, 2> VarRow;
 
 class PKB {
