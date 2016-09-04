@@ -25,5 +25,5 @@ private:
 
 public:
 	ProgramConverter();
-	void convert(std::string source);
+	int convert(std::string source);
 };
