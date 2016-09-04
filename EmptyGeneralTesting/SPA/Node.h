@@ -4,8 +4,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-class Node
-{
+class Node {
 
 public:
 
@@ -13,11 +12,15 @@ public:
 	// NodeType: procedure, variable, constant
 	Node(EntityType nodeType, int nameIndex);
 
-	EntityType geNodeType();
-	int getNameIndex();
+	EntityType getNodeType();
+	int getIndex();
+	void setLeft(Node*);
+	void setRight(Node*);
+
 private:
-	EntityType mNodeType;
-	int mNameIndex;
+	EntityType nodeType;
+	int index;
+	Node *leftChild, *rightChild;
 };
 
 #endif

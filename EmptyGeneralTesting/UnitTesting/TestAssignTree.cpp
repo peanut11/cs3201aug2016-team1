@@ -6,14 +6,10 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTesting
 {		
-	TEST_CLASS(TestAST)
-	{
+	TEST_CLASS(TestAssignTree) {
 	public:
-		
-		TEST_METHOD(Test)
-		{
-			
+		TEST_METHOD(TestBuildAssignTree) {
+						
 		}
-
 	};
 }

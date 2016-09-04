@@ -117,7 +117,7 @@ bool ProgramConverter::isLineEnding(std::string str) {
 
 // Ngoc Khanh
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
-	AssignTree tree = AssignTree();
+	AssignTree tree = buildAssignTree(line);
 	pkb->putAssign(lineNum, tree);
 
 	return false;
@@ -148,4 +148,7 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	currentLeader = lineNum;
 
 	return success;
+}
+
+bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
 }

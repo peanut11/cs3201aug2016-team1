@@ -1,4 +1,4 @@
-// Maintained by: Kai Lin & Ngoc Khanh
+// Maintained by: Ngoc Khanh
 //
 // Constructed by:
 // - ProgramConvertor
@@ -12,22 +12,27 @@
 Node::Node(EntityType nodeType)
 {
 	//assumes Entity type is valid. ie only assign related
-	mNodeType = nodeType;
+	this->nodeType = nodeType;
 }
-
 
 Node::Node(EntityType nodeType, int nameIndex)
 {
-	mNodeType = nodeType;
-	mNameIndex = nameIndex;
+	this->nodeType = nodeType;
+	this->nameIndex = nameIndex;
 }
 
-EntityType Node::geNodeType()
-{
-	return mNodeType;
+EntityType Node::getNodeType() {
+	return nodeType;
 }
 
-int Node::getNameIndex()
-{
-	return mNameIndex;
+int Node::getIndex() {
+	return index;
+}
+
+void Node::setLeft(Node *p) {
+	this->leftChild = p;
+}
+
+void Node::setRight(Node *p) {
+	this->rightChild = p;
 }

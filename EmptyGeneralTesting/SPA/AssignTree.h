@@ -1,14 +1,21 @@
-#include "Node.h"
-
 #pragma once
+#include "ExprTree.h"
+#include "PKB.h"
+
 class AssignTree
 {
 
 public:
+	AssignTree();
+	AssignTree(VarIndex varIndex, ExprTree exprTree);
+	VarIndex getVar();
+	ExprTree getExprTree();
 
-	Node* createNode(EntityType nodeType);
-	Node* createNode(EntityType nodeType, int nameIndex);
 private:
-	
+	ExprTree exprTree;
+	VarIndex varIndex;
 };
 
+AssignTree buildAssignTree(ProgLine line, ProgLineNumber lineNum) {
+
+}

@@ -13,10 +13,9 @@
   <ItemGroup>
     <ClCompile Include="AssignTree.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
+    <ClCompile Include="ExprTree.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="PatternObject.cpp" />
-    <ClCompile Include="PatternTypeObject.cpp" />
     <ClCompile Include="PKB.cpp" />
     <ClCompile Include="ProgramConverter.cpp" />
     <ClCompile Include="ProgramValidator.cpp" />
@@ -26,23 +25,15 @@
     <ClCompile Include="QueryTree.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelTable.cpp" />
-    <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
-    <ClCompile Include="SuchThatObject.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="WithAttrObject.cpp" />
-    <ClCompile Include="WithObject.cpp" />
-    <ClCompile Include="WithRefObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssignTree.h" />
-    <ClInclude Include="AttrType.h" />
-    <ClInclude Include="ClauseObject.h" />
     <ClInclude Include="ClauseType.h" />
+    <ClInclude Include="ExprTree.h" />
     <ClInclude Include="Parser.h" />
-    <ClInclude Include="PatternObject.h" />
-    <ClInclude Include="PatternTypeObject.h" />
     <ClInclude Include="PKB.h" />
     <ClInclude Include="ProgramConverter.h" />
     <ClInclude Include="ProgramValidator.h" />
@@ -55,16 +46,11 @@
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
-    <ClInclude Include="SelectObject.h" />
     <ClInclude Include="StringTokenizer.h" />
-    <ClInclude Include="SuchThatObject.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="WithAttrObject.h" />
-    <ClInclude Include="WithObject.h" />
-    <ClInclude Include="WithRefObject.h" />
-    <ClInclude Include="WithRefType.h" />
+    <ClInclude Include="TreeBuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
