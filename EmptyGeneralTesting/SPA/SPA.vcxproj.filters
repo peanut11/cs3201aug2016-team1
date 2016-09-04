@@ -159,6 +159,9 @@
     <ClInclude Include="PatternTypeObject.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
+    <ClInclude Include="Frontend.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
