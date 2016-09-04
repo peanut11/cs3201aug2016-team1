@@ -7,6 +7,25 @@
 // - AssignTree
 
 #include "ProgramConverter.h"
+#include <string>
+#include <cctype>
+
+bool ProgramConverter::isVarName(std::string str)
+{
+	if (str.empty()) {
+		return false;
+	}
+	
+	if (!std::isalpha(str.at(0))) {
+		return false;
+	}
+	for (unsigned int i = 1; i < str.length(); i++) {
+		if (!std::isalnum(str.at(i))) {
+			return false;
+		}
+	}
+	return true;
+}
 
 ProgramConverter::ProgramConverter() {
 	pkb = PKB::getInstance();
@@ -125,13 +144,31 @@ bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLine
 
 // Kai Lin
 bool ProgramConverter::updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum) {
-	VarName varName = "varName";
-	VarIndex varIndex = pkb->getVarIndex(varName);
+	bool isRHS = false;
+	bool res = true;
+	for each (std::string str in line)
+	{
+		if (isVarName(str)) {
+			VarName varName = str;
+			VarIndex varIndex = pkb->getVarIndex(varName); 
+			
+			// assumes will deifnitely get a valid index
 
-	pkb->putVar(lineNum, MODIFIES, varIndex);
-	pkb->putVar(lineNum, USES, varIndex);
-
-	return false;
+			if (isRHS) {
+				res = pkb->putVar(lineNum, USES, varIndex);
+			}
+			else {
+				res = pkb->putVar(lineNum, MODIFIES, varIndex);
+			}
+			
+			if (!res) return res; //returns immediately if false
+		}
+		else { // assumes string '='
+			isRHS = true;
+		}
+	}
+	
+	return res;
 }
 
 bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
