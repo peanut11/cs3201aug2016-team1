@@ -126,6 +126,11 @@ bool ProgramConverter::isAssignment(ProgLine line) {
 	return SECOND_TOKEN == "=";
 }
 
+bool ProgramConverter::isWhile(ProgLine line) {
+	const std::string FIRST_TOKEN = line[0];
+	return FIRST_TOKEN == "while";
+}
+
 bool ProgramConverter::isEnterParent(std::string str) {
 	return str == "{";
 }
@@ -178,6 +183,10 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	if (isAssignment(line)) {
 		success = updateAssignmentInTable(line, lineNum) && success;
 		success = updateAssignmentInAssignmentTrees(line, lineNum) && success;
+
+	} else if (isWhile(line)) {
+		const VarName varName = line[1];
+		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
 	}
 
 	if (currentParent != 0) {
