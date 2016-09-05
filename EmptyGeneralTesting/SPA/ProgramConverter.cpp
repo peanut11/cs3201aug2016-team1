@@ -7,11 +7,8 @@
 // - AssignTree
 
 #include "ProgramConverter.h"
-#include <string>
-#include <cctype>
 
-bool ProgramConverter::isVarName(std::string str)
-{
+bool ProgramConverter::isVarName(std::string str) {
 	if (str.empty()) {
 		return false;
 	}
@@ -19,11 +16,13 @@ bool ProgramConverter::isVarName(std::string str)
 	if (!std::isalpha(str.at(0))) {
 		return false;
 	}
+
 	for (unsigned int i = 1; i < str.length(); i++) {
 		if (!std::isalnum(str.at(i))) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -63,10 +62,11 @@ int ProgramConverter::convert(std::string source) {
 			} else {
 				currentParent = parentVec[0];
 			}
+
 			continue;
 		}
 
-		ProgLineNumber lineNum = lineCount;
+		const ProgLineNumber lineNum = lineCount;
 		updateStmtInStmtTable(currentLine, lineNum);
 	}
 
@@ -147,7 +147,7 @@ bool ProgramConverter::isLineEnding(std::string str) {
 }
 
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
-	AssignTree tree = AssignTree();
+	const AssignTree tree = AssignTree();
 	pkb->putAssignForStmt(lineNum, tree);
 
 	return false;
@@ -159,7 +159,7 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 
 	for each (std::string str in line) {
 		if (isVarName(str)) {
-			VarName varName = str;
+			const VarName varName = str;
 
 			if (isRHS) {
 				res = pkb->putVarForStmt(lineNum, USES, varName);
