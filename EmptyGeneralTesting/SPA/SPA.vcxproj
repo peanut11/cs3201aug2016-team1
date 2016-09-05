@@ -40,6 +40,7 @@
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseObject.h" />
     <ClInclude Include="ClauseType.h" />
+    <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PatternObject.h" />

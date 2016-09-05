@@ -90,7 +90,9 @@ std::vector<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
 
 	return std::vector<StmtNumber>();
 }
-
+StmtNumber PKB::getStmtsTableSize() {
+	return stmtTable.size();
+}
 VarIndex PKB::getVarIndex(VarName varName) {
 	RefMap::const_iterator it = refMap.find(varName);
 	VarIndex varIndex;

@@ -59,6 +59,7 @@ public:
 	bool is(StmtNumber stmt, RelationshipType rel, VarOrStmt item);    // E.g. is(1,MODIFIES,2)
 	bool isVarExist(VarName varName);
 	AssignTree              getAssign(StmtNumber stmt);
+	StmtNumber PKB::getStmtsTableSize();
 	std::vector<Constant>   getAllConstantValues();
 	std::vector<VarName>    getAllVarNames();
 	std::vector<StmtNumber> getStmtsByType(EntityType stmtType);
