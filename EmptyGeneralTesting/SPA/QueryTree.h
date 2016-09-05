@@ -1,24 +1,15 @@
 #pragma once
 #include <vector>
+#include "SelectObject.h"
+#include "ClauseObject.h"
 
 class QueryTree {
 
-	// store result synonm from query into a vector
-	std::vector<std::string> result;
-
-	// store relationships query from query into a vector
-	std::vector<std::string> relationship;
-
-	// store the type of results expected (procedure (p) - names, statement(s) - integer, ..)
-	void storeResultType();
-
-	// store the relationships needed to evaluate in the PQL queries (etc. Calls(p,q), Modifies(_,"x"), ......)
-	void storeRelationships();
-
-
+	SelectObject select;
+	std::vector<ClauseObject> clauses;
 
 public:
-	std::vector<std::string> getResultType();
-	std::vector<std::string> getRelationships();
+	SelectObject getSelect();
+	std::vector<ClauseObject> getClauses();
 
 };

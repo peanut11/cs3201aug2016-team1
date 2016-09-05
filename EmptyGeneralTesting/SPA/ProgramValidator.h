@@ -1,11 +1,12 @@
 #pragma once
 
-#include <stack>
+#include <cctype>
 #include <string>
+
 #include "StringTokenizer.h"
 
 class ProgramValidator {
-	StringTokenizer st = StringTokenizer("", DelimiterMode::PARSER);
+	StringTokenizer st;
 	bool isValidSyntax();
 	bool isMatch(std::string s1, std::string s2);
 

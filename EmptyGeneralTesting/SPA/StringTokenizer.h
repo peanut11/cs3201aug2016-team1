@@ -11,7 +11,8 @@
 
 enum DelimiterMode {
 	PARSER,
-	QUERY_PREPROCESSOR
+	QUERY_PREPROCESSOR,
+	NONE
 };
 
 class StringTokenizer {
@@ -22,7 +23,7 @@ class StringTokenizer {
 	bool isDelimiter(char ch);
 
 public:
-	StringTokenizer(std::string str, DelimiterMode mode);
+	StringTokenizer(std::string str="", DelimiterMode mode=NONE);
 	int countTokens();
 	bool hasMoreTokens();
 	std::string nextToken();

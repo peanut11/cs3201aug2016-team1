@@ -3,7 +3,6 @@
 // Accessed by:
 // - Parser
 
-#include <cctype>
 #include "ProgramValidator.h"
 
 ProgramValidator::ProgramValidator() {}

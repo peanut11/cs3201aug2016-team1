@@ -28,6 +28,9 @@
     <ClCompile Include="RelTable.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+	<ClCompile Include="RelObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
     <ClCompile Include="ProgramValidator.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
@@ -49,7 +52,25 @@
     <ClCompile Include="AssignTree.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
-    <ClCompile Include="RelObject.cpp">
+    <ClCompile Include="SelectObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="SuchThatObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="WithObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="WithAttrObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="WithRefObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="PatternTypeObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="PatternObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,6 +131,42 @@
     </ClInclude>
     <ClInclude Include="AssignTree.h">
       <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="AttrType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClauseObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SuchThatObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="WithObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="WithAttrObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="WithRefObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="WithRefType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatternObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="PatternTypeObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignExtractor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
