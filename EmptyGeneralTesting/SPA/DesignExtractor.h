@@ -24,6 +24,6 @@ class DesignExtractor {
 private:
 	std::vector<StmtRow>    stmtTable;
 public:
-	StmtRow DesignExtractor::processFollowStar();
-	StmtRow DesignExtractor::processParentStar();
+	void DesignExtractor::processFollowStar();
+	void DesignExtractor::processParentStar();
 };

@@ -24,9 +24,9 @@ using namespace std;
 int DesignExtractor() {
 	return 0;
 }
-StmtRow DesignExtractor::processFollowStar() {
+void DesignExtractor::processFollowStar() {
 	PKB* pkb = PKB::getInstance();
-	StmtNumber size = pkb->getStmtsTableSize;
+	StmtNumber size = pkb->getStmtsTableSize();
 	for (StmtNumber i = (size - 1); i >= size; i--) {
 
 
@@ -44,9 +44,9 @@ StmtRow DesignExtractor::processFollowStar() {
 	}
 }
 
-StmtRow DesignExtractor::processParentStar() {
+void DesignExtractor::processParentStar() {
 	PKB* pkb = PKB::getInstance();
-	StmtNumber size = pkb->getStmtsTableSize;
+	StmtNumber size = pkb->getStmtsTableSize();
 	for (StmtNumber i = 0; i < size; i++) {
 		PKB* pkb = PKB::getInstance();
 		std::vector<StmtNumber> parentList = pkb->getStmtsByStmt(i, PARENT);
