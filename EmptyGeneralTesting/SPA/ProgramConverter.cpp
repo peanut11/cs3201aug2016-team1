@@ -181,10 +181,13 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	bool success = true;
 
 	if (isAssignment(line)) {
+		success = pkb->putStmtTypeForStmt(lineNum, ASSIGN) && success;
 		success = updateAssignmentInTable(line, lineNum) && success;
 		success = updateAssignmentInAssignmentTrees(line, lineNum) && success;
 
 	} else if (isWhile(line)) {
+		success = pkb->putStmtTypeForStmt(lineNum, WHILE) && success;
+
 		const VarName varName = line[1];
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
 	}
