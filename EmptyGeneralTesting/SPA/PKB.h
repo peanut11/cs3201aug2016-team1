@@ -57,7 +57,6 @@ public:
 
 	// API used by QP
 	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
-	bool is(StmtNumber stmt, RelationshipType rel, VarOrStmt item);    // E.g. is(1,MODIFIES,2)
 	bool isVarExist(VarName varName);
 
 	AssignTree              getAssign(StmtNumber stmt);

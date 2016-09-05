@@ -58,7 +58,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("x");
-		Assert::IsTrue(pkb->is(1, MODIFIES, x));
+		Assert::IsTrue(pkb->is(MODIFIES, 1, x));
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtDoesNotModifies) {
@@ -69,7 +69,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("i");
-		Assert::IsFalse(pkb->is(1, MODIFIES, x));
+		Assert::IsFalse(pkb->is(MODIFIES, 1, x));
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtUses) {
@@ -80,7 +80,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("i");
-		Assert::IsTrue(pkb->is(4, USES, x));
+		Assert::IsTrue(pkb->is(USES, 4, x));
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtDoesNotUse) {
@@ -91,7 +91,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("i");
-		Assert::IsFalse(pkb->is(5, USES, x));
+		Assert::IsFalse(pkb->is(USES, 5, x));
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtModifiesAndUses) {
@@ -102,8 +102,8 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("z");
-		bool modifies = pkb->is(4, MODIFIES, x);
-		bool uses = pkb->is(4, USES, x);
+		bool modifies = pkb->is(MODIFIES, 4, x);
+		bool uses = pkb->is(USES, 4, x);
 		Assert::IsTrue(modifies && uses);
 	}
 
@@ -115,7 +115,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		VarIndex x = pkb->getVarIndex("0");
-		Assert::IsFalse(pkb->is(1, USES, x));
+		Assert::IsFalse(pkb->is(USES, 1, x));
 	}
 	
 	TEST_METHOD(TestUpdateAssignmentInTable_VarModifiedBy) {

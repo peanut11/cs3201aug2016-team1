@@ -39,10 +39,6 @@ PKB::PKB() {
 	varTable = std::vector<VarRow>();
 }
 
-bool PKB::is(StmtNumber stmt, RelationshipType rel, VarOrStmt item) {
-	return contains(stmtTable[stmt][rel], item);
-}
-
 bool PKB::is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB) {
 	return contains(stmtTable[stmtA][rel], stmtB);
 }
