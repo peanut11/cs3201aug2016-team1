@@ -63,6 +63,7 @@ public:
 	AssignTree              getAssign(StmtNumber stmt);
 	StmtNumber              getStmtTableSize();
 	std::vector<Constant>   getAllConstantValues();
+	std::vector<StmtNumber> getAllStmts();
 	std::vector<VarName>    getAllVarNames();
 	std::vector<StmtNumber> getStmtsByType(EntityType stmtType);
 	std::vector<StmtNumber> getStmtsByVar(RelationshipType rel, VarName varName);

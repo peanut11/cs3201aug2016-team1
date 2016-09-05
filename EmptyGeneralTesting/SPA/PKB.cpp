@@ -55,6 +55,14 @@ std::vector<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
 
+std::vector<StmtNumber> PKB::getAllStmts() {
+	std::vector<StmtNumber> stmts;
+	for (StmtNumber stmt = 1; stmt < stmtTable.size(); stmt++) {
+		stmts.push_back(stmt);
+	}
+	return stmts;
+}
+
 std::vector<VarName> PKB::getAllVarNames() {
 	return refTable;
 }
