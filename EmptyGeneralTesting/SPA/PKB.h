@@ -52,6 +52,7 @@ public:
 	// API used by Parser and DE
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
+	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
 	bool putConstant(Constant constant);
 
@@ -79,6 +80,7 @@ public:
 	bool isVarExist(VarName varName);
 
 	AssignTree              getAssign(StmtNumber stmt);
+	EntityType				getStmtTypeForStmt(StmtNumber stmt);
 	StmtNumber              getStmtTableSize();
 	std::vector<Constant>   getAllConstantValues();
 	std::vector<StmtNumber> getAllStmts();

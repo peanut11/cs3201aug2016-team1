@@ -37,6 +37,9 @@ PKB::PKB() {
 	stmtTable = std::vector<StmtRow>();
 	stmtTypeTable = std::vector<EntityType>();
 	varTable = std::vector<VarRow>();
+
+	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
+	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, VarOrStmt item) {
@@ -69,6 +72,10 @@ AssignTree PKB::getAssign(StmtNumber stmt) {
 	}
 
 	return assignTrees[stmt];
+}
+
+EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
+	return stmtTypeTable[stmt];
 }
 
 std::vector<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
@@ -193,6 +200,15 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 	}
 
 	return success;
+}
+
+bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
+	if (stmtTypeTable.size() != stmt) {
+		throw ERROR;
+	}
+
+	stmtTypeTable.push_back(stmtType);
+	return (stmtTypeTable.size() == stmt);
 }
 
 bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
