@@ -44,7 +44,7 @@ public:
 		actual = pkb->getAllVarNames();
 		
 		bool res = expected.size() == actual.size();
-		for (int i = 0; i < expected.size(); i++) {
+		for (unsigned int i = 0; i < expected.size(); i++) {
 			res = (expected[i] == actual[i]) && res;
 		}
 		Assert::IsTrue(res);
@@ -132,8 +132,7 @@ public:
 		expectedOutput.push_back(stmtNo);
 
 		bool res = expectedOutput.size() == output.size();
-		for (int i = 0; i < expectedOutput.size(); i++)
-		{
+		for (unsigned int i = 0; i < expectedOutput.size(); i++) {
 			res = (expectedOutput[i] == output[i]) && res;
 		}
 		Assert::IsTrue(res);
@@ -153,8 +152,7 @@ public:
 		expectedOutput.push_back(stmtNo);
 
 		bool res = expectedOutput.size() == output.size();
-		for (int i = 0; i < expectedOutput.size(); i++)
-		{
+		for (unsigned int i = 0; i < expectedOutput.size(); i++) {
 			res = (expectedOutput[i] == output[i]) && res;
 		}
 		Assert::IsTrue(res);
