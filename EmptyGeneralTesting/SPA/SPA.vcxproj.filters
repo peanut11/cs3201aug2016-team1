@@ -49,6 +49,9 @@
     <ClCompile Include="AssignTree.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
+    <ClCompile Include="RelObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">

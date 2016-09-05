@@ -14,27 +14,13 @@ class RelObject {
 
 public:
 
-	RelObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs) {
-		this->type = type;
-		this->argsOneTypes = argsOneTypes;
-		this->argsTwoTypes = argsTwoTypes;
-		this->numOfArgs = numOfArgs;
-	}
+	RelObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs);
 
-	RelationshipType getRelObjectType() {
-		return this->type;
-	}
-
-	std::vector<EntityType> getArgsOneTypes() {
-		return this->argsOneTypes;
-	}
-
-	std::vector<EntityType> getArgsTwoTypes() {
-		return this->argsTwoTypes;
-	}
-
-	int getNumOfArgs() {
-		return this->numOfArgs;
-	}
+	RelationshipType getRelObjectType();
+	std::vector<EntityType> getArgsOneTypes();
+	std::vector<EntityType> getArgsTwoTypes();
+	bool doesFirstArgsContains(EntityType type);
+	bool doesSecondArgsContains(EntityType type);
+	int getNumOfArgs();
 
 };

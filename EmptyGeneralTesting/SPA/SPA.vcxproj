@@ -23,6 +23,7 @@
     <ClCompile Include="QueryProcessor.cpp" />
     <ClCompile Include="QueryTree.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
+    <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
