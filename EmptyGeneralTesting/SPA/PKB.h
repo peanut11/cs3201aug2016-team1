@@ -53,6 +53,7 @@ public:
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
+	bool putConstant(Constant constant);
 
 	// API used by QP
 	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
