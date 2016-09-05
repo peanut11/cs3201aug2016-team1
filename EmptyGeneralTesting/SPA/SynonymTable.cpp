@@ -57,6 +57,15 @@ bool SynonymTable::contains(std::string synonym) {
 	return false;
 }
 
+SynonymObject SynonymTable::getObject(std::string synonym) {
+	for (auto value : this->synonymObjects) {
+		if (value.getSynonym().compare(synonym) == 0) {
+			return value;
+		}
+	}
+	return this->invalidObject;
+}
+
 SynonymObject SynonymTable::getObject(int index) {
 	if (index >= this->synonymObjects.size() || index < 0) {
 		throw std::runtime_error("getObject index is out of vector size");

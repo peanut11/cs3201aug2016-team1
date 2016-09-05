@@ -32,12 +32,55 @@ void QueryPreProcessor::init() {
 
 void QueryPreProcessor::populateRelationshipTable() {
 
-	RelObject object = this->createRelationshipObject(RelationshipType::CALLS,
-	{ EntityType::PROCEDURE, EntityType::VARIABLE, EntityType::WILDCARD },
-	{ EntityType::PROCEDURE, EntityType::VARIABLE, EntityType::WILDCARD },
+	RelObject object = this->createRelationshipObject(RelationshipType::MODIFIES,
+	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::WILDCARD },	// args 1
+	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2
 		2);
-
 	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::USES,
+	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::WILDCARD },	// args 1
+	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::CALLS,
+	{ EntityType::PROCEDURE, EntityType::WILDCARD },
+	{ EntityType::PROCEDURE, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::CALLSSTAR,
+	{ EntityType::PROCEDURE, EntityType::WILDCARD },
+	{ EntityType::PROCEDURE, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::PARENT,
+	{ EntityType::STMT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::PARENTSTAR,
+	{ EntityType::STMT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::FOLLOWS,
+	{ EntityType::STMT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::FOLLOWSSTAR,
+	{ EntityType::STMT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	// havent include next and affects
 }
 
 void QueryPreProcessor::populateSynonymTable() {

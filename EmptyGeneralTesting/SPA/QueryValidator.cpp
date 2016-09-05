@@ -3,6 +3,7 @@
 #include <string>
 #include "QueryValidator.h"
 #include "SynonymObject.h"
+#include "RelObject.h"
 #include "ClauseType.h"
 
 const std::string QueryValidator::SYNTAX_PROCEDURE = "procedure";
@@ -20,9 +21,23 @@ const std::string QueryValidator::SYNTAX_SUCH_THAT = "such that";
 const std::string QueryValidator::SYNTAX_WITH = "with";
 const std::string QueryValidator::SYNTAX_AND = "and";
 const std::string QueryValidator::SYNTAX_PATTERN = "pattern";
+const std::string QueryValidator::SYNTAX_CALL = "call";
 
 const std::string QueryValidator::SYNTAX_NEXT_LINE = "\n";
-const std::string QueryValidator::SYNTAX_CALL = "call";
+const std::string QueryValidator::SYNTAX_UNDERSCORE = "_";
+const std::string QueryValidator::SYNTAX_DOUBLE_QUOTE = "\"";
+const std::string QueryValidator::SYNTAX_COMMA = ",";
+
+
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT = "Parent";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS = "Follows";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_MODIFIES = "Modifies";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_USES = "Uses";
+
+const std::string QueryValidator::SYNTAX_ATTRIBUTE_PROCEDURE_NAME = "procName";
+const std::string QueryValidator::SYNTAX_ATTRIBUTE_VARIABLE_NAME = "varName";
+const std::string QueryValidator::SYNTAX_ATTRIBUTE_STATEMENT_NUMBER = "stmt#";
+const std::string QueryValidator::SYNTAX_ATTRIBUTE_VALUE = "value";
 
 QueryValidator *QueryValidator::_instance;
 
@@ -34,9 +49,13 @@ QueryValidator *QueryValidator::getInstance()
 	if (!_instance)
 		_instance = new QueryValidator;
 	_instance->mSynonymTable = SynonymTable::getInstance();
+	_instance->mRelTable = RelTable::getInstance();
 	return _instance;
 }
 
+void QueryValidator::initStringTokenizer(std::string str) {
+	this->st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
+}
 
 void QueryValidator::clearSynonymTable() {
 	this->mSynonymTable->clearAll();
@@ -46,8 +65,12 @@ SynonymTable *QueryValidator::getSynonymTable() {
 	return this->mSynonymTable;
 }
 
+RelTable *QueryValidator::getRelationshipTable() {
+	return this->mRelTable;
+}
+
 bool QueryValidator::isValidQuery(std::string str) {
-	st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
+	this->initStringTokenizer(str);
 
 	// validate both synonym declaration & select clause string
 	return isDeclaration(st.nextToken()) && isSelect(st.hasMoreTokens() ? st.nextToken() : "");  //
@@ -102,7 +125,7 @@ bool QueryValidator::isDeclaration(std::string str) {
 			}
 		}
 
-		if (isName(nextToken)) { // is a synonym
+		if (isSynonym(nextToken)) { // is a synonym
 			isValid = true;
 			isUnderDeclaration = true;
 
@@ -115,7 +138,7 @@ bool QueryValidator::isDeclaration(std::string str) {
 		}
 
 		if (isMatch(nextToken, ",")) {
-			isValid = isName(st.peekNextToken()); // ,[synonym] -> there's more synonym
+			isValid = isSynonym(st.peekNextToken()); // ,[synonym] -> there's more synonym
 		}
 
 	}
@@ -143,28 +166,41 @@ bool QueryValidator::isSelect(std::string str) {
 
 		std::string nextToken = st.nextToken();
 
-		if (isMatch(nextToken, QueryValidator::SYNTAX_SELECT) && hasSelectOnce) {
-			// next string is "Select" again & already had "Select" previously
-			// cannot have more than 1 "Select"
-			return false;
+		if (isMatch(nextToken, QueryValidator::SYNTAX_SELECT)) {
+
+			if (hasSelectOnce) {
+				// next string is "Select" again & already had "Select" previously
+				// cannot have more than 1 "Select"
+				return false;
+			}
 		}
 
+		// if current point to "such" clause
 		if (isMatch(nextToken, QueryValidator::SYNTAX_SUCH) && isMatch(st.peekNextToken(), QueryValidator::SYNTAX_THAT)) {
-			// first token = such & next token =  that
+			// first token = "such" & next token = "that"
 			previousClauseType = ClauseType::SUCH_THAT;
+			st.nextToken(); // point to "that" clause
+
+			//isValid = isDeclaredSynonym(nextToken);
 		}
 
+		if (isDeclaredSynonym(nextToken)) {
 
-		
-		switch (previousClauseType) {
+			switch (previousClauseType) {
 
-		case ClauseType::SELECT:
-			isValid = isDeclaredSynonym(nextToken);
-			break; 
+			case ClauseType::SELECT:
+				isValid = true;
+				break;
 
-		case ClauseType::SUCH_THAT:	
+			case ClauseType::SUCH_THAT:
 
-			break;
+				break;
+			}
+
+		}
+
+		if (isRelationship(nextToken)) {
+
 		}
 
 	}
@@ -183,6 +219,166 @@ bool QueryValidator::isDeclaredSynonym(std::string str) {
 	return this->mSynonymTable->contains(str);
 }
 
+/*
+@str	current token which is the relationship syntax 
+*/
+bool QueryValidator::isRelationship(std::string str) {
+
+	RelationshipType searchedType = getSyntaxRelationshipType(str);
+
+	if (searchedType == RelationshipType::INVALID_RELATIONSHIP) {
+		// no such relationship
+		return false;
+	}
+
+	// Relationship(args1,args2) e.g. Parent(ifstmt, w)
+
+	RelObject searchedRelObject = this->mRelTable->find(searchedType);
+	if (searchedRelObject.getRelObjectType() == RelationshipType::INVALID_RELATIONSHIP) {
+		// no such relationship in table
+		return false;
+	}
+
+	st.nextToken(); // point to relationship
+	
+	return isArguments(st.peekNextToken(), searchedRelObject); 
+	// isMatch(st.nextToken(), "(")
+	// && isMatch(st.nextToken(), ")")
+		
+	//&& isMatch(st.nextToken(), ")")
+	// check is synonym or variable
+	// synonym has no double quote, check with synonym table
+	// variable has double quote, may include underscore, validate variable
+	
+
+
+
+}
+
+bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) {
+
+	bool isUnderArg = true;
+	bool isValid = false;
+	bool hasComma = false;
+	bool hasValidFirstArg = false;
+
+	int numberOfArgs = 0;
+
+	if (str == "" || str.compare("(") != 0) {
+		return false;
+	}
+
+	st.nextToken(); // point to "("
+
+	while (isUnderArg) {
+
+		if (!st.hasMoreTokens()) { return false; }
+
+		if (isMatch(st.peekNextToken(), ")")) {	// 2 arguments have finished and next token is a close bracket
+			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		std::string nextToken = st.nextToken();
+
+		if (isStatementNumber(nextToken)) {	// integer of statement# (e.g. 1, 2)
+
+			// havent read first argument and current token is correct first arugment type
+			if (!hasValidFirstArg) {
+				if (relationshipObject.doesFirstArgsContains(EntityType::STMT)) {
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
+				}
+				else {
+					//isValid = false;
+				}
+				
+			}
+
+			// has read first arugment and comma and current token is correct second arugment type
+			if (hasComma && hasValidFirstArg) {
+
+				if (relationshipObject.doesSecondArgsContains(EntityType::STMT)) {
+					//isValid = true;
+					numberOfArgs += 1;
+				}
+				else {
+					//isValid = false;
+				}
+				
+			}
+
+		}
+		
+		if (isSynonym(nextToken)) {
+			
+			// check SynonymTable to get EntityType, and check if the EntityType is valid for the relationship
+			if (!hasValidFirstArg) {
+
+				if (relationshipObject.doesFirstArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
+				}
+				else {
+					// means this relationship does not contain the specific arg type
+					//isValid = false;
+				}
+	
+			}
+
+			// has read first arugment and comma and current token is correct second arugment type
+			if (hasComma && hasValidFirstArg) {
+
+				if (relationshipObject.doesSecondArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
+					//isValid = true;
+					numberOfArgs += 1;
+				}
+				else {
+					//isValid = false;
+				}
+
+			}
+		}
+		
+
+		if (isMatch(nextToken, SYNTAX_COMMA) && hasValidFirstArg) {
+			hasComma = true;
+		}
+
+	}
+
+	return false;
+
+}
+
+bool QueryValidator::isSynonym(std::string str) {
+	return isName(str);
+}
+
+bool QueryValidator::isVariable(std::string str) {
+	if (isMatch(str, SYNTAX_UNDERSCORE)) {
+		return false;
+	}
+
+	if (!isMatch(str, SYNTAX_DOUBLE_QUOTE)) {
+		return false;
+	}
+
+	st.nextToken();
+
+	return (st.hasMoreTokens() ? isName(st.nextToken()) : false)
+		&& (st.hasMoreTokens() ? isMatch(st.nextToken(), SYNTAX_DOUBLE_QUOTE) : false);
+
+}
+
+bool QueryValidator::isExpression(std::string str) {
+	return false;
+}
+
 bool QueryValidator::isName(std::string str) {
 	if (str.empty()) {
 		return false;
@@ -198,6 +394,35 @@ bool QueryValidator::isName(std::string str) {
 	return true;
 }
 
+bool QueryValidator::isStatementNumber(std::string str) {
+	if (str.empty()) {
+		return false;
+	}
+
+	if (std::isdigit(str[0])) {
+		return true;
+	}
+
+	return false;
+}
+
+RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
+	if (isMatch(syntax, SYNTAX_RELATIONSHIP_USES)) {
+		return RelationshipType::USES;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_MODIFIES)) {
+		return RelationshipType::MODIFIES;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_PARENT)) {
+		return RelationshipType::PARENT;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS)) {
+		return RelationshipType::FOLLOWS;
+	}
+	else {
+		return RelationshipType::INVALID_RELATIONSHIP;
+	}
+}
 
 EntityType QueryValidator::getSyntaxEntityType(std::string syntax) {
 	if (isMatch(syntax, SYNTAX_PROCEDURE)) {
@@ -296,8 +521,8 @@ std::string QueryValidator::getEntityTypeString(EntityType type) {
 }
 
 std::string QueryValidator::getNextToken() {
-	return st.nextToken();
-	//return st.hasMoreTokens() ? st.nextToken() : "";
+	//return st.nextToken();
+	return st.hasMoreTokens() ? st.nextToken() : "";
 }
 
 

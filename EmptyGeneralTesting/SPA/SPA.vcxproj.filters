@@ -28,6 +28,9 @@
     <ClCompile Include="RelTable.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+	<ClCompile Include="RelObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
     <ClCompile Include="ProgramValidator.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
