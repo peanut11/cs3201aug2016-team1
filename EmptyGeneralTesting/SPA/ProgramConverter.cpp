@@ -27,19 +27,6 @@ bool ProgramConverter::isVarName(std::string str)
 	return true;
 }
 
-bool ProgramConverter::isConstant(std::string str)
-{
-	if (str.empty()) {
-		return false;
-	}
-	for (unsigned int i = 0; i < str.length(); i++) {
-		if (!std::isdigit(str.at(i))) {
-			return false;
-		}
-	}
-	return true;
-}
-
 ProgramConverter::ProgramConverter() {
 	pkb = PKB::getInstance();
 	currentLeader = 0;
@@ -80,12 +67,7 @@ int ProgramConverter::convert(std::string source) {
 		}
 
 		ProgLineNumber lineNum = lineCount;
-		updateStmtInStmtTable(currentLine, lineNum);                 // Aaron
-
-		if (isAssignment(currentLine)) {
-			updateAssignmentInAssignmentTrees(currentLine, lineNum); // Ngoc Khanh
-			updateAssignmentInTable(currentLine, lineNum);        // Kai Lin
-		}
+		updateStmtInStmtTable(currentLine, lineNum);
 	}
 
 	return lineCount;
@@ -159,7 +141,6 @@ bool ProgramConverter::isLineEnding(std::string str) {
 	return LINE_ENDINGS.find(ch) != std::string::npos;
 }
 
-// Ngoc Khanh
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
 	AssignTree tree = AssignTree();
 	pkb->putAssignForStmt(lineNum, tree);
@@ -167,31 +148,24 @@ bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLine
 	return false;
 }
 
-// Kai Lin
 bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {
-
 	bool isRHS = false;
 	bool res = true;
-	for each (std::string str in line)
-	{
+
+	for each (std::string str in line) {
 		if (isVarName(str)) {
 			VarName varName = str;
 
 			if (isRHS) {
 				res = pkb->putVarForStmt(lineNum, USES, varName);
-			}
-			else {
+			} else {
 				res = pkb->putVarForStmt(lineNum, MODIFIES, varName);
 			}
 			
-			if (!res) return res; //returns immediately if false
-		}
-		else if (isConstant(str)) {
-			Constant constant = atoi(str.c_str());
-			res = pkb->putConstant(constant);
-		}
-		else { 
-			if(str=="=") isRHS = true; //ignores the rest of the signs
+			if (!res) return res; // Returns immediately if false
+
+		} else { 
+			if (str == "=") isRHS = true; // Ignores the rest of the signs
 		}
 	}
 	
@@ -201,8 +175,13 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
 	bool success = true;
 
+	if (isAssignment(line)) {
+		success = updateAssignmentInTable(line, lineNum) && success;
+		success = updateAssignmentInAssignmentTrees(line, lineNum) && success;
+	}
+
 	if (currentParent != 0) {
-		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent);
+		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent) && success;
 	}
 
 	if (currentLeader != 0) {

@@ -15,7 +15,6 @@ private:
 	ProgLineNumber lineCount;
 	ProgLine nextLine();
 	bool isVarName(std::string str);
-	bool isConstant(std::string str);
 	bool isAssignment(ProgLine line);
 	bool isEnterParent(std::string str);
 	bool isExitParent(std::string str);
