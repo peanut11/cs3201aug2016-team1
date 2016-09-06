@@ -32,6 +32,7 @@ class QueryValidator {
 	static const std::string SYNTAX_UNDERSCORE;
 	static const std::string SYNTAX_DOUBLE_QUOTE;
 	static const std::string SYNTAX_COMMA;
+	static const std::string SYNTAX_BOOLEAN;
 
 	static const std::string SYNTAX_RELATIONSHIP_PARENT;
 	static const std::string SYNTAX_RELATIONSHIP_FOLLOWS;
@@ -55,7 +56,6 @@ class QueryValidator {
 	ClauseType::ClauseType getClauseType(std::string syntax);
 	std::string getEntitySyntax(std::string str);
 
-	
 
 	bool isMatch(std::string s1, std::string s2);
 	//bool isSelect(std::string str);
@@ -116,10 +116,11 @@ public:
 	bool isRelationship(std::string str);
 	bool isStatementNumber(std::string str);
 	bool isSynonym(std::string str);
+	bool isClauseResult(std::string str);
 	bool isClauseWith(std::string str);
 	bool isClausePattern(std::string str);
 	bool isPatternExprArgument(std::string str);
 	bool isExpression(std::string str);
-
-	int currentNumberOfArgument;
+	bool isTurple(std::string str);
+	bool isSyntaxBoolean(std::string str);
 };
