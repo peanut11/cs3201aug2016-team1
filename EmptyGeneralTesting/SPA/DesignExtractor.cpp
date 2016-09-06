@@ -30,7 +30,7 @@ void DesignExtractor::process() {
 }
 void DesignExtractor::processFollowStar() {
 	PKB* pkb = PKB::getInstance();
-	StmtNumber size = pkb->getStmtsTableSize();
+	StmtNumber size = pkb->getStmtTableSize();
 	for (StmtNumber i = (size - 1); i >= size; i--) {
 
 
@@ -50,7 +50,7 @@ void DesignExtractor::processFollowStar() {
 
 void DesignExtractor::processParentStar() {
 	PKB* pkb = PKB::getInstance();
-	StmtNumber size = pkb->getStmtsTableSize();
+	StmtNumber size = pkb->getStmtTableSize();
 	for (StmtNumber i = 0; i < size; i++) {
 		std::vector<StmtNumber> parentList = pkb->getStmtsByStmt(i, PARENT);
 		if (!parentList.empty()) {

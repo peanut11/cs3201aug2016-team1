@@ -32,6 +32,8 @@ public:
 			return "assign";
 		case IF:
 			return "if";
+		case WHILE:
+			return "while";
 		case STMT:
 			return "stmt";
 		case VARIABLE:

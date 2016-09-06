@@ -70,10 +70,20 @@ RelTable *QueryValidator::getRelationshipTable() {
 }
 
 bool QueryValidator::isValidQuery(std::string str) {
+	bool hasDeclared = false;
+	bool hasSelect = false;
+	
 	this->initStringTokenizer(str);
 
+	// Declaration is a must for every query
+	hasDeclared = isDeclaration(st.nextToken());
+	if (!hasDeclared) { return false; }
+
+	hasSelect = isSelect(st.hasMoreTokens() ? st.nextToken() : "");
+
+	return hasSelect;
 	// validate both synonym declaration & select clause string
-	return isDeclaration(st.nextToken()) && isSelect(st.hasMoreTokens() ? st.nextToken() : "");  //
+	//return isDeclaration(st.nextToken()) && isSelect(st.hasMoreTokens() ? st.nextToken() : "");  //
 
 }
 
@@ -219,6 +229,122 @@ bool QueryValidator::isDeclaredSynonym(std::string str) {
 	return this->mSynonymTable->contains(str);
 }
 
+bool QueryValidator::isClauseWith(std::string str) {
+	return false;
+}
+
+bool QueryValidator::isClausePattern(std::string str) {
+	SynonymObject selectedSynonymObj;
+	bool isUnderPattern = true;
+	int numOfComma = 0;
+	int maxNumOfArgs = 0;
+	int numOfArgs = 0;
+	
+	// start with pattern syntax
+	if (str.compare(SYNTAX_PATTERN) != 0) { return false; }
+
+	st.nextToken(); // point to pattern syntax
+
+	// after pattern syntax, a synonym (assign, while, if) must be written next
+	if (!isSynonym(st.peekNextToken())) { return false; }
+
+	selectedSynonymObj = this->mSynonymTable->getObject(st.peekNextToken());
+	if (selectedSynonymObj.getType() == EntityType::INVALID) {
+		return true; // invalid synonym, did not declare in the first place
+	}
+
+	if (selectedSynonymObj.getType() != EntityType::ASSIGN
+		&& selectedSynonymObj.getType() != EntityType::WHILE
+		&& selectedSynonymObj.getType() != EntityType::IF) {
+		return false; // since the synonym is not within one of these, its wrong
+	}
+
+	if (selectedSynonymObj.getType() == EntityType::ASSIGN || selectedSynonymObj.getType() == EntityType::WHILE) {
+		maxNumOfArgs = 2;
+	}
+	else {
+		maxNumOfArgs = 3; // entity type if
+	}
+
+	st.nextToken(); // point to valid synonym
+
+	// check if there's open bracket
+	if (st.peekNextToken().compare("(") != 0) { return false;  }
+	st.nextToken(); // point to "("
+
+	while (isUnderPattern) {
+
+		if (!st.hasMoreTokens()) { return false; }
+
+		if (st.peekNextToken().compare(")") == 0) { // end of pattern
+			currentNumberOfArgument = numOfArgs;
+			if (numOfArgs == maxNumOfArgs) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		std::string nextToken = st.nextToken();
+
+		if (isMatch(nextToken, SYNTAX_COMMA)) {
+			numOfComma += 1;
+		}
+
+		// first argument, if synonym, assign must match with assign, same for while and if
+		if (numOfArgs == 0 && numOfComma == 0) {
+			if (isSynonym(nextToken)) {
+
+				// WHILE and IF cannot have synonym as control variable
+				if (selectedSynonymObj.getType() == ASSIGN 
+					&& this->mSynonymTable->getObject(nextToken).getType() == selectedSynonymObj.getType()) {
+						numOfArgs += 1;
+				}
+				
+			}
+			else if (isVariable(nextToken)) {
+				// first arugment, if it is a variable name
+				// WHILE and IF can have variable as control variable
+				numOfArgs += 1;
+			}
+			else if (isWildcard(nextToken)) {
+				// first arugment, if it is a "_" (wildcard)
+				// WHILE and IF can have wildcard as control variable
+				numOfArgs += 1;
+			}
+		}
+
+		else if (numOfArgs >= 1 && numOfArgs <= maxNumOfArgs && numOfComma > 0) {
+			// check current number of args; second arugment, validate expression
+
+			if (!isMatch(nextToken, SYNTAX_COMMA)) {
+				if (isWildcard(nextToken)) { // "_"
+					numOfArgs += 1;
+				}
+				else if (isPatternExprArgument(nextToken)) { // "x + y"
+					// isMatch(nextToken, "\"") // start double quote
+					// && isMatch(nextToken, "\"") // end double quote
+
+					// "x + y" or _"x+y"_
+
+					// Only WHILE cannot have pattern behind
+					if (selectedSynonymObj.getType() != EntityType::WHILE) {
+						numOfArgs += 1;
+					}
+					
+				}
+			}
+
+			
+
+
+		}
+
+	}
+
+}
+
 /*
 @str	current token which is the relationship syntax 
 */
@@ -355,6 +481,90 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 
 }
 
+bool QueryValidator::isPatternExprArgument(std::string str) {
+	
+	bool isUnderArg = true;
+	bool containWildcard = false;
+	bool isValidExpression = false;
+	int numofDoubleQuote = 0;
+	int numOfWildcard = 0;
+
+	if (str.compare("") == 0) { // empty
+		return false;
+	}
+
+	if (str.compare(SYNTAX_UNDERSCORE) == 0) {
+		containWildcard = true;
+		numOfWildcard += 1;
+	}
+	else if (str.compare("\"") == 0) {
+		//isValidExpression = isExpression(st.nextToken());
+		numofDoubleQuote += 1;
+	}
+
+
+	while (isUnderArg) {
+		if (!st.hasMoreTokens()) { return false; }
+
+		if ((isMatch(st.peekNextToken(), SYNTAX_COMMA) || isMatch(st.peekNextToken(), ")"))) {
+			if (containWildcard && numOfWildcard == 2 && numofDoubleQuote == 2) {
+				return true;
+			}
+			else if (numofDoubleQuote == 1 || numOfWildcard == 1) {
+				return false; // did not end a second quote and jump to next comma or close bracket
+			}
+			else if (numofDoubleQuote == 2 && numOfWildcard == 0) {
+
+				return isValidExpression; // only have double quotes
+			}
+			else {
+				return false;
+			}
+		}
+		
+		std::string nextToken = st.nextToken();
+
+		if (nextToken.compare(SYNTAX_UNDERSCORE) == 0) {
+			//if (numOfWildcard == 0) { // first wildcard
+			//	containWildcard = true;
+			//}
+			numOfWildcard += 1;
+		}
+		else if (nextToken.compare("\"") == 0) {
+			numofDoubleQuote += 1;
+		}
+
+		if (numofDoubleQuote == 1) { // passed first quote
+			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
+				isValidExpression = isExpression(nextToken);
+
+				if (!isValidExpression) {
+					return false;
+				}
+			}
+			
+		}
+
+
+
+
+		/*
+		if (nextToken.compare("\"") == 0) {
+			if (numofDoubleQuote == 0) {
+				isValidExpression = isExpression(st.nextToken());	
+			}
+			numofDoubleQuote += 1;
+		}
+		*/
+	}
+
+	
+
+
+
+
+}
+
 bool QueryValidator::isSynonym(std::string str) {
 	return isName(str);
 }
@@ -368,15 +578,38 @@ bool QueryValidator::isVariable(std::string str) {
 		return false;
 	}
 
-	st.nextToken();
+	//st.nextToken();
 
 	return (st.hasMoreTokens() ? isName(st.nextToken()) : false)
 		&& (st.hasMoreTokens() ? isMatch(st.nextToken(), SYNTAX_DOUBLE_QUOTE) : false);
 
 }
 
+bool QueryValidator::isVariableName(std::string str) {
+	return isName(str);
+}
+
 bool QueryValidator::isExpression(std::string str) {
+	if (isFactor(str)) {
+		if (isMatch(st.peekNextToken(), "+")) {
+			st.popNextToken();
+			return isExpression(st.nextToken());
+		}
+		return true;
+	}
 	return false;
+}
+
+bool QueryValidator::isFactor(std::string str) {
+	return isVariableName(str) || isConstant(str);
+}
+
+bool QueryValidator::isConstant(std::string str) {
+	return isInteger(str);
+}
+
+bool QueryValidator::isWildcard(std::string str) {
+	return (str.compare(SYNTAX_UNDERSCORE) == 0);
 }
 
 bool QueryValidator::isName(std::string str) {
@@ -406,6 +639,18 @@ bool QueryValidator::isStatementNumber(std::string str) {
 	return false;
 }
 
+bool QueryValidator::isInteger(std::string str) {
+	if (str.empty()) {
+		return false;
+	}
+	for (unsigned int i = 0; i < str.length(); i++) {
+		if (!std::isdigit(str.at(i))) {
+			return false;
+		}
+	}
+	return true;
+}
+
 RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	if (isMatch(syntax, SYNTAX_RELATIONSHIP_USES)) {
 		return RelationshipType::USES;
@@ -433,6 +678,9 @@ EntityType QueryValidator::getSyntaxEntityType(std::string syntax) {
 	}
 	else if (isMatch(syntax, SYNTAX_IF)) {
 		return EntityType::IF;
+	}
+	else if (isMatch(syntax, SYNTAX_WHILE)) {
+		return EntityType::WHILE;
 	}
 	else if (isMatch(syntax, SYNTAX_STATEMENT)) {
 		return EntityType::STMT;
@@ -477,7 +725,6 @@ ClauseType::ClauseType QueryValidator::getClauseType(std::string syntax) {
 	}
 }
 
-
 std::string QueryValidator::getEntitySyntax(std::string str) {
 	if (isMatch(str, SYNTAX_PROCEDURE)) {
 		return SYNTAX_PROCEDURE;
@@ -487,6 +734,9 @@ std::string QueryValidator::getEntitySyntax(std::string str) {
 	}
 	else if (isMatch(str, SYNTAX_IF)) {
 		return SYNTAX_IF;
+	}
+	else if (isMatch(str, SYNTAX_WHILE)) {
+		return SYNTAX_WHILE;
 	}
 	else if (isMatch(str, SYNTAX_STATEMENT)) {
 		return SYNTAX_STATEMENT;
@@ -517,7 +767,11 @@ std::string QueryValidator::getEntityTypeString(EntityType type) {
 		return "assign";
 	case IF:
 		return "if";
+	case WHILE:
+		return "while";
 	}
+
+	return "";
 }
 
 std::string QueryValidator::getNextToken() {

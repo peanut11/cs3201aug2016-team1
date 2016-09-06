@@ -90,7 +90,6 @@ public:
 
 	}
 	
-
 	TEST_METHOD(TestQueryValidator_Select_Only) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
@@ -112,7 +111,6 @@ public:
 		// if ifstmt;whilew;\nSelect w such that Parent(ifstmt, w)
 
 	}
-
 
 	TEST_METHOD(TestQueryValidator_Check_tokenizer) {
 		/*
@@ -143,29 +141,58 @@ public:
 		Assert::AreEqual(std::string(","), st.nextToken());
 		Assert::AreEqual(std::string("2"), st.nextToken());
 		Assert::AreEqual(std::string(")"), st.nextToken());
+
+		st = StringTokenizer("pattern(\"x\",\"x+y\")", QUERY_PREPROCESSOR);
+		Assert::AreEqual(std::string("pattern"), st.nextToken());
+		Assert::AreEqual(std::string("("), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string("x"), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string(","), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string("x"), st.nextToken());
+		Assert::AreEqual(std::string("+"), st.nextToken());
+		Assert::AreEqual(std::string("y"), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string(")"), st.nextToken());
+
+		st = StringTokenizer("pattern(\"x\",_)", QUERY_PREPROCESSOR);
+		Assert::AreEqual(std::string("pattern"), st.nextToken());
+		Assert::AreEqual(std::string("("), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string("x"), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string(","), st.nextToken());
+		Assert::AreEqual(std::string("_"), st.nextToken());
+		Assert::AreEqual(std::string(")"), st.nextToken());
+
 	}
 
 	TEST_METHOD(TestQueryValidator_Variable_Only) {
 		QueryValidator *validator = QueryValidator::getInstance();
 		// success
 		validator->initStringTokenizer("\"a\"");
+		validator->getNextToken();
 		Assert::IsTrue(validator->isVariable("\""));
 
 		// failure
 		validator->initStringTokenizer("\"a"); // no back "
+		validator->getNextToken();
 		Assert::IsFalse(validator->isVariable("\""));
 
 		validator->initStringTokenizer("a\""); // no front "
+		validator->getNextToken();
 		Assert::IsFalse(validator->isVariable(""));
 
 		validator->initStringTokenizer("a"); // no front and back "
+		validator->getNextToken();
 		Assert::IsFalse(validator->isVariable(""));
 
 		validator->initStringTokenizer("\"\""); // no name inside
+		validator->getNextToken();
 		Assert::IsFalse(validator->isVariable("\""));
 
 	}
-
 
 	TEST_METHOD(TestQueryValidator_Argument_Only) {
 
@@ -264,6 +291,137 @@ public:
 
 		validator->initStringTokenizer("Follows(p,q)"); // follows
 		Assert::IsFalse(validator->isRelationship("Follows"));
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Clause_Pattern) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		//Assert::IsTrue(validator->isWildcard("_"));
+
+		// populate the synonym table first
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success
+		validator->initStringTokenizer("pattern a1(\"x\",\"x+y\")");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(_,\"x+1\")");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(_,_\"x+1\"_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(\"x\",_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(_,_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern w(_,_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern w(\"x\",_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern ifstmt(\"x\",_,_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern ifstmt(\"x\",_,\"x+y\")");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern ifstmt(\"x\",\"x+1\",_)");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern ifstmt(\"x\",\"x+1\",\"x+y\")");
+		Assert::IsTrue(validator->isClausePattern("pattern"));
+
+		// Failure
+		validator->initStringTokenizer("pattern a1(\"x + 1\",_)");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(x,_)");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(_,x)");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(_,_\"x+1\")");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern a1(x,x)");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern w(\"x\",\"x+y\")");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern w(w,_)");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+		validator->initStringTokenizer("pattern ifstmt(a,_,_)");
+		Assert::IsFalse(validator->isClausePattern("pattern"));
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Pattern_Expr_Only) {
+		QueryValidator *validator = QueryValidator::getInstance();
+		// verify expression
+
+		validator->initStringTokenizer("x+1");
+		Assert::IsTrue(validator->isExpression("x"));
+
+		validator->initStringTokenizer("x+1+z");
+		Assert::IsTrue(validator->isExpression("x"));
+
+		validator->initStringTokenizer("+1");
+		Assert::IsFalse(validator->isExpression("+"));
+
+
+		// success
+		validator->initStringTokenizer("\"x+1\",");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isPatternExprArgument("\""));
+
+		validator->initStringTokenizer("_\"x+1\"_,");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isPatternExprArgument("_"));
+
+		// failure
+		validator->initStringTokenizer("_,");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("_"));
+
+		validator->initStringTokenizer("\"x+1\"");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("\""));
+
+		validator->initStringTokenizer("_\"x+1\"_");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("_"));
+
+		validator->initStringTokenizer("\"x+1,");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("\""));
+
+		validator->initStringTokenizer("_\"x+1\",");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("_"));
+
+		validator->initStringTokenizer("\"x+1\"_,");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("\""));
+
+		validator->initStringTokenizer("\"+1\",");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument("\""));
+
+		validator->initStringTokenizer(",");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isPatternExprArgument(","));
+
+
 
 	}
 
