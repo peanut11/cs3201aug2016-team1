@@ -59,6 +59,8 @@ class QueryValidator {
 
 	bool isMatch(std::string s1, std::string s2);
 	//bool isSelect(std::string str);
+	bool isInteger(std::string str);
+
 	bool isBoolean(std::string str); // BOOLEAN
 	bool isSuchThat(std::string str); // match such+that
 	bool isAnd(std::string str);
@@ -67,10 +69,14 @@ class QueryValidator {
 	bool isPattern(std::string str); // match pattern+assign+(+"variable"|_+,+"exp"|_+)
 	bool isWith(std::string str);
 
+	bool isFactor(std::string str);
+	//bool isExpression(std::string str);
 	bool isName(std::string str);
+	bool isConstant(std::string str);
+	bool isWildcard(std::string str);
+
 	//bool isSynonym(std::string str);
 	//bool isVariable(std::string str);
-	bool isExpression(std::string str);
 	//bool isArguments(std::string str);
 	//bool isStatementNumber(std::string str);
 
@@ -104,9 +110,16 @@ public:
 	bool isSelect(std::string str);
 	bool isValidQuery(std::string str);
 
-	bool isVariable(std::string str);
+	bool isVariable(std::string str); // contains double quote (e.g. "x")
+	bool isVariableName(std::string str); // does not contain double quote (e.g. x)
 	bool isArguments(std::string str, RelObject relationshipObject);
 	bool isRelationship(std::string str);
 	bool isStatementNumber(std::string str);
 	bool isSynonym(std::string str);
+	bool isClauseWith(std::string str);
+	bool isClausePattern(std::string str);
+	bool isPatternExprArgument(std::string str);
+	bool isExpression(std::string str);
+
+	int currentNumberOfArgument;
 };
