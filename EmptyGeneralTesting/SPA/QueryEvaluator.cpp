@@ -4,9 +4,14 @@
 // - QueryProcessor
 //
 // Uses:
-// - QueryTree
-//   - QueryNode
+// QueryTable
+// ClauseObject
+// SelectObject
+
 #include "QueryEvaluator.h"
+#include "QueryTable.h"
+#include "ClauseObject.h"
+#include "SelectObject.h"
 
 QueryEvaluator *QueryEvaluator::_instance;
 
@@ -23,9 +28,19 @@ QueryEvaluator *QueryEvaluator::getInstance()
 /*
 Evaluate QueryTree
 */
-void QueryEvaluator::evaluate() {
+void QueryEvaluator::evaluate(QueryTable queryTable) {
 	try {
 		// do the evaluation (Basic Query Evaluator BQE) 
+		this->queryTable = queryTable;
+
+		// gets all the clauses and select objects
+		std::vector<ClauseObject> clauses = queryTable.getClauses();
+		SelectObject select = queryTable.getSelect();
+
+		// iterate the clauses objects
+		for (std::vector<ClauseObject>::const_iterator it = clauses.begin(); it < clauses.end(); it++) {
+			it->execute();
+		}
 	}
 	catch (std::runtime_error e) {
 		throw e.what();

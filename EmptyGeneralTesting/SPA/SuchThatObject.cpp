@@ -4,3 +4,7 @@ std::vector<SuchThatRelObject> SuchThatObject::getRelationships()
 {
 	return relationships;
 }
+
+void SuchThatObject::evaluate()
+{
+}

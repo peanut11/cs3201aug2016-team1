@@ -74,7 +74,7 @@
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="SynonymOccurence.cpp">
-		<Filter>Source Files\QP</Filter>
+      <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="SuchThatRelObject.cpp">
       <Filter>Source Files\QP</Filter>
@@ -83,6 +83,9 @@
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="QueryTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ClauseObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -178,7 +181,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SynonymOccurence.h">
-		<Filter>Header Files\QP</Filter>
+      <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="SuchThatRelObject.h">
       <Filter>Header Files\QP</Filter>

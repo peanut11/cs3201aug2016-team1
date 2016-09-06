@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssignTree.cpp" />
+    <ClCompile Include="ClauseObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />

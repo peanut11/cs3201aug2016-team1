@@ -8,4 +8,5 @@ class SuchThatObject: public ClauseObject {
 
 public:
 	std::vector<SuchThatRelObject> getRelationships();
+	void evaluate();
 };
