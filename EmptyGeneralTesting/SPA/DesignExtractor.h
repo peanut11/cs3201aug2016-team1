@@ -27,5 +27,6 @@ public:
 	void DesignExtractor::process();
 	void DesignExtractor::processFollowStar();
 	void DesignExtractor::processParentStar();
-	void DesignExtractor::updateStmtTable()
+	void DesignExtractor::updateStmtTable();
+	void DesignExtractor::processWhileLoop(StmtNumber i);
 };

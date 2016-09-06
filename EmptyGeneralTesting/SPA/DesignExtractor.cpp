@@ -65,19 +65,34 @@ void DesignExtractor::processParentStar() {
 }
 void DesignExtractor::updateStmtTable() {
 	PKB* pkb = PKB::getInstance();
-	StmtNumber size = pkb->getStmtsTableSize();
+	StmtNumber size = pkb->getStmtTableSize();
 	std::vector<StmtNumber> whileList = pkb->getStmtsByType(WHILE);
 	for (StmtNumber i = 0; i < whileList.size(); i++) {
-
+		processWhileLoop(whileList.at(i));
 	}
 
 }
 void DesignExtractor::processWhileLoop(StmtNumber i) {
 	PKB* pkb = PKB::getInstance();
-	StmtNumber followLine = pkb->getStmtsByStmt(i, FOLLOWS).front;
+	std::vector<StmtNumber> followlist = pkb->getStmtsByStmt(i, FOLLOWS);
+	StmtNumber followLine = followlist.front();
 	std::vector<StmtNumber> followStar = pkb->getStmtsByStmt(i + 1, FOLLOWSSTAR);
 	for (StmtNumber j = 0; j < followStar.size(); j++) {
 		StmtNumber k = followStar.at(j);
-		
+		if (pkb->getStmtTypeForStmt(k) == WHILE) {
+			processWhileLoop(k);
+			
+		}
+		std::vector<StmtNumber> useList = pkb->getStmtsByStmt(k, USES);
+		std::vector<StmtNumber> modifiesList = pkb->getStmtsByStmt(k, MODIFIES);
+		for (StmtNumber l = 0; l < useList.size(); l++) {
+			pkb->putStmtForStmt(i, USES, useList.at(l));
+			pkb->putStmtForStmt(i, MODIFIES, modifiesList.at(l));
+			VarName addToVartableUse = pkb->getVarName(useList.at(l));
+			VarName addToVartableMod = pkb->getVarName(modifiesList.at(l));
+			pkb->putVarForStmt(i, USES, addToVartableUse);
+			pkb->putVarForStmt(i, MODIFIES, addToVartableMod);
+			
+		}
 	}
 }
