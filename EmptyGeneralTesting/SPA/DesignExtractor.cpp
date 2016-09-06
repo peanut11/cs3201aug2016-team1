@@ -24,6 +24,10 @@ using namespace std;
 int DesignExtractor() {
 	return 0;
 }
+void DesignExtractor::process() {
+	processFollowStar();
+	processParentStar();
+}
 void DesignExtractor::processFollowStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtsTableSize();
@@ -48,7 +52,6 @@ void DesignExtractor::processParentStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtsTableSize();
 	for (StmtNumber i = 0; i < size; i++) {
-		PKB* pkb = PKB::getInstance();
 		std::vector<StmtNumber> parentList = pkb->getStmtsByStmt(i, PARENT);
 		if (!parentList.empty()) {
 			StmtNumber add = parentList.front();
@@ -60,5 +63,21 @@ void DesignExtractor::processParentStar() {
 		}
 	}
 }
+void DesignExtractor::updateStmtTable() {
+	PKB* pkb = PKB::getInstance();
+	StmtNumber size = pkb->getStmtsTableSize();
+	std::vector<StmtNumber> whileList = pkb->getStmtsByType(WHILE);
+	for (StmtNumber i = 0; i < whileList.size(); i++) {
 
+	}
 
+}
+void DesignExtractor::processWhileLoop(StmtNumber i) {
+	PKB* pkb = PKB::getInstance();
+	StmtNumber followLine = pkb->getStmtsByStmt(i, FOLLOWS).front;
+	std::vector<StmtNumber> followStar = pkb->getStmtsByStmt(i + 1, FOLLOWSSTAR);
+	for (StmtNumber j = 0; j < followStar.size(); j++) {
+		StmtNumber k = followStar.at(j);
+		
+	}
+}
