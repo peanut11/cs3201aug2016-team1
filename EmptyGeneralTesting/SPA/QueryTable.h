@@ -3,7 +3,7 @@
 #include "SelectObject.h"
 #include "ClauseObject.h"
 
-class QueryTree {
+class QueryTable {
 
 	SelectObject select;
 	std::vector<ClauseObject> clauses;

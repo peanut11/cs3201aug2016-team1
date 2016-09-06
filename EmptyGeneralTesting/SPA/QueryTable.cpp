@@ -6,14 +6,14 @@
 // Used by:
 // - QueryEvaluator
 
-#include "QueryTree.h" 
+#include "QueryTable.h" 
 
-SelectObject QueryTree::getSelect()
+SelectObject QueryTable::getSelect()
 {
 	return select;
 }
 
-std::vector<ClauseObject> QueryTree::getClauses()
+std::vector<ClauseObject> QueryTable::getClauses()
 {
 	return clauses;
 }

@@ -13,9 +13,6 @@
     <ClCompile Include="QueryProcessor.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="QueryTree.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="QueryValidator.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -82,6 +79,9 @@
     <ClCompile Include="SuchThatArgObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="QueryTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -97,9 +97,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QueryValidator.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryTree.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="QueryProcessor.h">
@@ -181,6 +178,9 @@
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="SuchThatArgObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryTable.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>

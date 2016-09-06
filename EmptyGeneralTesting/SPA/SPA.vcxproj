@@ -23,7 +23,7 @@
     <ClCompile Include="QueryEvaluator.cpp" />
     <ClCompile Include="QueryPreprocessor.cpp" />
     <ClCompile Include="QueryProcessor.cpp" />
-    <ClCompile Include="QueryTree.cpp" />
+    <ClCompile Include="QueryTable.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
@@ -56,7 +56,7 @@
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
     <ClInclude Include="EntityType.h" />
-    <ClInclude Include="QueryTree.h" />
+    <ClInclude Include="QueryTable.h" />
     <ClInclude Include="QueryValidator.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
