@@ -76,6 +76,12 @@
     <ClCompile Include="SynonymObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="SuchThatRelObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="SuchThatArgObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -170,6 +176,12 @@
     </ClInclude>
     <ClInclude Include="DesignExtractor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SuchThatRelObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SuchThatArgObject.h">
+      <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
