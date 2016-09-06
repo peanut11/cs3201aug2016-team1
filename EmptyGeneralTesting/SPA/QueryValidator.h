@@ -5,8 +5,10 @@
 #include "EntityType.h"
 #include "RelationshipType.h"
 #include "ClauseType.h"
+#include "AttrType.h"
 #include "SynonymTable.h"
 #include "SynonymObject.h"
+#include "SynonymOccurence.h"
 #include "RelTable.h"
 
 class QueryValidator {
@@ -44,16 +46,23 @@ class QueryValidator {
 	static const std::string SYNTAX_ATTRIBUTE_STATEMENT_NUMBER;
 	static const std::string SYNTAX_ATTRIBUTE_VALUE;
 
-
 	static QueryValidator *_instance;
+	SynonymOccurence *mSynonymOccurence;
 	SynonymTable *mSynonymTable;
 	RelTable *mRelTable;
 
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
 
+	void insertClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
+	void insertClauseSuchThatObject(RelationshipType mRelType);
+	void insertClausePatternObject();
+	void insertClauseWithObject();
+
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
 	ClauseType::ClauseType getClauseType(std::string syntax);
+	
+
 	std::string getEntitySyntax(std::string str);
 
 
@@ -102,6 +111,7 @@ public:
 	void clearSynonymTable();
 
 	// Return methods
+	SynonymOccurence *getSynonymOccurence();
 	SynonymTable *getSynonymTable();
 	RelTable *getRelationshipTable();
 
