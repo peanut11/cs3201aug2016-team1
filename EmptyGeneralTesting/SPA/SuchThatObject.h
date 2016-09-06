@@ -1,11 +1,11 @@
 #pragma once
 #include <vector>
 #include "ClauseObject.h"
-#include "SuchThatRelObject.h"
+#include "RelObject.h"
 
 class SuchThatObject: public ClauseObject {
-	std::vector<SuchThatRelObject> relationships;
+	std::vector<RelObject> relationships;
 
 public:
-	std::vector<SuchThatRelObject> getRelationships();
+	std::vector<RelObject> getRelationships();
 };

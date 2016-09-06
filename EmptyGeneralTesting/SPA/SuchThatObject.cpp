@@ -1,6 +1,6 @@
 #include "SuchThatObject.h"
 
-std::vector<SuchThatRelObject> SuchThatObject::getRelationships()
+std::vector<RelObject> SuchThatObject::getRelationships()
 {
 	return relationships;
 }

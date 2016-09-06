@@ -61,9 +61,7 @@
     <ClInclude Include="RelTable.h" />
     <ClInclude Include="SelectObject.h" />
     <ClInclude Include="StringTokenizer.h" />
-    <ClInclude Include="SuchThatArgObject.h" />
     <ClInclude Include="SuchThatObject.h" />
-    <ClInclude Include="SuchThatRelObject.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
