@@ -7,11 +7,8 @@
 // - AssignTree
 
 #include "ProgramConverter.h"
-#include <string>
-#include <cctype>
 
-bool ProgramConverter::isVarName(std::string str)
-{
+bool ProgramConverter::isVarName(std::string str) {
 	if (str.empty()) {
 		return false;
 	}
@@ -19,11 +16,13 @@ bool ProgramConverter::isVarName(std::string str)
 	if (!std::isalpha(str.at(0))) {
 		return false;
 	}
+
 	for (unsigned int i = 1; i < str.length(); i++) {
 		if (!std::isalnum(str.at(i))) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -63,16 +62,12 @@ int ProgramConverter::convert(std::string source) {
 			} else {
 				currentParent = parentVec[0];
 			}
+
 			continue;
 		}
 
-		ProgLineNumber lineNum = lineCount;
-		updateStmtInStmtTable(currentLine, lineNum);                 // Aaron
-
-		if (isAssignment(currentLine)) {
-			updateAssignmentInAssignmentTrees(currentLine, lineNum); // Ngoc Khanh
-			updateAssignmentInTable(currentLine, lineNum);        // Kai Lin
-		}
+		const ProgLineNumber lineNum = lineCount;
+		updateStmtInStmtTable(currentLine, lineNum);
 	}
 
 	return lineCount;
@@ -131,6 +126,11 @@ bool ProgramConverter::isAssignment(ProgLine line) {
 	return SECOND_TOKEN == "=";
 }
 
+bool ProgramConverter::isWhile(ProgLine line) {
+	const std::string FIRST_TOKEN = line[0];
+	return FIRST_TOKEN == "while";
+}
+
 bool ProgramConverter::isEnterParent(std::string str) {
 	return str == "{";
 }
@@ -146,35 +146,31 @@ bool ProgramConverter::isLineEnding(std::string str) {
 	return LINE_ENDINGS.find(ch) != std::string::npos;
 }
 
-// Ngoc Khanh
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
-	AssignTree tree = AssignTree();
+	const AssignTree tree = AssignTree();
 	pkb->putAssignForStmt(lineNum, tree);
 
 	return false;
 }
 
-// Kai Lin
 bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {
-
 	bool isRHS = false;
 	bool res = true;
-	for each (std::string str in line)
-	{
+
+	for each (std::string str in line) {
 		if (isVarName(str)) {
-			VarName varName = str;
+			const VarName varName = str;
 
 			if (isRHS) {
 				res = pkb->putVarForStmt(lineNum, USES, varName);
-			}
-			else {
+			} else {
 				res = pkb->putVarForStmt(lineNum, MODIFIES, varName);
 			}
 			
-			if (!res) return res; //returns immediately if false
-		}
-		else { 
-			if(str=="=") isRHS = true; //ignores the rest of the signs
+			if (!res) return res; // Returns immediately if false
+
+		} else { 
+			if (str == "=") isRHS = true; // Ignores the rest of the signs
 		}
 	}
 	
@@ -184,8 +180,20 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
 	bool success = true;
 
+	if (isAssignment(line)) {
+		success = pkb->putStmtTypeForStmt(lineNum, ASSIGN) && success;
+		success = updateAssignmentInTable(line, lineNum) && success;
+		success = updateAssignmentInAssignmentTrees(line, lineNum) && success;
+
+	} else if (isWhile(line)) {
+		success = pkb->putStmtTypeForStmt(lineNum, WHILE) && success;
+
+		const VarName varName = line[1];
+		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
+	}
+
 	if (currentParent != 0) {
-		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent);
+		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent) && success;
 	}
 
 	if (currentLeader != 0) {

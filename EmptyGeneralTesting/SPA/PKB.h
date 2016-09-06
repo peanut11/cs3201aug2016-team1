@@ -49,18 +49,40 @@ public:
 	VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
 	VarName getVarName(VarIndex varIndex);
 
-	// API used by Parser
+	// API used by Parser and DE
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
+	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
 
-	// API used by QP
-	bool is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB); // E.g. is(FOLLOWS,1,2)
-	bool is(StmtNumber stmt, RelationshipType rel, VarOrStmt item);    // E.g. is(1,MODIFIES,2)
+	// API used by QP and DE
+	/*
+	Follows( 1, 2) -> bool result = is(FOLLOWS,1,2);
+	Follows(s1, 2) -> std::vector<StmtNumber> s1 = getStmtsByStmt(2,FOLLOWS);     // Get stmts that stmt 2 follows
+	Follows( 1,s2) -> std::vector<StmtNumber> s2 = getStmtsByStmt(1,FOLLOWED_BY); // Get stmts that stmt 1 is followed by
+	Follows(s1,s2) -> std::vector<StmtNumber> s1 = s2 = getAllStmts();
+	Follows( a,s2) -> std::vector<StmtNumber>  a = getStmtsByType(ASSIGN);
+					  std::vector<StmtNumber> s2 = getAllStmts();
+					  for (int i = 0; i < a.size(); i++) {
+						for (int j = 0; j < s2.size(); j++) {
+						  if (is(FOLLOWS,a,s2)) {
+						    if (query == "Select a") {
+							  results.append(a);
+							} else if (query == "Select s2") {
+							  results.append(s2);
+							}
+						  }
+						}
+					  }
+	*/
+	bool is(RelationshipType rel, StmtNumber stmt, VarOrStmt item);
 	bool isVarExist(VarName varName);
+
 	AssignTree              getAssign(StmtNumber stmt);
-	StmtNumber PKB::getStmtsTableSize();
+	EntityType				getStmtTypeForStmt(StmtNumber stmt);
+	StmtNumber              getStmtTableSize();
 	std::vector<Constant>   getAllConstantValues();
+	std::vector<StmtNumber> getAllStmts();
 	std::vector<VarName>    getAllVarNames();
 	std::vector<StmtNumber> getStmtsByType(EntityType stmtType);
 	std::vector<StmtNumber> getStmtsByVar(RelationshipType rel, VarName varName);
