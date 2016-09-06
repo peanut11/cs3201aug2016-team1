@@ -5,6 +5,8 @@
 #include "SynonymObject.h"
 #include "RelObject.h"
 #include "ClauseType.h"
+#include "AttrType.h"
+#include "SelectObject.h"
 
 const std::string QueryValidator::SYNTAX_PROCEDURE = "procedure";
 const std::string QueryValidator::SYNTAX_ASSIGN = "assign";
@@ -39,6 +41,8 @@ const std::string QueryValidator::SYNTAX_ATTRIBUTE_VARIABLE_NAME = "varName";
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_STATEMENT_NUMBER = "stmt#";
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_VALUE = "value";
 
+
+
 QueryValidator *QueryValidator::_instance;
 
 /*
@@ -48,6 +52,7 @@ QueryValidator *QueryValidator::getInstance()
 {
 	if (!_instance)
 		_instance = new QueryValidator;
+	_instance->mSynonymOccurence = SynonymOccurence::getInstance();
 	_instance->mSynonymTable = SynonymTable::getInstance();
 	_instance->mRelTable = RelTable::getInstance();
 	return _instance;
@@ -59,6 +64,15 @@ void QueryValidator::initStringTokenizer(std::string str) {
 
 void QueryValidator::clearSynonymTable() {
 	this->mSynonymTable->clearAll();
+}
+
+void QueryValidator::insertClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
+	SelectObject mObj = SelectObject(entityType, attrType, isBoolean);
+	// insert into selectTable
+}
+
+SynonymOccurence *QueryValidator::getSynonymOccurence() {
+	return this->mSynonymOccurence;
 }
 
 SynonymTable *QueryValidator::getSynonymTable() {
@@ -203,6 +217,23 @@ bool QueryValidator::isSelect(std::string str) {
 
 			case ClauseType::SELECT:
 				isValid = isClauseResult(currentToken);
+
+				if (isValid) {
+					// insert into clause select table
+
+					EntityType mSynonymEntityType = this->mSynonymTable->getObject(str).getType();
+
+					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
+						this->insertClauseSelectObject(EntityType::INVALID, AttrType::INVALID, true);
+					}
+					else if (isSynonym(currentToken)	// synonym
+						&& mSynonymEntityType != EntityType::INVALID) {
+
+						this->insertClauseSelectObject(mSynonymEntityType, AttrType::INVALID, false);
+
+					}
+				}
+
 				break;
 
 			case ClauseType::SUCH_THAT:
@@ -442,8 +473,16 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 			if (!hasValidFirstArg) {
 
 				if (relationshipObject.doesFirstArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
-					hasValidFirstArg = true; // first argument is correct
-					numberOfArgs += 1;
+					
+					// check if reach max synonym occurence
+					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken)) {
+						// update synonym occurence
+						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken);
+
+						hasValidFirstArg = true; // first argument is correct
+						numberOfArgs += 1;
+					} // end of check synonym occurence
+					
 				}
 
 			}
@@ -452,7 +491,12 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 			if (hasComma && hasValidFirstArg) {
 
 				if (relationshipObject.doesSecondArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
-					numberOfArgs += 1;
+					// check if reach max synonym occurence
+					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken)) {
+						// update synonym occurence
+						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken);
+						numberOfArgs += 1;
+					} // end of check synonym occurence
 				}
 
 			}

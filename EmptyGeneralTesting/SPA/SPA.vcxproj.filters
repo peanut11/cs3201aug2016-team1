@@ -73,6 +73,9 @@
     <ClCompile Include="SynonymObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="SynonymOccurence.cpp">
+		<Filter>Source Files\QP</Filter>
+    </ClCompile>
     <ClCompile Include="SuchThatRelObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -173,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="DesignExtractor.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymOccurence.h">
+		<Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="SuchThatRelObject.h">
       <Filter>Header Files\QP</Filter>

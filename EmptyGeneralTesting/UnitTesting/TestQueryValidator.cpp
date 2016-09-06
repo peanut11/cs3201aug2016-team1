@@ -467,6 +467,8 @@ public:
 		validator->initStringTokenizer("Uses(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
+		Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
+		
 
 		validator->initStringTokenizer("Uses(s1,var1)"); // stmt & var
 		validator->getNextToken();
@@ -582,7 +584,7 @@ public:
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 		
 		// Failure
-		validator->initStringTokenizer("a1(\"x + 1\",_)");
+		validator->initStringTokenizer("a1(\"x + 1\",_)"); // first arg is expression
 		validator->getNextToken();
 		Assert::IsFalse(validator->isClausePattern("a1"));
 
@@ -606,15 +608,15 @@ public:
 		validator->getNextToken();
 		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("w(\"x\",\"x+y\")");
+		validator->initStringTokenizer("w(\"x\",\"x+y\")"); // second arg is not _
 		validator->getNextToken();
 		Assert::IsFalse(validator->isClausePattern("w"));
 
-		validator->initStringTokenizer("w(w,_)");
+		validator->initStringTokenizer("w(w,_)");		// no control variable, use synonym while
 		validator->getNextToken();
 		Assert::IsFalse(validator->isClausePattern("w"));
 
-		validator->initStringTokenizer("ifstmt(a,_,_)");
+		validator->initStringTokenizer("ifstmt(a,_,_)");	// no control variable, use synonym assign
 		validator->getNextToken();
 		Assert::IsFalse(validator->isClausePattern("ifstmt"));
 		
