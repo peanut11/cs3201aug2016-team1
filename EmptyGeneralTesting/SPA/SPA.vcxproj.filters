@@ -171,6 +171,12 @@
     <ClInclude Include="DesignExtractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SuchThatRelObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SuchThatArgObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
