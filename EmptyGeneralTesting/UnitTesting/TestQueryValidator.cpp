@@ -5,10 +5,69 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+
+
 namespace UnitTesting {
 	TEST_CLASS(TestQueryValidator) {
 public:
 	
+	TEST_METHOD(TestQueryValidator_Full_Query) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		// Success test cases
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(s1,s2)"));
+		Assert::AreEqual(6, validator->getSynonymTable()->size());
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(1,2)"));
+		Assert::AreEqual(6, validator->getSynonymTable()->size());
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(1,_)"));
+		Assert::AreEqual(6, validator->getSynonymTable()->size());
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(_,2)"));
+		Assert::AreEqual(6, validator->getSynonymTable()->size());
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(_,_)"));
+		Assert::AreEqual(6, validator->getSynonymTable()->size());
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(_,_) pattern a1(\"x\",\"y\")"));
+		Assert::AreEqual(6, validator->getSynonymTable()->size());
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success follows
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3)"));
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3) pattern a1(\"x\",\"y\")"));
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3) pattern a1(\"x\",\"y\")"));
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// Failed test cases
+		//Assert::IsFalse(validator->isValidQuery("procedure p;assign a;\nSelect"));
+		//validator->clearSynonymTable();
+
+		// if ifstmt;whilew;\nSelect w such that Parent(ifstmt, w)
+
+	}
+
+
 	TEST_METHOD(TestQueryValidator_Procedure_Only) {
 		std::string str1 = "procedure p;\n";
 
@@ -89,28 +148,7 @@ public:
 		validator->clearSynonymTable();
 
 	}
-	
-	TEST_METHOD(TestQueryValidator_Select_Only) {
-		QueryValidator *validator = QueryValidator::getInstance();
 
-		// Success test cases
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a;\nSelect p"));
-		Assert::AreEqual(validator->getSynonymTable()->size(), 2);
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-		validator->clearSynonymTable();
-		/*
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a;\nSelect p.procName"));
-		Assert::AreEqual(validator->getSynonymTable()->size(), 2);
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-		validator->clearSynonymTable();
-		*/
-		// Failed test cases
-		Assert::IsFalse(validator->isValidQuery("procedure p;assign a;\nSelect"));
-		validator->clearSynonymTable();
-
-		// if ifstmt;whilew;\nSelect w such that Parent(ifstmt, w)
-
-	}
 
 	TEST_METHOD(TestQueryValidator_Check_tokenizer) {
 		/*
@@ -129,7 +167,20 @@ public:
 		Assert::AreEqual(std::string("procName"), st.nextToken());
 		*/
 
-		StringTokenizer st = StringTokenizer("1,2", QUERY_PREPROCESSOR);
+		StringTokenizer st = StringTokenizer("Select p such that Parent(1,2)", QUERY_PREPROCESSOR);
+		Assert::AreEqual(std::string("Select"), st.nextToken());
+		Assert::AreEqual(std::string("p"), st.nextToken());
+		Assert::AreEqual(std::string("such"), st.nextToken());
+		Assert::AreEqual(std::string("that"), st.nextToken());
+		Assert::AreEqual(std::string("Parent"), st.nextToken());
+		Assert::AreEqual(std::string("("), st.nextToken());
+		Assert::AreEqual(std::string("1"), st.nextToken());
+		Assert::AreEqual(std::string(","), st.nextToken());
+		Assert::AreEqual(std::string("2"), st.nextToken());
+		Assert::AreEqual(std::string(")"), st.nextToken());
+
+
+		st = StringTokenizer("1,2", QUERY_PREPROCESSOR);
 		Assert::AreEqual(std::string("1"), st.nextToken());
 		Assert::AreEqual(std::string(","), st.nextToken());
 		Assert::AreEqual(std::string("2"), st.nextToken());
@@ -241,56 +292,225 @@ public:
 
 	}
 
-	TEST_METHOD(TestQueryValidator_Relationship) {
+	TEST_METHOD(TestQueryValidator_Relationship_Parent) {
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		// populate the synonym table first
 		validator->clearSynonymTable();
-		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;\nSelect p")); //
+		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-
-		//std::string procString = "procedure";
-		//Assert::AreEqual(validator->getSynonymTable()->getObject("p").getTypeString().c_str(), procString.c_str());
 
 		// success
 		validator->initStringTokenizer("Parent(1,2)"); // parent
+		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(s1,s2)"); // parent
+		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(1,s2)"); // parent
+		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(s1,2)"); // parent
+		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->initStringTokenizer("Follows(s1,2)"); // follows
-		Assert::IsTrue(validator->isRelationship("Follows"));
+		validator->initStringTokenizer("Parent(ifstmt1, ifstmt2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->initStringTokenizer("Modifies(p,var1)"); // modifies
-		Assert::IsTrue(validator->isRelationship("Modifies"));
+		validator->initStringTokenizer("Parent(ifstmt1, 1)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
 
+		validator->initStringTokenizer("Parent(w1, w2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent(w1, 1)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent(s1,_)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent(_,s1)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent(_,_)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		// failure
 		validator->initStringTokenizer("Parent(p,q)"); // parent should have stmt args, but both args are procedure
+		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(s1,q)"); // parent
+		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(p,s2)"); // parent
+		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(s1)"); // parent
+		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(s1,)"); // parent
+		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Parent"));
 
+		validator->initStringTokenizer("Parent(_,)"); // parent
+		validator->getNextToken();
+		Assert::IsFalse(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // parent
+		validator->getNextToken();
+		Assert::IsFalse(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent(\"x\",_)"); // parent
+		validator->getNextToken();
+		Assert::IsFalse(validator->isRelationship("Parent"));
+
+
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Relationship_Follows) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+	
+		// populate the synonym table first
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success
+		validator->initStringTokenizer("Follows(s1,2)"); // follows
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
+		validator->initStringTokenizer("Follows(c1,c2)"); // calls
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
+		validator->initStringTokenizer("Follows(ifstmt1,c2)"); // if & call
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
+
+		// failure
 		validator->initStringTokenizer("Follows(p,q)"); // follows
+		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Follows"));
+
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Relationship_Modifies) {
+
+		// modifies and uses should not have _ as first argument
+
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		// populate the synonym table first
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+	
+		// success
+		validator->initStringTokenizer("Modifies(p,var1)"); // proc & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		validator->initStringTokenizer("Modifies(s1,var1)"); // stmt & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		validator->initStringTokenizer("Modifies(ifstmt1,var1)"); // ifstmt & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		validator->initStringTokenizer("Modifies(w1,var1)"); // while & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		validator->initStringTokenizer("Modifies(c1,var1)"); // call & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		// failure
+		validator->initStringTokenizer("Modifies(_,var1)"); // _ & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Relationship_Uses) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		// populate the synonym table first
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success
+		validator->initStringTokenizer("Uses(p,var1)"); // proc & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		validator->initStringTokenizer("Uses(s1,var1)"); // stmt & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		validator->initStringTokenizer("Uses(ifstmt1,var1)"); // ifstmt & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		validator->initStringTokenizer("Uses(w1,var1)"); // while & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		validator->initStringTokenizer("Uses(c1,var1)"); // call & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		// failure
+		validator->initStringTokenizer("Uses(_,var1)"); // _ & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+	}
+
+
+
+	TEST_METHOD(TestQueryValidator_Clause_Result) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->initStringTokenizer("p"); // declared synonym
+		Assert::IsTrue(validator->isClauseResult(validator->getNextToken()));
+		
+		validator->initStringTokenizer("BOOLEAN"); // boolean!
+		Assert::IsTrue(validator->isClauseResult(validator->getNextToken()));
+
+		validator->initStringTokenizer("z"); // not declared synonym
+		Assert::IsFalse(validator->isClauseResult(validator->getNextToken()));
+
+		validator->initStringTokenizer(""); // empty
+		Assert::IsFalse(validator->isClauseResult(validator->getNextToken()));
 
 	}
 
@@ -305,64 +525,99 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
-		validator->initStringTokenizer("pattern a1(\"x\",\"x+y\")");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(\"x\",\"x+y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(_,\"x+1\")");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(\"x\", _\"y\"_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(_,_\"x+1\"_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,\"x+1\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(\"x\",_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,_\"x+1\"_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(_,_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(\"x\",_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern w(_,_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(a1,_)");			// left = a1 (synonym)
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern w(\"x\",_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern ifstmt(\"x\",_,_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,_   \"x+1\"_)"); // spaces
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern ifstmt(\"x\",_,\"x+y\")");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("w(_,_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("w"));
 
-		validator->initStringTokenizer("pattern ifstmt(\"x\",\"x+1\",_)");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("w(\"x\",_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("w"));
 
-		validator->initStringTokenizer("pattern ifstmt(\"x\",\"x+1\",\"x+y\")");
-		Assert::IsTrue(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("ifstmt(\"x\",_,_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
+		validator->initStringTokenizer("ifstmt(\"x\",_,\"x+y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("ifstmt"));
+
+		validator->initStringTokenizer("ifstmt(\"x\",\"x+1\",_)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("ifstmt"));
+
+		validator->initStringTokenizer("ifstmt(\"x\",\"x+1\",\"x+y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("ifstmt"));
+		
 		// Failure
-		validator->initStringTokenizer("pattern a1(\"x + 1\",_)");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(\"x + 1\",_)");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(x,_)");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(x,_)");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(_,x)");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,x)");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(_,_\"x+1\")");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,_\"x+1\")");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern a1(x,x)");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(x,x)"); // left and right are variables
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern w(\"x\",\"x+y\")");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("a1(_,a1)");			// right = a1 (synonym)
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->initStringTokenizer("pattern w(w,_)");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("w(\"x\",\"x+y\")");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("w"));
 
-		validator->initStringTokenizer("pattern ifstmt(a,_,_)");
-		Assert::IsFalse(validator->isClausePattern("pattern"));
+		validator->initStringTokenizer("w(w,_)");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("w"));
 
+		validator->initStringTokenizer("ifstmt(a,_,_)");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("ifstmt"));
+		
 	}
 
 	TEST_METHOD(TestQueryValidator_Pattern_Expr_Only) {
