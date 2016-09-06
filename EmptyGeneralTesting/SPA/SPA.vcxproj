@@ -29,7 +29,9 @@
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
+    <ClCompile Include="SuchThatArgObject.cpp" />
     <ClCompile Include="SuchThatObject.cpp" />
+    <ClCompile Include="SuchThatRelObject.cpp" />
     <ClCompile Include="SynonymObject.cpp" />
     <ClCompile Include="SynonymOccurence.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
@@ -62,7 +64,9 @@
     <ClInclude Include="RelTable.h" />
     <ClInclude Include="SelectObject.h" />
     <ClInclude Include="StringTokenizer.h" />
+    <ClInclude Include="SuchThatArgObject.h" />
     <ClInclude Include="SuchThatObject.h" />
+    <ClInclude Include="SuchThatRelObject.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />
