@@ -33,13 +33,13 @@ void QueryPreProcessor::init() {
 void QueryPreProcessor::populateRelationshipTable() {
 
 	RelObject object = this->createRelationshipObject(RelationshipType::MODIFIES,
-	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT },	// args 1
+	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT },	// args 1
 	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2
 		2);
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::USES,
-	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT },	// args 1
+	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT },	// args 1
 	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2
 		2);
 	this->mRelTable->insert(object);
@@ -57,26 +57,26 @@ void QueryPreProcessor::populateRelationshipTable() {
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::PARENT,
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
 		2);
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::PARENTSTAR,
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
 		2);
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::FOLLOWS,
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
 		2);
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::FOLLOWSSTAR,
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
-	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT, EntityType::WILDCARD },
 		2);
 	this->mRelTable->insert(object);
 

@@ -22,7 +22,7 @@ Singleton
 QueryEvaluator *QueryEvaluator::getInstance()
 {
 	if (!_instance)
-		_instance = new QueryEvaluator;
+//		_instance = new QueryEvaluator;
 	return _instance;
 }
 

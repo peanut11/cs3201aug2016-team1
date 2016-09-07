@@ -16,61 +16,77 @@ public:
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		// Success test cases
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(s1,s2)"));
 		Assert::AreEqual(6, validator->getSynonymTable()->size());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		
-
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(1,2)"));
 		Assert::AreEqual(6, validator->getSynonymTable()->size());
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(1,_)"));
 		Assert::AreEqual(6, validator->getSynonymTable()->size());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(_,2)"));
 		Assert::AreEqual(6, validator->getSynonymTable()->size());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(_,_)"));
 		Assert::AreEqual(6, validator->getSynonymTable()->size());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect p such that Parent(_,_) pattern a1(\"x\",\"y\")"));
 		Assert::AreEqual(6, validator->getSynonymTable()->size());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success follows
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
-		validator->clearSynonymTable();
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3) pattern a1(\"x\",\"y\")"));
-		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-
+		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3) pattern a1(\"x\",\"y\")"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3) pattern a1(\"x\",\"y\")"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->clearSynonymOccurence();
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows (s1, 3) Parent(s1, s2) pattern a1(\"x\",\"y\")"));
 		Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 
-		// Failed test cases
-		//Assert::IsFalse(validator->isValidQuery("procedure p;assign a;\nSelect"));
-		//validator->clearSynonymTable();
+		validator->clearSynonymOccurence();
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
+		//Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 
-		// if ifstmt;whilew;\nSelect w such that Parent(ifstmt, w)
+		
+
+
+		// Failed test cases
+		validator->clearSynonymOccurence();
+		validator->clearSynonymTable();
+		// 1 common synonym is 3 clauses!
+		Assert::IsFalse(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
+		//Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 
 	}
 
@@ -457,7 +473,7 @@ public:
 		// failure
 		validator->initStringTokenizer("Modifies(_,var1)"); // _ & var
 		validator->getNextToken();
-		Assert::IsTrue(validator->isRelationship("Modifies"));
+		Assert::IsFalse(validator->isRelationship("Modifies"));
 
 	}
 
@@ -494,11 +510,11 @@ public:
 		// failure
 		validator->initStringTokenizer("Uses(_,var1)"); // _ & var
 		validator->getNextToken();
-		Assert::IsTrue(validator->isRelationship("Uses"));
+		Assert::IsFalse(validator->isRelationship("Uses"));
 
 		validator->initStringTokenizer("Uses(c1,3)"); // call & constant
 		validator->getNextToken();
-		Assert::IsTrue(validator->isRelationship("Uses"));
+		Assert::IsFalse(validator->isRelationship("Uses"));
 
 	}
 

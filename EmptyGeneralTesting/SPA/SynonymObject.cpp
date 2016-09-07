@@ -10,6 +10,14 @@ EntityType SynonymObject::getType() {
 	return this->type;
 }
 
+std::set<std::string> SynonymObject::getSetString() {
+	return this->mSetString;
+}
+
+std::set<int> SynonymObject::getSetInt() {
+	return this->mSetInt;
+}
+
 std::string SynonymObject::getSynonym() {
 	return this->synonym;
 }
@@ -37,6 +45,24 @@ std::string SynonymObject::getTypeString() {
 	default:
 		return "";
 	}
+}
+
+void SynonymObject::replaceSet(std::set<std::string> newSet) {
+	this->mSetString.clear();
+	this->mSetString.insert(newSet.begin(), newSet.end());
+}
+
+void SynonymObject::replaceSet(std::set<int> newSet) {
+	this->mSetInt.clear();
+	this->mSetInt.insert(newSet.begin(), newSet.end());
+}
+
+void SynonymObject::insertSet(std::set<std::string> updatedSet) {
+	this->mSetString.insert(updatedSet.begin(), updatedSet.end());
+}
+
+void SynonymObject::insertSet(std::set<int> updatedSet) {
+	this->mSetInt.insert(updatedSet.begin(), updatedSet.end());
 }
 
 void SynonymObject::insertSet(std::string variable) {

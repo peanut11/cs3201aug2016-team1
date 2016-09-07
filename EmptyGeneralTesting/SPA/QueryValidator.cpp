@@ -224,7 +224,6 @@ bool QueryValidator::isSelect(std::string str) {
 
 				if (isValid) {
 					// insert into clause select table
-
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(str).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
@@ -236,6 +235,12 @@ bool QueryValidator::isSelect(std::string str) {
 						this->insertClauseSelectObject(mSynonymEntityType, AttrType::INVALID, false);
 
 					}
+
+					// insert into synonym occurence table
+					this->mSynonymOccurence->setIncrementNumberOccurence(currentToken, ClauseType::SELECT);
+					//if (!mSynonymOccurence->hasMaximumOccurence(currentToken, ClauseType::SELECT)) {
+					//}
+
 				}
 
 				break;
@@ -318,6 +323,11 @@ bool QueryValidator::isClausePattern(std::string str) {
 	else {
 		maxNumOfArgs = 3; // entity type if
 	}
+
+	// check if reach max synonym occurence
+	if (this->getSynonymOccurence()->hasMaximumOccurence(str, ClauseType::PATTERN)) { return false; }
+	// update synonym occurence
+	this->getSynonymOccurence()->setIncrementNumberOccurence(str, ClauseType::PATTERN);
 
 	//st.nextToken(); // point to valid synonym
 
@@ -479,9 +489,9 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 				if (relationshipObject.doesFirstArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
 					
 					// check if reach max synonym occurence
-					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken)) {
+					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
 						// update synonym occurence
-						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken);
+						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken, ClauseType::SUCH_THAT);
 
 						hasValidFirstArg = true; // first argument is correct
 						numberOfArgs += 1;
@@ -496,15 +506,15 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 
 				if (relationshipObject.doesSecondArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
 					// check if reach max synonym occurence
-					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken)) {
+					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
 						// update synonym occurence
-						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken);
+						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken, ClauseType::SUCH_THAT);
 						numberOfArgs += 1;
 					} // end of check synonym occurence
 				}
 
 			}
-		}
+		} // end of isSynonym
 
 		else if (isWildcard(nextToken)) {
 			// first argument is wildcard
@@ -513,14 +523,17 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 				// if modifies and uses
 				// cannot have wildcard as first argument
 
-				hasValidFirstArg = true; // first argument is correct
-				numberOfArgs += 1;
+				if (!(relationshipObject.getRelObjectType() == RelationshipType::MODIFIES 
+					|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
+				}
+				
 			}
 
 			// second argument is wildcard
 			if (hasComma && hasValidFirstArg) {
 				numberOfArgs += 1;
-
 			}
 		}
 		

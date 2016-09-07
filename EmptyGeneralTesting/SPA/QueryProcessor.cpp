@@ -32,7 +32,7 @@ void QueryProcessor::evaluate() {
 
 	try {
 		// call QueryEvaulator and evaluate QueryTable
-		this->mEvaluator->evaluate();
+		//this->mEvaluator->evaluate();
 	}
 	catch (std::runtime_error e) {
 		std::cout << e.what() << std::endl;
