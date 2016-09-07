@@ -7,4 +7,8 @@ std::vector<SuchThatRelObject> SuchThatObject::getRelationships()
 
 void SuchThatObject::evaluate()
 {
+	// iterate all the relationships
+	for (std::vector<SuchThatRelObject>::iterator it = relationships.begin(); it < relationships.end(); it++) {
+
+	}
 }

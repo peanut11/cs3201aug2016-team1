@@ -13,7 +13,17 @@ SelectObject QueryTable::getSelect()
 	return select;
 }
 
-std::vector<ClauseObject> QueryTable::getClauses()
+std::vector<SuchThatRelObject> QueryTable::getSuchThats()
 {
-	return clauses;
+	return suchThats;
+}
+
+std::vector<WithObject> QueryTable::getWiths()
+{
+	return withs;
+}
+
+std::vector<PatternObject> QueryTable::getPatterns()
+{
+	return patterns;
 }
