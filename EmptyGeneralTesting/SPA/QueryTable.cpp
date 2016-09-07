@@ -13,17 +13,17 @@ SelectObject QueryTable::getSelect()
 	return select;
 }
 
-std::vector<SuchThatRelObject> QueryTable::getSuchThats()
+std::set<SuchThatRelObject> QueryTable::getSuchThats()
 {
 	return suchThats;
 }
 
-std::vector<WithObject> QueryTable::getWiths()
+std::set<WithObject> QueryTable::getWiths()
 {
 	return withs;
 }
 
-std::vector<PatternObject> QueryTable::getPatterns()
+std::set<PatternObject> QueryTable::getPatterns()
 {
 	return patterns;
 }
