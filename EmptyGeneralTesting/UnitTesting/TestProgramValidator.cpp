@@ -12,14 +12,14 @@ public:
 		std::string str = Tools::readFile("prototype_procedure_First.txt");
 
 		ProgramValidator pv = ProgramValidator();
-		Assert::IsFalse(pv.isValidProgram(str));
+		Assert::IsFalse(pv.isValidSyntax(str));
 	}
 
 	TEST_METHOD(TestIsValidProgram_True_While) {
 		std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramValidator pv = ProgramValidator();
-		Assert::IsTrue(pv.isValidProgram(str));
+		Assert::IsTrue(pv.isValidSyntax(str));
 	}
 
 	};
