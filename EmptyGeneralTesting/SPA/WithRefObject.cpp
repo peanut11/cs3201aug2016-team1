@@ -1,6 +1,7 @@
 #include "WithRefObject.h"
+#include "AttrType.h"
 
-WithRefObject WithRefObject::CreateWithRefObject(WithRefType refType, std::string synonym, AttrType attributeName) {
+WithRefObject WithRefObject::CreateWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
 	this->refType = refType;
 	this->synonym = synonym;
 	this->attributeName = attributeName;
@@ -34,7 +35,7 @@ std::string WithRefObject::getSynonym() {
 	return synonym;
 }
 
-AttrType WithRefObject::getAttrType() {
+AttrType::AttrType WithRefObject::getAttrType() {
 	return attributeName;
 }
 

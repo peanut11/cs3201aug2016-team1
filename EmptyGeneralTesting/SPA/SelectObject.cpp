@@ -3,7 +3,7 @@
 #include "AttrType.h"
 
 
-SelectObject::SelectObject(EntityType entityType, AttrType attrType, bool isBoolean)
+SelectObject::SelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean)
 {
 	this->entityType = entityType;
 	this->attrType = attrType;
@@ -15,7 +15,7 @@ EntityType SelectObject::getEntityType()
 	return entityType;
 }
 
-AttrType SelectObject::getAttrType()
+AttrType::AttrType SelectObject::getAttrType()
 {
 	return attrType;
 }

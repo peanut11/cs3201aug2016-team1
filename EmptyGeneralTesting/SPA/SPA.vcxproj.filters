@@ -13,9 +13,6 @@
     <ClCompile Include="QueryProcessor.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="QueryTree.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="QueryValidator.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -26,6 +23,9 @@
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
     <ClCompile Include="RelTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="RelObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="ProgramValidator.cpp">
@@ -52,6 +52,24 @@
     <ClCompile Include="ExprTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SynonymObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="SynonymOccurence.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="SuchThatRelObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="SuchThatArgObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ClauseObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -67,9 +85,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QueryValidator.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryTree.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="QueryProcessor.h">
@@ -116,6 +131,21 @@
     </ClInclude>
     <ClInclude Include="ExprTree.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignExtractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymOccurence.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SuchThatRelObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SuchThatArgObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryTable.h">
+      <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

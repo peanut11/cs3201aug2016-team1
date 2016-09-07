@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssignTree.cpp" />
+    <ClCompile Include="ClauseObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="ExprTree.cpp" />
     <ClCompile Include="Frontend.cpp" />
@@ -22,10 +23,16 @@
     <ClCompile Include="QueryEvaluator.cpp" />
     <ClCompile Include="QueryPreprocessor.cpp" />
     <ClCompile Include="QueryProcessor.cpp" />
-    <ClCompile Include="QueryTree.cpp" />
+    <ClCompile Include="QueryTable.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
+    <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
+    <ClCompile Include="SuchThatArgObject.cpp" />
+    <ClCompile Include="SuchThatObject.cpp" />
+    <ClCompile Include="SuchThatRelObject.cpp" />
+    <ClCompile Include="SynonymObject.cpp" />
+    <ClCompile Include="SynonymOccurence.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
@@ -33,6 +40,7 @@
     <ClInclude Include="AssignTree.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="ExprTree.h" />
+    <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PKB.h" />
@@ -42,13 +50,14 @@
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
     <ClInclude Include="EntityType.h" />
-    <ClInclude Include="QueryTree.h" />
+    <ClInclude Include="QueryTable.h" />
     <ClInclude Include="QueryValidator.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
     <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="SynonymObject.h" />
+    <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>

@@ -1,4 +1,6 @@
 #pragma once
+#include <set>
+#include <vector>
 #include <string>
 
 #include "EntityType.h"
@@ -6,42 +8,26 @@
 class SynonymObject {
 	EntityType type;
 	std::string synonym;
+	std::set<std::string> mSetString;
+	std::set<int> mSetInt;
 
 public:
 	
 	SynonymObject() {}
 
-	SynonymObject(EntityType type, std::string synonym) {
-		this->type = type;
-		this->synonym = synonym;
-	}
+	SynonymObject(EntityType type, std::string synonym);
+	EntityType getType();
 
-	EntityType getType() {
-		return this->type;
-	}
+	std::set<std::string> getSetString();
+	std::set<int> getSetInt();
+	std::string getSynonym();
+	std::string getTypeString();
 
-	std::string getSynonym() {
-		return this->synonym;
-	}
+	void replaceSet(std::set<std::string> newSet);
+	void replaceSet(std::set<int> newSet);
+	void insertSet(std::set<std::string> updatedSet);
+	void insertSet(std::set<int> updatedSet);
+	void insertSet(std::string variable);
+	void insertSet(int stmtNum);
 
-	std::string getTypeString() {
-		switch (this->type) {
-		case PROCEDURE:
-			return "procedure";
-		case ASSIGN:
-			return "assign";
-		case IF:
-			return "if";
-		case STMT:
-			return "stmt";
-		case VARIABLE:
-			return "variable";
-		case CONSTANT:
-			return "constant";
-		case PROGRAM_LINE:
-			return "prog_line";
-		case CALL:
-			return "call";
-		}
-	}
 };

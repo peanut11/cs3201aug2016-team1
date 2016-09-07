@@ -2,6 +2,7 @@
 #include "RelTable.h"
 
 RelTable *RelTable::_instance;
+RelObject RelTable::nullRelObject = RelObject(RelationshipType::INVALID_RELATIONSHIP, std::vector<EntityType>(), std::vector<EntityType>(), 0);
 
 /*
 Singleton
@@ -30,6 +31,15 @@ RelObject RelTable::getObject(int index) {
 	return this->relObjects.at(index);
 }
 
+RelObject RelTable::find(RelationshipType type) {
+	for (auto value : this->relObjects) {
+		if (value.getRelObjectType() == type) {
+			return value;
+		}
+	}
+
+	return nullRelObject;
+}
 
 /*
 Get the size of table

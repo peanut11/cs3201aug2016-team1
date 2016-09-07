@@ -37,14 +37,13 @@ PKB::PKB() {
 	stmtTable = std::vector<StmtRow>();
 	stmtTypeTable = std::vector<EntityType>();
 	varTable = std::vector<VarRow>();
+
+	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
+	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
 }
 
-bool PKB::is(StmtNumber stmt, RelationshipType rel, VarOrStmt item) {
+bool PKB::is(RelationshipType rel, StmtNumber stmt, VarOrStmt item) {
 	return contains(stmtTable[stmt][rel], item);
-}
-
-bool PKB::is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB) {
-	return contains(stmtTable[stmtA][rel], stmtB);
 }
 
 bool PKB::isVarExist(VarName varName) {
@@ -53,6 +52,14 @@ bool PKB::isVarExist(VarName varName) {
 
 std::vector<Constant> PKB::getAllConstantValues() {
 	return constants;
+}
+
+std::vector<StmtNumber> PKB::getAllStmts() {
+	std::vector<StmtNumber> stmts;
+	for (StmtNumber stmt = 1; stmt < stmtTable.size(); stmt++) {
+		stmts.push_back(stmt);
+	}
+	return stmts;
 }
 
 std::vector<VarName> PKB::getAllVarNames() {
@@ -65,6 +72,10 @@ AssignTree PKB::getAssign(StmtNumber stmt) {
 	}
 
 	return assignTrees[stmt];
+}
+
+EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
+	return stmtTypeTable[stmt];
 }
 
 std::vector<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
@@ -89,6 +100,10 @@ std::vector<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
 	}
 
 	return std::vector<StmtNumber>();
+}
+
+StmtNumber PKB::getStmtTableSize() {
+	return stmtTable.size() - 1; // StmtNumber starts from 1
 }
 
 VarIndex PKB::getVarIndex(VarName varName) {
@@ -185,6 +200,15 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 	}
 
 	return success;
+}
+
+bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
+	if (stmtTypeTable.size() != stmt) {
+		throw ERROR;
+	}
+
+	stmtTypeTable.push_back(stmtType);
+	return (stmtTypeTable.size() == stmt);
 }
 
 bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {

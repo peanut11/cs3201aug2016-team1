@@ -1,6 +1,6 @@
 #pragma once
 namespace ClauseType {
 	enum ClauseType {
-		SELECT, SUCH_THAT, WITH, AND, PATTERN, INVALID
+		SELECT, SUCH_THAT, WITH, AND, PATTERN, RESULT, INVALID
 	};
 }
