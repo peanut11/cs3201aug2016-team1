@@ -54,6 +54,7 @@ public:
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
+	bool putConstant(Constant constant);
 
 	// API used by QP and DE
 	/*

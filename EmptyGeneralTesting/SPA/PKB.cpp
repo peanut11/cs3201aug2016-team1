@@ -220,3 +220,9 @@ bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 
 	return (stmt + 1 == assignTrees.size());
 }
+
+bool PKB::putConstant(Constant constant) {
+	int prevSize = constants.size();
+	constants.push_back(constant);
+	return (prevSize + 1 == constants.size());
+}
