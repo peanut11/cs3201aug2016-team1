@@ -128,7 +128,23 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 			// update the synonym table
 			mSynonymTable->replaceSet(argTwo.getStringValue(), updatedStatements);
 		}
-		// both arguments are a synonym
+		// arg1 is underscore & arg2 is integer : Follows(_,10);
+		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIntegerValue > 0){
+
+		}
+		// arg1 is underscore & arg2 is synonym : Follows(_,s);
+		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIsSynonym()) {
+
+		}
+		// arg1 is integer & arg2 is underscore : Follows(3,_);
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
+
+		}
+		// arg1 is synonym & arg2 is underscore : Follows(s,_);
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
+
+		}
+		// both arguments are a synonym : Follows(s1,s2); Follow(a,s1);
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
 			// get all the statements for each synonym entity type
 			std::vector<StmtNumber> s1 = pkb->getStmtsByType(argOne.getEntityType());
@@ -167,11 +183,75 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 		return suchThatRelObject;
 
 	}
+	else if (type == PARENT) {
+		// both are statements number : Parent(3,4)
+		if (argOne.getIntegerValue() > 0 && argTwo.getIntegerValue() > 0) {
+		}
+		// arg1 is synonym, and arg2 is integer : Parent(s,3);Parent(a,4)
+		else if (argOne.getIsSynonym() && argTwo.getIntegerValue() > 0) {
+
+		}
+		// arg1 is integer, and arg1 is synonym : Parent(3,s);Parent(4,a)
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym()) {
+
+		}
+		// arg1 is underscore & arg2 is integer : Parent(_,10);
+		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIntegerValue > 0) {
+
+		}
+		// arg1 is underscore & arg2 is synonym : Parent(_,s);
+		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIsSynonym()) {
+
+		}
+		// arg1 is integer & arg2 is underscore : Parent(3,_);
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
+
+		}
+		// arg1 is synonym & arg2 is underscore : Parent(s,_);
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
+
+		}
+		// both arguments are a synonym : Parent(s1,s2);Parent(a,s1);
+		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
+
+		}
+	}
 	// iteration 1 : only allow 'statement' at left instead of 'procedure' too
 	else if (type == MODIFIES) {
 		// if left arg is 'statement number', right arg is "x" (Modifies(3,"x"))
-		if (argOne.getIntegerValue() > 0 &&  argTwo.getIsSynonym == false && argTwo.getStringValue().length > 0) {
+		if (argOne.getIntegerValue() > 0 &&  argTwo.getIsSynonym() == false && argTwo.getStringValue().length > 0) {
 				
+		}
+		// if left arg is 'statement number', right arg is a synonym (Modifies(3,v))
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym()) {
+
+		}
+		// if left arg is synonym, right arg is "x" (Modifies(s,"x")); Modifies(a,"x")
+		else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue().length > 0) {
+
+		}
+		// both args are synonym (Modifies(a,v));Modifies(s,v)
+		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
+
+		}
+
+	}
+	else if (type == USES) {
+		// if left arg is 'statement number', right arg is "x" (Uses(3,"x"))
+		if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue().length > 0) {
+
+		}
+		// if left arg is 'statement number', right arg is a synonym (Uses(3,v))
+		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym()) {
+
+		}
+		// if left arg is synonym, right arg is "x" (Uses(s,"x")); Uses(a,"x")
+		else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue().length > 0) {
+
+		}
+		// both args are synonym (Uses(a,v));Uses(s,v)
+		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
+
 		}
 	}
 }
