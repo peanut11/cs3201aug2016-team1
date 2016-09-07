@@ -34,7 +34,7 @@ private:
 	PKB();
 	
 	std::vector<AssignTree> assignTrees;
-	std::vector<Constant>   constants;
+	std::set<Constant>   constants;
 	RefMap                  refMap;
 	std::vector<VarName>    refTable;
 	std::vector<StmtRow>    stmtTable;
@@ -81,9 +81,9 @@ public:
 	AssignTree              getAssign(StmtNumber stmt);
 	EntityType				getStmtTypeForStmt(StmtNumber stmt);
 	StmtNumber              getStmtTableSize();
-	std::vector<Constant>   getAllConstantValues();
+	std::set<Constant>		getAllConstantValues();
 	std::set<StmtNumber>	getAllStmts();
-	std::vector<VarName>    getAllVarNames();
+	std::set<VarName>		getAllVarNames();
 	std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
 	std::set<StmtNumber>	getStmtsByVar(RelationshipType rel, VarName varName);
 	std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);

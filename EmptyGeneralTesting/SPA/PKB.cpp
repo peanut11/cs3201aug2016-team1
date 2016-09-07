@@ -21,7 +21,7 @@ PKB* PKB::getInstance() {
 
 PKB::PKB() {
 	assignTrees = std::vector<AssignTree>();
-	constants = std::vector<Constant>();
+	constants = std::set<Constant>();
 	refMap = RefMap();
 	refTable = std::vector<VarName>();
 	stmtTable = std::vector<StmtRow>();
@@ -43,7 +43,7 @@ bool PKB::isVarExist(VarName varName) {
 	return (refMap.find(varName) != refMap.end());
 }
 
-std::vector<Constant> PKB::getAllConstantValues() {
+std::set<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
 
@@ -55,8 +55,8 @@ std::set<StmtNumber> PKB::getAllStmts() {
 	return stmts;
 }
 
-std::vector<VarName> PKB::getAllVarNames() {
-	return refTable;
+std::set<VarName> PKB::getAllVarNames() {
+	return std::set<VarName>(refTable.begin(),refTable.end());
 }
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
@@ -216,6 +216,6 @@ bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 
 bool PKB::putConstant(Constant constant) {
 	int prevSize = constants.size();
-	constants.push_back(constant);
+	constants.insert(constant);
 	return (prevSize + 1 == constants.size());
 }
