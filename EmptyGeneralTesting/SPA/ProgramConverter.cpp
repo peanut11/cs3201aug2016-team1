@@ -7,6 +7,25 @@
 // - AssignTree
 
 #include "ProgramConverter.h"
+#include <string>
+#include <cctype>
+
+bool ProgramConverter::isVarName(std::string str)
+{
+	if (str.empty()) {
+		return false;
+	}
+	
+	if (!std::isalpha(str.at(0))) {
+		return false;
+	}
+	for (unsigned int i = 1; i < str.length(); i++) {
+		if (!std::isalnum(str.at(i))) {
+			return false;
+		}
+	}
+	return true;
+}
 
 ProgramConverter::ProgramConverter() {
 	pkb = PKB::getInstance();
@@ -15,21 +34,29 @@ ProgramConverter::ProgramConverter() {
 	lineCount = 0;
 }
 
-void ProgramConverter::convert(std::string source) {
+int ProgramConverter::convert(std::string source) {
 	st = StringTokenizer(source, DelimiterMode::PARSER);
+	lineCount = 0;
 	ProgLine currentLine;
 
 	while (!(currentLine = nextLine()).empty()) {
 		const std::string FIRST_TOKEN = currentLine[0];
 
+		if (FIRST_TOKEN == "procedure") {
+			currentLeader = 0;
+			currentParent = 0;
+			continue;
+		}
+
 		if (isEnterParent(FIRST_TOKEN)) {
-			currentLeader = 0; 
+			currentLeader = 0;
 			currentParent = lineCount;
 			continue;
+		}
 
-		} else if (isExitParent(FIRST_TOKEN)) {
+		if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
-			std::vector<StmtNumber> parentVec = pkb->getStmts(currentParent, PARENT);
+			std::vector<StmtNumber> parentVec = pkb->getStmtsByStmt(currentParent, PARENT);
 
 			if (parentVec.empty()) {
 				currentParent = 0;
@@ -44,9 +71,11 @@ void ProgramConverter::convert(std::string source) {
 
 		if (isAssignment(currentLine)) {
 			updateAssignmentInAssignmentTrees(currentLine, lineNum); // Ngoc Khanh
-			updateAssignmentInVarTable(currentLine, lineNum);        // Kai Lin
+			updateAssignmentInTable(currentLine, lineNum);        // Kai Lin
 		}
 	}
+
+	return lineCount;
 }
 
 // Possible return values:
@@ -80,17 +109,19 @@ ProgLine ProgramConverter::nextLine() {
 	while (st.hasMoreTokens() && !isLineEnding(token = st.nextToken())) {
 		if (isEnterParent(token) || isExitParent(token)) {
 			st.returnToken(token);
-			return line;
+			break;
+		} else {
+			line.push_back(token);
 		}
-
-		line.push_back(token);
 	}
 
 	if (line.empty()) {
 		return nextLine();
 	}
-
-	lineCount++;
+	
+	if (line[0] != "procedure") {
+		lineCount++;
+	}
 
 	return line;
 }
@@ -124,25 +155,41 @@ bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLine
 }
 
 // Kai Lin
-bool ProgramConverter::updateAssignmentInVarTable(ProgLine line, ProgLineNumber lineNum) {
-	VarName varName = "varName";
-	VarIndex varIndex = pkb->getVarIndex(varName);
+bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {
 
-	pkb->putVar(lineNum, MODIFIES, varIndex);
-	pkb->putVar(lineNum, USES, varIndex);
+	bool isRHS = false;
+	bool res = true;
+	for each (std::string str in line)
+	{
+		if (isVarName(str)) {
+			VarName varName = str;
 
-	return false;
+			if (isRHS) {
+				res = pkb->putVarForStmt(lineNum, USES, varName);
+			}
+			else {
+				res = pkb->putVarForStmt(lineNum, MODIFIES, varName);
+			}
+			
+			if (!res) return res; //returns immediately if false
+		}
+		else { 
+			if(str=="=") isRHS = true; //ignores the rest of the signs
+		}
+	}
+	
+	return res;
 }
 
 bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum) {
-	bool success;
+	bool success = true;
 
 	if (currentParent != 0) {
-		success = pkb->putStmt(lineNum, PARENT, currentParent);
+		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent);
 	}
 
 	if (currentLeader != 0) {
-		success = pkb->putStmt(lineNum, FOLLOWS, currentLeader) && success;
+		success = pkb->putStmtForStmt(lineNum, FOLLOWS, currentLeader) && success;
 	}
 
 	currentLeader = lineNum;

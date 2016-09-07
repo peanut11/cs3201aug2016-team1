@@ -33,6 +33,7 @@
     <ClInclude Include="AssignTree.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="ExprTree.h" />
+    <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="PKB.h" />
     <ClInclude Include="ProgramConverter.h" />
@@ -50,7 +51,6 @@
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="TreeBuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

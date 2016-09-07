@@ -1,6 +1,5 @@
 #pragma once
 #include "ExprTree.h"
-#include "PKB.h"
 
 class AssignTree
 {

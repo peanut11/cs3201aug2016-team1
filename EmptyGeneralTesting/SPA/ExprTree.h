@@ -1,5 +1,6 @@
 #pragma once
 #include "Node.h"
+#include "PKB.h"
 #include <stack>
 
 class ExprTree {

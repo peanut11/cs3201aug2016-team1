@@ -9,6 +9,8 @@
 
 const std::runtime_error PKB::ERROR = std::runtime_error("");
 
+PKB* PKB::theOne = nullptr;
+
 bool PKB::contains(std::vector<VarOrStmt> vec, VarOrStmt item) {
 	for (std::vector<VarOrStmt>::const_iterator it = vec.begin(); it < vec.end(); it++) {
 		if (*it == item) {
@@ -27,6 +29,15 @@ PKB* PKB::getInstance() {
 	return theOne;
 }
 
+PKB::PKB() {
+	assignTrees = std::vector<AssignTree>();
+	constants = std::vector<Constant>();
+	refMap = RefMap();
+	refTable = std::vector<VarName>();
+	stmtTable = std::vector<StmtRow>();
+	stmtTypeTable = std::vector<EntityType>();
+	varTable = std::vector<VarRow>();
+}
 
 bool PKB::is(StmtNumber stmt, RelationshipType rel, VarOrStmt item) {
 	return contains(stmtTable[stmt][rel], item);
@@ -34,6 +45,10 @@ bool PKB::is(StmtNumber stmt, RelationshipType rel, VarOrStmt item) {
 
 bool PKB::is(RelationshipType rel, StmtNumber stmtA, StmtNumber stmtB) {
 	return contains(stmtTable[stmtA][rel], stmtB);
+}
+
+bool PKB::isVarExist(VarName varName) {
+	return (refMap.find(varName) != refMap.end());
 }
 
 std::vector<Constant> PKB::getAllConstantValues() {
@@ -52,11 +67,11 @@ AssignTree PKB::getAssign(StmtNumber stmt) {
 	return assignTrees[stmt];
 }
 
-std::vector<StmtNumber> PKB::getStmts(RelationshipType rel, VarIndex varIndex) {
-	return varTable[varIndex][rel];
+std::vector<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
+	return varTable[getVarIndex(varName)][rel];
 }
 
-std::vector<StmtNumber> PKB::getStmts(StmtNumber stmt, RelationshipType stmtRel) {
+std::vector<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
 		throw ERROR;
 	}
@@ -64,7 +79,7 @@ std::vector<StmtNumber> PKB::getStmts(StmtNumber stmt, RelationshipType stmtRel)
 	return stmtTable[stmt][stmtRel];
 }
 
-std::vector<StmtNumber> PKB::getStmts(EntityType stmtType) {
+std::vector<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
 	std::vector<StmtNumber> stmts;
 
 	for (StmtNumber i = 0; i < stmtTable.size(); i++) {
@@ -82,8 +97,7 @@ VarIndex PKB::getVarIndex(VarName varName) {
 	
 	if (it == refMap.end()) {
 		varIndex = varTable.size();
-		VarRow newRow = VarRow();
-		varTable.push_back(newRow);
+		varTable.push_back(VarRow());
 		refTable.push_back(varName);
 		refMap[varName] = varIndex;
 	} else {
@@ -102,7 +116,7 @@ VarName PKB::getVarName(VarIndex varIndex) {
 	return varName;
 }
 
-std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType modifiesOrUses) {
+std::vector<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw ERROR;
 	}
@@ -110,53 +124,75 @@ std::vector<VarIndex> PKB::getVars(StmtNumber stmt, RelationshipType modifiesOrU
 	return stmtTable[stmt][modifiesOrUses];
 }
 
-bool PKB::putVar(StmtNumber dest, RelationshipType rel, VarIndex varIndex) {
-	if (dest > stmtTable.size()) {
-		throw ERROR;
-	}
+bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) {
+	bool success; 
+	int prevSize;
+	VarIndex varIndex = getVarIndex(varName);
 
 	if (rel != MODIFIES && rel != USES) {
 		throw ERROR;
 	}
+	
+	while (stmt >= stmtTable.size()) {
+		stmtTable.push_back(StmtRow());
+	}
 
-	const int prevSize = stmtTable[dest][rel].size();
-	stmtTable[dest][rel].push_back(varIndex);
-	varTable[varIndex][rel].push_back(dest);
+	while (varIndex >= varTable.size()) {
+		varTable.push_back(VarRow());
+	}
+	
+	prevSize = stmtTable[stmt][rel].size();
+	stmtTable[stmt][rel].push_back(varIndex);
+	success = (prevSize + 1 == stmtTable[stmt][rel].size());
 
-	return (prevSize + 1 == stmtTable[dest][rel].size());
+	prevSize = varTable[varIndex][rel].size();
+	varTable[varIndex][rel].push_back(stmt);
+	success = (prevSize + 1 == varTable[varIndex][rel].size()) && success;
+
+	return success;
 }
 
-bool PKB::putStmt(StmtNumber before, RelationshipType rel, StmtNumber after) {
-	if (before > stmtTable.size()) {
-		throw ERROR;
-	}
+bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
+	bool success;
 
 	if (rel == MODIFIES || rel == USES) {
 		throw ERROR;
 	}
 
-	const int prevSize = stmtTable[before][rel].size();
-
-	if (rel == FOLLOWS || rel == FOLLOWED_BY) {
-		stmtTable[after][FOLLOWS].push_back(before);
-		stmtTable[before][FOLLOWED_BY].push_back(after);
-
-	} else if (rel == PARENT || rel == PARENT_OF) {
-		stmtTable[after][PARENT].push_back(before);
-		stmtTable[before][PARENT_OF].push_back(after);
+	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
+		stmtTable.push_back(StmtRow());
 	}
 
-	stmtTable[before][rel].push_back(after);
+	int prevSize = stmtTable[stmtA][rel].size();
 
-	return (prevSize + 1 == stmtTable[before][rel].size());
+	prevSize = stmtTable[stmtA][rel].size();
+	stmtTable[stmtA][rel].push_back(stmtB);
+	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
+
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
+		const int OFFSET = 1;
+		int supplementaryRel;
+
+		if (rel == FOLLOWS || rel == PARENT) {
+			supplementaryRel = rel + OFFSET;
+		} else {
+			supplementaryRel = rel - OFFSET;
+		}
+
+		prevSize = stmtTable[stmtB][supplementaryRel].size();
+		stmtTable[stmtB][supplementaryRel].push_back(stmtA);
+		success = (prevSize + 1 == stmtTable[stmtB][supplementaryRel].size()) && success;
+	}
+
+	return success;
 }
 
-bool PKB::putAssign(StmtNumber dest, AssignTree tree) {
-	while (dest > assignTrees.size()) {
+bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
+	while (stmt > assignTrees.size()) {
 		assignTrees.push_back(AssignTree());
 	}
 
 	assignTrees.push_back(tree);
 
-	return (dest + 1 == assignTrees.size());
+	return (stmt + 1 == assignTrees.size());
 }

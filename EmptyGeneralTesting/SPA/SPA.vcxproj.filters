@@ -49,7 +49,9 @@
     <ClCompile Include="AssignTree.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
-    <ClCompile Include="ExprTree.cpp" />
+    <ClCompile Include="ExprTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -109,8 +111,12 @@
     <ClInclude Include="AssignTree.h">
       <Filter>Header Files\PKB</Filter>
     </ClInclude>
-    <ClInclude Include="TreeBuilder.h" />
-    <ClInclude Include="ExprTree.h" />
+    <ClInclude Include="Frontend.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="ExprTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

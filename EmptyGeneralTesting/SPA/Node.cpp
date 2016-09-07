@@ -18,7 +18,7 @@ Node::Node(EntityType nodeType)
 Node::Node(EntityType nodeType, int nameIndex)
 {
 	this->nodeType = nodeType;
-	this->nameIndex = nameIndex;
+	this->index = index;
 }
 
 EntityType Node::getNodeType() {
