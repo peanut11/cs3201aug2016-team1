@@ -71,12 +71,13 @@ int ProgramConverter::convert(std::string source) {
 
 		if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
-			std::vector<StmtNumber> parentVec = pkb->getStmtsByStmt(currentParent, PARENT);
+			std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
 
-			if (parentVec.empty()) {
+			if (parentSet.empty()) {
 				currentParent = 0;
 			} else {
-				currentParent = parentVec[0];
+				std::set<StmtNumber>::iterator it = parentSet.begin();
+				currentParent = *it;
 			}
 
 			continue;
