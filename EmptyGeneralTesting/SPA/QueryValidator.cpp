@@ -7,6 +7,9 @@
 #include "ClauseType.h"
 #include "AttrType.h"
 #include "SelectObject.h"
+#include "SuchThatObject.h"
+#include "SuchThatRelObject.h"
+#include "SuchThatArgObject.h"
 
 const std::string QueryValidator::SYNTAX_PROCEDURE = "procedure";
 const std::string QueryValidator::SYNTAX_ASSIGN = "assign";
@@ -238,8 +241,6 @@ bool QueryValidator::isSelect(std::string str) {
 
 					// insert into synonym occurence table
 					this->mSynonymOccurence->setIncrementNumberOccurence(currentToken, ClauseType::SELECT);
-					//if (!mSynonymOccurence->hasMaximumOccurence(currentToken, ClauseType::SELECT)) {
-					//}
 
 				}
 
