@@ -12,6 +12,7 @@ public:
 
 	static SynonymOccurence *getInstance();
 
+	void clearAll();
 	void setIncrementNumberOccurence(std::string synonym);
 	
 	std::string toString();

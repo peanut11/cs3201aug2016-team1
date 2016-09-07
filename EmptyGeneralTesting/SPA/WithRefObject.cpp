@@ -35,7 +35,7 @@ std::string WithRefObject::getSynonym() {
 	return synonym;
 }
 
-AttrType WithRefObject::getAttrType() {
+AttrType::AttrType WithRefObject::getAttrType() {
 	return attributeName;
 }
 

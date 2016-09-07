@@ -5,10 +5,16 @@
 
 const int SynonymOccurence::MAX_SYNONYM_OCCURENCE = 2;
 
+SynonymOccurence *SynonymOccurence::_instance;
+
 SynonymOccurence *SynonymOccurence::getInstance() {
 	if (!_instance)
 		_instance = new SynonymOccurence;
 	return _instance;
+}
+
+void SynonymOccurence::clearAll() {
+	this->mMap.clear();
 }
 
 void SynonymOccurence::setIncrementNumberOccurence(std::string synonym) {
@@ -19,6 +25,7 @@ void SynonymOccurence::setIncrementNumberOccurence(std::string synonym) {
 
 std::string SynonymOccurence::toString() {
 	std::string output = "";
+	output.append("============ SYNONYM OCCURENCE RESULT ===============\n");
 	for (std::map<std::string, int>::iterator ii = this->mMap.begin(); ii != this->mMap.end(); ii++) {
 		output.append(ii->first + " - " + std::to_string(ii->second) + "\n");
 	}

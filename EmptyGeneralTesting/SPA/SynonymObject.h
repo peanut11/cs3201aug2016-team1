@@ -21,7 +21,7 @@ public:
 	std::string getSynonym();
 	std::string getTypeString();
 
-	bool insertSet(std::string variable);
-	bool insertSet(int stmtNum);
+	void insertSet(std::string variable);
+	void insertSet(int stmtNum);
 
 };

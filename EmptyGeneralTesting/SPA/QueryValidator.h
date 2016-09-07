@@ -108,6 +108,7 @@ public:
 	static QueryValidator *getInstance();
 
 	void initStringTokenizer(std::string str);
+	void clearSynonymOccurence();
 	void clearSynonymTable();
 
 	// Return methods

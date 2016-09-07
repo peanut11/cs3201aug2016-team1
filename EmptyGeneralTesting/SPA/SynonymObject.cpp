@@ -34,13 +34,15 @@ std::string SynonymObject::getTypeString() {
 		return "prog_line";
 	case CALL:
 		return "call";
+	default:
+		return "";
 	}
 }
 
-bool SynonymObject::insertSet(std::string variable) {
+void SynonymObject::insertSet(std::string variable) {
 	this->mSetString.insert(variable);
 }
 
-bool SynonymObject::insertSet(int stmtNum) {
+void SynonymObject::insertSet(int stmtNum) {
 	this->mSetInt.insert(stmtNum);
 }

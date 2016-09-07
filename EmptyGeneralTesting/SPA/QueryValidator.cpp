@@ -62,6 +62,10 @@ void QueryValidator::initStringTokenizer(std::string str) {
 	this->st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
 }
 
+void QueryValidator::clearSynonymOccurence() {
+	this->mSynonymOccurence->clearAll();
+}
+
 void QueryValidator::clearSynonymTable() {
 	this->mSynonymTable->clearAll();
 }
