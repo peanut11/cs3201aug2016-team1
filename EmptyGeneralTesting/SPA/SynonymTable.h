@@ -14,6 +14,7 @@ public:
 
 	SynonymObject getObject(std::string synonym);
 	SynonymObject getObject(int index);
+	std::vector<SynonymObject> getObjects();
 
 	std::set<std::string> getSetString(std::string synonym);
 	std::set<int> getSetInt(std::string synonym);

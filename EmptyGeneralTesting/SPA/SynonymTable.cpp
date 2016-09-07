@@ -142,6 +142,11 @@ SynonymObject SynonymTable::getObject(int index) {
 	return this->synonymObjects.at(index);
 }
 
+std::vector<SynonymObject> SynonymTable::getObjects()
+{
+	return this->synonymObjects;
+}
+
 std::string SynonymTable::toString() {
 	std::string output = "";
 	for (auto value : this->synonymObjects) {
