@@ -13,9 +13,6 @@
     <ClCompile Include="QueryProcessor.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="QueryTree.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="QueryValidator.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -77,12 +74,18 @@
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="SynonymOccurence.cpp">
-		<Filter>Source Files\QP</Filter>
+      <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="SuchThatRelObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="SuchThatArgObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ClauseObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -100,9 +103,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QueryValidator.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryTree.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="QueryProcessor.h">
@@ -181,12 +181,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SynonymOccurence.h">
-		<Filter>Header Files\QP</Filter>
+      <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="SuchThatRelObject.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="SuchThatArgObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryTable.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>

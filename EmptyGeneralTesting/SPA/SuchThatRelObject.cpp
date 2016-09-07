@@ -22,3 +22,13 @@ SuchThatArgObject SuchThatRelObject::getArgsTwo()
 {
 	return argsTwo;
 }
+
+void SuchThatRelObject::setResultsBoolean(bool boolean)
+{
+	this->isResultsBoolean = boolean;
+}
+
+bool SuchThatRelObject::getResultsBoolean()
+{
+	return this->isResultsBoolean;
+}

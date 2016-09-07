@@ -26,12 +26,12 @@ void QueryProcessor::init() {
 }
 
 /*
-Evaluate QueryTree
+Evaluate QueryTable
 */
 void QueryProcessor::evaluate() {
 
 	try {
-		// call QueryEvaulator and evaluate QueryTree
+		// call QueryEvaulator and evaluate QueryTable
 		this->mEvaluator->evaluate();
 	}
 	catch (std::runtime_error e) {

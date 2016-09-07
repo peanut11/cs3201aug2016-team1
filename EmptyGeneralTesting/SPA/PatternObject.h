@@ -8,4 +8,5 @@ class PatternObject : public ClauseObject {
 
 public:
 	std::vector<PatternTypeObject> getPatterns();
+	void evaluate();
 };
