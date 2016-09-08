@@ -147,6 +147,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			// get existing results from synonym table
 			std::set<StmtNumber> currentStatements = mSynonymTable->getSetInt(argTwo.getStringValue());
 
+/*
 			// intersect two sets
 			std::set<StmtNumber> updatedStatements;
 			set_intersection(statements.begin(), statements.end(), currentStatements.begin(), currentStatements.end(),
@@ -154,6 +155,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 
 			// update the synonym table
 			mSynonymTable->replaceSet(argTwo.getStringValue(), updatedStatements);
+*/
 		}
 		// arg1 is underscore & arg2 is integer : Follows(_,10);
 		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIntegerValue() > 0){			
@@ -186,6 +188,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 				}
 			}
 
+/*
 			// intersect the synonym set
 			std::set<StmtNumber> updatedStatements;
 			set_intersection(evaluatedS.begin(), evaluatedS.end(), currentStatements.begin(), currentStatements.end(),
@@ -193,6 +196,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 
 			// update the synonm table
 			mSynonymTable->replaceSet(argTwo.getStringValue(), updatedStatements);
+*/
 		}
 		// arg1 is integer & arg2 is underscore : Follows(3,_);
 		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
@@ -224,7 +228,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 					}
 				}
 			}
-
+/*
 			// intersect the synonym set
 			std::set<StmtNumber> updatedStatements;
 			set_intersection(evaluatedS.begin(), evaluatedS.end(), currentStatements.begin(), currentStatements.end(),
@@ -232,7 +236,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 
 			// update the synonm table
 			mSynonymTable->replaceSet(argOne.getStringValue(), updatedStatements);
-
+*/
 		}
 		// both arguments are a synonym : Follows(s1,s2); Follow(a,s1);
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
@@ -255,7 +259,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			// retrieve current statements
 			std::set<StmtNumber> currentStatements1 = mSynonymTable->getSetInt(argOne.getStringValue());
 			std::set<StmtNumber> currentStatements2 = mSynonymTable->getSetInt(argTwo.getStringValue());
-
+/*
 			// intersect two sets x2
 			std::set<StmtNumber> updatedStatements1;
 			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), currentStatements1.begin(), currentStatements1.end(),
@@ -268,6 +272,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			// update the synonm table
 			mSynonymTable->replaceSet(argOne.getStringValue(), updatedStatements1);
 			mSynonymTable->replaceSet(argTwo.getStringValue(), updatedStatements2);
+*/
 		}
 
 		return suchThatRelObject;
@@ -295,7 +300,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 
 			// get existing results from the synonym table
 			std::set<VarName> currentVariables = mSynonymTable->getSetString(argTwo.getStringValue());
-			
+
+/*
 			// intersect two sets
 			std::set<VarName> updatedVariables;
 			set_intersection(variables.begin(), variables.end(), currentVariables.begin(), currentVariables.end(),
@@ -303,6 +309,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 
 			// update the synonym table
 			mSynonymTable->replaceSet(argOne.getIntegerValue(), updatedVariables);
+*/
 		}
 		// if left arg is synonym, right arg is "x" (Modifies(s,"x")); Modifies(a,"x")
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue().length() > 0) {
@@ -312,6 +319,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			// get existing results from synonym table
 			std::set<StmtNumber> currentStatements = mSynonymTable->getSetInt(argOne.getStringValue());
 
+/*
 			// intersect two sets
 			std::set<VarName> updatedStatements;
 			set_intersection(statements.begin(), statements.end(), currentStatements.begin(), currentStatements.end(),
@@ -319,6 +327,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 
 			// update the synonym table
 			mSynonymTable->replaceSet(argOne.getStringValue(), updatedStatements);
+*/
 		}
 		// both args are synonym (Modifies(a,v));Modifies(s,v)
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
@@ -342,6 +351,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			std::set<StmtNumber> currentStatements = mSynonymTable->getSetInt(argOne.getStringValue());
 			std::set<VarName> currentVariables = mSynonymTable->getSetString(argTwo.getStringValue());
 
+/*
 			// intersect two sets x2
 			std::set<StmtNumber> updatedStatements;
 			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), currentStatements.begin(), currentStatements.end(),
@@ -354,6 +364,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			// update the synonm table
 			mSynonymTable->replaceSet(argOne.getStringValue(), updatedStatements);
 			mSynonymTable->replaceSet(argTwo.getStringValue(), updatedVariables);
+*/
 		}
 
 		return suchThatRelObject;
