@@ -1,6 +1,6 @@
 #include "ClauseSuchThatObject.h"
 
-ClauseSuchThatObject ClauseSuchThatObject::createSuchThatRelobject(RelationshipType type, SuchThatArgObject argsOne, SuchThatArgObject argsTwo)
+ClauseSuchThatObject ClauseSuchThatObject::createSuchThatRelobject(RelationshipType type, ClauseSuchThatArgObject argsOne, ClauseSuchThatArgObject argsTwo)
 {
 	this->type = type;
 	this->argsOne = argsOne;
@@ -13,12 +13,12 @@ RelationshipType ClauseSuchThatObject::getRelationshipType()
 	return type;
 }
 
-SuchThatArgObject ClauseSuchThatObject::getArgsOne()
+ClauseSuchThatArgObject ClauseSuchThatObject::getArgsOne()
 {
 	return argsOne;
 }
 
-SuchThatArgObject ClauseSuchThatObject::getArgsTwo()
+ClauseSuchThatArgObject ClauseSuchThatObject::getArgsTwo()
 {
 	return argsTwo;
 }

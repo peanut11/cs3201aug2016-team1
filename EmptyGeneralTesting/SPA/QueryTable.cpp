@@ -19,7 +19,7 @@ std::set<ClauseSuchThatObject> QueryTable::getSuchThats()
 	return this->suchThats;
 }
 
-std::set<WithObject> QueryTable::getWiths()
+std::set<ClauseWithObject> QueryTable::getWiths()
 {
 	return this->withs;
 }
@@ -50,7 +50,7 @@ bool QueryTable::insertSuchThatRelObject(ClauseSuchThatObject object) {
 	}
 }
 
-bool QueryTable::insertWithObject(WithObject object) {
+bool QueryTable::insertWithObject(ClauseWithObject object) {
 	try {
 		return this->withs.insert(object).second;
 	}

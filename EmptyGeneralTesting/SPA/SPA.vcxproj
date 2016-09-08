@@ -30,15 +30,14 @@
     <ClCompile Include="ResultsTable.cpp" />
     <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
-    <ClCompile Include="SuchThatArgObject.cpp" />
-    <ClCompile Include="SuchThatRelObject.cpp" />
+    <ClCompile Include="ClauseSuchThatArgObject.cpp" />
+    <ClCompile Include="ClauseSuchThatObject.cpp" />
     <ClCompile Include="SynonymObject.cpp" />
     <ClCompile Include="SynonymOccurence.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="WithAttrObject.cpp" />
-    <ClCompile Include="WithObject.cpp" />
-    <ClCompile Include="WithRefObject.cpp" />
+    <ClCompile Include="ClauseWithObject.cpp" />
+    <ClCompile Include="ClauseWithRefObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssignTree.h" />
@@ -64,16 +63,15 @@
     <ClInclude Include="ResultsTable.h" />
     <ClInclude Include="SelectObject.h" />
     <ClInclude Include="StringTokenizer.h" />
-    <ClInclude Include="SuchThatArgObject.h" />
+    <ClInclude Include="ClauseSuchThatArgObject.h" />
     <ClInclude Include="ClauseSuchThatObject.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="WithAttrObject.h" />
-    <ClInclude Include="WithObject.h" />
-    <ClInclude Include="WithRefObject.h" />
+    <ClInclude Include="ClauseWithObject.h" />
+    <ClInclude Include="ClauseWithRefObject.h" />
     <ClInclude Include="WithRefType.h" />
   </ItemGroup>
   <ItemGroup>
