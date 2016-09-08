@@ -76,7 +76,7 @@ int ProgramConverter::convert(std::string source) {
 			if (parentSet.empty()) {
 				currentParent = 0;
 			} else {
-				std::set<StmtNumber>::iterator it = parentSet.begin();
+				StmtSetIterator it = parentSet.begin();
 				currentParent = *it;
 			}
 

@@ -1,18 +1,20 @@
 #pragma once
-#include "EntityType.h"
+
 #include <string>
+
+#include "EntityType.h"
+#include "Types.h"
 
 class SuchThatArgObject {
 	bool isSynonym;
 	EntityType entityType;
-	std::string stringValue;
-	int integerValue;
+	StringToken stringValue;
+	ProcStmtVarIndex integerValue;
 
 public:
-	SuchThatArgObject createSuchThatArgObject(bool isSynonym, EntityType entityType, std::string stringValue, int integerValue);
+	SuchThatArgObject createSuchThatArgObject(bool isSynonym, EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue);
 	bool getIsSynonym();
 	EntityType getEntityType();
-	std::string getStringValue();
-	int getIntegerValue();
-
+	StringToken getStringValue();
+	ProcStmtVarIndex getIntegerValue();
 };

@@ -9,35 +9,27 @@
 // SelectObject
 
 #include "QueryEvaluator.h"
-#include "QueryTable.h"
-#include "ClauseObject.h"
-#include "SuchThatRelObject.h"
-#include "WithObject.h"
-#include "PatternObject.h"
-#include "SelectObject.h"
-#include "PKB.h"
-#include "SynonymTable.h"
-#include <set>
-#include <iterator>
 
-QueryEvaluator *QueryEvaluator::_instance;
+QueryEvaluator* QueryEvaluator::_instance = nullptr;
 
 /*
 Singleton
 */
-QueryEvaluator *QueryEvaluator::getInstance()
+QueryEvaluator* QueryEvaluator::getInstance()
 {
-	if (!_instance)
-//		_instance = new QueryEvaluator;
+	if (_instance == nullptr) {
+		_instance = new QueryEvaluator();
+	}
+
 	return _instance;
 }
 
-PKB * QueryEvaluator::getPKB()
+PKB* QueryEvaluator::getPKB()
 {
 	return this->mPKB;
 }
 
-SynonymTable * QueryEvaluator::getSynonymTable()
+SynonymTable* QueryEvaluator::getSynonymTable()
 {
 	return this->mSynonymTable;
 }
@@ -61,19 +53,22 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		bool relationshipHolds = true;
 
 		// iterate the clauses vectors and evaluate them
-		for (std::set<SuchThatRelObject>::iterator it = suchThats.begin(); it < suchThats.end(); it++) {
-			*it = evaluateSuchThat(*it);
-			relationshipHolds = relationshipHolds && *it->getResultsBoolean();
+		std::vector<SuchThatRelObject> evaluatedSTs;
+		for (std::set<SuchThatRelObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
+			SuchThatRelObject evaluatedST = evaluateSuchThat(*it);
+			evaluatedSTs.push_back(evaluatedST);
+			relationshipHolds = relationshipHolds && evaluatedST.getResultsBoolean();
 		}
+		suchThats = std::set<SuchThatRelObject>(evaluatedSTs.begin(), evaluatedSTs.end());
 		// iterate the clauses vectors and evaluate them
-		for (std::set<WithObject>::iterator it = withs.begin(); it < withs.end(); it++) {
+		for (std::set<WithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
 			evaluateWith(*it);
-			relationshipHolds = relationshipHolds && *it->getResultsBoolean();
+			relationshipHolds = relationshipHolds && it->getResultsBoolean();
 		}
 		// iterate the clauses vectors and evaluate them
-		for (std::set<PatternObject>::iterator it = patterns.begin(); it < patterns.end(); it++) {
+		for (std::set<PatternObject>::const_iterator it = patterns.begin(); it != patterns.end(); it++) {
 			evaluatePattern(*it);
-			relationshipHolds = relationshipHolds && *it->getResultsBoolean();
+			relationshipHolds = relationshipHolds && it->getResultsBoolean();
 		}
 		// constraint results by SelectObj
 		if (relationshipHolds) {
@@ -83,7 +78,8 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 			}
 			// then it must be a synonym
 			else {
-				resultsTable.get(select.getStringValue());
+				// TODO: Define resultsTable
+				// resultsTable.get(select.getStringValue());
 			}
 		}
 		else {
@@ -140,7 +136,6 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 
 			// update the synonym table
 			mSynonymTable->replaceSet(argOne.getStringValue(), updatedStatements);
-
 		}
 		// arg1 is integer, and arg1 is synonym : Follows(3,s);Follows(4,a)
 		else if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym()) {
@@ -180,11 +175,11 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 			std::set<StmtNumber> currentStatements = mSynonymTable->getSetInt(argTwo.getStringValue());
 
 			// check if any synonym statements follows any statements
-			for (int i = 0; i < statements.size(); i++) {
-				for (int j = 0; j < currentStatements.size(); j++) {
-					if (pkb->is(type, statements[i], currentStatements[j])) {
+			for (StmtSetIterator i = statements.begin(); i != statements.end(); i++) {
+				for (StmtSetIterator j = currentStatements.begin(); j != currentStatements.end(); j++) {
+					if (pkb->is(type, *i, *j)) {
 						suchThatRelObject.setResultsBoolean(true);
-						evaluatedS.insert(currentStatements[i]);
+						evaluatedS.insert(*i);
 					}
 				}
 			}
@@ -219,11 +214,11 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 			std::set<StmtNumber> currentStatements = mSynonymTable->getSetInt(argOne.getStringValue());
 
 			// check if any synonym statements follows any statements
-			for (int i = 0; i < currentStatements.size(); i++) {
-				for (int j = 0; j < statements.size(); j++) {
-					if (pkb->is(type, currentStatements[i], statements[j])) {
+			for (StmtSetIterator cs = currentStatements.begin(); cs != currentStatements.end(); cs++) {
+				for (StmtSetIterator s = statements.begin(); s != statements.end(); s++) {
+					if (pkb->is(type, *cs, *s)) {
 						suchThatRelObject.setResultsBoolean(true);
-						evaluatedS.insert(currentStatements[i]);
+						evaluatedS.insert(*cs);
 					}
 				}
 			}
@@ -240,17 +235,17 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 		// both arguments are a synonym : Follows(s1,s2); Follow(a,s1);
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
 			// get all the statements for each synonym entity type
-			std::set<StmtNumber> s1 = pkb->getStmtsByType(argOne.getEntityType());
-			std::set<StmtNumber> s2 = pkb->getStmtsByType(argTwo.getEntityType());
-			std::set<StmtNumber> evaluatedS1;
-			std::set<StmtNumber> evaluatedS2;
+			std::set<StmtNumber> s1s = pkb->getStmtsByType(argOne.getEntityType());
+			std::set<StmtNumber> s2s = pkb->getStmtsByType(argTwo.getEntityType());
+			std::set<StmtNumber> evaluatedS1s;
+			std::set<StmtNumber> evaluatedS2s;
 
 			// obtain evaluation results
-			for (int i = 0; i < s1.size(); i++) {
-				for (int j = 0; j < s2.size(); j++) {
-					if (pkb->is(type, s1[i], s2[j])) {
-						evaluatedS1.insert(s1[i]);
-						evaluatedS2.insert(s2[j]);
+			for (StmtSetIterator s1 = s1s.begin(); s1 != s1s.end(); s1++) {
+				for (StmtSetIterator s2 = s2s.begin(); s2 != s2s.end(); s2++) {
+					if (pkb->is(type, *s1, *s2)) {
+						evaluatedS1s.insert(*s1);
+						evaluatedS2s.insert(*s2);
 					}
 				}
 			}
@@ -261,11 +256,11 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 
 			// intersect two sets x2
 			std::set<StmtNumber> updatedStatements1;
-			set_intersection(evaluatedS1.begin(), evaluatedS1.end(), currentStatements1.begin(), currentStatements1.end(),
+			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), currentStatements1.begin(), currentStatements1.end(),
 				std::inserter(updatedStatements1, updatedStatements1.begin()));
 			
 			std::set<StmtNumber> updatedStatements2;
-			set_intersection(evaluatedS2.begin(), evaluatedS2.end(), currentStatements2.begin(), currentStatements2.end(),
+			set_intersection(evaluatedS2s.begin(), evaluatedS2s.end(), currentStatements2.begin(), currentStatements2.end(),
 				std::inserter(updatedStatements2, updatedStatements2.begin()));
 
 			// update the synonm table
@@ -306,7 +301,6 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 
 			// update the synonym table
 			mSynonymTable->replaceSet(argOne.getIntegerValue(), updatedVariables);
-
 		}
 		// if left arg is synonym, right arg is "x" (Modifies(s,"x")); Modifies(a,"x")
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue().length() > 0) {
@@ -327,17 +321,17 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 		// both args are synonym (Modifies(a,v));Modifies(s,v)
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
 			// get all the statements for each synonym entity type
-			std::set<StmtNumber> s1 = pkb->getStmtsByType(argOne.getEntityType());
-			std::set<VarName> v1 = pkb->getAllVarNames();
-			std::set<StmtNumber> evaluatedS1;
-			std::set<VarName> evaluatedV1;
+			std::set<StmtNumber> s1s = pkb->getStmtsByType(argOne.getEntityType());
+			std::set<VarName> v1s = pkb->getAllVarNames();
+			std::set<StmtNumber> evaluatedS1s;
+			std::set<VarName> evaluatedV1s;
 
 			// obtain evaluation results
-			for (int i = 0; i < s1.size(); i++) {
-				for (int j = 0; j < v1.size(); j++) {
-					if (pkb->is(type, s1[i], pkb->getVarIndex(v1[j]))) {
-						evaluatedS1.insert(s1[i]);
-						evaluatedV1.insert(v1[j]);
+			for (StmtSetIterator s1 = s1s.begin(); s1 != s1s.end(); s1++) {
+				for (VarNameSetIterator v1 = v1s.begin(); v1 != v1s.end(); v1++) {
+					if (pkb->is(type, *s1, pkb->getVarIndex(*v1))) {
+						evaluatedS1s.insert(*s1);
+						evaluatedV1s.insert(*v1);
 					}
 				}
 			}
@@ -348,11 +342,11 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 
 			// intersect two sets x2
 			std::set<StmtNumber> updatedStatements;
-			set_intersection(evaluatedS1.begin(), evaluatedS1.end(), currentStatements.begin(), currentStatements.end(),
+			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), currentStatements.begin(), currentStatements.end(),
 				std::inserter(updatedStatements, updatedStatements.begin()));
 
 			std::set<StmtNumber> updatedVariables;
-			set_intersection(evaluatedV1.begin(), evaluatedV1.end(), currentVariables.begin(), currentVariables.end(),
+			set_intersection(evaluatedV1s.begin(), evaluatedV1s.end(), currentVariables.begin(), currentVariables.end(),
 				std::inserter(updatedVariables, updatedVariables.begin()));
 
 			// update the synonm table

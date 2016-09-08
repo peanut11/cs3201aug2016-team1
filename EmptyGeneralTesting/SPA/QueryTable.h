@@ -22,4 +22,11 @@ public:
 	std::set<PatternObject> getPatterns();
 //	std::vector<ClauseObject> getClauses();
 
+	bool replaceSelectObject(SelectObject object);
+	bool insertSuchThatRelObject(SuchThatRelObject object);
+	bool insertWithObject(WithObject object);
+	bool insertPatternObject(PatternObject object);
+
+
+
 };

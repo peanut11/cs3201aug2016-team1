@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+
 #include "SynonymObject.h"
 
 class SynonymTable {
@@ -12,20 +12,21 @@ public:
 
 	void clearAll();
 
-	SynonymObject getObject(std::string synonym);
-	SynonymObject getObject(int index);
+	SynonymObject getObject(SynonymString synonym);
+	SynonymObject getObject(SynonymValue index);
 	std::vector<SynonymObject> getObjects();
 
-	std::set<std::string> getSetString(std::string synonym);
-	std::set<int> getSetInt(std::string synonym);
+	std::set<SynonymString> getSetString(SynonymString synonym);
+	std::set<SynonymValue> getSetInt(SynonymString synonym);
 
 	std::string toString();
-	bool replaceSet(std::string synonym, std::set<std::string> newSet);
-	bool replaceSet(std::string synonym, std::set<int> newSet);
-	bool insertSet(std::string synonym, std::set<std::string> newSet);
-	bool insertSet(std::string synonym, std::set<int> newSet);
+	bool replaceSet(SynonymString synonym, std::set<SynonymString> newSet);
+	bool replaceSet(SynonymString synonym, std::set<SynonymValue> newSet);
+	bool replaceSet(SynonymValue synonym, std::set<SynonymString> newSet);
+	bool insertSet(SynonymString synonym, std::set<SynonymString> newSet);
+	bool insertSet(SynonymString synonym, std::set<SynonymValue> newSet);
 	bool insert(SynonymObject object);
 	bool contains(SynonymObject object);
-	bool contains(std::string synonym);
+	bool contains(SynonymString synonym);
 	int size();
 };

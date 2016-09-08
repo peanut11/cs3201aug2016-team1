@@ -3,7 +3,7 @@
 #include "SuchThatArgObject.h"
 
 class SuchThatRelObject {
-
+private:
 	RelationshipType type;
 	SuchThatArgObject argsOne;
 	SuchThatArgObject argsTwo;

@@ -1,6 +1,6 @@
 #include "SuchThatArgObject.h"
 
-SuchThatArgObject SuchThatArgObject::createSuchThatArgObject(bool isSynonym, EntityType entityType, std::string stringValue, int integerValue)
+SuchThatArgObject SuchThatArgObject::createSuchThatArgObject(bool isSynonym, EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue)
 {
 	this->isSynonym = isSynonym;
 	this->entityType = entityType;
@@ -20,12 +20,12 @@ EntityType SuchThatArgObject::getEntityType()
 	return entityType;
 }
 
-std::string SuchThatArgObject::getStringValue()
+StringToken SuchThatArgObject::getStringValue()
 {
 	return stringValue;
 }
 
-int SuchThatArgObject::getIntegerValue()
+ProcStmtVarIndex SuchThatArgObject::getIntegerValue()
 {
 	return integerValue;
 }
