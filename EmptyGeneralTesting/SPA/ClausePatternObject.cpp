@@ -1,3 +1,4 @@
+
 #include "ClausePatternObject.h"
 
 EntityType ClausePatternObject::getEntityType()
