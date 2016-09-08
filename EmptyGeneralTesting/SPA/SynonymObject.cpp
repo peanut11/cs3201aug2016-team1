@@ -1,5 +1,6 @@
 #include "SynonymObject.h"
 
+SynonymObject::SynonymObject() {}
 
 SynonymObject::SynonymObject(EntityType type, SynonymString synonym) {
 	this->type = type;

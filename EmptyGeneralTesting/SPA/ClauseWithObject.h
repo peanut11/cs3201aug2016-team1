@@ -6,6 +6,10 @@ class ClauseWithObject {
 	ClauseWithRefObject obj2;
 
 public:
+
+	ClauseWithObject();
+	ClauseWithObject(ClauseWithRefObject obj1, ClauseWithRefObject obj2);
+
 	ClauseWithRefObject getRefObject1();
 	ClauseWithRefObject getRefObject2();
 };

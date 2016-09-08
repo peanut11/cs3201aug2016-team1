@@ -1,13 +1,13 @@
 #include "ClauseSuchThatArgObject.h"
 
-ClauseSuchThatArgObject ClauseSuchThatArgObject::createSuchThatArgObject(bool isSynonym, EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue)
+ClauseSuchThatArgObject::ClauseSuchThatArgObject() {}
+
+ClauseSuchThatArgObject::ClauseSuchThatArgObject(EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue, bool isSynonym)
 {
-	this->isSynonym = isSynonym;
 	this->entityType = entityType;
 	this->stringValue = stringValue;
 	this->integerValue = integerValue;
-
-	return *this;
+	this->isSynonym = isSynonym;
 }
 
 bool ClauseSuchThatArgObject::getIsSynonym()

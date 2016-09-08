@@ -21,8 +21,9 @@ public:
 	std::vector<ClausePatternObject> getPatterns();
 //	std::vector<ClauseObject> getClauses();
 
+
 	bool replaceSelectObject(SelectObject object);
-	bool insertSuchThatRelObject(ClauseSuchThatObject object);
+	bool insertSuchThatObject(ClauseSuchThatObject object);
 	bool insertWithObject(ClauseWithObject object);
 	bool insertPatternObject(ClausePatternObject object);
 

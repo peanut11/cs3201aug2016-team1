@@ -40,7 +40,7 @@ bool QueryTable::replaceSelectObject(SelectObject object) {
 
 }
 
-bool QueryTable::insertSuchThatRelObject(ClauseSuchThatObject object) {
+bool QueryTable::insertSuchThatObject(ClauseSuchThatObject object) {
 	// second returns the status of insertion
 	try {
 		 this->suchThats.push_back(object);
@@ -70,3 +70,4 @@ bool QueryTable::insertPatternObject(ClausePatternObject object) {
 		return false;
 	}
 }
+
