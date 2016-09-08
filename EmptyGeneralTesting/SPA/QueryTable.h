@@ -5,7 +5,6 @@
 #include "ClauseSuchThatObject.h"
 #include "ClauseWithObject.h"
 #include "ClausePatternObject.h"
-//#include "ClauseObject.h"
 
 class QueryTable {
 

@@ -1,3 +1,4 @@
+
 #pragma once
 #include "EntityType.h"
 #include <string>

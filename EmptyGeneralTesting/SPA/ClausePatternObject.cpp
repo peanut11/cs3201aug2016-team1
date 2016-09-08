@@ -1,3 +1,4 @@
+
 #include "ClausePatternObject.h"
 
 ClausePatternObject::ClausePatternObject(EntityType entityType, std::string leftHand, std::string rightHand) {
