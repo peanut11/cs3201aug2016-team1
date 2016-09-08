@@ -10,20 +10,20 @@
 
 SelectObject QueryTable::getSelect()
 {
-	return select;
+	return this->select;
 }
 
 std::set<SuchThatRelObject> QueryTable::getSuchThats()
 {
-	return suchThats;
+	return this->suchThats;
 }
 
 std::set<WithObject> QueryTable::getWiths()
 {
-	return withs;
+	return this->withs;
 }
 
 std::set<PatternObject> QueryTable::getPatterns()
 {
-	return patterns;
+	return this->patterns;
 }

@@ -11,6 +11,9 @@
 #include "QueryEvaluator.h"
 #include "QueryTable.h"
 #include "ClauseObject.h"
+#include "SuchThatRelObject.h"
+#include "WithObject.h"
+#include "PatternObject.h"
 #include "SelectObject.h"
 #include "PKB.h"
 #include "SynonymTable.h"
@@ -54,17 +57,37 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		std::set<PatternObject> patterns = queryTable.getPatterns();
 		SelectObject select = queryTable.getSelect();
 
+		// boolean status on relationships holds
+		bool relationshipHolds = true;
+
 		// iterate the clauses vectors and evaluate them
 		for (std::set<SuchThatRelObject>::iterator it = suchThats.begin(); it < suchThats.end(); it++) {
 			*it = evaluateSuchThat(*it);
+			relationshipHolds = relationshipHolds && *it->getResultsBoolean();
 		}
 		// iterate the clauses vectors and evaluate them
 		for (std::set<WithObject>::iterator it = withs.begin(); it < withs.end(); it++) {
 			evaluateWith(*it);
+			relationshipHolds = relationshipHolds && *it->getResultsBoolean();
 		}
 		// iterate the clauses vectors and evaluate them
 		for (std::set<PatternObject>::iterator it = patterns.begin(); it < patterns.end(); it++) {
 			evaluatePattern(*it);
+			relationshipHolds = relationshipHolds && *it->getResultsBoolean();
+		}
+		// constraint results by SelectObj
+		if (relationshipHolds) {
+			// if its Select BOOLEAN
+			if (select.getBoolean()) {
+				// output : true
+			}
+			// then it must be a synonym
+			else {
+				resultsTable.get(select.getStringValue());
+			}
+		}
+		else {
+			// output : invalid/none
 		}
 	}
 	catch (std::runtime_error e) {
@@ -77,6 +100,7 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 	RelationshipType type = suchThatRelObject.getRelationshipType();
 	SuchThatArgObject argOne = suchThatRelObject.getArgsOne();
 	SuchThatArgObject argTwo = suchThatRelObject.getArgsTwo();
+	bool relationshipHolds = true;
 
 	// get PKB
 	PKB *pkb = getPKB();
@@ -108,6 +132,11 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 			std::set<StmtNumber> updatedStatements;
 			set_intersection(statements.begin(), statements.end(), currentStatements.begin(), currentStatements.end(),
 				std::inserter(updatedStatements, updatedStatements.begin()));
+
+			// check if relationship holds/have results
+			if (updatedStatements.size() > 0) {
+				suchThatRelObject.setResultsBoolean(true);
+			}
 
 			// update the synonym table
 			mSynonymTable->replaceSet(argOne.getStringValue(), updatedStatements);
