@@ -7,7 +7,8 @@
 #include "ClauseType.h"
 #include "AttrType.h"
 #include "SelectObject.h"
-#include "SuchThatArgObject.h"
+#include "ClauseSuchThatArgObject.h"
+
 
 const std::string QueryValidator::SYNTAX_PROCEDURE = "procedure";
 const std::string QueryValidator::SYNTAX_ASSIGN = "assign";
@@ -82,12 +83,12 @@ SelectObject QueryValidator::createClauseSelectObject(EntityType entityType, Att
 }
 
 
-ClauseSuchThatObject QueryValidator::createClauseSuchThatObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg) {
+ClauseSuchThatObject QueryValidator::createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject firstArg, ClauseSuchThatArgObject secondArg) {
 	return ClauseSuchThatObject();
 }
 
-SuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue) {
-	return SuchThatArgObject();
+ClauseSuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue) {
+	return ClauseSuchThatArgObject();
 }
 
 ClausePatternObject QueryValidator::createClausePatternObject() {
