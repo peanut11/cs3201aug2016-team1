@@ -83,14 +83,25 @@ SelectObject QueryValidator::createClauseSelectObject(EntityType entityType, Att
 	return mObj;
 }
 
-SuchThatObject QueryValidator::createClauseSuchThatObject(RelationshipType mRelType) {
+/*
+SuchThatObject QueryValidator::createClauseSuchThatObject() {
 	return SuchThatObject();
 }
 
+SuchThatRelObject QueryValidator::createClauseSuchThatRelObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg) {
+
+}
+*/
+
+SuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue) {
+
+}
+
+/*
 PatternObject QueryValidator::createClausePatternObject() {
 	return PatternObject();
 }
-
+*/
 WithObject QueryValidator::createClauseWithObject() {
 	return WithObject();
 }
