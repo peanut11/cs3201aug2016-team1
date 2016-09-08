@@ -6,15 +6,22 @@
 #include "Types.h"
 
 class ClauseSuchThatArgObject {
+
+	
+
 	bool isSynonym;
 	EntityType entityType;
 	StringToken stringValue;
 	ProcStmtVarIndex integerValue;
 
 public:
-	ClauseSuchThatArgObject createSuchThatArgObject(bool isSynonym, EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue);
-	bool getIsSynonym();
+
+	ClauseSuchThatArgObject();
+	ClauseSuchThatArgObject (EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue, bool isSynonym);
+	
 	EntityType getEntityType();
 	StringToken getStringValue();
 	ProcStmtVarIndex getIntegerValue();
+
+	bool getIsSynonym();
 };

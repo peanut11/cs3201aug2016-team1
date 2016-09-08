@@ -15,7 +15,7 @@ class SynonymObject {
 
 public:
 	
-	SynonymObject() {}
+	SynonymObject();
 
 	SynonymObject(EntityType type, std::string synonym);
 	EntityType getType();
