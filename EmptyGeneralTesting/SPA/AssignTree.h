@@ -1,12 +1,11 @@
 #pragma once
 #include "ExprTree.h"
 
-class AssignTree
-{
-
+class AssignTree {
 public:
 	AssignTree();
-	AssignTree(VarIndex varIndex, ExprTree exprTree);
+	AssignTree(VarIndex varIndex, ExprTree &exprTree);
+	AssignTree(ProgLine line);
 	VarIndex getVar();
 	ExprTree getExprTree();
 
@@ -14,7 +13,3 @@ private:
 	ExprTree exprTree;
 	VarIndex varIndex;
 };
-
-AssignTree buildAssignTree(ProgLine line, ProgLineNumber lineNum) {
-
-}

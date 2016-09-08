@@ -1,5 +1,5 @@
-#include "PKB.h"
 #include "ExprTree.h"
+#include "PKB.h"
 
 const std::string DUMMY_TOKEN = "~";
 
@@ -14,14 +14,14 @@ Node* ExprTree::getRoot() {
 	return root;
 }
 
-ExprTree buildExprTree(ProgLine line) {
+ExprTree::ExprTree(ProgLine line) {
 	line.push_back(DUMMY_TOKEN);
 	PKB *pkb = PKB::getInstance();
 	std::stack<Node*> nodeStack;
 	std::stack<std::string> opStack;
 
-	for (int i = 0; i < line.size(); i++) {
-		if (line[i].length == 0) continue;
+	for (size_t i = 0; i < line.size(); i++) {
+		if (line[i].size() == 0) continue;
 
 		if ((line[i] == "+" || line[i] == "-" || line[i] == DUMMY_TOKEN)
 			&& !opStack.empty()) {
@@ -39,10 +39,10 @@ ExprTree buildExprTree(ProgLine line) {
 		}
 	}
 
-	return ExprTree(nodeStack.top());
+	root = nodeStack.top();
 }
 
-void popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &opStack) {
+void ExprTree::popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &opStack) {
 	std::string oper = opStack.top();
 	opStack.pop();
 	Node* rightOperand = nodeStack.top();

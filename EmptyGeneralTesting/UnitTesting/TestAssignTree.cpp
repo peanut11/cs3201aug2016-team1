@@ -8,8 +8,8 @@ namespace UnitTesting
 {		
 	TEST_CLASS(TestAssignTree) {
 	public:
-		TEST_METHOD(TestBuildAssignTree) {
-						
+		TEST_METHOD(TestAssignTreeFromProgLine) {
+		
 		}
 	};
 }
