@@ -1,14 +1,19 @@
 #include "ResultsTable.h"
 
+ResultsTable::ResultsTable()
+{
+}
+
 ResultsObject ResultsTable::getObject(SynonymString synonym) {
 	for (auto value : this->resultsObject) {
 		if (value.getSynonym().compare(synonym) == 0) {
 			return value;
 		}
 	}
+	return invalidObject;
 }
 
-std::set<ResultsObject> ResultsTable::getObjects()
+std::vector<ResultsObject> ResultsTable::getObjects()
 {
 	return this->resultsObject;
 }
@@ -60,7 +65,7 @@ bool ResultsTable::insert(ResultsObject object) {
 		return false;
 	}
 
-	resultsObject.insert(object);
+	resultsObject.push_back(object);
 	return true; 
 }
 

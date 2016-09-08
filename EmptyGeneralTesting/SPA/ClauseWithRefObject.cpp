@@ -1,26 +1,25 @@
 #include "ClauseWithRefObject.h"
 #include "AttrType.h"
 
-ClauseWithRefObject ClauseWithRefObject::CreateWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
+ClauseWithRefObject::ClauseWithRefObject() {
+}
+
+ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
 	this->refType = refType;
 	this->synonym = synonym;
 	this->attributeName = attributeName;
-
-	return *this;
 }
 
-ClauseWithRefObject ClauseWithRefObject::CreateWithRefObject(WithRefType refType, std::string synonym) {
+ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, std::string synonym) {
 	this->refType = refType;
 	this->synonym = synonym;
-
-	return *this;
+	this->integerValue = -1;
 }
 
-ClauseWithRefObject ClauseWithRefObject::CreateWithRefObject(WithRefType refType, int integerValue) {
+ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, int integerValue) {
 	this->refType = refType;
 	this->integerValue = integerValue;
-
-	return *this;
+	this->synonym = "";
 }
 
 WithRefType ClauseWithRefObject::getRefType() {

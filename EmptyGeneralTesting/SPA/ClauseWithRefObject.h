@@ -13,12 +13,15 @@ class ClauseWithRefObject {
 	int integerValue;
 
 public:
+
+	ClauseWithRefObject();
 	// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
-	ClauseWithRefObject CreateWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName); 
+	ClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName); 
 	// the ref-object is an identifier (e.g if WithRefType = Synonym, the string 'synonym' will contain the synonym)
-	ClauseWithRefObject CreateWithRefObject(WithRefType refType, std::string synonym);
+	ClauseWithRefObject(WithRefType refType, std::string synonym);
 	// the ref-object is an integer (e.g WithRefType = INTEGER, the int 'integerValue' will contain the value)
-	ClauseWithRefObject CreateWithRefObject(WithRefType refType, int integerValue);
+	ClauseWithRefObject(WithRefType refType, int integerValue);
+
 	WithRefType getRefType();
 	EntityType getEntityType();
 	std::string getSynonym();

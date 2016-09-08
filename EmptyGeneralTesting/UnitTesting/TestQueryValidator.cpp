@@ -287,30 +287,30 @@ public:
 
 		// success
 		validator->initStringTokenizer("(1,2)"); // stmt numbers
-		Assert::IsTrue(validator->isArguments("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent
+		Assert::IsTrue(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent
 		
 		validator->initStringTokenizer("(p,p)");
-		Assert::IsTrue(validator->isArguments("(", validator->getRelationshipTable()->find(RelationshipType::CALLS))); // Calls
+		Assert::IsTrue(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::CALLS))); // Calls
 
 		validator->initStringTokenizer("(p,var1)");
-		Assert::IsTrue(validator->isArguments("(", validator->getRelationshipTable()->find(RelationshipType::MODIFIES))); // Modifies
+		Assert::IsTrue(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::MODIFIES))); // Modifies
 
 
 		// failure
 		validator->initStringTokenizer("(1,)"); // no second arg, with comma
-		Assert::IsFalse(validator->isArguments("(", validator->getRelationshipTable()->getObject(4)));
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
 	
 		validator->initStringTokenizer("(1)"); // only 1 arg, no comma
-		Assert::IsFalse(validator->isArguments("(", validator->getRelationshipTable()->getObject(4)));
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
 
 		validator->initStringTokenizer("(,2)"); // no first arg, with comma
-		Assert::IsFalse(validator->isArguments("(", validator->getRelationshipTable()->getObject(4)));
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
 
 		validator->initStringTokenizer("p,p)"); // parent should have stmt args, but both args are procedure
-		Assert::IsFalse(validator->isArguments("p", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent can only have stmt
+		Assert::IsFalse(validator->isRelationshipArgument("p", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent can only have stmt
 
 		validator->initStringTokenizer("p,1)"); // parent should have stmt args, but both args are procedure
-		Assert::IsFalse(validator->isArguments("p", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent can only have stmt
+		Assert::IsFalse(validator->isRelationshipArgument("p", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent can only have stmt
 
 
 	}

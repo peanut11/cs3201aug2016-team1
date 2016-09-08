@@ -30,10 +30,10 @@ void DesignExtractor::processFollowStar() {
 		if (!followList.empty()) {
 			StmtNumber add = *followList.begin();
 			std::set<StmtNumber> followStarList = pkb->getStmtsByStmt(add, FOLLOWSSTAR);
-
+			pkb->putStmtForStmt(add, FOLLOWSSTAR, i);
 			for (StmtSetIterator fs = followStarList.begin(); fs != followStarList.end(); fs++) {
 				StmtNumber add2 = *fs;
-				pkb->getStmtsByStmt(add2, FOLLOWSSTAR);
+				pkb->putStmtForStmt(add2, FOLLOWSSTAR, i);
 			}
 		}
 	}
@@ -45,14 +45,16 @@ void DesignExtractor::processParentStar() {
 
 	for (StmtNumber i = 0; i < size; i++) {
 		std::set<StmtNumber> parentList = pkb->getStmtsByStmt(i, PARENT);
-
+		
 		if (!parentList.empty()) {
+			
 			StmtNumber add = *parentList.begin();
+			pkb->putStmtForStmt(add, PARENTSTAR, i);
 			std::set<StmtNumber> parentStarList = pkb->getStmtsByStmt(add, PARENTSTAR);
 
 			for (StmtSetIterator ps = parentStarList.begin(); ps != parentStarList.end(); ps++) {
 				StmtNumber add2 = *ps;
-				pkb->getStmtsByStmt(add2, PARENTSTAR);
+				pkb->putStmtForStmt(add2, PARENTSTAR,i);
 			}
 		}
 	}

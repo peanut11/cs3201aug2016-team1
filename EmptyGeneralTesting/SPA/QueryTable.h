@@ -5,25 +5,25 @@
 #include "ClauseSuchThatObject.h"
 #include "ClauseWithObject.h"
 #include "ClausePatternObject.h"
-//#include "ClauseObject.h"
 
 class QueryTable {
 
 	SelectObject select;
 //	std::vector<ClauseObject> clauses;
-	std::set<ClauseSuchThatObject> suchThats;
-	std::set<ClauseWithObject> withs;
-	std::set<ClausePatternObject> patterns;
+	std::vector<ClauseSuchThatObject> suchThats;
+	std::vector<ClauseWithObject> withs;
+	std::vector<ClausePatternObject> patterns;
 
 public:
 	SelectObject getSelect();
-	std::set<ClauseSuchThatObject> getSuchThats();
-	std::set<ClauseWithObject> getWiths();
-	std::set<ClausePatternObject> getPatterns();
+	std::vector<ClauseSuchThatObject> getSuchThats();
+	std::vector<ClauseWithObject> getWiths();
+	std::vector<ClausePatternObject> getPatterns();
 //	std::vector<ClauseObject> getClauses();
 
+
 	bool replaceSelectObject(SelectObject object);
-	bool insertSuchThatRelObject(ClauseSuchThatObject object);
+	bool insertSuchThatObject(ClauseSuchThatObject object);
 	bool insertWithObject(ClauseWithObject object);
 	bool insertPatternObject(ClausePatternObject object);
 

@@ -62,12 +62,20 @@ class QueryValidator {
 
 	QueryTable *getQueryTable();
 
-	SelectObject createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
+	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
 	
+	// Clause Such that object
 	ClauseSuchThatObject createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject firstArg, ClauseSuchThatArgObject secondArg);
-	ClauseSuchThatArgObject createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue);
-	ClausePatternObject createClausePatternObject();
-	// WithObject createClauseWithObject();
+	ClauseSuchThatArgObject createClauseSuchThatArgObject(EntityType type, std::string stringValue, int integerValue, bool isSynonym);
+	
+	// Clause Pattern object
+ 	ClausePatternObject createClausePatternObject(EntityType entityType, std::string leftHand, std::string rightHand);
+	
+	// Clause With object
+	ClauseWithObject createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg);
+	ClauseWithRefObject createClauseRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
+	ClauseWithRefObject createClauseRefObject(WithRefType refType, std::string synonym);
+	ClauseWithRefObject createClauseRefObject(WithRefType refType, int integerValue);
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
@@ -133,7 +141,7 @@ public:
 
 	bool isVariable(std::string str); // contains double quote (e.g. "x")
 	bool isVariableName(std::string str); // does not contain double quote (e.g. x)
-	bool isArguments(std::string str, RelObject relationshipObject);
+	bool isRelationshipArgument(std::string str, RelObject relationshipObject);
 	bool isRelationship(std::string str);
 	bool isStatementNumber(std::string str);
 	bool isSynonym(std::string str);

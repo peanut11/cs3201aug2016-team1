@@ -5,17 +5,17 @@
 #include "SelectObject.h"
 #include "ClauseSuchThatObject.h"
 #include "ClauseWithObject.h"
-
+#include "ResultsTable.h"
 #include "QueryTable.h"
 #include "SynonymTable.h"
 
 class QueryEvaluator {
 private:
 	static QueryEvaluator *_instance;
-	QueryEvaluator();
 
 	PKB *mPKB; 
-	QueryTable queryTable;
+	QueryTable *queryTable;
+	ResultsTable resultsTable;
 	SynonymTable *mSynonymTable;
 
 public:
@@ -23,9 +23,10 @@ public:
 	PKB *getPKB();
 
 	SynonymTable *getSynonymTable();
-	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	void evaluate(QueryTable queryTable);
-//	void evaluatePattern(ClausePatternObject patternObject);
+	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
+	ClauseWithObject evaluateWith(ClauseWithObject withObject);
+	ClausePatternObject evaluatePattern(ClausePatternObject patternObject);
 	void evaluateSelect(SelectObject selectObject);
-//	void evaluateWith(ClauseWithObject withObject);
+
 };

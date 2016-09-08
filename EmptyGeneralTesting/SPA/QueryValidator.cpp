@@ -76,29 +76,42 @@ QueryTable *QueryValidator::getQueryTable() {
 	return this->mQueryTable;
 }
 
-SelectObject QueryValidator::createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
+SelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
 	SelectObject mObj = SelectObject(entityType, attrType, isBoolean);
 	// insert into selectTable
 	return mObj;
 }
 
-
+// Clause Such that object
 ClauseSuchThatObject QueryValidator::createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject firstArg, ClauseSuchThatArgObject secondArg) {
-	return ClauseSuchThatObject();
+	return ClauseSuchThatObject(mRelType, firstArg, secondArg);
 }
 
-ClauseSuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue) {
-	return ClauseSuchThatArgObject();
+ClauseSuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType type, std::string stringValue, int integerValue, bool isSynonym) {
+	return ClauseSuchThatArgObject(type, stringValue, integerValue, isSynonym);
 }
 
-ClausePatternObject QueryValidator::createClausePatternObject() {
-	return ClausePatternObject();
+// Clause Pattern object
+ClausePatternObject QueryValidator::createClausePatternObject(EntityType entityType, std::string leftHand, std::string rightHand) {
+	return ClausePatternObject(entityType, leftHand, rightHand);
 }
-/*
-WithObject QueryValidator::createClauseWithObject() {
-	return WithObject();
+
+// Clause With object
+ClauseWithObject QueryValidator::createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg) {
+	return ClauseWithObject(firstArg, secondArg);
 }
-*/
+
+ClauseWithRefObject QueryValidator::createClauseRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
+	return ClauseWithRefObject(refType, synonym, attributeName);
+}
+
+ClauseWithRefObject QueryValidator::createClauseRefObject(WithRefType refType, std::string synonym) {
+	return ClauseWithRefObject(refType, synonym);
+}
+
+ClauseWithRefObject QueryValidator::createClauseRefObject(WithRefType refType, int integerValue) {
+	return ClauseWithRefObject(refType, integerValue);
+}
 
 SynonymOccurence *QueryValidator::getSynonymOccurence() {
 	return this->mSynonymOccurence;
@@ -252,12 +265,12 @@ bool QueryValidator::isSelect(std::string str) {
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(str).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable()->replaceSelectObject(this->createClauseSelectObject(EntityType::INVALID, AttrType::INVALID, true));
+						this->getQueryTable()->replaceSelectObject(this->createSelectObject(EntityType::INVALID, AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						this->getQueryTable()->replaceSelectObject(this->createClauseSelectObject(mSynonymEntityType, AttrType::INVALID, false));
+						this->getQueryTable()->replaceSelectObject(this->createSelectObject(mSynonymEntityType, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table
@@ -449,11 +462,14 @@ bool QueryValidator::isRelationship(std::string str) {
 
 	//st.nextToken(); // point to relationship
 	
-	return isArguments(st.peekNextToken(), searchedRelObject); 
+	return isRelationshipArgument(st.peekNextToken(), searchedRelObject);
 
 }
 
-bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) {
+bool QueryValidator::isRelationshipArgument(std::string str, RelObject relationshipObject) {
+
+	ClauseSuchThatArgObject firstArgObject;
+	ClauseSuchThatArgObject secondArgObject;
 
 	bool isUnderArg = true;
 	bool hasComma = false;
@@ -474,6 +490,11 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 		if (isMatch(st.peekNextToken(), ")")) {	// 2 arguments have finished and next token is a close bracket
 			st.nextToken(); // point to ")"
 			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
+
+				// create a ClauseSuchThatObject(), with two arguments, then put into queryTable
+				//ClauseSuchThatObject()
+				//this->mQueryTable->insertSuchThatObject();
+
 				return true;
 			}
 			else {
@@ -488,6 +509,9 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 			// havent read first argument and current token is correct first arugment type
 			if (!hasValidFirstArg) {
 				if (relationshipObject.doesFirstArgsContains(EntityType::CONSTANT)) {
+
+					firstArgObject = ClauseSuchThatArgObject();
+
 					hasValidFirstArg = true; // first argument is correct
 					numberOfArgs += 1;
 				}				
@@ -497,6 +521,7 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 			if (hasComma && hasValidFirstArg) {
 
 				if (relationshipObject.doesSecondArgsContains(EntityType::CONSTANT)) {
+					secondArgObject = ClauseSuchThatArgObject();
 					numberOfArgs += 1;
 				}
 				
@@ -515,6 +540,8 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
 						// update synonym occurence
 						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken, ClauseType::SUCH_THAT);
+						
+						firstArgObject = ClauseSuchThatArgObject();
 
 						hasValidFirstArg = true; // first argument is correct
 						numberOfArgs += 1;
@@ -532,6 +559,9 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 					if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
 						// update synonym occurence
 						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken, ClauseType::SUCH_THAT);
+						
+						secondArgObject = ClauseSuchThatArgObject();
+
 						numberOfArgs += 1;
 					} // end of check synonym occurence
 				}
@@ -548,6 +578,8 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 
 				if (!(relationshipObject.getRelObjectType() == RelationshipType::MODIFIES 
 					|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
+
+					firstArgObject = ClauseSuchThatArgObject();
 					hasValidFirstArg = true; // first argument is correct
 					numberOfArgs += 1;
 				}
@@ -556,6 +588,7 @@ bool QueryValidator::isArguments(std::string str, RelObject relationshipObject) 
 
 			// second argument is wildcard
 			if (hasComma && hasValidFirstArg) {
+				secondArgObject = ClauseSuchThatArgObject();
 				numberOfArgs += 1;
 			}
 		}

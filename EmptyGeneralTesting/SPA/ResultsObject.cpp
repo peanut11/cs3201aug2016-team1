@@ -1,5 +1,7 @@
 #include "ResultsObject.h"
 
+ResultsObject::ResultsObject() {}
+
 ResultsObject::ResultsObject(std::string synonym)
 {
 	this->synonym = synonym;
