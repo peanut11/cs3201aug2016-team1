@@ -10,6 +10,10 @@
 #include "SynonymObject.h"
 #include "SynonymOccurence.h"
 #include "RelTable.h"
+#include "PatternObject.h"
+#include "WithObject.h"
+#include "WithRefObject.h"
+#include "WithAttrObject.h"
 
 class QueryValidator {
 
@@ -53,10 +57,10 @@ class QueryValidator {
 
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
 
-	void insertClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
-	void insertClauseSuchThatObject(RelationshipType mRelType);
-	void insertClausePatternObject();
-	void insertClauseWithObject();
+	SelectObject createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
+	SuchThatObject createClauseSuchThatObject(RelationshipType mRelType);
+	PatternObject createClausePatternObject();
+	WithObject createClauseWithObject();
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
