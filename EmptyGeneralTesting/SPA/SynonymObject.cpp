@@ -1,7 +1,7 @@
 #include "SynonymObject.h"
 
 
-SynonymObject::SynonymObject(EntityType type, std::string synonym) {
+SynonymObject::SynonymObject(EntityType type, SynonymString synonym) {
 	this->type = type;
 	this->synonym = synonym;
 }
@@ -10,19 +10,19 @@ EntityType SynonymObject::getType() {
 	return this->type;
 }
 
-std::set<std::string> SynonymObject::getSetString() {
+std::set<SynonymString> SynonymObject::getSetString() {
 	return this->mSetString;
 }
 
-std::set<int> SynonymObject::getSetInt() {
+std::set<SynonymValue> SynonymObject::getSetInt() {
 	return this->mSetInt;
 }
 
-std::string SynonymObject::getSynonym() {
+SynonymString SynonymObject::getSynonym() {
 	return this->synonym;
 }
 
-std::string SynonymObject::getTypeString() {
+SynonymString SynonymObject::getTypeString() {
 	switch (this->type) {
 	case PROCEDURE:
 		return "procedure";
@@ -47,28 +47,28 @@ std::string SynonymObject::getTypeString() {
 	}
 }
 
-void SynonymObject::replaceSet(std::set<std::string> newSet) {
+void SynonymObject::replaceSet(std::set<SynonymString> newSet) {
 	this->mSetString.clear();
 	this->mSetString.insert(newSet.begin(), newSet.end());
 }
 
-void SynonymObject::replaceSet(std::set<int> newSet) {
+void SynonymObject::replaceSet(std::set<SynonymValue> newSet) {
 	this->mSetInt.clear();
 	this->mSetInt.insert(newSet.begin(), newSet.end());
 }
 
-void SynonymObject::insertSet(std::set<std::string> updatedSet) {
+void SynonymObject::insertSet(std::set<SynonymString> updatedSet) {
 	this->mSetString.insert(updatedSet.begin(), updatedSet.end());
 }
 
-void SynonymObject::insertSet(std::set<int> updatedSet) {
+void SynonymObject::insertSet(std::set<SynonymValue> updatedSet) {
 	this->mSetInt.insert(updatedSet.begin(), updatedSet.end());
 }
 
-void SynonymObject::insertSet(std::string variable) {
+void SynonymObject::insertSet(SynonymString variable) {
 	this->mSetString.insert(variable);
 }
 
-void SynonymObject::insertSet(int stmtNum) {
+void SynonymObject::insertSet(SynonymValue stmtNum) {
 	this->mSetInt.insert(stmtNum);
 }

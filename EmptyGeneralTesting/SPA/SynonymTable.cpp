@@ -19,9 +19,9 @@ void SynonymTable::clearAll() {
 
 
 
-std::set<std::string> SynonymTable::getSetString(std::string synonym) {
+std::set<SynonymString> SynonymTable::getSetString(SynonymString synonym) {
 	if (synonym.compare("_") == 0) {
-		std::set<std::string> fullSet = std::set<std::string>();
+		std::set<SynonymString> fullSet = std::set<SynonymString>();
 
 		for (auto value : this->synonymObjects) {
 			fullSet.insert(value.getSetString().begin(), value.getSetString().end());
@@ -34,12 +34,12 @@ std::set<std::string> SynonymTable::getSetString(std::string synonym) {
 		return this->getObject(synonym).getSetString();
 	}
 
-	return std::set<std::string>();
+	return std::set<SynonymString>();
 }
 
-std::set<int> SynonymTable::getSetInt(std::string synonym) {
+std::set<SynonymValue> SynonymTable::getSetInt(SynonymString synonym) {
 	if (synonym.compare("_") == 0) {
-		std::set<int> fullSet = std::set<int>();
+		std::set<SynonymValue> fullSet = std::set<SynonymValue>();
 
 		for (auto value : this->synonymObjects) {
 			fullSet.insert(value.getSetInt().begin(), value.getSetInt().end());
@@ -52,7 +52,7 @@ std::set<int> SynonymTable::getSetInt(std::string synonym) {
 		return this->getObject(synonym).getSetInt();
 	}
 
-	return std::set<int>();
+	return std::set<SynonymValue>();
 }
 
 /*
@@ -70,7 +70,7 @@ bool SynonymTable::insert(SynonymObject object) {
 	//return synonymObjects.size() - 1; // last index of the object
 }
 
-bool SynonymTable::replaceSet(std::string synonym, std::set<std::string> newSet) {
+bool SynonymTable::replaceSet(SynonymString synonym, std::set<SynonymString> newSet) {
 	if (this->contains(synonym)) {
 		this->getObject(synonym).replaceSet(newSet);
 		return true;
@@ -78,7 +78,7 @@ bool SynonymTable::replaceSet(std::string synonym, std::set<std::string> newSet)
 	return false;
 }
 
-bool SynonymTable::replaceSet(std::string synonym, std::set<int> newSet) {
+bool SynonymTable::replaceSet(SynonymString synonym, std::set<ProcStmtVarIndex> newSet) {
 	if (this->contains(synonym)) {
 		this->getObject(synonym).replaceSet(newSet);
 		return true;
@@ -86,7 +86,7 @@ bool SynonymTable::replaceSet(std::string synonym, std::set<int> newSet) {
 	return false;
 }
 
-bool SynonymTable::insertSet(std::string synonym, std::set<std::string> newSet) {
+bool SynonymTable::insertSet(SynonymString synonym, std::set<SynonymString> newSet) {
 	if (this->contains(synonym)) {
 		this->getObject(synonym).insertSet(newSet);
 		return true;
@@ -94,7 +94,7 @@ bool SynonymTable::insertSet(std::string synonym, std::set<std::string> newSet) 
 	return false;
 }
 
-bool SynonymTable::insertSet(std::string synonym, std::set<int> newSet) {
+bool SynonymTable::insertSet(SynonymString synonym, std::set<SynonymValue> newSet) {
 	if (this->contains(synonym)) {
 		this->getObject(synonym).insertSet(newSet);
 		return true;
@@ -116,7 +116,7 @@ bool SynonymTable::contains(SynonymObject object) {
 	return false;
 }
 
-bool SynonymTable::contains(std::string synonym) {
+bool SynonymTable::contains(SynonymString synonym) {
 	for (auto value : this->synonymObjects) {
 		if (value.getSynonym().compare(synonym) == 0) {
 			return true;
@@ -125,7 +125,7 @@ bool SynonymTable::contains(std::string synonym) {
 	return false;
 }
 
-SynonymObject SynonymTable::getObject(std::string synonym) {
+SynonymObject SynonymTable::getObject(SynonymString synonym) {
 	for (auto value : this->synonymObjects) {
 		if (value.getSynonym().compare(synonym) == 0) {
 			return value;
@@ -134,7 +134,7 @@ SynonymObject SynonymTable::getObject(std::string synonym) {
 	return this->invalidObject;
 }
 
-SynonymObject SynonymTable::getObject(int index) {
+SynonymObject SynonymTable::getObject(SynonymValue index) {
 	if (index >= this->synonymObjects.size() || index < 0) {
 		throw std::runtime_error("getObject index is out of vector size");
 	}
@@ -147,8 +147,8 @@ std::vector<SynonymObject> SynonymTable::getObjects()
 	return this->synonymObjects;
 }
 
-std::string SynonymTable::toString() {
-	std::string output = "";
+SynonymString SynonymTable::toString() {
+	SynonymString output = "";
 	for (auto value : this->synonymObjects) {
 		output.append(value.getTypeString() + " - " + value.getSynonym() + "\n");
 	}

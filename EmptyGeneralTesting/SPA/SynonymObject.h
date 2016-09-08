@@ -1,15 +1,17 @@
 #pragma once
+
 #include <set>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "EntityType.h"
+#include "Types.h"
 
 class SynonymObject {
 	EntityType type;
-	std::string synonym;
-	std::set<std::string> mSetString;
-	std::set<int> mSetInt;
+	SynonymString synonym;
+	std::set<SynonymString> mSetString;
+	std::set<SynonymValue> mSetInt;
 
 public:
 	
@@ -18,16 +20,16 @@ public:
 	SynonymObject(EntityType type, std::string synonym);
 	EntityType getType();
 
-	std::set<std::string> getSetString();
-	std::set<int> getSetInt();
+	std::set<SynonymString> getSetString();
+	std::set<SynonymValue> getSetInt();
 	std::string getSynonym();
 	std::string getTypeString();
 
-	void replaceSet(std::set<std::string> newSet);
-	void replaceSet(std::set<int> newSet);
-	void insertSet(std::set<std::string> updatedSet);
-	void insertSet(std::set<int> updatedSet);
-	void insertSet(std::string variable);
-	void insertSet(int stmtNum);
+	void replaceSet(std::set<SynonymString> newSet);
+	void replaceSet(std::set<SynonymValue> newSet);
+	void insertSet(std::set<SynonymString> updatedSet);
+	void insertSet(std::set<SynonymValue> updatedSet);
+	void insertSet(SynonymString variable);
+	void insertSet(SynonymValue stmtNum);
 
 };

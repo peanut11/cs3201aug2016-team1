@@ -131,8 +131,8 @@ public:
 		StmtNumber stmtNo = 1;
 		expectedOutput.insert(stmtNo);
 
-		/*std::set<StmtNumber>::iterator expectedIt;
-		std::set<StmtNumber>::iterator outputIt;
+		/*StmtSetIterator expectedIt;
+		StmtSetIterator outputIt;
 		bool res = expectedOutput.size() == output.size();
 		for (expectedIt = expectedOutput.begin(); expectedIt != expectedOutput.end(); ++ex) {
 			res = (expectedOutput[i] == output[i]) && res;

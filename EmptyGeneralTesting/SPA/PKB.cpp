@@ -32,7 +32,7 @@ PKB::PKB() {
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
 }
 
-bool PKB::is(RelationshipType rel, StmtNumber stmt, VarOrStmt item) {
+bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
 	StmtEntry::iterator it;
 	StmtEntry entry = stmtTable[stmt][rel];
 	it = entry.find(item);
@@ -81,6 +81,15 @@ std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtR
 	}
 
 	return stmtTable[stmt][stmtRel];
+}
+
+std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
+	if (followsOrParent != FOLLOWS && followsOrParent != PARENT) {
+		throw ERROR;
+	}
+
+	int supplementaryRel = followsOrParent + 1;
+	return stmtTable[stmt][supplementaryRel];
 }
 
 std::set<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {

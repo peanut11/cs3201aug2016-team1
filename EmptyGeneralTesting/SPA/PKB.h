@@ -2,9 +2,6 @@
 
 #pragma once
 
-#include <array>
-#include <iostream>
-#include <map>
 #include <string>
 #include <vector>
 #include <set>
@@ -12,20 +9,7 @@
 #include "AssignTree.h"
 #include "EntityType.h"
 #include "RelationshipType.h"
-
-typedef int Constant; 
-typedef int ProcIndex;        // Index of procedure name in ProcTable
-typedef unsigned int VarOrStmt;
-typedef VarOrStmt ProgLineNumber;
-typedef VarOrStmt VarIndex;   // Index of variable/constant in VarTable
-typedef VarOrStmt StmtNumber; // StmtNumber == ProgLineNumber
-typedef std::string VarName;
-typedef std::map<VarName, VarIndex> RefMap;
-typedef std::vector<std::string> ProgLine;
-typedef std::set<StmtNumber> VarEntry;
-typedef std::set<VarOrStmt> StmtEntry;
-typedef std::array<StmtEntry, RelationshipType::TOTAL_COUNT> StmtRow;
-typedef std::array<VarEntry, 2> VarRow;
+#include "Types.h"
 
 class PKB {
 private:
@@ -75,7 +59,7 @@ public:
 						}
 					  }
 	*/
-	bool is(RelationshipType rel, StmtNumber stmt, VarOrStmt item);
+	bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
 	bool isVarExist(VarName varName);
 
 	AssignTree              getAssign(StmtNumber stmt);
@@ -87,5 +71,6 @@ public:
 	std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
 	std::set<StmtNumber>	getStmtsByVar(RelationshipType rel, VarName varName);
 	std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
+	std::set<StmtNumber>	getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
 	std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 };

@@ -8,5 +8,6 @@ class WithObject: public ClauseObject {
 
 public:
 	std::vector<WithAttrObject> getAttributes();
+	bool getResultsBoolean() const;
 	void evaluate();
 };

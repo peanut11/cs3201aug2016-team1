@@ -72,6 +72,7 @@
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="WithAttrObject.h" />
     <ClInclude Include="WithObject.h" />
     <ClInclude Include="WithRefObject.h" />
