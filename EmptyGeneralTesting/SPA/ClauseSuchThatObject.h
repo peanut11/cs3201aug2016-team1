@@ -18,7 +18,6 @@ public:
 	ClauseSuchThatArgObject getArgsOne();
 	ClauseSuchThatArgObject getArgsTwo();
 	bool getResultsBoolean();
-
 	void setResultsBoolean(bool boolean);
 	
 };

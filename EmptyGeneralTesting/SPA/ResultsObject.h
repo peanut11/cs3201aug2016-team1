@@ -10,6 +10,7 @@ class ResultsObject {
 	std::set<SynonymValue> mSetInt;
 
 public:
+	ResultsObject();
 	ResultsObject(std::string synonym);
 
 	std::set<SynonymString> getSetString();

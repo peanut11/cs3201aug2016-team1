@@ -17,3 +17,13 @@ ClauseWithRefObject ClauseWithObject::getRefObject2()
 {
 	return obj2;
 }
+
+void ClauseWithObject::setResultsBoolean(bool boolean)
+{
+	this->isResultsBoolean = boolean;
+}
+
+bool ClauseWithObject::getResultsBoolean()
+{
+	return this->isResultsBoolean;
+}

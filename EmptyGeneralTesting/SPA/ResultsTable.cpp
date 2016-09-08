@@ -1,5 +1,9 @@
 #include "ResultsTable.h"
 
+ResultsTable::ResultsTable()
+{
+}
+
 ResultsObject ResultsTable::getObject(SynonymString synonym) {
 	for (auto value : this->resultsObject) {
 		if (value.getSynonym().compare(synonym) == 0) {
