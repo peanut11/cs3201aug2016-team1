@@ -14,17 +14,17 @@ SelectObject QueryTable::getSelect()
 	return this->select;
 }
 
-std::set<SuchThatRelObject> QueryTable::getSuchThats()
+std::set<ClauseSuchThatObject> QueryTable::getSuchThats()
 {
 	return this->suchThats;
 }
 
-std::set<WithObject> QueryTable::getWiths()
+std::set<ClauseWithObject> QueryTable::getWiths()
 {
 	return this->withs;
 }
 
-std::set<PatternObject> QueryTable::getPatterns()
+std::set<ClausePatternObject> QueryTable::getPatterns()
 {
 	return this->patterns;
 }
@@ -40,7 +40,7 @@ bool QueryTable::replaceSelectObject(SelectObject object) {
 
 }
 
-bool QueryTable::insertSuchThatRelObject(SuchThatRelObject object) {
+bool QueryTable::insertSuchThatRelObject(ClauseSuchThatObject object) {
 	// second returns the status of insertion
 	try {
 		return this->suchThats.insert(object).second;
@@ -50,7 +50,7 @@ bool QueryTable::insertSuchThatRelObject(SuchThatRelObject object) {
 	}
 }
 
-bool QueryTable::insertWithObject(WithObject object) {
+bool QueryTable::insertWithObject(ClauseWithObject object) {
 	try {
 		return this->withs.insert(object).second;
 	}
@@ -59,7 +59,7 @@ bool QueryTable::insertWithObject(WithObject object) {
 	}
 }
 
-bool QueryTable::insertPatternObject(PatternObject object) {
+bool QueryTable::insertPatternObject(ClausePatternObject object) {
 	try {
 		return this->patterns.insert(object).second;
 	}

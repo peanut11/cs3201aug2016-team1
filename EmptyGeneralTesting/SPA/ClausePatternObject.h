@@ -2,7 +2,7 @@
 #include "EntityType.h"
 #include <string>
 
-class PatternTypeObject {
+class ClausePatternObject {
 	EntityType entityType;
 	std::string leftHand;
 	std::string rightHand;

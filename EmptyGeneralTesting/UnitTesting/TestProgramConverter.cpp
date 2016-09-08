@@ -35,19 +35,15 @@ public:
 		pc.convert(str);*/
 		
 		PKB* pkb = PKB::getInstance();
-		std::vector<std::string> expected;
-		expected.push_back("x");
-		expected.push_back("i");
-		expected.push_back("z");
-		expected.push_back("y");
-		std::vector<std::string> actual;
+		std::set<VarName> expected;
+		expected.insert("x");
+		expected.insert("i");
+		expected.insert("z");
+		expected.insert("y");
+		std::set<VarName> actual;
 		actual = pkb->getAllVarNames();
 		
-		bool res = expected.size() == actual.size();
-		for (unsigned int i = 0; i < expected.size(); i++) {
-			res = (expected[i] == actual[i]) && res;
-		}
-		Assert::IsTrue(res);
+		Assert::IsTrue(expected == actual);
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_StmtModifies) {

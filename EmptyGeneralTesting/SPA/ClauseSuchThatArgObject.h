@@ -5,14 +5,14 @@
 #include "EntityType.h"
 #include "Types.h"
 
-class SuchThatArgObject {
+class ClauseSuchThatArgObject {
 	bool isSynonym;
 	EntityType entityType;
 	StringToken stringValue;
 	ProcStmtVarIndex integerValue;
 
 public:
-	SuchThatArgObject createSuchThatArgObject(bool isSynonym, EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue);
+	ClauseSuchThatArgObject createSuchThatArgObject(bool isSynonym, EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue);
 	bool getIsSynonym();
 	EntityType getEntityType();
 	StringToken getStringValue();

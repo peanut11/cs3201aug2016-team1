@@ -12,11 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssignTree.cpp" />
-    <ClCompile Include="ClauseObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="ExprTree.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="ClausePatternObject.cpp" />
     <ClCompile Include="PKB.cpp" />
     <ClCompile Include="ProgramConverter.cpp" />
     <ClCompile Include="ProgramValidator.cpp" />
@@ -27,22 +27,28 @@
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
+    <ClCompile Include="ResultsObject.cpp" />
+    <ClCompile Include="ResultsTable.cpp" />
+    <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
-    <ClCompile Include="SuchThatArgObject.cpp" />
-    <ClCompile Include="SuchThatObject.cpp" />
-    <ClCompile Include="SuchThatRelObject.cpp" />
+    <ClCompile Include="ClauseSuchThatArgObject.cpp" />
+    <ClCompile Include="ClauseSuchThatObject.cpp" />
     <ClCompile Include="SynonymObject.cpp" />
     <ClCompile Include="SynonymOccurence.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="ClauseWithObject.cpp" />
+    <ClCompile Include="ClauseWithRefObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssignTree.h" />
+    <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="ExprTree.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="ClausePatternObject.h" />
     <ClInclude Include="PKB.h" />
     <ClInclude Include="ProgramConverter.h" />
     <ClInclude Include="ProgramValidator.h" />
@@ -56,14 +62,18 @@
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
     <ClInclude Include="StringTokenizer.h" />
+    <ClInclude Include="ResultsObject.h" />
+    <ClInclude Include="ResultsTable.h" />
+    <ClInclude Include="SelectObject.h" />
+    <ClInclude Include="ClauseSuchThatArgObject.h" />
+    <ClInclude Include="ClauseSuchThatObject.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="WithAttrObject.h" />
-    <ClInclude Include="WithObject.h" />
-    <ClInclude Include="WithRefObject.h" />
+    <ClInclude Include="ClauseWithObject.h" />
+    <ClInclude Include="ClauseWithRefObject.h" />
     <ClInclude Include="WithRefType.h" />
   </ItemGroup>
   <ItemGroup>
