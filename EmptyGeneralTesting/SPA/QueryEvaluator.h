@@ -4,7 +4,7 @@
 #include "ClausePatternObject.h"
 #include "SelectObject.h"
 #include "ClauseSuchThatObject.h"
-#include "WithObject.h"
+#include "ClauseWithObject.h"
 
 #include "QueryTable.h"
 #include "SynonymTable.h"
@@ -25,7 +25,7 @@ public:
 	SynonymTable *getSynonymTable();
 	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	void evaluate(QueryTable queryTable);
-//	void evaluatePattern(PatternTypeObject patternObject);
+//	void evaluatePattern(ClausePatternObject patternObject);
 	void evaluateSelect(SelectObject selectObject);
-//	void evaluateWith(WithObject withObject);
+//	void evaluateWith(ClauseWithObject withObject);
 };

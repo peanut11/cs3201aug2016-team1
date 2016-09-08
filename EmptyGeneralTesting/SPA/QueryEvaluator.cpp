@@ -96,8 +96,8 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchThatRelObject)
 {
 	RelationshipType type = suchThatRelObject.getRelationshipType();
-	SuchThatArgObject argOne = suchThatRelObject.getArgsOne();
-	SuchThatArgObject argTwo = suchThatRelObject.getArgsTwo();
+	ClauseSuchThatArgObject argOne = suchThatRelObject.getArgsOne();
+	ClauseSuchThatArgObject argTwo = suchThatRelObject.getArgsTwo();
 	bool relationshipHolds = true;
 
 	// get PKB
