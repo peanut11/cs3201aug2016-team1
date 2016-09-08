@@ -11,16 +11,6 @@ const std::runtime_error PKB::ERROR = std::runtime_error("");
 
 PKB* PKB::theOne = nullptr;
 
-bool PKB::contains(std::vector<VarOrStmt> vec, VarOrStmt item) {
-	for (std::vector<VarOrStmt>::const_iterator it = vec.begin(); it < vec.end(); it++) {
-		if (*it == item) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
 PKB* PKB::getInstance() {
 	if (theOne == nullptr) {
 		theOne = new PKB();
@@ -31,7 +21,7 @@ PKB* PKB::getInstance() {
 
 PKB::PKB() {
 	assignTrees = std::vector<AssignTree>();
-	constants = std::vector<Constant>();
+	constants = std::set<Constant>();
 	refMap = RefMap();
 	refTable = std::vector<VarName>();
 	stmtTable = std::vector<StmtRow>();
@@ -43,27 +33,30 @@ PKB::PKB() {
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, VarOrStmt item) {
-	return contains(stmtTable[stmt][rel], item);
+	StmtEntry::iterator it;
+	StmtEntry entry = stmtTable[stmt][rel];
+	it = entry.find(item);
+	return it != entry.end();
 }
 
 bool PKB::isVarExist(VarName varName) {
 	return (refMap.find(varName) != refMap.end());
 }
 
-std::vector<Constant> PKB::getAllConstantValues() {
+std::set<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
 
-std::vector<StmtNumber> PKB::getAllStmts() {
-	std::vector<StmtNumber> stmts;
+std::set<StmtNumber> PKB::getAllStmts() {
+	std::set<StmtNumber> stmts;
 	for (StmtNumber stmt = 1; stmt < stmtTable.size(); stmt++) {
-		stmts.push_back(stmt);
+		stmts.insert(stmt);
 	}
 	return stmts;
 }
 
-std::vector<VarName> PKB::getAllVarNames() {
-	return refTable;
+std::set<VarName> PKB::getAllVarNames() {
+	return std::set<VarName>(refTable.begin(),refTable.end());
 }
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
@@ -78,11 +71,11 @@ EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
 	return stmtTypeTable[stmt];
 }
 
-std::vector<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
+std::set<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 	return varTable[getVarIndex(varName)][rel];
 }
 
-std::vector<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
+std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
 		throw ERROR;
 	}
@@ -90,16 +83,16 @@ std::vector<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType st
 	return stmtTable[stmt][stmtRel];
 }
 
-std::vector<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
-	std::vector<StmtNumber> stmts;
+std::set<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
+	std::set<StmtNumber> stmts;
 
 	for (StmtNumber i = 0; i < stmtTable.size(); i++) {
 		if (stmtTypeTable[i] == stmtType) {
-			stmts.push_back(i);
+			stmts.insert(i);
 		}
 	}
 
-	return std::vector<StmtNumber>();
+	return std::set<StmtNumber>();
 }
 
 StmtNumber PKB::getStmtTableSize() {
@@ -131,7 +124,7 @@ VarName PKB::getVarName(VarIndex varIndex) {
 	return varName;
 }
 
-std::vector<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
+std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw ERROR;
 	}
@@ -157,11 +150,11 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	}
 	
 	prevSize = stmtTable[stmt][rel].size();
-	stmtTable[stmt][rel].push_back(varIndex);
+	stmtTable[stmt][rel].insert(varIndex);
 	success = (prevSize + 1 == stmtTable[stmt][rel].size());
 
 	prevSize = varTable[varIndex][rel].size();
-	varTable[varIndex][rel].push_back(stmt);
+	varTable[varIndex][rel].insert(stmt);
 	success = (prevSize + 1 == varTable[varIndex][rel].size()) && success;
 
 	return success;
@@ -181,7 +174,7 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 	int prevSize = stmtTable[stmtA][rel].size();
 
 	prevSize = stmtTable[stmtA][rel].size();
-	stmtTable[stmtA][rel].push_back(stmtB);
+	stmtTable[stmtA][rel].insert(stmtB);
 	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
 
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
@@ -195,7 +188,7 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 		}
 
 		prevSize = stmtTable[stmtB][supplementaryRel].size();
-		stmtTable[stmtB][supplementaryRel].push_back(stmtA);
+		stmtTable[stmtB][supplementaryRel].insert(stmtA);
 		success = (prevSize + 1 == stmtTable[stmtB][supplementaryRel].size()) && success;
 	}
 
@@ -219,4 +212,10 @@ bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 	assignTrees.push_back(tree);
 
 	return (stmt + 1 == assignTrees.size());
+}
+
+bool PKB::putConstant(Constant constant) {
+	int prevSize = constants.size();
+	constants.insert(constant);
+	return (prevSize + 1 == constants.size());
 }

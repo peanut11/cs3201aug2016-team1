@@ -26,6 +26,22 @@ bool ProgramConverter::isVarName(std::string str) {
 	return true;
 }
 
+bool ProgramConverter::isConstant(std::string str)
+{
+	if (str.empty()) {
+		return false;
+		
+	}
+	for (unsigned int i = 0; i < str.length(); i++) {
+		if (!std::isdigit(str.at(i))) {
+			return false;
+			
+		}
+		
+	}
+	return true;
+}
+
 ProgramConverter::ProgramConverter() {
 	pkb = PKB::getInstance();
 	currentLeader = 0;
@@ -55,12 +71,13 @@ int ProgramConverter::convert(std::string source) {
 
 		if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
-			std::vector<StmtNumber> parentVec = pkb->getStmtsByStmt(currentParent, PARENT);
+			std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
 
-			if (parentVec.empty()) {
+			if (parentSet.empty()) {
 				currentParent = 0;
 			} else {
-				currentParent = parentVec[0];
+				std::set<StmtNumber>::iterator it = parentSet.begin();
+				currentParent = *it;
 			}
 
 			continue;
@@ -169,7 +186,10 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 			
 			if (!res) return res; // Returns immediately if false
 
-		} else { 
+		} else if (isConstant(str)) {
+			Constant constant = atoi(str.c_str());
+			res = pkb->putConstant(constant);
+		} else {
 			if (str == "=") isRHS = true; // Ignores the rest of the signs
 		}
 	}

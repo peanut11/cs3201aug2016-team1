@@ -7,7 +7,8 @@
 
 ProgramValidator::ProgramValidator() {}
 
-bool ProgramValidator::isValidSyntax() {
+bool ProgramValidator::isValidSyntax(std::string str) {
+	st = StringTokenizer(str, DelimiterMode::PARSER);
 	const std::string token = st.nextToken();
 	if (isProcedure(token) && !st.hasMoreTokens()) {
 		return true;
@@ -116,9 +117,4 @@ bool ProgramValidator::isVarName(std::string str) {
 
 bool ProgramValidator::isConstValue(std::string str) {
 	return isInteger(str);
-}
-
-bool ProgramValidator::isValidProgram(std::string str) {
-	st = StringTokenizer(str, DelimiterMode::PARSER);
-	return isValidSyntax();
 }

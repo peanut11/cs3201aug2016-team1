@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <set>
 
 #include "AssignTree.h"
 #include "EntityType.h"
@@ -21,8 +22,8 @@ typedef VarOrStmt StmtNumber; // StmtNumber == ProgLineNumber
 typedef std::string VarName;
 typedef std::map<VarName, VarIndex> RefMap;
 typedef std::vector<std::string> ProgLine;
-typedef std::vector<StmtNumber> VarEntry;
-typedef std::vector<VarOrStmt> StmtEntry;
+typedef std::set<StmtNumber> VarEntry;
+typedef std::set<VarOrStmt> StmtEntry;
 typedef std::array<StmtEntry, RelationshipType::TOTAL_COUNT> StmtRow;
 typedef std::array<VarEntry, 2> VarRow;
 
@@ -33,14 +34,12 @@ private:
 	PKB();
 	
 	std::vector<AssignTree> assignTrees;
-	std::vector<Constant>   constants;
+	std::set<Constant>   constants;
 	RefMap                  refMap;
 	std::vector<VarName>    refTable;
 	std::vector<StmtRow>    stmtTable;
 	std::vector<EntityType> stmtTypeTable;
 	std::vector<VarRow>     varTable;
-
-	bool contains(std::vector<VarOrStmt> vec, VarOrStmt item);
 
 public:
 	static PKB* getInstance();
@@ -54,6 +53,7 @@ public:
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
+	bool putConstant(Constant constant);
 
 	// API used by QP and DE
 	/*
@@ -81,11 +81,11 @@ public:
 	AssignTree              getAssign(StmtNumber stmt);
 	EntityType				getStmtTypeForStmt(StmtNumber stmt);
 	StmtNumber              getStmtTableSize();
-	std::vector<Constant>   getAllConstantValues();
-	std::vector<StmtNumber> getAllStmts();
-	std::vector<VarName>    getAllVarNames();
-	std::vector<StmtNumber> getStmtsByType(EntityType stmtType);
-	std::vector<StmtNumber> getStmtsByVar(RelationshipType rel, VarName varName);
-	std::vector<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
-	std::vector<VarIndex>   getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
+	std::set<Constant>		getAllConstantValues();
+	std::set<StmtNumber>	getAllStmts();
+	std::set<VarName>		getAllVarNames();
+	std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
+	std::set<StmtNumber>	getStmtsByVar(RelationshipType rel, VarName varName);
+	std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
+	std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 };

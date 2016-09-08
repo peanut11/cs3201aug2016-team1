@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <set>
 #include "SelectObject.h"
 #include "SuchThatRelObject.h"
 #include "WithObject.h"
@@ -10,15 +11,15 @@ class QueryTable {
 
 	SelectObject select;
 //	std::vector<ClauseObject> clauses;
-	std::vector<SuchThatRelObject> suchThats;
-	std::vector<WithObject> withs;
-	std::vector<PatternObject> patterns;
+	std::set<SuchThatRelObject> suchThats;
+	std::set<WithObject> withs;
+	std::set<PatternObject> patterns;
 
 public:
 	SelectObject getSelect();
-	std::vector<SuchThatRelObject> getSuchThats();
-	std::vector<WithObject> getWiths();
-	std::vector<PatternObject> getPatterns();
+	std::set<SuchThatRelObject> getSuchThats();
+	std::set<WithObject> getWiths();
+	std::set<PatternObject> getPatterns();
 //	std::vector<ClauseObject> getClauses();
 
 };
