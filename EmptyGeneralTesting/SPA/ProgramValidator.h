@@ -7,9 +7,10 @@
 
 class ProgramValidator {
 	StringTokenizer st;
-	bool isValidSyntax();
+public:
+	ProgramValidator();
+	bool isValidSyntax(std::string program);
 	bool isMatch(std::string s1, std::string s2);
-
 	bool isName(std::string str);
 	bool isInteger(std::string str);
 	bool isProcedure(std::string str);
@@ -21,8 +22,4 @@ class ProgramValidator {
 	bool isFactor(std::string str);
 	bool isVarName(std::string str);
 	bool isConstValue(std::string str);
-
-public:
-	ProgramValidator();
-	bool isValidProgram(std::string str);
 };

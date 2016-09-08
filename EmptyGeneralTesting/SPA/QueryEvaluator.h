@@ -1,25 +1,33 @@
 #pragma once
 
-#include<stdio.h>
-#include <iostream>
-#include "QueryTable.h"
 #include "PKB.h"
+
+#include "ClauseObject.h"
+#include "PatternObject.h"
+#include "SelectObject.h"
+#include "SuchThatRelObject.h"
+#include "WithObject.h"
+
+#include "QueryTable.h"
 #include "SynonymTable.h"
 
 class QueryEvaluator {
-
+private:
 	static QueryEvaluator *_instance;
+	QueryEvaluator();
+
+	PKB *mPKB; 
 	QueryTable queryTable;
-	PKB *mPKB;
 	SynonymTable *mSynonymTable;
 
 public:
 	static QueryEvaluator *getInstance();
 	PKB *getPKB();
+
 	SynonymTable *getSynonymTable();
-	void evaluate(QueryTable queryTable);
 	SuchThatRelObject evaluateSuchThat(SuchThatRelObject suchThatRelObject);
-	void evaluateWith(WithObject withObject);
+	void evaluate(QueryTable queryTable);
 	void evaluatePattern(PatternObject patternObject);
 	void evaluateSelect(SelectObject selectObject);
+	void evaluateWith(WithObject withObject);
 };

@@ -1,4 +1,5 @@
 #include "Frontend.h"
+#include "Parser.h"
 
 Frontend::Frontend()
 {
@@ -6,4 +7,5 @@ Frontend::Frontend()
 
 void Frontend::parse(std::string sourceFile)
 {
+	Parser parser = Parser();
 }

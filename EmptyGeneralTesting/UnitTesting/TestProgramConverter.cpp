@@ -126,16 +126,18 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 		
-		std::vector<StmtNumber> output = pkb->getStmtsByVar(MODIFIES, "x");
-		std::vector<StmtNumber> expectedOutput;
+		std::set<StmtNumber> output = pkb->getStmtsByVar(MODIFIES, "x");
+		std::set<StmtNumber> expectedOutput;
 		StmtNumber stmtNo = 1;
-		expectedOutput.push_back(stmtNo);
+		expectedOutput.insert(stmtNo);
 
+		/*StmtSetIterator expectedIt;
+		StmtSetIterator outputIt;
 		bool res = expectedOutput.size() == output.size();
-		for (unsigned int i = 0; i < expectedOutput.size(); i++) {
+		for (expectedIt = expectedOutput.begin(); expectedIt != expectedOutput.end(); ++ex) {
 			res = (expectedOutput[i] == output[i]) && res;
-		}
-		Assert::IsTrue(res);
+		}*/
+		Assert::IsTrue(expectedOutput == output);
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_VarUsedBy) {
@@ -146,7 +148,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 
-		std::vector<StmtNumber> output = pkb->getStmtsByVar(USES, "x");
+		/*std::vector<StmtNumber> output = pkb->getStmtsByVar(USES, "x");
 		std::vector<StmtNumber> expectedOutput;
 		StmtNumber stmtNo = 4;
 		expectedOutput.push_back(stmtNo);
@@ -155,7 +157,7 @@ public:
 		for (unsigned int i = 0; i < expectedOutput.size(); i++) {
 			res = (expectedOutput[i] == output[i]) && res;
 		}
-		Assert::IsTrue(res);
+		Assert::IsTrue(res);*/
 	}
 	};
 }

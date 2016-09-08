@@ -6,17 +6,19 @@
 
 #pragma once
 
-#include<stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
+#include "Parser.h"
 
-using namespace std;
+Parser::Parser () {
+	mConverter = ProgramConverter();
+	mValidator = ProgramValidator();
+}
 
-#include "PKB.h"
-#include "Node.h"
+bool Parser::isValidProgram(std::string str)
+{
+	return mValidator.isValidSyntax(str);
+}
 
-int Parse () {
-
+int Parser::convert(std::string source)
+{
 	return 0;
 }
