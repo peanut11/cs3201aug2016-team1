@@ -1,6 +1,6 @@
-#include "SuchThatRelObject.h"
+#include "ClauseSuchThatObject.h"
 
-SuchThatRelObject SuchThatRelObject::createSuchThatRelobject(RelationshipType type, SuchThatArgObject argsOne, SuchThatArgObject argsTwo)
+ClauseSuchThatObject ClauseSuchThatObject::createSuchThatRelobject(RelationshipType type, SuchThatArgObject argsOne, SuchThatArgObject argsTwo)
 {
 	this->type = type;
 	this->argsOne = argsOne;
@@ -8,27 +8,27 @@ SuchThatRelObject SuchThatRelObject::createSuchThatRelobject(RelationshipType ty
 	return *this;
 }
 
-RelationshipType SuchThatRelObject::getRelationshipType()
+RelationshipType ClauseSuchThatObject::getRelationshipType()
 {
 	return type;
 }
 
-SuchThatArgObject SuchThatRelObject::getArgsOne()
+SuchThatArgObject ClauseSuchThatObject::getArgsOne()
 {
 	return argsOne;
 }
 
-SuchThatArgObject SuchThatRelObject::getArgsTwo()
+SuchThatArgObject ClauseSuchThatObject::getArgsTwo()
 {
 	return argsTwo;
 }
 
-void SuchThatRelObject::setResultsBoolean(bool boolean)
+void ClauseSuchThatObject::setResultsBoolean(bool boolean)
 {
 	this->isResultsBoolean = boolean;
 }
 
-bool SuchThatRelObject::getResultsBoolean()
+bool ClauseSuchThatObject::getResultsBoolean()
 {
 	return this->isResultsBoolean;
 }

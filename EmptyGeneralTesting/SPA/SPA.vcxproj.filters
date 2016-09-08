@@ -52,9 +52,6 @@
     <ClCompile Include="SelectObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="SuchThatObject.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="WithObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -62,12 +59,6 @@
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="WithRefObject.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
-    <ClCompile Include="PatternTypeObject.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
-    <ClCompile Include="PatternObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="SynonymObject.cpp">
@@ -85,7 +76,13 @@
     <ClCompile Include="QueryTable.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="ClauseObject.cpp">
+    <ClCompile Include="ResultsTable.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultsObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ClausePatternObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -150,12 +147,6 @@
     <ClInclude Include="AttrType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClauseObject.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="SuchThatObject.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
     <ClInclude Include="WithObject.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
@@ -168,12 +159,6 @@
     <ClInclude Include="WithRefType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PatternObject.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="PatternTypeObject.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
     <ClInclude Include="Frontend.h">
       <Filter>Header Files\PKB</Filter>
     </ClInclude>
@@ -181,9 +166,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SynonymOccurence.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="SuchThatRelObject.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="SuchThatArgObject.h">
@@ -194,6 +176,18 @@
     </ClInclude>
     <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultsTable.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultsObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ClauseSuchThatObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ClausePatternObject.h">
+      <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

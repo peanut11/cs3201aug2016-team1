@@ -1,11 +1,9 @@
 #pragma once
 
 #include "PKB.h"
-
-#include "ClauseObject.h"
-#include "PatternObject.h"
+#include "ClausePatternObject.h"
 #include "SelectObject.h"
-#include "SuchThatRelObject.h"
+#include "ClauseSuchThatObject.h"
 #include "WithObject.h"
 
 #include "QueryTable.h"
@@ -25,9 +23,9 @@ public:
 	PKB *getPKB();
 
 	SynonymTable *getSynonymTable();
-	SuchThatRelObject evaluateSuchThat(SuchThatRelObject suchThatRelObject);
+	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	void evaluate(QueryTable queryTable);
-	void evaluatePattern(PatternObject patternObject);
+//	void evaluatePattern(PatternTypeObject patternObject);
 	void evaluateSelect(SelectObject selectObject);
-	void evaluateWith(WithObject withObject);
+//	void evaluateWith(WithObject withObject);
 };
