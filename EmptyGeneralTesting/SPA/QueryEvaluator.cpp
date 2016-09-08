@@ -19,7 +19,7 @@ Singleton
 QueryEvaluator* QueryEvaluator::getInstance()
 {
 	if (_instance == nullptr) {
-		_instance = new QueryEvaluator();
+		_instance = new QueryEvaluator;
 	}
 
 	return _instance;

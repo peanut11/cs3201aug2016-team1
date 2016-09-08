@@ -12,10 +12,9 @@
 class QueryEvaluator {
 private:
 	static QueryEvaluator *_instance;
-	QueryEvaluator();
 
 	PKB *mPKB; 
-	QueryTable queryTable;
+	QueryTable *queryTable;
 	ResultsTable resultsTable;
 	SynonymTable *mSynonymTable;
 
