@@ -11,9 +11,9 @@
 
 #include "DesignExtractor.h"
 
-int DesignExtractor() {
-	return 0;
-}
+
+
+DesignExtractor::DesignExtractor() {}
 
 void DesignExtractor::process() {
 	processFollowStar();
