@@ -64,8 +64,9 @@ class QueryValidator {
 	QueryTable *getQueryTable();
 
 	SelectObject createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
-	SuchThatObject createClauseSuchThatObject(RelationshipType mRelType);
-	PatternObject createClausePatternObject();
+	//SuchThatObject createClauseSuchThatRelObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg);
+	SuchThatArgObject createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue);
+	//PatternObject createClausePatternObject();
 	WithObject createClauseWithObject();
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
