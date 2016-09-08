@@ -80,7 +80,21 @@ QueryTable *QueryValidator::getQueryTable() {
 SelectObject QueryValidator::createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
 	SelectObject mObj = SelectObject(entityType, attrType, isBoolean);
 	// insert into selectTable
+	return mObj;
 }
+
+SuchThatObject QueryValidator::createClauseSuchThatObject(RelationshipType mRelType) {
+	return SuchThatObject();
+}
+
+PatternObject QueryValidator::createClausePatternObject() {
+	return PatternObject();
+}
+
+WithObject QueryValidator::createClauseWithObject() {
+	return WithObject();
+}
+
 
 SynonymOccurence *QueryValidator::getSynonymOccurence() {
 	return this->mSynonymOccurence;
@@ -234,14 +248,12 @@ bool QueryValidator::isSelect(std::string str) {
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(str).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->createClauseSelectObject(EntityType::INVALID, AttrType::INVALID, true);
+						this->getQueryTable()->replaceSelectObject(this->createClauseSelectObject(EntityType::INVALID, AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						//this->getQueryTable()->inser
-						this->createClauseSelectObject(mSynonymEntityType, AttrType::INVALID, false);
-
+						this->getQueryTable()->replaceSelectObject(this->createClauseSelectObject(mSynonymEntityType, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table
@@ -408,6 +420,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 
 	}
 
+	return false;
 }
 
 /*
@@ -630,12 +643,8 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		}
 		*/
 	}
-
 	
-
-
-
-
+	return false;
 }
 
 bool QueryValidator::isSynonym(std::string str) {
