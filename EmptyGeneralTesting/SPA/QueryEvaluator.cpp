@@ -1,3 +1,4 @@
+
 // Maintained by: Joseph
 //
 // Accessed by:
@@ -44,24 +45,24 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		this->queryTable = queryTable;
 
 		// gets all the clauses and select objects
-		std::set<SuchThatRelObject> suchThats = queryTable.getSuchThats();
-		std::set<WithObject> withs = queryTable.getWiths();
-		std::set<PatternObject> patterns = queryTable.getPatterns();
+		std::set<ClauseSuchThatObject> suchThats = queryTable.getSuchThats();
+//		std::set<WithObject> withs = queryTable.getWiths();
+//		std::set<PatternObject> patterns = queryTable.getPatterns();
 		SelectObject select = queryTable.getSelect();
 
 		// boolean status on relationships holds
 		bool relationshipHolds = true;
 
 		// iterate the clauses vectors and evaluate them
-		std::vector<SuchThatRelObject> evaluatedSTs;
-		for (std::set<SuchThatRelObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
-			SuchThatRelObject evaluatedST = evaluateSuchThat(*it);
-			evaluatedSTs.push_back(evaluatedST);
-			relationshipHolds = relationshipHolds && evaluatedST.getResultsBoolean();
+		std::vector<ClauseSuchThatObject> evaluatedSTs;
+		for (std::set<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
+			ClauseSuchThatObject evaluatedST = evaluateSuchThat(*it);
+//			evaluatedSTs.push_back(evaluatedST);
+//			relationshipHolds = relationshipHolds && evaluatedST.getResultsBoolean();
 		}
-		suchThats = std::set<SuchThatRelObject>(evaluatedSTs.begin(), evaluatedSTs.end());
+//		suchThats = std::set<ClauseSuchThatObject>(evaluatedSTs.begin(), evaluatedSTs.end());
 		// iterate the clauses vectors and evaluate them
-		for (std::set<WithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
+/*		for (std::set<WithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
 			evaluateWith(*it);
 			relationshipHolds = relationshipHolds && it->getResultsBoolean();
 		}
@@ -85,13 +86,14 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		else {
 			// output : invalid/none
 		}
+*/
 	}
 	catch (std::runtime_error e) {
 		throw e.what();
 	}
 }
 
-SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRelObject)
+ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchThatRelObject)
 {
 	RelationshipType type = suchThatRelObject.getRelationshipType();
 	SuchThatArgObject argOne = suchThatRelObject.getArgsOne();
@@ -410,14 +412,16 @@ SuchThatRelObject QueryEvaluator::evaluateSuchThat(SuchThatRelObject suchThatRel
 	}
 */
 }
-
+/*
 void QueryEvaluator::evaluateWith(WithObject withObject)
 {
 }
 
+
 void QueryEvaluator::evaluatePattern(PatternObject patternObject)
 {
 }
+*/
 
 void QueryEvaluator::evaluateSelect(SelectObject selectObject)
 {

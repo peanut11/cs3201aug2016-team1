@@ -1,13 +1,11 @@
 #pragma once
 #include <vector>
-#include "ClauseObject.h"
 #include "WithAttrObject.h"
 
-class WithObject: public ClauseObject {
+class WithObject{
 	std::vector<WithAttrObject> attributes;
 
 public:
 	std::vector<WithAttrObject> getAttributes();
-	bool getResultsBoolean() const;
 	void evaluate();
 };

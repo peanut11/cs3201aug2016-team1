@@ -12,12 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssignTree.cpp" />
-    <ClCompile Include="ClauseObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="PatternObject.cpp" />
-    <ClCompile Include="PatternTypeObject.cpp" />
+    <ClCompile Include="ClausePatternObject.cpp" />
     <ClCompile Include="PKB.cpp" />
     <ClCompile Include="ProgramConverter.cpp" />
     <ClCompile Include="ProgramValidator.cpp" />
@@ -28,10 +26,11 @@
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
+    <ClCompile Include="ResultsObject.cpp" />
+    <ClCompile Include="ResultsTable.cpp" />
     <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="SuchThatArgObject.cpp" />
-    <ClCompile Include="SuchThatObject.cpp" />
     <ClCompile Include="SuchThatRelObject.cpp" />
     <ClCompile Include="SynonymObject.cpp" />
     <ClCompile Include="SynonymOccurence.cpp" />
@@ -44,13 +43,11 @@
   <ItemGroup>
     <ClInclude Include="AssignTree.h" />
     <ClInclude Include="AttrType.h" />
-    <ClInclude Include="ClauseObject.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
-    <ClInclude Include="PatternObject.h" />
-    <ClInclude Include="PatternTypeObject.h" />
+    <ClInclude Include="ClausePatternObject.h" />
     <ClInclude Include="PKB.h" />
     <ClInclude Include="ProgramConverter.h" />
     <ClInclude Include="ProgramValidator.h" />
@@ -63,11 +60,12 @@
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
+    <ClInclude Include="ResultsObject.h" />
+    <ClInclude Include="ResultsTable.h" />
     <ClInclude Include="SelectObject.h" />
     <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="SuchThatArgObject.h" />
-    <ClInclude Include="SuchThatObject.h" />
-    <ClInclude Include="SuchThatRelObject.h" />
+    <ClInclude Include="ClauseSuchThatObject.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />

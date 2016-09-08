@@ -2,7 +2,7 @@
 #include "RelationshipType.h"
 #include "SuchThatArgObject.h"
 
-class SuchThatRelObject {
+class ClauseSuchThatObject {
 private:
 	RelationshipType type;
 	SuchThatArgObject argsOne;
@@ -10,7 +10,7 @@ private:
 	bool isResultsBoolean = false;
 
 public:
-	SuchThatRelObject createSuchThatRelobject(RelationshipType type, SuchThatArgObject argsOne, SuchThatArgObject argsTwo);
+	ClauseSuchThatObject createSuchThatRelobject(RelationshipType type, SuchThatArgObject argsOne, SuchThatArgObject argsTwo);
 	RelationshipType getRelationshipType();
 	SuchThatArgObject getArgsOne();
 	SuchThatArgObject getArgsTwo();
