@@ -14,6 +14,7 @@
 #include "WithObject.h"
 #include "WithRefObject.h"
 #include "WithAttrObject.h"
+#include "QueryTable.h"
 
 class QueryValidator {
 
@@ -55,7 +56,12 @@ class QueryValidator {
 	SynonymTable *mSynonymTable;
 	RelTable *mRelTable;
 
+	QueryTable *mQueryTable;
+
+
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
+
+	QueryTable *getQueryTable();
 
 	SelectObject createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
 	SuchThatObject createClauseSuchThatObject(RelationshipType mRelType);
@@ -66,7 +72,6 @@ class QueryValidator {
 	EntityType getSyntaxEntityType(std::string syntax);
 	ClauseType::ClauseType getClauseType(std::string syntax);
 	
-
 	std::string getEntitySyntax(std::string str);
 
 

@@ -73,7 +73,11 @@ void QueryValidator::clearSynonymTable() {
 	this->mSynonymTable->clearAll();
 }
 
-SelectObject createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
+QueryTable *QueryValidator::getQueryTable() {
+	return this->mQueryTable;
+}
+
+SelectObject QueryValidator::createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
 	SelectObject mObj = SelectObject(entityType, attrType, isBoolean);
 	// insert into selectTable
 }
@@ -235,6 +239,7 @@ bool QueryValidator::isSelect(std::string str) {
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
+						//this->getQueryTable()->inser
 						this->createClauseSelectObject(mSynonymEntityType, AttrType::INVALID, false);
 
 					}
