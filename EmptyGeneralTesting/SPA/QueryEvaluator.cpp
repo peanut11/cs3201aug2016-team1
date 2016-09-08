@@ -45,9 +45,9 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		this->queryTable = queryTable;
 
 		// gets all the clauses and select objects
-		std::set<ClauseSuchThatObject> suchThats = queryTable.getSuchThats();
-//		std::set<WithObject> withs = queryTable.getWiths();
-//		std::set<PatternObject> patterns = queryTable.getPatterns();
+		std::vector<ClauseSuchThatObject> suchThats = queryTable.getSuchThats();
+		std::vector<ClauseWithObject> withs = queryTable.getWiths();
+		std::vector<ClausePatternObject> patterns = queryTable.getPatterns();
 		SelectObject select = queryTable.getSelect();
 
 		// boolean status on relationships holds
@@ -55,7 +55,7 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 
 		// iterate the clauses vectors and evaluate them
 		std::vector<ClauseSuchThatObject> evaluatedSTs;
-		for (std::set<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
+		for (std::vector<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
 			ClauseSuchThatObject evaluatedST = evaluateSuchThat(*it);
 //			evaluatedSTs.push_back(evaluatedST);
 //			relationshipHolds = relationshipHolds && evaluatedST.getResultsBoolean();

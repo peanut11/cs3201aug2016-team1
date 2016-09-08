@@ -14,17 +14,17 @@ SelectObject QueryTable::getSelect()
 	return this->select;
 }
 
-std::set<ClauseSuchThatObject> QueryTable::getSuchThats()
+std::vector<ClauseSuchThatObject> QueryTable::getSuchThats()
 {
 	return this->suchThats;
 }
 
-std::set<ClauseWithObject> QueryTable::getWiths()
+std::vector<ClauseWithObject> QueryTable::getWiths()
 {
 	return this->withs;
 }
 
-std::set<ClausePatternObject> QueryTable::getPatterns()
+std::vector<ClausePatternObject> QueryTable::getPatterns()
 {
 	return this->patterns;
 }
@@ -43,7 +43,8 @@ bool QueryTable::replaceSelectObject(SelectObject object) {
 bool QueryTable::insertSuchThatRelObject(ClauseSuchThatObject object) {
 	// second returns the status of insertion
 	try {
-		return this->suchThats.insert(object).second;
+		 this->suchThats.push_back(object);
+		 return true;
 	}
 	catch (std::runtime_error e) {
 		return false;
@@ -52,7 +53,8 @@ bool QueryTable::insertSuchThatRelObject(ClauseSuchThatObject object) {
 
 bool QueryTable::insertWithObject(ClauseWithObject object) {
 	try {
-		return this->withs.insert(object).second;
+		this->withs.push_back(object);
+		return true;
 	}
 	catch (std::runtime_error e) {
 		return false;
@@ -61,7 +63,8 @@ bool QueryTable::insertWithObject(ClauseWithObject object) {
 
 bool QueryTable::insertPatternObject(ClausePatternObject object) {
 	try {
-		return this->patterns.insert(object).second;
+		this->patterns.push_back(object);
+		return true;
 	}
 	catch (std::runtime_error e) {
 		return false;

@@ -2,11 +2,11 @@
 #include "ResultsObject.h"
 
 class ResultsTable {
-	std::set<ResultsObject> resultsObject;
-
+	std::vector<ResultsObject> resultsObject;
+	ResultsObject invalidObject = ResultsObject("INVALID");
 public:
 	ResultsObject getObject(SynonymString synonym);
-	std::set<ResultsObject> getObjects();
+	std::vector<ResultsObject> getObjects();
 	std::set<SynonymString> getSetString(SynonymString synonym);
 	std::set<SynonymValue> getSetInt(SynonymString synonym);
 
