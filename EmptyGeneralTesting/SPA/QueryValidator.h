@@ -10,7 +10,6 @@
 #include "SynonymObject.h"
 #include "SynonymOccurence.h"
 #include "RelTable.h"
-#include "PatternObject.h"
 #include "WithObject.h"
 #include "WithRefObject.h"
 #include "WithAttrObject.h"
@@ -64,10 +63,11 @@ class QueryValidator {
 	QueryTable *getQueryTable();
 
 	SelectObject createClauseSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
-	//SuchThatObject createClauseSuchThatRelObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg);
+	
+	ClauseSuchThatObject createClauseSuchThatObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg);
 	SuchThatArgObject createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue);
-	//PatternObject createClausePatternObject();
-	WithObject createClauseWithObject();
+	ClausePatternObject createClausePatternObject();
+	// WithObject createClauseWithObject();
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);

@@ -7,8 +7,6 @@
 #include "ClauseType.h"
 #include "AttrType.h"
 #include "SelectObject.h"
-#include "SuchThatObject.h"
-#include "SuchThatRelObject.h"
 #include "SuchThatArgObject.h"
 
 const std::string QueryValidator::SYNTAX_PROCEDURE = "procedure";
@@ -83,29 +81,23 @@ SelectObject QueryValidator::createClauseSelectObject(EntityType entityType, Att
 	return mObj;
 }
 
-/*
-SuchThatObject QueryValidator::createClauseSuchThatObject() {
-	return SuchThatObject();
-}
 
-SuchThatRelObject QueryValidator::createClauseSuchThatRelObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg) {
-
+ClauseSuchThatObject QueryValidator::createClauseSuchThatObject(RelationshipType mRelType, SuchThatArgObject firstArg, SuchThatArgObject secondArg) {
+	return ClauseSuchThatObject();
 }
-*/
 
 SuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType type, bool isSynonym, std::string stringValue, int integerValue) {
-
+	return SuchThatArgObject();
 }
 
+ClausePatternObject QueryValidator::createClausePatternObject() {
+	return ClausePatternObject();
+}
 /*
-PatternObject QueryValidator::createClausePatternObject() {
-	return PatternObject();
-}
-*/
 WithObject QueryValidator::createClauseWithObject() {
 	return WithObject();
 }
-
+*/
 
 SynonymOccurence *QueryValidator::getSynonymOccurence() {
 	return this->mSynonymOccurence;
