@@ -19,25 +19,35 @@ public:
 		pc.convert(str);
 		
 
-		DesignExtractor test = DesignExtractor();
-		test.process();
+		DesignExtractor de = DesignExtractor();
+		de.process();
 		PKB* pkb = PKB::getInstance();
-		std::set<StmtNumber> i = pkb->getStmtsByStmt(1, FOLLOWSSTAR);
-		std::set<StmtNumber> k= pkb->getStmtsByStmt(1, FOLLOWS);
-		int a = k.size();
-		int expected = 2;
-		int b = 5;
-		if (a == expected) {
-			for (int j = 0; j < a; j++) {
+		std::set<StmtNumber> i = pkb->getStmtsByStmt(1, FOLLOWED_BY_STAR);
+		std::set<StmtNumber> k= pkb->getStmtsByStmt(5, PARENT);
+		StmtSetIterator it = k.begin();
+		//it++;
+		StmtSetIterator follo = i.begin();
 
-			}
-		}
+		int l = *follo;
+		int a = *it;
+		Assert::AreEqual(0, a);
+		//int a = k.begin();
+		//int expected = 2;
+		//int b = 5;
+		//if (a == expected) {
+			//for (int j = 0; j < a; j++) {
+
+			//}
+		//}
 		
-		std::set<VarName> actual;
-		actual = pkb->getAllVarNames();
-		int f = actual.size();
-		Assert::AreEqual(a, 0);
-		Assert::AreEqual(f, 0);
+		//std::set<VarName> actual;
+		//actual = pkb->getAllVarNames();
+		//int f = k.size();
+		//Assert::AreEqual(l,2);
+		//l++;
+		//Assert::AreEqual(f, 5);
+
+		//Assert::AreEqual(f, 0);
 	}
 	};
 }

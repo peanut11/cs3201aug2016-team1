@@ -15,6 +15,10 @@ private:
 	ProgLineNumber currentLeader; 
 	ProgLineNumber lineCount;
 	ProgLine nextLine();
+public:
+	ProgramConverter();
+	int convert(std::string source);
+
 	bool isVarName(std::string str);
 	bool isConstant(std::string str);
 	bool isAssignment(ProgLine line);
@@ -25,8 +29,5 @@ private:
 	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
 	bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
 	bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
-
-public:
-	ProgramConverter();
-	int convert(std::string source);
+	
 };
