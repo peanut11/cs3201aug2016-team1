@@ -32,6 +32,10 @@ PKB::PKB() {
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
 }
 
+void PKB::clear() {
+	theOne = new PKB();
+}
+
 bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
 	StmtEntry::iterator it;
 	StmtEntry entry = stmtTable[stmt][rel];
@@ -210,7 +214,7 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	}
 
 	stmtTypeTable.push_back(stmtType);
-	return (stmtTypeTable.size() == stmt);
+	return (stmtTypeTable.size() == stmt+1);
 }
 
 bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
