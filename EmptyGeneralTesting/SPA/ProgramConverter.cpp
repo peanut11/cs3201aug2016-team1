@@ -175,7 +175,10 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 	bool res = true;
 
 	for each (std::string str in line) {
-		if (isVarName(str)) {
+		if (isConstant(str)) {
+			Constant constant = atoi(str.c_str());
+			res = pkb->putConstant(constant);
+		} else if (isVarName(str)) {
 			const VarName varName = str;
 
 			if (isRHS) {
@@ -186,9 +189,6 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 			
 			if (!res) return res; // Returns immediately if false
 
-		} else if (isConstant(str)) {
-			Constant constant = atoi(str.c_str());
-			res = pkb->putConstant(constant);
 		} else {
 			if (str == "=") isRHS = true; // Ignores the rest of the signs
 		}

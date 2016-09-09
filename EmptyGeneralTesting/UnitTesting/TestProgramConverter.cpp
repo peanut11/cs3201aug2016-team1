@@ -8,24 +8,163 @@ namespace UnitTesting {
 	
 	TEST_CLASS(TestProgramConverter) {
 		
-	TEST_CLASS_INITIALIZE(initialize) {
-		std::string str = Tools::readFile("prototype_procedure_Second.txt");
+	TEST_METHOD_INITIALIZE(initialize) {
+		std::string str = Tools::readFile("prototype_procedure_ConverterTest.txt");
 
 		ProgramConverter pc = ProgramConverter();
 		pc.convert(str);
 	};
 
-	/*TEST_METHOD_CLEANUP(destruct) {
+	TEST_METHOD_CLEANUP(destruct) {
 		PKB* pkb = PKB::getInstance();
-		delete pkb;
-	};*/
+		pkb->clear();
+	};
 
 public:
 	TEST_METHOD(TestConvert_ProcSecond) {
+		PKB* pkb = PKB::getInstance();
+		pkb->clear();
 		std::string str = Tools::readFile("prototype_procedure_Second.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		Assert::AreEqual(5, pc.convert(str));
+		int progLines = pc.convert(str);
+		Assert::AreEqual(5, progLines);
+	}
+	
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckFirstLineFollows) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 1;
+		
+		std::set<StmtNumber> expected; //should be empty
+		std::set<StmtNumber> actual; 
+		
+		actual = pkb->getStmtsByStmt(stmt1, FOLLOWS);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckRegularFollows) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 1;
+		StmtNumber stmt2 = 2;
+
+		std::set<StmtNumber> expected; // {stmt1}
+		std::set<StmtNumber> actual;
+
+		expected.insert(stmt1);
+
+		actual = pkb->getStmtsByStmt(stmt2, FOLLOWS);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckFirstLineFollowedBy) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 1;
+		StmtNumber stmt2 = 2;
+
+		std::set<StmtNumber> expected; // {stmt1}
+		std::set<StmtNumber> actual;
+
+		expected.insert(stmt2);
+
+		actual = pkb->getStmtsByStmt(FOLLOWS, stmt1);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckFirstLineWhileFollows) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 4;
+
+		std::set<StmtNumber> expected; // {}
+		std::set<StmtNumber> actual;
+
+		actual = pkb->getStmtsByStmt(stmt1, FOLLOWS);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckAfterWhileFollows) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 6;
+		StmtNumber stmt2 = 3;
+
+		std::set<StmtNumber> expected; // {stmt2}
+		std::set<StmtNumber> actual;
+		expected.insert(stmt2);
+		actual = pkb->getStmtsByStmt(stmt1, FOLLOWS);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckWhileFollowBy) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 3;
+		StmtNumber stmt2 = 6;
+
+		std::set<StmtNumber> expected; // {stmt2}
+		std::set<StmtNumber> actual;
+		expected.insert(stmt2);
+		actual = pkb->getStmtsByStmt(FOLLOWS, stmt1);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckFirstLineParent) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 1;
+
+		std::set<StmtNumber> expected; // {}
+		std::set<StmtNumber> actual;
+		
+		actual = pkb->getStmtsByStmt(stmt1, PARENT);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckInsideWhileParent) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt1 = 3;
+		StmtNumber stmt2 = 4;
+		std::set<StmtNumber> expected; // {stmt1}
+		std::set<StmtNumber> actual;
+		expected.insert(stmt1);
+		actual = pkb->getStmtsByStmt(stmt2, PARENT);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckWhileIsParentOf) {
+
+		PKB* pkb = PKB::getInstance();
+		StmtNumber stmt3 = 3;
+		StmtNumber stmt4 = 4;
+		StmtNumber stmt5 = 5;
+		std::set<StmtNumber> expected; // {4, 5}
+		std::set<StmtNumber> actual;
+		expected.insert(stmt4);
+		expected.insert(stmt5);
+		actual = pkb->getStmtsByStmt(PARENT, stmt3);
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateStmtInStmtTable_CheckStmtType) {
+
+		PKB* pkb = PKB::getInstance();
+		std::set<StmtNumber> expected; // {a, a, w, a, a, a}
+		std::set<StmtNumber> actual;
+		expected.insert(ASSIGN);
+		expected.insert(ASSIGN);
+		expected.insert(WHILE);
+		expected.insert(ASSIGN);
+		expected.insert(ASSIGN);
+		expected.insert(ASSIGN);
+
+		for (int stmt = 1; stmt < pkb->getStmtTableSize(); stmt++) {
+			actual.insert(pkb->getStmtTypeForStmt(stmt));
+		}
+		Assert::IsTrue(expected == actual);
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_CheckRefTable) {
@@ -43,6 +182,25 @@ public:
 		std::set<VarName> actual;
 		actual = pkb->getAllVarNames();
 		
+		Assert::IsTrue(expected == actual);
+	}
+
+	TEST_METHOD(TestUpdateAssignmentInTable_WhileUses) {
+		PKB* pkb = PKB::getInstance();
+		StmtNumber whi = 3;
+		VarIndex i = pkb->getVarIndex("i");
+		Assert::IsTrue(pkb->is(USES, whi, i));
+	}
+
+	TEST_METHOD(TestUpdateAssignmentInTable_VarUsedByWhile) {
+		PKB* pkb = PKB::getInstance();
+		StmtNumber whi = 3;
+		StmtNumber stmt = 4;
+		std::set<StmtNumber> actual;
+		std::set<StmtNumber> expected;
+		expected.insert(whi);
+		expected.insert(stmt);
+		actual = pkb->getStmtsByVar(USES, "i");
 		Assert::IsTrue(expected == actual);
 	}
 
@@ -125,14 +283,10 @@ public:
 		std::set<StmtNumber> output = pkb->getStmtsByVar(MODIFIES, "x");
 		std::set<StmtNumber> expectedOutput;
 		StmtNumber stmtNo = 1;
+		StmtNumber stmtNo2 = 6;
 		expectedOutput.insert(stmtNo);
+		expectedOutput.insert(stmtNo2);
 
-		/*StmtSetIterator expectedIt;
-		StmtSetIterator outputIt;
-		bool res = expectedOutput.size() == output.size();
-		for (expectedIt = expectedOutput.begin(); expectedIt != expectedOutput.end(); ++ex) {
-			res = (expectedOutput[i] == output[i]) && res;
-		}*/
 		Assert::IsTrue(expectedOutput == output);
 	}
 
@@ -144,16 +298,26 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 
-		/*std::vector<StmtNumber> output = pkb->getStmtsByVar(USES, "x");
-		std::vector<StmtNumber> expectedOutput;
+		std::set<StmtNumber> output = pkb->getStmtsByVar(USES, "x");
+		std::set<StmtNumber> expectedOutput;
 		StmtNumber stmtNo = 4;
-		expectedOutput.push_back(stmtNo);
+		expectedOutput.insert(stmtNo);
 
-		bool res = expectedOutput.size() == output.size();
-		for (unsigned int i = 0; i < expectedOutput.size(); i++) {
-			res = (expectedOutput[i] == output[i]) && res;
-		}
-		Assert::IsTrue(res);*/
+		Assert::IsTrue(output == expectedOutput);
+	}
+
+	TEST_METHOD(TestUpdateAssignmentInTable_Constants) {
+		PKB* pkb = PKB::getInstance();
+		Constant const1 = 0;
+		Constant const2 = 5;
+		Constant const3 = 2;
+		Constant const4 = 7;
+		std::array<Constant, 4> expected = { const1, const2, const3, const4 };
+		std::set<Constant> output = pkb->getAllConstantValues();
+		std::set<Constant> expectedOutput (expected.begin(), expected.end());
+		
+
+		Assert::IsTrue(output == expectedOutput);
 	}
 	};
 }

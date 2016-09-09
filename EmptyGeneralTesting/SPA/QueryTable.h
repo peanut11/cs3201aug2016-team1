@@ -15,10 +15,13 @@ class QueryTable {
 
 public:
 	QueryTable();
+	~QueryTable();
 	SelectObject getSelect();
 	std::vector<ClauseSuchThatObject> getSuchThats();
 	std::vector<ClauseWithObject> getWiths();
 	std::vector<ClausePatternObject> getPatterns();
+
+	std::string toString();
 
 	bool replaceSelectObject(SelectObject object);
 	bool insertSuchThatObject(ClauseSuchThatObject object);

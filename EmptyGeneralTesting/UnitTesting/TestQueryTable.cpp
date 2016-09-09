@@ -23,8 +23,8 @@ public:
 		ClauseWithRefObject wr4(INTEGER, "", AttrType::PROC_NAME);
 		ClauseWithObject w1(wr1, wr2);
 		ClauseWithObject w2(wr3, wr4);
-		ClausePatternObject p1(ASSIGN, "", "");
-		ClausePatternObject p2(PROCEDURE, "", "");
+		ClausePatternObject p1(ASSIGN, EntityType::INVALID, false, "", ""); 
+		ClausePatternObject p2(PROCEDURE, EntityType::INVALID, false, "", "");
 		suchThats.push_back(st1);
 		suchThats.push_back(st2);
 		withs.push_back(w1);
@@ -58,7 +58,7 @@ public:
 
 		bool statusPattern = true;
 		for (int i = 0; i < 2; i++) {
-			if (queryTable.getPatterns()[i].getEntityType() != patterns[i].getEntityType()) {
+			if (queryTable.getPatterns()[i].getPatternType() != patterns[i].getPatternType()) {
 				statusPattern = false;
 			}
 		}
