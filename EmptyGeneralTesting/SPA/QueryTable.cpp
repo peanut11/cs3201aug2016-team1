@@ -9,9 +9,9 @@
 #include "QueryTable.h" 
 #include <exception>
 
-QueryTable::QueryTable()
-{
-}
+QueryTable::QueryTable(){}
+
+QueryTable::~QueryTable(){}
 
 SelectObject QueryTable::getSelect()
 {
@@ -33,13 +33,34 @@ std::vector<ClausePatternObject> QueryTable::getPatterns()
 	return this->patterns;
 }
 
-std::string toString() {
-	std::string str = "========== QUERY TABLE ===============";
+std::string QueryTable::toString() {
+	std::string str = "========== QUERY TABLE ===============\n";
 
-	//for (auto value : this->)
+	//str.append("== Select object ==\n");
+	//str.append(this->select.get
+	str.append("== Such That ==\n");
+	for (auto value : this->suchThats) {
 
+		if (value.getArgsOne().getIsSynonym()) {
+			str.append("true");
+		}
+		else {
+			str.append("false");
+		}
 
+		str.append(", " + value.getArgsOne().getStringValue() + ", " + std::to_string(value.getArgsOne().getIntegerValue()) + " | ");
 
+		if (value.getArgsTwo().getIsSynonym()) {
+			str.append("true");
+		}
+		else {
+			str.append("false");
+		}
+
+		str.append(", " + value.getArgsTwo().getStringValue() + ", " + std::to_string(value.getArgsTwo().getIntegerValue()) + "\n");
+
+	}
+	return str;
 }
 
 bool QueryTable::replaceSelectObject(SelectObject object) {

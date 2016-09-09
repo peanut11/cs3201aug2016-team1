@@ -57,6 +57,7 @@ QueryValidator *QueryValidator::getInstance()
 	_instance->mSynonymOccurence = SynonymOccurence::getInstance();
 	_instance->mSynonymTable = SynonymTable::getInstance();
 	_instance->mRelTable = RelTable::getInstance();
+	_instance->mQueryTable = QueryTable();
 	return _instance;
 }
 
@@ -72,7 +73,7 @@ void QueryValidator::clearSynonymTable() {
 	this->mSynonymTable->clearAll();
 }
 
-QueryTable *QueryValidator::getQueryTable() {
+QueryTable QueryValidator::getQueryTable() {
 	return this->mQueryTable;
 }
 
@@ -92,9 +93,15 @@ ClauseSuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType
 }
 
 // Clause Pattern object
-ClausePatternObject QueryValidator::createClausePatternObject(EntityType entityType, std::string leftHand, std::string rightHand) {
-	return ClausePatternObject(entityType, leftHand, rightHand);
+ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg) {
+	return ClausePatternObject(patternType, firstArgType, isFirstArgSynonym, firstArg, secondArg);
 }
+
+ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg) {
+	return ClausePatternObject(patternType, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
+}
+
+
 
 // Clause With object
 ClauseWithObject QueryValidator::createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg) {
@@ -265,12 +272,12 @@ bool QueryValidator::isSelect(std::string str) {
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(str).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable()->replaceSelectObject(this->createSelectObject(EntityType::INVALID, AttrType::INVALID, true));
+						this->getQueryTable().replaceSelectObject(this->createSelectObject(EntityType::INVALID, AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						this->getQueryTable()->replaceSelectObject(this->createSelectObject(mSynonymEntityType, AttrType::INVALID, false));
+						this->getQueryTable().replaceSelectObject(this->createSelectObject(mSynonymEntityType, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table
@@ -328,7 +335,9 @@ bool QueryValidator::isClauseWith(std::string str) {
 bool QueryValidator::isClausePattern(std::string str) {
 	SynonymObject selectedSynonymObj;
 
+	EntityType firstArgType;
 	std::string firstArg, secondArg, thirdArg;
+	bool isFirstArgSynonym = false;
 	bool isUnderPattern = true;
 	int numOfComma = 0;
 	int maxNumOfArgs = 0;
@@ -378,10 +387,10 @@ bool QueryValidator::isClausePattern(std::string str) {
 			if (numOfArgs == maxNumOfArgs) { // WHILE and ASSIGN have max 2 args, IF has max 3 args
 
 				if (numOfArgs == 2) {
-					this->mQueryTable->insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArg, secondArg));
+					this->mQueryTable.insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, firstArg, secondArg));
 				}
 				else { // third argument 
-					//this->mQueryTable->insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArg, secondArg));
+					this->mQueryTable.insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg));
 				}
 
 				return true;
@@ -403,8 +412,10 @@ bool QueryValidator::isClausePattern(std::string str) {
 
 				// WHILE and IF cannot have synonym as control variable
 				if (selectedSynonymObj.getType() == ASSIGN 
-					&& this->mSynonymTable->getObject(nextToken).getType() == selectedSynonymObj.getType()) {
+					&& this->mSynonymTable->getObject(nextToken).getType() == EntityType::VARIABLE) { //selectedSynonymObj.getType()
 					
+					firstArgType = EntityType::VARIABLE;
+					isFirstArgSynonym = true;
 					firstArg = nextToken;
 					numOfArgs += 1;
 				}
@@ -413,12 +424,17 @@ bool QueryValidator::isClausePattern(std::string str) {
 			else if (isVariable(nextToken)) {
 				// first arugment, if it is a variable
 				// WHILE and IF can have variable as control variable
+
+				firstArgType = EntityType::VARIABLE;
+				isFirstArgSynonym = false;
 				firstArg = nextToken;
 				numOfArgs += 1;
 			}
 			else if (isWildcard(nextToken)) {
 				// first arugment, if it is a "_" (wildcard)
 				// WHILE and IF can have wildcard as control variable
+				firstArgType = EntityType::WILDCARD;
+				isFirstArgSynonym = false;
 				firstArg = nextToken;
 				numOfArgs += 1;
 			}
@@ -516,7 +532,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
 
 				// create a ClauseSuchThatObject(), with two arguments, then put into queryTable
-				this->mQueryTable->insertSuchThatObject(
+				this->mQueryTable.insertSuchThatObject(
 					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), 
 					firstArgObject, 
 					secondArgObject));
@@ -536,7 +552,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (!hasValidFirstArg) {
 				if (relationshipObject.doesFirstArgsContains(EntityType::CONSTANT)) {
 
-					firstArgObject = ClauseSuchThatArgObject();
+					firstArgObject = createClauseSuchThatArgObject(EntityType::CONSTANT, "", atoi(nextToken.c_str()), false);
 
 					hasValidFirstArg = true; // first argument is correct
 					numberOfArgs += 1;
@@ -547,7 +563,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (hasComma && hasValidFirstArg) {
 
 				if (relationshipObject.doesSecondArgsContains(EntityType::CONSTANT)) {
-					secondArgObject = ClauseSuchThatArgObject();
+					secondArgObject = createClauseSuchThatArgObject(EntityType::CONSTANT, "", atoi(nextToken.c_str()), false);
 					numberOfArgs += 1;
 				}
 				
@@ -567,7 +583,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 						// update synonym occurence
 						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken, ClauseType::SUCH_THAT);
 						
-						firstArgObject = ClauseSuchThatArgObject();
+						firstArgObject = createClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(), 
+							nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
 
 						hasValidFirstArg = true; // first argument is correct
 						numberOfArgs += 1;
@@ -586,7 +603,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 						// update synonym occurence
 						this->getSynonymOccurence()->setIncrementNumberOccurence(nextToken, ClauseType::SUCH_THAT);
 						
-						secondArgObject = ClauseSuchThatArgObject();
+						secondArgObject = createClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
+							nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
 
 						numberOfArgs += 1;
 					} // end of check synonym occurence
@@ -605,7 +623,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				if (!(relationshipObject.getRelObjectType() == RelationshipType::MODIFIES 
 					|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
 
-					firstArgObject = ClauseSuchThatArgObject();
+					firstArgObject = createClauseSuchThatArgObject(EntityType::WILDCARD,
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
 					hasValidFirstArg = true; // first argument is correct
 					numberOfArgs += 1;
 				}
@@ -614,7 +633,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 			// second argument is wildcard
 			if (hasComma && hasValidFirstArg) {
-				secondArgObject = ClauseSuchThatArgObject();
+				secondArgObject = createClauseSuchThatArgObject(EntityType::WILDCARD,
+					nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
 				numberOfArgs += 1;
 			}
 		}

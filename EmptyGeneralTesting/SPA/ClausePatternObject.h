@@ -10,13 +10,14 @@ class ClausePatternObject {
 	std::string firstArg;
 	std::string secondArg;
 	std::string thirdArg;
+	bool isFirstArgSynonym = false;
 	bool isResultsBoolean = false;
 
 public:
 
 	ClausePatternObject();
-	ClausePatternObject(EntityType patternType, EntityType firstArgType, std::string firstArg, std::string secondArg);
-	ClausePatternObject(EntityType patternType, EntityType firstArgType, std::string firstArg, std::string secondArg, std::string thirdArg);
+	ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg);
+	ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg);
 
 	EntityType getPatternType();
 	EntityType getFirstArgumentType();

@@ -4,16 +4,18 @@
 ClausePatternObject::ClausePatternObject() {
 }
 
-ClausePatternObject::ClausePatternObject(EntityType patternType, EntityType firstArgType, std::string firstArg, std::string secondArg) {
+ClausePatternObject::ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg) {
 	this->patternType = patternType;
 	this->firstArgType = firstArgType;
+	this->isFirstArgSynonym = isFirstArgSynonym;
 	this->firstArg = firstArg;
 	this->secondArg = secondArg;
 }
 
-ClausePatternObject::ClausePatternObject(EntityType patternType, EntityType firstArgType, std::string firstArg, std::string secondArg, std::string thirdArg) {
+ClausePatternObject::ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg) {
 	this->patternType = patternType;
 	this->firstArgType = firstArgType;
+	this->isFirstArgSynonym = isFirstArgSynonym;
 	this->firstArg = firstArg;
 	this->secondArg = secondArg;
 	this->thirdArg = thirdArg;
