@@ -60,8 +60,6 @@ class QueryValidator {
 
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
 
-	QueryTable *getQueryTable();
-
 	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
 	
 	// Clause Such that object
@@ -133,6 +131,7 @@ public:
 	SynonymOccurence *getSynonymOccurence();
 	SynonymTable *getSynonymTable();
 	RelTable *getRelationshipTable();
+	QueryTable *getQueryTable();
 
 	std::string getEntityTypeString(EntityType type);
 	std::string getNextToken();
@@ -152,4 +151,6 @@ public:
 	bool isExpression(std::string str);
 	bool isTurple(std::string str);
 	bool isSyntaxBoolean(std::string str);
+
+	int totalArg;
 };
