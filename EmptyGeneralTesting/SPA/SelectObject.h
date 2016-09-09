@@ -9,7 +9,7 @@ class SelectObject {
 	bool isBoolean;	// to reprsent if its 'Select BOOLEAN' instead
 
 public :
-
+	SelectObject();
 	SelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean);
 	EntityType getEntityType();
 	AttrType::AttrType getAttrType();
