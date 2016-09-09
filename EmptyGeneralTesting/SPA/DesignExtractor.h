@@ -12,7 +12,7 @@ private:
 public:
 	DesignExtractor();
 	void DesignExtractor::process();
-	void DesignExtractor::processFollowStar();
+	void DesignExtractor::processFollowedByStar();
 	void DesignExtractor::processParentStar();
 	void DesignExtractor::updateStmtTable();
 	void DesignExtractor::processWhileLoop(StmtNumber w);

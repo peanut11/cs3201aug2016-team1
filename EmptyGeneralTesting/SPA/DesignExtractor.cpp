@@ -16,24 +16,26 @@
 DesignExtractor::DesignExtractor() {}
 
 void DesignExtractor::process() {
-	processFollowStar();
+	processFollowedByStar();
 	processParentStar();
 }
 
-void DesignExtractor::processFollowStar() {
+void DesignExtractor::processFollowedByStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
 
-	for (StmtNumber i = (size - 1); i >= size; i--) {
+	for (StmtNumber i = size; i > 0; i--) {
 		std::set<StmtNumber> followList = pkb->getStmtsByStmt(i, FOLLOWS);
 
 		if (!followList.empty()) {
 			StmtNumber add = *followList.begin();
-			std::set<StmtNumber> followStarList = pkb->getStmtsByStmt(add, FOLLOWSSTAR);
-			pkb->putStmtForStmt(add, FOLLOWSSTAR, i);
-			for (StmtSetIterator fs = followStarList.begin(); fs != followStarList.end(); fs++) {
-				StmtNumber add2 = *fs;
-				pkb->putStmtForStmt(add2, FOLLOWSSTAR, i);
+			std::set<StmtNumber> followStarList = pkb->getStmtsByStmt(add, FOLLOWED_BY_STAR);
+			pkb->putStmtForStmt(add, FOLLOWED_BY_STAR, i);
+			if (!followStarList.empty()) {
+				for (StmtSetIterator fs = followStarList.begin(); fs != followStarList.end(); fs++) {
+					StmtNumber add2 = *fs;
+					pkb->putStmtForStmt(add2, FOLLOWED_BY_STAR, i);
+				}
 			}
 		}
 	}
@@ -43,7 +45,7 @@ void DesignExtractor::processParentStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
 
-	for (StmtNumber i = 0; i < size; i++) {
+	for (StmtNumber i = 1; i <= size; i++) {
 		std::set<StmtNumber> parentList = pkb->getStmtsByStmt(i, PARENT);
 		
 		if (!parentList.empty()) {
@@ -74,7 +76,7 @@ void DesignExtractor::processWhileLoop(StmtNumber w) {
 	PKB* pkb = PKB::getInstance();
 	std::set<StmtNumber> followlist = pkb->getStmtsByStmt(w, FOLLOWS);
 	StmtNumber followLine = *followlist.begin();
-	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWSSTAR);
+	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
 
 	for (StmtSetIterator f = followStar.begin(); f != followStar.end(); f++) {
 		StmtNumber s = *f;
