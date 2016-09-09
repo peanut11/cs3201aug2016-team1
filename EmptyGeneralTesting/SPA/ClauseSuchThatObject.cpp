@@ -1,9 +1,5 @@
 #include "ClauseSuchThatObject.h"
 
-ClauseSuchThatObject::ClauseSuchThatObject()
-{
-}
-
 ClauseSuchThatObject::ClauseSuchThatObject(RelationshipType type, ClauseSuchThatArgObject argsOne, ClauseSuchThatArgObject argsTwo)
 {
 	this->type = type;

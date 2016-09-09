@@ -3,10 +3,6 @@
 #include "AttrType.h"
 
 
-SelectObject::SelectObject()
-{
-}
-
 SelectObject::SelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean)
 {
 	this->entityType = entityType;

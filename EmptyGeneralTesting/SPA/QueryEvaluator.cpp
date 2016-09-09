@@ -88,8 +88,24 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		}
 		patterns = std::vector<ClausePatternObject>(evaluatedPs.begin(), evaluatedPs.end());
 
-		// evaluate results by constraint of select object
-		evaluateSelect(select, relationshipHolds);
+		// constraint results by SelectObj
+		if (relationshipHolds) {
+			// if its Select BOOLEAN
+			if (select.getBoolean()) {
+				// output : TRUE
+			}
+			// else then it must be a synonym
+			else {
+				// TODO: Define resultsTable
+				// resultsTable.get(select.getStringValue());
+			}
+		}
+		else {
+			if (select.getBoolean()) {
+				// output : FALSE
+			}
+		}
+
 	}
 	catch (std::runtime_error e) {
 		throw e.what();
@@ -444,26 +460,6 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 }
 
 
-bool QueryEvaluator::evaluateSelect(SelectObject selectObject, bool relationshipHolds)
+void QueryEvaluator::evaluateSelect(SelectObject selectObject)
 {
-	// constraint results by SelectObj
-	if (relationshipHolds) {
-		// if its Select BOOLEAN
-		if (selectObject.getBoolean()) {
-			// output : TRUE
-			return true;
-		}
-		// else then it must be a synonym
-		else {
-			// TODO: Define resultsTable
-			// resultsTable.get(select.getStringValue());
-			return true;
-		}
-	}
-	else {
-		if (selectObject.getBoolean()) {
-			// output : FALSE
-		}
-		return false;
-	}
 }

@@ -19,7 +19,7 @@ namespace UnitTesting {
 			std::set<StmtNumber> i = pkb->getStmtsByStmt(0, FOLLOWSSTAR);
 			int a = i.size();
 			int expected = 2;
-//			bool test = true;
+			bool test = true;
 			if (a == expected) {
 				for (int j = 0; j < a; j++) {
 					

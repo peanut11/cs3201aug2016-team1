@@ -27,6 +27,6 @@ public:
 	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
 	ClausePatternObject evaluatePattern(ClausePatternObject patternObject);
-	bool evaluateSelect(SelectObject selectObject, bool relationshipHolds);
+	void evaluateSelect(SelectObject selectObject);
 
 };

@@ -9,10 +9,6 @@
 #include "QueryTable.h" 
 #include <exception>
 
-QueryTable::QueryTable()
-{
-}
-
 SelectObject QueryTable::getSelect()
 {
 	return this->select;
