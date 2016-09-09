@@ -1,14 +1,17 @@
-#include "Node.h"
-
 #pragma once
-class AssignTree
-{
+#include "ExprTree.h"
 
+class AssignTree {
 public:
+	AssignTree();
+	AssignTree(VarIndex, ExprTree&);
+	AssignTree(ProgLine);
+	VarIndex getVar();
+	ExprTree getExprTree();
+	static bool equals(AssignTree, AssignTree);
+	static void print(AssignTree);
 
-	Node* createNode(EntityType nodeType);
-	Node* createNode(EntityType nodeType, int nameIndex);
 private:
-	
+	ExprTree exprTree;
+	VarIndex varIndex;
 };
-

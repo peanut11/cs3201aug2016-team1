@@ -49,6 +49,8 @@
     <ClCompile Include="AssignTree.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
+    <ClCompile Include="ExprTree.cpp">
+      <Filter>Source Files</Filter>
     <ClCompile Include="SelectObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -69,6 +71,7 @@
     </ClCompile>
     <ClCompile Include="ClausePatternObject.cpp">
       <Filter>Source Files\QP</Filter>
+>>>>>>> refs/remotes/origin/master
     </ClCompile>
     <ClCompile Include="ClauseWithObject.cpp">
       <Filter>Source Files\QP</Filter>
@@ -137,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="AssignTree.h">
       <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="ExprTree.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SelectObject.h">
       <Filter>Header Files\QP</Filter>

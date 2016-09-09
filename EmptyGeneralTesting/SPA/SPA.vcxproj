@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="AssignTree.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
+    <ClCompile Include="ExprTree.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ClausePatternObject.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="AssignTree.h" />
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseType.h" />
+    <ClInclude Include="ExprTree.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
@@ -59,10 +61,10 @@
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
+    <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="ResultsObject.h" />
     <ClInclude Include="ResultsTable.h" />
     <ClInclude Include="SelectObject.h" />
-    <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="ClauseSuchThatArgObject.h" />
     <ClInclude Include="ClauseSuchThatObject.h" />
     <ClInclude Include="SynonymObject.h" />
