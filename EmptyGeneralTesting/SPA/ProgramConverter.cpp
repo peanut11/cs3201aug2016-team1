@@ -164,7 +164,7 @@ bool ProgramConverter::isLineEnding(std::string str) {
 }
 
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
-	const AssignTree tree = AssignTree();
+	const AssignTree tree = AssignTree(line);
 	pkb->putAssignForStmt(lineNum, tree);
 
 	return false;
