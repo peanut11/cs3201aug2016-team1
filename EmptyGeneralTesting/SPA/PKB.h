@@ -27,6 +27,7 @@ private:
 
 public:
 	static PKB* getInstance();
+	void clear();
 
 	// Indexing
 	VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
@@ -69,8 +70,8 @@ public:
 	std::set<StmtNumber>	getAllStmts();
 	std::set<VarName>		getAllVarNames();
 	std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
-	std::set<StmtNumber>	getStmtsByVar(RelationshipType rel, VarName varName);
-	std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
+	std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);
+	std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent);
 	std::set<StmtNumber>	getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
 	std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 };
