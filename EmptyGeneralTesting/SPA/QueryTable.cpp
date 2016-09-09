@@ -33,6 +33,15 @@ std::vector<ClausePatternObject> QueryTable::getPatterns()
 	return this->patterns;
 }
 
+std::string toString() {
+	std::string str = "========== QUERY TABLE ===============";
+
+	//for (auto value : this->)
+
+
+
+}
+
 bool QueryTable::replaceSelectObject(SelectObject object) {
 	try {
 		this->select = object;

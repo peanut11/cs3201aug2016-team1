@@ -20,6 +20,8 @@ public:
 	std::vector<ClauseWithObject> getWiths();
 	std::vector<ClausePatternObject> getPatterns();
 
+	std::string toString();
+
 	bool replaceSelectObject(SelectObject object);
 	bool insertSuchThatObject(ClauseSuchThatObject object);
 	bool insertWithObject(ClauseWithObject object);

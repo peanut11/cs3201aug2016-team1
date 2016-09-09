@@ -327,23 +327,19 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 bool QueryValidator::isClausePattern(std::string str) {
 	SynonymObject selectedSynonymObj;
+
+	std::string firstArg, secondArg, thirdArg;
 	bool isUnderPattern = true;
 	int numOfComma = 0;
 	int maxNumOfArgs = 0;
 	int numOfArgs = 0;
 	
-	// start with pattern syntax
-	//if (str.compare(SYNTAX_PATTERN) != 0) { return false; }
-
-	//st.nextToken(); // point to pattern syntax
-
 	// start is a synonym (assign, while, if) must be written next
-	//if (!isSynonym(st.peekNextToken())) { return false; }
 	if (!isSynonym(str)) { return false; }
 
 	selectedSynonymObj = this->mSynonymTable->getObject(str); // st.peekNextToken()
 	if (selectedSynonymObj.getType() == EntityType::INVALID) {
-		return true; // invalid synonym, did not declare in the first place
+		return false; // invalid synonym, did not declare in the first place
 	}
 
 	if (selectedSynonymObj.getType() != EntityType::ASSIGN
@@ -367,7 +363,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 	//st.nextToken(); // point to valid synonym
 
 	// check if there's open bracket
-	if (st.peekNextToken().compare("(") != 0) { return false;  }
+	if (st.peekNextToken().compare("(") != 0) {  return false;  }
 	st.nextToken(); // point to "("
 
 	while (isUnderPattern) {
@@ -376,7 +372,18 @@ bool QueryValidator::isClausePattern(std::string str) {
 
 		if (st.peekNextToken().compare(")") == 0) { // end of pattern
 			st.nextToken(); // point to ")"
-			if (numOfArgs == maxNumOfArgs) {
+			
+			this->totalArg = numOfArgs;
+			
+			if (numOfArgs == maxNumOfArgs) { // WHILE and ASSIGN have max 2 args, IF has max 3 args
+
+				if (numOfArgs == 2) {
+					this->mQueryTable->insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArg, secondArg));
+				}
+				else { // third argument 
+					//this->mQueryTable->insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArg, secondArg));
+				}
+
 				return true;
 			}
 			else {
@@ -397,41 +404,58 @@ bool QueryValidator::isClausePattern(std::string str) {
 				// WHILE and IF cannot have synonym as control variable
 				if (selectedSynonymObj.getType() == ASSIGN 
 					&& this->mSynonymTable->getObject(nextToken).getType() == selectedSynonymObj.getType()) {
-						numOfArgs += 1;
+					
+					firstArg = nextToken;
+					numOfArgs += 1;
 				}
 				
 			}
 			else if (isVariable(nextToken)) {
-				// first arugment, if it is a variable name
+				// first arugment, if it is a variable
 				// WHILE and IF can have variable as control variable
+				firstArg = nextToken;
 				numOfArgs += 1;
 			}
 			else if (isWildcard(nextToken)) {
 				// first arugment, if it is a "_" (wildcard)
 				// WHILE and IF can have wildcard as control variable
+				firstArg = nextToken;
 				numOfArgs += 1;
 			}
 		}
 
-		else if (numOfArgs >= 1 && numOfArgs <= maxNumOfArgs && numOfComma > 0) {
+		else if (numOfArgs == 1 && numOfComma == 1) { // && numOfArgs <= maxNumOfArgs 
 			// check current number of args; second arugment, validate expression
 
 			if (!isMatch(nextToken, SYNTAX_COMMA)) {
-				if (isWildcard(nextToken)) { // "_"
+				if (isWildcard(nextToken) && !isMatch(st.peekNextToken(), SYNTAX_DOUBLE_QUOTE)) { // "_" without "next
+					secondArg = nextToken;
 					numOfArgs += 1;
 				}
 				else if (isPatternExprArgument(nextToken)) { // "x + y"
 
 					// Only WHILE cannot have pattern behind
 					if (selectedSynonymObj.getType() != EntityType::WHILE) {
+						secondArg = nextToken;
 						numOfArgs += 1;
 					}
 					
 				}
-			}
-
+			} 
 			
+		}
+		else if (numOfArgs == 2 && numOfComma == 2) {
+			// third argument which is for IF
+			if (!isMatch(nextToken, SYNTAX_COMMA) && selectedSynonymObj.getType() == EntityType::IF) {
+				if ((isWildcard(nextToken) 
+					&& !isMatch(st.peekNextToken(), SYNTAX_DOUBLE_QUOTE))
+					|| isPatternExprArgument(nextToken)) { // "_" or "x + y"
 
+					thirdArg = nextToken;
+					numOfArgs += 1;
+				}
+				
+			}
 
 		}
 
@@ -492,8 +516,10 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
 
 				// create a ClauseSuchThatObject(), with two arguments, then put into queryTable
-				//ClauseSuchThatObject()
-				//this->mQueryTable->insertSuchThatObject();
+				this->mQueryTable->insertSuchThatObject(
+					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), 
+					firstArgObject, 
+					secondArgObject));
 
 				return true;
 			}
@@ -621,7 +647,6 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		numOfWildcard += 1;
 	}
 	else if (str.compare("\"") == 0) {
-		//isValidExpression = isExpression(st.nextToken());
 		numofDoubleQuote += 1;
 	}
 
@@ -648,9 +673,6 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		std::string nextToken = st.nextToken();
 
 		if (nextToken.compare(SYNTAX_UNDERSCORE) == 0) {
-			//if (numOfWildcard == 0) { // first wildcard
-			//	containWildcard = true;
-			//}
 			numOfWildcard += 1;
 		}
 		else if (nextToken.compare("\"") == 0) {
@@ -661,24 +683,15 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
 				isValidExpression = isExpression(nextToken);
 
+				// check valid for second argument
 				if (!isValidExpression) {
 					return false;
 				}
+
 			}
 			
 		}
 
-
-
-
-		/*
-		if (nextToken.compare("\"") == 0) {
-			if (numofDoubleQuote == 0) {
-				isValidExpression = isExpression(st.nextToken());	
-			}
-			numofDoubleQuote += 1;
-		}
-		*/
 	}
 	
 	return false;
