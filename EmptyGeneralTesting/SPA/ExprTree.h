@@ -6,11 +6,13 @@
 class ExprTree {
 public:
 	ExprTree();
-	ExprTree(Node* root);
-	ExprTree(ProgLine line);
+	ExprTree(Node*);
+	ExprTree(ProgLine);
 	Node* getRoot();
+	static bool equals(ExprTree, ExprTree);
+	static void print(ExprTree);
 
 private:
 	Node* root;
-	void popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &opStack);
+	void popOnce(std::stack<Node*>&, std::stack<std::string>&);
 };

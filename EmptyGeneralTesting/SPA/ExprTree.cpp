@@ -10,6 +10,10 @@ ExprTree::ExprTree(Node* root) {
 	this->root = root;
 }
 
+void ExprTree::print(ExprTree tree) {
+	Node::print(tree.root);
+}
+
 Node* ExprTree::getRoot() {
 	return root;
 }
@@ -40,6 +44,10 @@ ExprTree::ExprTree(ProgLine line) {
 	}
 
 	root = nodeStack.top();
+}
+
+bool ExprTree::equals(ExprTree tree1, ExprTree tree2) {
+	return Node::equals(tree1.root, tree2.root);
 }
 
 void ExprTree::popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &opStack) {

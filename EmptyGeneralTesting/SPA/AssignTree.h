@@ -4,10 +4,12 @@
 class AssignTree {
 public:
 	AssignTree();
-	AssignTree(VarIndex varIndex, ExprTree &exprTree);
-	AssignTree(ProgLine line);
+	AssignTree(VarIndex, ExprTree&);
+	AssignTree(ProgLine);
 	VarIndex getVar();
 	ExprTree getExprTree();
+	static bool equals(AssignTree, AssignTree);
+	static void print(AssignTree);
 
 private:
 	ExprTree exprTree;

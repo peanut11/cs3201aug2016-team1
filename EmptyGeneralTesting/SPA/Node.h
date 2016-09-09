@@ -16,6 +16,8 @@ public:
 	int getIndex();
 	void setLeft(Node*);
 	void setRight(Node*);
+	static bool equals(Node*, Node*);
+	static void print(Node*);
 
 private:
 	EntityType nodeType;

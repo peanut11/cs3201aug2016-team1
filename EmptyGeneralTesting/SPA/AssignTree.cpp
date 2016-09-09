@@ -8,6 +8,7 @@
 
 #include "AssignTree.h"
 #include "PKB.h"
+#include <iostream>
 #include <cassert>
 
 AssignTree::AssignTree() {
@@ -30,6 +31,17 @@ AssignTree::AssignTree(ProgLine line) {
 	varIndex = pkb->getVarIndex(line[0]);
 	line.erase(line.begin(), line.begin() + 2);
 	exprTree = ExprTree(line);
+}
+
+bool AssignTree::equals(AssignTree tree1, AssignTree tree2) {
+	return tree1.varIndex == tree2.varIndex &&
+		ExprTree::equals(tree1.exprTree, tree2.exprTree);
+}
+
+void AssignTree::print(AssignTree tree) {
+	std::cout << tree.varIndex << " = ";
+	ExprTree::print(tree.exprTree);
+	std::cout << "\n";
 }
 
 VarIndex AssignTree::getVar() {
