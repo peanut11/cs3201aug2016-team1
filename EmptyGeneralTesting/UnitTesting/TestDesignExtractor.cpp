@@ -106,7 +106,13 @@ public:
 		StmtSetIterator useIt = useList.begin();
 		DesignExtractor de = DesignExtractor();
 		int useSize = de.getwhileList();
-		Assert::AreEqual(useSize, 4);
+		Assert::AreEqual(useSize, 2);
+		int sz = useList.size();
+		Assert::AreEqual(sz, 2);
+		 useList = pkb->getVarsByStmt(3, USES);
+		 useIt = useList.begin();
+		 sz = useList.size();
+		Assert::AreEqual(sz, 4);
 	}
 	
 	};

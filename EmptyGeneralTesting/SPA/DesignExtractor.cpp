@@ -114,9 +114,28 @@ StmtNumber DesignExtractor::getwhileList() {
 void DesignExtractor::processWhileLoop(StmtNumber w) {
 	PKB* pkb = PKB::getInstance();
 	std::set<StmtNumber> followlist = pkb->getStmtsByStmt(w, FOLLOWED_BY);
-	StmtNumber followLine = *followlist.begin();
-	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
 
+	//StmtNumber followLine = *followlist.begin();
+	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
+	if (pkb->getStmtTypeForStmt((w+1)) == WHILE) {
+		processWhileLoop((w+1));
+	}
+	std::set<StmtNumber> useList = pkb->getVarsByStmt((w+1), USES);
+
+	for (StmtSetIterator u = useList.begin(); u != useList.end(); u++) {
+
+		VarName addToVartableUse = pkb->getVarName(*u);
+		pkb->putVarForStmt(w, USES, addToVartableUse);
+	}
+
+	std::set<StmtNumber> modifiesList = pkb->getVarsByStmt((w+1), MODIFIES);
+	for (StmtSetIterator m = modifiesList.begin(); m != modifiesList.end(); m++) {
+
+		VarName addToVartableMod = pkb->getVarName(*m);
+		pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
+	}
+
+	//From Second Line in while Loop
 	for (StmtSetIterator f = followStar.begin(); f != followStar.end(); f++) {
 		StmtNumber s = *f;
 		if (pkb->getStmtTypeForStmt(s) == WHILE) {
