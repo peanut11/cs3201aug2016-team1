@@ -39,7 +39,7 @@ namespace UnitTesting
 			Assert::IsTrue(AssignTree::equals(actual, expected));
 		}
 
-		TEST_METHOD(TestAssingTreeSimple) {
+		TEST_METHOD(TestAssignTreeSimple) {
 			static const std::string arr[] = { "x", "=", "y" };
 			ProgLine progLine = ProgLine(arr, arr + sizeof(arr) / sizeof(arr[0]));
 
