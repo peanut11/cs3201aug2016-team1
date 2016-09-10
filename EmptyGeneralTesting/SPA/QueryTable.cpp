@@ -43,7 +43,7 @@ std::string QueryTable::toString() {
 	std::string str = "========== QUERY TABLE ===============\n";
 
 	str.append("== Select object ==\n");
-	//str.append(this->select.
+	str.append(this->select.getSynonymString() + "\n");
 	
 		
 	str.append("== Such That ==\n");
@@ -75,14 +75,14 @@ std::string QueryTable::toString() {
 	str.append("\n== Pattern ==\n");
 	for (auto value : this->patterns) {
 
-		if (value.getIsFirstArugmentSynonym()) {
+		if (value.getIsFirstArgSynonym()) {
 			str.append("true");
 		}
 		else {
 			str.append("false");
 		}
 
-		str.append(", " + value.getFirstArgument() + ", " + value.getSecondArgument() + "\n");
+		str.append(", " + value.getPatternSynonymArgument() + ", " + value.getFirstArgument() + ", " + value.getSecondArgument() + "\n");
 
 	}
 	
@@ -136,6 +136,12 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 bool QueryTable::replaceSelectObject(SelectObject object) {
 	try {
 		this->select = object;
+		/*
+		this->select.setAttrType(object.getAttrType());
+		this->select.setEntityType(object.getEntityType());
+		this->select.setSynonymString(object.getSynonymString());
+		this->select.setIsBoolean(object.getBoolean());
+		*/
 		return true;
 	}
 	catch (std::runtime_error e) {
