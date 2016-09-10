@@ -7,15 +7,14 @@
 // - Node
 
 #include "AssignTree.h"
-#include "PKB.h"
 #include <iostream>
 #include <cassert>
 
 AssignTree::AssignTree() {
 }
 
-AssignTree::AssignTree(VarIndex varIndex, ExprTree &exprTree) {
-	this->varIndex = varIndex;
+AssignTree::AssignTree(StringToken var, ExprTree exprTree) {
+	this->var = var;
 	this->exprTree = exprTree;
 }
 
@@ -27,25 +26,22 @@ AssignTree::AssignTree(ProgLine line) {
 		line.pop_back();
 	}
 
-	PKB *pkb = PKB::getInstance();
-	varIndex = pkb->getVarIndex(line[0]);
+	var = line[0];
 	line.erase(line.begin(), line.begin() + 2);
 	exprTree = ExprTree(line);
 }
 
 bool AssignTree::equals(AssignTree tree1, AssignTree tree2) {
-	return tree1.varIndex == tree2.varIndex &&
+	return tree1.var == tree2.var &&
 		ExprTree::equals(tree1.exprTree, tree2.exprTree);
 }
 
-void AssignTree::print(AssignTree tree) {
-	std::cout << tree.varIndex << " = ";
-	ExprTree::print(tree.exprTree);
-	std::cout << "\n";
+StringToken AssignTree::toString(AssignTree tree) {
+	return tree.var + " = " + ExprTree::toString(tree.exprTree);
 }
 
-VarIndex AssignTree::getVar() {
-	return varIndex;
+StringToken AssignTree::getVar() {
+	return var;
 }
 
 ExprTree AssignTree::getExprTree() {

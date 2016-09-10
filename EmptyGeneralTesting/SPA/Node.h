@@ -4,24 +4,26 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "Types.h"
+
 class Node {
 
 public:
 
-	Node(EntityType nodeType);	
+	Node(EntityType);	
 	// NodeType: procedure, variable, constant
-	Node(EntityType nodeType, int nameIndex);
+	Node(EntityType, StringToken);
 
 	EntityType getNodeType();
-	int getIndex();
+	StringToken getValue();
 	void setLeft(Node*);
 	void setRight(Node*);
 	static bool equals(Node*, Node*);
-	static void print(Node*);
+	static StringToken toString(Node*);
 
 private:
 	EntityType nodeType;
-	int index;
+	StringToken value;
 	Node *leftChild, *rightChild;
 };
 
