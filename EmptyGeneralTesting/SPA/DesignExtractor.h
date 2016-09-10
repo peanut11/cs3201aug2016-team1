@@ -18,5 +18,6 @@ public:
 	void DesignExtractor::processWhileLoop(StmtNumber w);
 	void DesignExtractor::processParentOfStar();
 	void DesignExtractor::processFollowsStar();
+	StmtNumber DesignExtractor::getwhileList();
 	
 };

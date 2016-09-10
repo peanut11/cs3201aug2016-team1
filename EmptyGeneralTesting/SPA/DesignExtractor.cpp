@@ -106,6 +106,10 @@ void DesignExtractor::updateStmtTable() {
 		processWhileLoop(*w);
 	}
 }
+StmtNumber DesignExtractor::getwhileList() {
+	PKB* pkb = PKB::getInstance();
+	return pkb->getStmtsByType(WHILE).size();
+}
 
 void DesignExtractor::processWhileLoop(StmtNumber w) {
 	PKB* pkb = PKB::getInstance();
@@ -119,16 +123,17 @@ void DesignExtractor::processWhileLoop(StmtNumber w) {
 			processWhileLoop(s);
 		}
 
-		std::set<StmtNumber> useList = pkb->getStmtsByStmt(s, USES);
+		std::set<StmtNumber> useList = pkb->getVarsByStmt(s,USES);
+			
 		for (StmtSetIterator u = useList.begin(); u != useList.end(); u++) {
-			pkb->putStmtForStmt(w, USES, *u);
+			
 			VarName addToVartableUse = pkb->getVarName(*u);
 			pkb->putVarForStmt(w, USES, addToVartableUse);
 		}
 
-		std::set<StmtNumber> modifiesList = pkb->getStmtsByStmt(s, MODIFIES);
+		std::set<StmtNumber> modifiesList = pkb->getVarsByStmt(s, MODIFIES);
 		for (StmtSetIterator m = modifiesList.begin(); m != modifiesList.end(); m++) {
-			pkb->putStmtForStmt(w, MODIFIES, *m);
+			
 			VarName addToVartableMod = pkb->getVarName(*m);
 			pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
 		}
