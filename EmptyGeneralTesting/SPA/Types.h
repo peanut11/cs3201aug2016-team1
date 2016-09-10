@@ -11,6 +11,7 @@
 typedef int Constant;
 typedef std::string StringToken;
 typedef std::vector<StringToken> ProgLine;
+typedef StringToken ExprString;
 
 typedef unsigned int ProcStmtVarIndex;
 typedef ProcStmtVarIndex SynonymValue; 

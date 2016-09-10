@@ -18,19 +18,20 @@ Singleton
 */
 QueryEvaluator* QueryEvaluator::getInstance()
 {
-	if (_instance == nullptr) {
+	if (_instance == nullptr) 
 		_instance = new QueryEvaluator;
-	}
-
+	_instance->mPKB = PKB::getInstance();
+	_instance->mSynonymTable = SynonymTable::getInstance();
+	
 	return _instance;
 }
 
-PKB* QueryEvaluator::getPKB()
+PKB *QueryEvaluator::getPKB()
 {
 	return this->mPKB;
 }
 
-SynonymTable* QueryEvaluator::getSynonymTable()
+SynonymTable *QueryEvaluator::getSynonymTable()
 {
 	return this->mSynonymTable;
 }
@@ -50,43 +51,25 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		// boolean status on relationships holds
 		bool relationshipHolds = true;
 
-		// get Synonym Table & list of synonyms
-		SynonymTable *mSynonymTable = getSynonymTable();
-		std::vector<SynonymObject> synonymObjects = mSynonymTable->getObjects();
-
-		// populate Results Table 
-		for (std::vector<SynonymObject>::iterator it = synonymObjects.begin(); it != synonymObjects.end(); it++) {
-			ResultsObject resultsObject(it->getSynonym());
-			resultsTable.insert(resultsObject);
-			resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
-		}
+		populateResultTable(getSynonymTable());
 
 		// iterate the such that clauses vectors and evaluate them
-		std::vector<ClauseSuchThatObject> evaluatedSTs;
 		for (std::vector<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
 			ClauseSuchThatObject suchThatObject = evaluateSuchThat(*it);
-			evaluatedSTs.push_back(suchThatObject);
 			relationshipHolds = relationshipHolds && suchThatObject.getResultsBoolean();
 		}
-		suchThats = std::vector<ClauseSuchThatObject>(evaluatedSTs.begin(), evaluatedSTs.end());
 
 		// iterate the with clauses vectors and evaluate them
-		std::vector<ClauseWithObject> evaluatedWs;
 		for (std::vector<ClauseWithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
 			ClauseWithObject withObject = evaluateWith(*it);
-			evaluatedWs.push_back(withObject);
 			relationshipHolds = relationshipHolds && withObject.getResultsBoolean();
 		}
-		withs = std::vector<ClauseWithObject>(evaluatedWs.begin(), evaluatedWs.end());
 
 		// iterate the pattern clauses vectors and evaluate them
-		std::vector<ClausePatternObject> evaluatedPs;
 		for (std::vector<ClausePatternObject>::iterator it = patterns.begin(); it != patterns.end(); it++) {
 			ClausePatternObject patternObject = evaluatePattern(*it);
-			evaluatedPs.push_back(patternObject);
 			relationshipHolds = relationshipHolds && patternObject.getResultsBoolean();
 		}
-		patterns = std::vector<ClausePatternObject>(evaluatedPs.begin(), evaluatedPs.end());
 
 		// evaluate results by constraint of select object
 		evaluateSelect(select, relationshipHolds);
@@ -95,6 +78,22 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 	catch (std::runtime_error e) {
 		throw e.what();
 	}
+}
+
+ResultsTable QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
+{
+	// get Synonym Table & list of synonyms
+	SynonymTable *mSynonymTable = synonymTable;
+	std::vector<SynonymObject> synonymObjects = mSynonymTable->getObjects();
+
+	// populate Results Table 
+	for (std::vector<SynonymObject>::iterator it = synonymObjects.begin(); it != synonymObjects.end(); it++) {
+		ResultsObject resultsObject(it->getSynonym());
+		resultsTable.insert(resultsObject);
+		resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
+	}
+
+	return resultsTable;
 }
 
 ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchThatRelObject)
@@ -441,30 +440,261 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject)
 
 ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternObject)
 {
-	return ClausePatternObject();
+	EntityType patternType = patternObject.getPatternType();
+	EntityType firstArgType = patternObject.getFirstArgumentType();
+	std::string patternSynonymArg = patternObject.getPatternSynonymArgument();
+	std::string firstArg = patternObject.getFirstArgument();
+	std::string secondArg = patternObject.getSecondArgument();
+	std::string thirdArg = patternObject.getThirdArgument();
+	bool isFirstArgSynonym = patternObject.getIsFirstArgSynonym();
+	bool relationshipHolds = true;
+	PKB *pkb = getPKB();
+
+	// ASSIGN PATTERN :
+	if (patternType == ASSIGN) {
+		// Pattern a(<firstArg>,_)
+		if (secondArg == "_") {
+			// Pattern a(v,_)
+			if (isFirstArgSynonym) {
+				// retrieve existing pattern synonym statements & first arg synonym variables
+				std::set<StmtNumber> patternSynonymStatements = resultsTable.getSetInt(patternSynonymArg);
+				std::set<VarName> firstArgSynonymVariables = resultsTable.getSetString(firstArg);
+
+				// evaluated true statements
+				std::set<StmtNumber> evaluatedPatternSynonymStatements;
+				std::set<VarName> evaluatedfirstArgSynonymVariables;
+
+				// check all existing pattern synonym statements if it modifies the 'variable'
+				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
+					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
+						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
+							evaluatedPatternSynonymStatements.insert(*cs);
+							evaluatedfirstArgSynonymVariables.insert(*s);
+							break;
+						}
+					}
+				}
+
+				// intersect two sets x2
+				std::set<StmtNumber> updatedStatements;
+				set_intersection(evaluatedPatternSynonymStatements.begin(), evaluatedPatternSynonymStatements.end(), patternSynonymStatements.begin(), patternSynonymStatements.end(),
+					std::inserter(updatedStatements, updatedStatements.begin()));
+
+				std::set<VarName> updatedVariables;
+				set_intersection(evaluatedfirstArgSynonymVariables.begin(), evaluatedfirstArgSynonymVariables.end(), firstArgSynonymVariables.begin(), firstArgSynonymVariables.end(),
+					std::inserter(updatedVariables, updatedVariables.begin()));
+
+				// check if relationship holds/have results
+				if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// update the results table
+				resultsTable.replaceSet(patternSynonymArg, updatedStatements);
+				resultsTable.replaceSet(firstArg, updatedVariables);
+
+			}
+			// Pattern a(_,_)
+			else if (firstArg == "_") {
+				// check if theres any statements number inside
+				if (resultsTable.getSetInt(patternSynonymArg).size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+			}
+			// Pattern a("x",_)
+			else if (firstArgType == VARIABLE) {
+				// retrieve existing pattern synonym statements
+				std::set<StmtNumber> currentStatements = resultsTable.getSetInt(patternSynonymArg);
+
+				// evaluated true statements
+				std::set<StmtNumber> evaluatedS;
+
+				// check all existing pattern synonym statements if it modifies the 'variable'
+				for (StmtSetIterator i = currentStatements.begin(); i != currentStatements.end(); i++) {
+					// check if the existing statement modifies the 'variable'
+					if (pkb->is(MODIFIES, *i, pkb->getVarIndex(firstArg))) {
+						evaluatedS.insert(*i);
+					}
+				}
+
+				// intersect sets
+				std::set<StmtNumber> updatedStatements;
+				set_intersection(evaluatedS.begin(), evaluatedS.end(), currentStatements.begin(), currentStatements.end(),
+					std::inserter(updatedStatements, updatedStatements.begin()));
+
+				// check if relationship holds/have results
+				if (updatedStatements.size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// update the results table
+				resultsTable.replaceSet(patternSynonymArg, updatedStatements);
+			}
+		} 
+		// means Pattern must be Pattern a(<firstArg>,"_<constant/variable>_")	
+		else { 		
+			// Pattern a(v,"_<constant/variable>_")
+			if (isFirstArgSynonym) {
+				// retrieve existing pattern synonym statements & first arg synonym variables
+				std::set<StmtNumber> patternSynonymStatements = resultsTable.getSetInt(patternSynonymArg);
+				std::set<VarName> firstArgSynonymVariables = resultsTable.getSetString(firstArg);
+
+				// evaluated true statements
+				std::set<StmtNumber> evaluatedPatternSynonymStatements;
+				std::set<VarName> evaluatedfirstArgSynonymVariables;
+
+				// check all existing pattern synonym statements if it modifies the 'variable'
+				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
+					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
+						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
+/*
+							if (pkb->getStmtsByAssignSubexpr(*cs, secondArg)) {
+								evaluatedPatternSynonymStatements.insert(*cs);
+								evaluatedfirstArgSynonymVariables.insert(*s);
+								break;
+							}
+*/
+						}
+					}
+				}
+
+				// intersect two sets x2
+				std::set<StmtNumber> updatedStatements;
+				set_intersection(evaluatedPatternSynonymStatements.begin(), evaluatedPatternSynonymStatements.end(), patternSynonymStatements.begin(), patternSynonymStatements.end(),
+					std::inserter(updatedStatements, updatedStatements.begin()));
+
+				std::set<VarName> updatedVariables;
+				set_intersection(evaluatedfirstArgSynonymVariables.begin(), evaluatedfirstArgSynonymVariables.end(), firstArgSynonymVariables.begin(), firstArgSynonymVariables.end(),
+					std::inserter(updatedVariables, updatedVariables.begin()));
+
+				// check if relationship holds/have results
+				if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// update the results table
+				resultsTable.replaceSet(patternSynonymArg, updatedStatements);
+				resultsTable.replaceSet(firstArg, updatedVariables);
+
+			}
+			// Pattern a(_,"_<constant/variable>_")
+			else if (firstArg == "_") {
+				// retrieve existing pattern synonym statements & first arg synonym variables
+				std::set<StmtNumber> patternSynonymStatements = resultsTable.getSetInt(patternSynonymArg);
+				std::set<VarName> firstArgSynonymVariables = pkb->getAllVarNames();
+
+				// evaluated true statements
+				std::set<StmtNumber> evaluatedPatternSynonymStatements;
+				std::set<VarName> evaluatedfirstArgSynonymVariables;
+
+				// check all existing pattern synonym statements if it modifies the 'variable'
+				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
+					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
+						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
+							/*
+							if (pkb->getStmtsByAssignSubexpr(*cs, secondArg)) {
+								evaluatedPatternSynonymStatements.insert(*cs);
+								break;
+							}
+							*/
+						}
+					}
+				}
+
+				// intersect sets 
+				std::set<StmtNumber> updatedStatements;
+				set_intersection(evaluatedPatternSynonymStatements.begin(), evaluatedPatternSynonymStatements.end(), patternSynonymStatements.begin(), patternSynonymStatements.end(),
+					std::inserter(updatedStatements, updatedStatements.begin()));
+
+				// check if relationship holds/have results
+				if (updatedStatements.size() > 0 ) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// update the results table
+				resultsTable.replaceSet(patternSynonymArg, updatedStatements);
+
+			}
+			// Pattern a("x","_<constant/variable>_")
+			else if (firstArgType == VARIABLE) {
+				// retrieve existing pattern synonym statements
+				std::set<StmtNumber> currentStatements = resultsTable.getSetInt(patternSynonymArg);
+
+				// evaluated true statements
+				std::set<StmtNumber> evaluatedS;
+
+				// check all existing pattern synonym statements if it modifies the 'variable'
+				for (StmtSetIterator i = currentStatements.begin(); i != currentStatements.end(); i++) {
+					// check if the existing statement modifies the 'variable'
+					if (pkb->is(MODIFIES, *i, pkb->getVarIndex(firstArg))) {
+						// if yes, check if this statement uses the second argument subexpression
+	/*					if (pkb->getStmtsByAssignSubexpr(*i, secondArg)) {
+							evaluatedS.insert(*i);
+						}
+	*/
+					}
+				}
+
+				// intersect sets
+				std::set<StmtNumber> updatedStatements;
+				set_intersection(evaluatedS.begin(), evaluatedS.end(), currentStatements.begin(), currentStatements.end(),
+					std::inserter(updatedStatements, updatedStatements.begin()));
+
+				// check if relationship holds/have results
+				if (updatedStatements.size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// update the results table
+				resultsTable.replaceSet(patternSynonymArg, updatedStatements);
+
+			}
+		}
+	}
+	return patternObject;
 }
 
 
-bool QueryEvaluator::evaluateSelect(SelectObject selectObject, bool relationshipHolds)
+std::vector<std::string> QueryEvaluator::evaluateSelect(SelectObject selectObject, bool relationshipHolds)
 {
 	// constraint results by SelectObj
+	std::vector<std::string> results;
+
 	if (relationshipHolds) {
 		// if its Select BOOLEAN
 		if (selectObject.getBoolean()) {
 			// output : TRUE
-			return true;
+			results.push_back("true");
 		}
 		// else then it must be a synonym
 		else {
 			// TODO: Define resultsTable
 			// resultsTable.get(select.getStringValue());
-			return true;
+			// iterate through results
+			// temp code :
+			results.push_back("1");
+			results.push_back("2");
+/*
+			// iteration 1 : only if the entity is VARIABLE, then return string (variable names)
+			if (selectObject.getEntityType() == VARIABLE) {
+				std::set<VarName> setResults1 = resultsTable.getSetString(selectObject.getSynonymString());
+				std::vector<std::string> vectorResults1(setResults1.begin(), setResults1.end());
+				return vectorResults1;
+			}
+			else {
+				std::set<StmtNumber> setResults2 = resultsTable.getSetInt(selectObject.getSynonymString());
+				std::vector<std::string> vectorResults2(setResults2.begin(), setResults2.end());
+				return vectorResults2;
+			}
+*/
 		}
 	}
 	else {
 		if (selectObject.getBoolean()) {
 			// output : FALSE
+			results.push_back("false");
 		}
-		return false;
 	}
+
+	return results;
 }

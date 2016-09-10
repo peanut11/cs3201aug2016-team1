@@ -15,18 +15,19 @@ private:
 
 	PKB *mPKB; 
 	QueryTable *queryTable;
-	ResultsTable resultsTable;
 	SynonymTable *mSynonymTable;
+	ResultsTable resultsTable;
 
 public:
 	static QueryEvaluator *getInstance();
 	PKB *getPKB();
-
 	SynonymTable *getSynonymTable();
+
 	void evaluate(QueryTable queryTable);
+	ResultsTable populateResultTable(SynonymTable *synonymTable);
 	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
 	ClausePatternObject evaluatePattern(ClausePatternObject patternObject);
-	bool evaluateSelect(SelectObject selectObject, bool relationshipHolds);
+	std::vector<std::string> evaluateSelect(SelectObject selectObject, bool relationshipHolds);
 
 };

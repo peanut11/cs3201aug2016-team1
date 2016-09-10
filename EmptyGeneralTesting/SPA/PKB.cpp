@@ -43,6 +43,15 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
 	return it != entry.end();
 }
 
+bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
+	return false;
+}
+
+bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
+	AssignTree tree = assignTrees[assign];
+	return false;
+}
+
 bool PKB::isVarExist(VarName varName) {
 	return (refMap.find(varName) != refMap.end());
 }
@@ -99,13 +108,13 @@ std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtN
 std::set<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
 	std::set<StmtNumber> stmts;
 
-	for (StmtNumber i = 0; i < stmtTable.size(); i++) {
+	for (StmtNumber i = 1; i < stmtTable.size(); i++) { // StmtNumber starts from 1
 		if (stmtTypeTable[i] == stmtType) {
 			stmts.insert(i);
 		}
 	}
 
-	return std::set<StmtNumber>();
+	return stmts;
 }
 
 StmtNumber PKB::getStmtTableSize() {

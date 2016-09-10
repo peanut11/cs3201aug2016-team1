@@ -18,7 +18,7 @@ private:
 	PKB();
 	
 	std::vector<AssignTree> assignTrees;
-	std::set<Constant>   constants;
+	std::set<Constant>      constants;
 	RefMap                  refMap;
 	std::vector<VarName>    refTable;
 	std::vector<StmtRow>    stmtTable;
@@ -61,6 +61,8 @@ public:
 					  }
 	*/
 	bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
+	bool isAssignHasExpr(StmtNumber assign, ExprString expr);
+	bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
 	bool isVarExist(VarName varName);
 
 	AssignTree              getAssign(StmtNumber stmt);
