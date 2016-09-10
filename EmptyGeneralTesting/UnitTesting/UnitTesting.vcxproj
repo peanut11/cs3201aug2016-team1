@@ -177,6 +177,7 @@
     <ClCompile Include="TestQueryProcessor.cpp" />
     <ClCompile Include="TestQueryTable.cpp" />
     <ClCompile Include="TestQueryValidator.cpp" />
+    <ClCompile Include="TestResultsTable.cpp" />
     <ClCompile Include="TestStringTokenizer.cpp" />
     <ClCompile Include="TestNode.cpp" />
     <ClCompile Include="Tools.cpp" />

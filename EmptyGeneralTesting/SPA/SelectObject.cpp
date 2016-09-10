@@ -7,9 +7,10 @@ SelectObject::SelectObject()
 {
 }
 
-SelectObject::SelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean)
+SelectObject::SelectObject(EntityType entityType, std::string synonymString, AttrType::AttrType attrType, bool isBoolean)
 {
 	this->entityType = entityType;
+	this->synonymString = synonymString;
 	this->attrType = attrType;
 	this->isBoolean = isBoolean;
 }
@@ -17,6 +18,11 @@ SelectObject::SelectObject(EntityType entityType, AttrType::AttrType attrType, b
 EntityType SelectObject::getEntityType()
 {
 	return entityType;
+}
+
+std::string SelectObject::getSynonymString() 
+{
+	return synonymString;
 }
 
 AttrType::AttrType SelectObject::getAttrType()

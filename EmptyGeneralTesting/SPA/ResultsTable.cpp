@@ -61,7 +61,7 @@ int ResultsTable::size() {
 bool ResultsTable::insert(ResultsObject object) {
 
 	if (contains(object)) {
-		throw std::runtime_error("ResultTable insert duplicate object synonym = " + object.getSynonym());
+//		throw std::runtime_error("ResultTable insert duplicate object synonym = " + object.getSynonym());
 		return false;
 	}
 

@@ -23,8 +23,8 @@ public:
 		ClauseWithRefObject wr4(INTEGER, "", AttrType::PROC_NAME);
 		ClauseWithObject w1(wr1, wr2);
 		ClauseWithObject w2(wr3, wr4);
-		ClausePatternObject p1(ASSIGN, EntityType::INVALID, false, "", ""); 
-		ClausePatternObject p2(PROCEDURE, EntityType::INVALID, false, "", "");
+		ClausePatternObject p1(ASSIGN, "ab", EntityType::INVALID, false, "ab", "ab"); 
+		ClausePatternObject p2(PROCEDURE, "ab", EntityType::INVALID, false, "ab", "ab");
 		suchThats.push_back(st1);
 		suchThats.push_back(st2);
 		withs.push_back(w1);
