@@ -8,21 +8,29 @@
 
 class QueryTable {
 
+	
+
 	SelectObject select;
 	std::vector<ClauseSuchThatObject> suchThats;
 	std::vector<ClauseWithObject> withs;
 	std::vector<ClausePatternObject> patterns;
 
+	std::string getEntityString(EntityType type);
+	std::string getRelationshipString(RelationshipType type);
+
 public:
 	QueryTable();
-	~QueryTable();
+	//~QueryTable();
+
+	void clearAll();
+
 	SelectObject getSelect();
-	std::vector<ClauseSuchThatObject> getSuchThats();
+	std::vector<ClauseSuchThatObject>& getSuchThats();
 	std::vector<ClauseWithObject> getWiths();
 	std::vector<ClausePatternObject> getPatterns();
 
 	std::string toString();
-
+	
 	bool replaceSelectObject(SelectObject object);
 	bool insertSuchThatObject(ClauseSuchThatObject object);
 	bool insertWithObject(ClauseWithObject object);
