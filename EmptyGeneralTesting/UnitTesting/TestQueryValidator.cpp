@@ -399,20 +399,24 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(s1,2)"); // follows
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(c1,c2)"); // calls
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(ifstmt1,c2)"); // if & call
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
 
 		// failure
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(p,q)"); // follows
 		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Follows"));
@@ -433,27 +437,33 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 	
 		// success
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
-
+		
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(s1,var1)"); // stmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(ifstmt1,var1)"); // ifstmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(w1,var1)"); // while & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(c1,var1)"); // call & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
 		// failure
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(_,var1)"); // _ & var
 		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Modifies"));
@@ -470,31 +480,38 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(s1,var1)"); // stmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(ifstmt1,var1)"); // ifstmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(w1,var1)"); // while & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(c1,var1)"); // call & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
 		// failure
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(_,var1)"); // _ & var
 		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Uses"));
 
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(c1,3)"); // call & constant
 		validator->getNextToken();
 		Assert::IsFalse(validator->isRelationship("Uses"));
