@@ -9,18 +9,19 @@
 class QueryTable {
 
 	SelectObject select;
-//	std::vector<ClauseObject> clauses;
 	std::vector<ClauseSuchThatObject> suchThats;
 	std::vector<ClauseWithObject> withs;
 	std::vector<ClausePatternObject> patterns;
 
 public:
+	QueryTable();
+	~QueryTable();
 	SelectObject getSelect();
 	std::vector<ClauseSuchThatObject> getSuchThats();
 	std::vector<ClauseWithObject> getWiths();
 	std::vector<ClausePatternObject> getPatterns();
-//	std::vector<ClauseObject> getClauses();
 
+	std::string toString();
 
 	bool replaceSelectObject(SelectObject object);
 	bool insertSuchThatObject(ClauseSuchThatObject object);

@@ -4,25 +4,45 @@
 ClausePatternObject::ClausePatternObject() {
 }
 
-ClausePatternObject::ClausePatternObject(EntityType entityType, std::string leftHand, std::string rightHand) {
-	this->entityType = entityType;
-	this->leftHand = leftHand;
-	this->rightHand = rightHand;
+ClausePatternObject::ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg) {
+	this->patternType = patternType;
+	this->firstArgType = firstArgType;
+	this->isFirstArgSynonym = isFirstArgSynonym;
+	this->firstArg = firstArg;
+	this->secondArg = secondArg;
 }
 
-EntityType ClausePatternObject::getEntityType()
-{
-	return entityType;
+ClausePatternObject::ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg) {
+	this->patternType = patternType;
+	this->firstArgType = firstArgType;
+	this->isFirstArgSynonym = isFirstArgSynonym;
+	this->firstArg = firstArg;
+	this->secondArg = secondArg;
+	this->thirdArg = thirdArg;
 }
 
-std::string ClausePatternObject::getLeftHand()
-{
-	return leftHand;
+
+EntityType ClausePatternObject::getPatternType() {
+	return this->patternType;
 }
 
-std::string ClausePatternObject::getRightHand()
+EntityType ClausePatternObject::getFirstArgumentType() {
+	return this->firstArgType;
+}
+
+std::string ClausePatternObject::getFirstArgument()
 {
-	return rightHand;
+	return this->firstArg;
+}
+
+std::string ClausePatternObject::getSecondArgument()
+{
+	return this->secondArg;
+}
+
+std::string ClausePatternObject::getThirdArgument()
+{
+	return this->thirdArg;
 }
 
 void ClausePatternObject::setResultsBoolean(bool boolean)

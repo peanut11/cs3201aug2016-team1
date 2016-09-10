@@ -16,6 +16,8 @@ class ClauseSuchThatArgObject {
 
 public:
 
+	static int EMTPY_INT;
+	
 	ClauseSuchThatArgObject();
 	ClauseSuchThatArgObject (EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue, bool isSynonym);
 	

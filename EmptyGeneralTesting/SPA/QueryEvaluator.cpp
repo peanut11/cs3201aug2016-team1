@@ -88,23 +88,8 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		}
 		patterns = std::vector<ClausePatternObject>(evaluatedPs.begin(), evaluatedPs.end());
 
-		// constraint results by SelectObj
-		if (relationshipHolds) {
-			// if its Select BOOLEAN
-			if (select.getBoolean()) {
-				// output : TRUE
-			}
-			// else then it must be a synonym
-			else {
-				// TODO: Define resultsTable
-				// resultsTable.get(select.getStringValue());
-			}
-		}
-		else {
-			if (select.getBoolean()) {
-				// output : FALSE
-			}
-		}
+		// evaluate results by constraint of select object
+		evaluateSelect(select, relationshipHolds);
 
 	}
 	catch (std::runtime_error e) {
@@ -120,8 +105,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 	bool relationshipHolds = true;
 	PKB *pkb = getPKB();
 
-	// FOLLOW/FOLLOWSSTAR/PARENT/PARENTSTAR RELATIONSHIP :
-	if (type == FOLLOWS || type == FOLLOWSSTAR || type == PARENT || type == PARENTSTAR) {
+	// FOLLOW/FOLLOWS_STAR/PARENT/PARENTSTAR RELATIFONSHIP :
+	if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENTSTAR) {
 		// both are statements number : Follows(3,4)
 		if (argOne.getIntegerValue() > 0 && argTwo.getIntegerValue() > 0) {
 			suchThatRelObject.setResultsBoolean(pkb->is(type, argOne.getIntegerValue(), argTwo.getIntegerValue()));
@@ -460,6 +445,26 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 }
 
 
-void QueryEvaluator::evaluateSelect(SelectObject selectObject)
+bool QueryEvaluator::evaluateSelect(SelectObject selectObject, bool relationshipHolds)
 {
+	// constraint results by SelectObj
+	if (relationshipHolds) {
+		// if its Select BOOLEAN
+		if (selectObject.getBoolean()) {
+			// output : TRUE
+			return true;
+		}
+		// else then it must be a synonym
+		else {
+			// TODO: Define resultsTable
+			// resultsTable.get(select.getStringValue());
+			return true;
+		}
+	}
+	else {
+		if (selectObject.getBoolean()) {
+			// output : FALSE
+		}
+		return false;
+	}
 }

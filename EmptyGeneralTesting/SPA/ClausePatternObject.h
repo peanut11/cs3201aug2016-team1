@@ -5,19 +5,25 @@
 
 class ClausePatternObject {
 
-	EntityType entityType;
-	std::string leftHand;
-	std::string rightHand;
+	EntityType patternType;
+	EntityType firstArgType;
+	std::string firstArg;
+	std::string secondArg;
+	std::string thirdArg;
+	bool isFirstArgSynonym = false;
 	bool isResultsBoolean = false;
 
 public:
 
 	ClausePatternObject();
-	ClausePatternObject(EntityType entityType, std::string leftHand, std::string rightHand);
+	ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg);
+	ClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg);
 
-	EntityType getEntityType();
-	std::string getLeftHand();
-	std::string getRightHand();
+	EntityType getPatternType();
+	EntityType getFirstArgumentType();
+	std::string getFirstArgument();
+	std::string getSecondArgument();
+	std::string getThirdArgument();
 	bool getResultsBoolean();
 	void setResultsBoolean(bool boolean);
 };

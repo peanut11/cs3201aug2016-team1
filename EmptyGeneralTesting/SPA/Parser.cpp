@@ -18,7 +18,6 @@ bool Parser::isValidProgram(std::string str)
 	return mValidator.isValidSyntax(str);
 }
 
-int Parser::convert(std::string source)
-{
-	return 0;
+int Parser::convert(std::string source) {
+	return mConverter.convert(source);
 }

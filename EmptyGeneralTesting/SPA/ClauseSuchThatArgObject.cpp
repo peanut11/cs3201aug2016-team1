@@ -1,5 +1,7 @@
 #include "ClauseSuchThatArgObject.h"
 
+int ClauseSuchThatArgObject::EMTPY_INT = 0;
+
 ClauseSuchThatArgObject::ClauseSuchThatArgObject() {}
 
 ClauseSuchThatArgObject::ClauseSuchThatArgObject(EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue, bool isSynonym)

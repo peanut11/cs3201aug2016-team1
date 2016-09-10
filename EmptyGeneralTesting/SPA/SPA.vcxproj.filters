@@ -51,6 +51,7 @@
     </ClCompile>
     <ClCompile Include="ExprTree.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="SelectObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -71,7 +72,6 @@
     </ClCompile>
     <ClCompile Include="ClausePatternObject.cpp">
       <Filter>Source Files\QP</Filter>
->>>>>>> refs/remotes/origin/master
     </ClCompile>
     <ClCompile Include="ClauseWithObject.cpp">
       <Filter>Source Files\QP</Filter>
