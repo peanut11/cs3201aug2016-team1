@@ -45,12 +45,16 @@ std::string ClausePatternObject::getThirdArgument()
 	return this->thirdArg;
 }
 
-void ClausePatternObject::setResultsBoolean(bool boolean)
-{
-	this->isResultsBoolean = boolean;
+bool ClausePatternObject::getIsFirstArugmentSynonym() {
+	return this->isFirstArgSynonym;
 }
 
 bool ClausePatternObject::getResultsBoolean()
 {
 	return this->isResultsBoolean;
+}
+
+void ClausePatternObject::setResultsBoolean(bool boolean)
+{
+	this->isResultsBoolean = boolean;
 }

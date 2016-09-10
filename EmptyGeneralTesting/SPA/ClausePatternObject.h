@@ -24,6 +24,7 @@ public:
 	std::string getFirstArgument();
 	std::string getSecondArgument();
 	std::string getThirdArgument();
+	bool getIsFirstArugmentSynonym();
 	bool getResultsBoolean();
 	void setResultsBoolean(bool boolean);
 };

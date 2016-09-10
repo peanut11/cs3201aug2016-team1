@@ -77,6 +77,9 @@ class QueryValidator {
 	ClauseWithRefObject createClauseRefObject(WithRefType refType, std::string synonym);
 	ClauseWithRefObject createClauseRefObject(WithRefType refType, int integerValue);
 
+	
+
+
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
 	ClauseType::ClauseType getClauseType(std::string syntax);
@@ -128,12 +131,18 @@ public:
 	void initStringTokenizer(std::string str);
 	void clearSynonymOccurence();
 	void clearSynonymTable();
+	void clearQueryTable();
+
+	void addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object);
 
 	// Return methods
 	SynonymOccurence *getSynonymOccurence();
 	SynonymTable *getSynonymTable();
 	RelTable *getRelationshipTable();
-	QueryTable getQueryTable();
+	QueryTable& getQueryTable();
+
+	std::string validatedVariableName;
+	std::string validatedExpression;
 
 	std::string getEntityTypeString(EntityType type);
 	std::string getNextToken();

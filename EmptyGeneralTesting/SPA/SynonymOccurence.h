@@ -21,10 +21,12 @@ public:
 	static SynonymOccurence *getInstance();
 
 	void clearAll();
-	void setIncrementNumberOccurence(std::string synonym, ClauseType::ClauseType type);
+	void setIncrementOccurence(std::string synonym, ClauseType::ClauseType type);
 	
 	std::string toString();
 	
+	bool hasMaxCommonSynonym();
+
 	bool hasMaximumOccurence(std::string synonym, ClauseType::ClauseType type);
 	int getNumberOccurence(std::string synonym, ClauseType::ClauseType type);
 
