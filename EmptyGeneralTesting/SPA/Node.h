@@ -16,15 +16,19 @@ public:
 
 	EntityType getNodeType();
 	StringToken getValue();
+	int size();
 	void setLeft(Node*);
 	void setRight(Node*);
+	static bool isSubTree(Node*, Node*);
 	static bool equals(Node*, Node*);
 	static StringToken toString(Node*);
+	void buildSize();
 
 private:
 	EntityType nodeType;
 	StringToken value;
 	Node *leftChild, *rightChild;
+	int nCount;
 };
 
 #endif

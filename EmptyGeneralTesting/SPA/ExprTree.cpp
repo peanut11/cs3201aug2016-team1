@@ -38,10 +38,15 @@ ExprTree::ExprTree(ProgLine line) {
 	}
 
 	root = nodeStack.top();
+	root->buildSize();
 }
 
 bool ExprTree::equals(ExprTree tree1, ExprTree tree2) {
 	return Node::equals(tree1.root, tree2.root);
+}
+
+bool ExprTree::contains(ExprTree subTree) {
+	return Node::isSubTree(root, subTree.root);
 }
 
 StringToken ExprTree::toString(ExprTree tree) {

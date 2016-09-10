@@ -11,6 +11,7 @@ public:
 	Node* getRoot();
 	static bool equals(ExprTree, ExprTree);
 	static StringToken toString(ExprTree);
+	bool contains(ExprTree);
 
 private:
 	Node* root;
