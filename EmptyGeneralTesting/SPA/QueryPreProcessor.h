@@ -15,7 +15,7 @@ class QueryPreProcessor {
 
 	void init();
 	void populateRelationshipTable();
-	void populateSynonymTable();
+	//void populateSynonymTable();
 	SynonymObject createSynonymObject(EntityType type, std::string synonym);
 	RelObject createRelationshipObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs);
 	

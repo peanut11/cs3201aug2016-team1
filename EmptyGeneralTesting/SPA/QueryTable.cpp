@@ -42,8 +42,10 @@ std::vector<ClausePatternObject> QueryTable::getPatterns()
 std::string QueryTable::toString() {
 	std::string str = "========== QUERY TABLE ===============\n";
 
-	//str.append("== Select object ==\n");
-	//str.append(this->select.get
+	str.append("== Select object ==\n");
+	//str.append(this->select.
+	
+		
 	str.append("== Such That ==\n");
 	str.append("size = " + std::to_string(this->suchThats.size()) + "\n");
 	for (auto value : this->suchThats) {
@@ -107,6 +109,8 @@ std::string QueryTable::getEntityString(EntityType type) {
 		return "prog_line";
 	case CALL:
 		return "call";
+	case WILDCARD:
+		return "wc";
 	default:
 		return "";
 	}

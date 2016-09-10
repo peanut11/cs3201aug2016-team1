@@ -666,8 +666,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				if (!(relationshipObject.getRelObjectType() == RelationshipType::MODIFIES 
 					|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
 
-					//firstArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
-					//	nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
+					firstArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
 
 					hasValidFirstArg = true; // first argument is correct
 					numberOfArgs += 1;
@@ -678,8 +678,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			// second argument is wildcard
 			if (hasComma && hasValidFirstArg) {
 
-				//secondArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
-				//	nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
+				secondArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
+					nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
 
 				numberOfArgs += 1;
 			}
@@ -709,6 +709,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 	}
 
 	if (str.compare(SYNTAX_UNDERSCORE) == 0) {
+		this->validatedExpression.append("_");
 		containWildcard = true;
 		numOfWildcard += 1;
 	}
@@ -722,7 +723,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		if (!st.hasMoreTokens()) { return false; }
 
 		if ((isMatch(st.peekNextToken(), SYNTAX_COMMA) || isMatch(st.peekNextToken(), ")"))) {
-			if (containWildcard && numOfWildcard == 2 && numofDoubleQuote == 2) {
+			if (containWildcard && numOfWildcard == 2 && numofDoubleQuote == 2) {	
 				return true;
 			}
 			else if (numofDoubleQuote == 1 || numOfWildcard == 1) {
@@ -740,6 +741,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		std::string nextToken = st.nextToken();
 
 		if (nextToken.compare(SYNTAX_UNDERSCORE) == 0) {
+			this->validatedExpression.append("_");
 			numOfWildcard += 1;
 		}
 		else if (nextToken.compare("\"") == 0) {
@@ -749,12 +751,18 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 
 		if (numofDoubleQuote == 1) { // passed first quote
 			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
-				isValidExpression = isExpression(nextToken);
+				
+				// NOT for Iteration 1 prototype - check expression 								
+				//isValidExpression = isExpression(nextToken);
+
+				isValidExpression = isVariableName(nextToken);
 
 				// check valid for second argument
 				if (!isValidExpression) {
 					return false;
 				}
+
+				validatedVariableName = nextToken;
 
 			}
 			
