@@ -1,5 +1,4 @@
 #include "ExprTree.h"
-#include "PKB.h"
 
 const std::string DUMMY_TOKEN = "~";
 
@@ -10,17 +9,12 @@ ExprTree::ExprTree(Node* root) {
 	this->root = root;
 }
 
-void ExprTree::print(ExprTree tree) {
-	Node::print(tree.root);
-}
-
 Node* ExprTree::getRoot() {
 	return root;
 }
 
 ExprTree::ExprTree(ProgLine line) {
 	line.push_back(DUMMY_TOKEN);
-	PKB *pkb = PKB::getInstance();
 	std::stack<Node*> nodeStack;
 	std::stack<std::string> opStack;
 
@@ -36,10 +30,10 @@ ExprTree::ExprTree(ProgLine line) {
 			opStack.push(line[i]);
 		}
 		else if (isalpha(line[i].at(0))) {
-			nodeStack.push(new Node(VARIABLE, pkb->getVarIndex(line[i])));
+			nodeStack.push(new Node(VARIABLE, line[i]));
 		}
 		else {
-			nodeStack.push(new Node(CONSTANT, pkb->getVarIndex(line[i])));
+			nodeStack.push(new Node(CONSTANT, line[i]));
 		}
 	}
 
@@ -48,6 +42,10 @@ ExprTree::ExprTree(ProgLine line) {
 
 bool ExprTree::equals(ExprTree tree1, ExprTree tree2) {
 	return Node::equals(tree1.root, tree2.root);
+}
+
+StringToken ExprTree::toString(ExprTree tree) {
+	return Node::toString(tree.root);
 }
 
 void ExprTree::popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &opStack) {

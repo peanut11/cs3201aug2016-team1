@@ -10,7 +10,7 @@ public:
 	ExprTree(ProgLine);
 	Node* getRoot();
 	static bool equals(ExprTree, ExprTree);
-	static void print(ExprTree);
+	static StringToken toString(ExprTree);
 
 private:
 	Node* root;
