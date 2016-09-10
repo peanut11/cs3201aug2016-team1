@@ -716,7 +716,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		numOfWildcard += 1;
 	}
 	else if (str.compare("\"") == 0) {
-		this->validatedExpression.append("\"");
+		//this->validatedExpression.append("\"");
 		numofDoubleQuote += 1;
 	}
 
@@ -747,7 +747,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 			numOfWildcard += 1;
 		}
 		else if (nextToken.compare("\"") == 0) {
-			this->validatedExpression.append("\"");
+			//this->validatedExpression.append("\"");
 			numofDoubleQuote += 1;
 		}
 
@@ -764,8 +764,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 					return false;
 				}
 
-				validatedVariableName = nextToken;
-
+				this->validatedExpression.append(nextToken);
 			}
 			
 		}
