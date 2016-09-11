@@ -92,6 +92,13 @@ bool Node::isSubTree(Node* tree, Node* subTree) {
 }
 
 StringToken Node::toString(Node* p) {
-	if (p == nullptr) return "";
+	if (p == nullptr || p == NULL) {
+		return "";
+	}
+
+	if (p->leftChild == nullptr) {
+		return p->getValue();
+	}
+
 	return Node::toString(p->leftChild) + p->value + Node::toString(p->rightChild);
 }

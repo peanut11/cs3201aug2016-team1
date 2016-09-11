@@ -171,6 +171,7 @@
     </ClCompile>
     <ClCompile Include="TestAssignTree.cpp" />
     <ClCompile Include="TestDesignExtractor.cpp" />
+    <ClCompile Include="TestIsAssignHasExpr.cpp" />
     <ClCompile Include="TestProgramConverter.cpp" />
     <ClCompile Include="TestProgramValidator.cpp" />
     <ClCompile Include="TestQueryEvaluator.cpp" />
