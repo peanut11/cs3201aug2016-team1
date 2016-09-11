@@ -38,10 +38,15 @@ ExprTree::ExprTree(ProgLine line) {
 	}
 
 	root = nodeStack.top();
+	root->buildSize();
 }
 
 bool ExprTree::equals(ExprTree tree1, ExprTree tree2) {
 	return Node::equals(tree1.root, tree2.root);
+}
+
+bool ExprTree::contains(ExprTree subTree) {
+	return Node::isSubTree(root, subTree.root);
 }
 
 StringToken ExprTree::toString(ExprTree tree) {
@@ -58,13 +63,13 @@ void ExprTree::popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &op
 
 	Node* operatorNode;
 	if (oper == "+") {
-		operatorNode = new Node(PLUS);
+		operatorNode = new Node(PLUS, "+");
 	}
 	else if (oper == "-") {
-		operatorNode = new Node(MINUS);
+		operatorNode = new Node(MINUS, "-");
 	}
 	else if (oper == "*") {
-		operatorNode = new Node(TIMES);
+		operatorNode = new Node(TIMES, "*");
 	}
 
 	operatorNode->setLeft(leftOperand);

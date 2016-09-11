@@ -18,23 +18,23 @@ namespace UnitTesting
 
 			AssignTree actual = AssignTree(progLine);
 
-			Node* plus1 = new Node(PLUS);
+			Node* plus1 = new Node(PLUS, "+");
 			plus1->setLeft(new Node(CONSTANT, "12"));
 			plus1->setRight(new Node(CONSTANT, "13"));
-			Node* plus2 = new Node(PLUS);
+			Node* plus2 = new Node(PLUS, "+");
 			plus2->setLeft(plus1);
 			plus2->setRight(new Node(VARIABLE, "y"));
 			
 			AssignTree expected = AssignTree("x", ExprTree(plus2));
 
-			Logger::WriteMessage("Before\n");
+/*			Logger::WriteMessage("Before\n");
 
 			Logger::WriteMessage(AssignTree::toString(actual).c_str());
 			Logger::WriteMessage("\n");
 			Logger::WriteMessage(AssignTree::toString(expected).c_str());
 			Logger::WriteMessage("\n");
 
-			Logger::WriteMessage("After\n");
+			Logger::WriteMessage("After\n"); */
 
 			Assert::IsTrue(AssignTree::equals(actual, expected));
 		}
@@ -48,14 +48,14 @@ namespace UnitTesting
 			Node* node = new Node(VARIABLE, "y");
 			AssignTree expected = AssignTree("x", ExprTree(node));
 
-			Logger::WriteMessage("Before\n");
+/*			Logger::WriteMessage("Before\n");
 
 			Logger::WriteMessage(AssignTree::toString(actual).c_str());
 			Logger::WriteMessage("\n");
 			Logger::WriteMessage(AssignTree::toString(expected).c_str());
 			Logger::WriteMessage("\n");
 
-			Logger::WriteMessage("After\n");
+			Logger::WriteMessage("After\n"); */
 
 			Assert::IsTrue(AssignTree::toString(actual) == AssignTree::toString(expected));
 		}

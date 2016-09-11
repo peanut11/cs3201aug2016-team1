@@ -37,7 +37,7 @@ bool AssignTree::equals(AssignTree tree1, AssignTree tree2) {
 }
 
 StringToken AssignTree::toString(AssignTree tree) {
-	return tree.var + " = " + ExprTree::toString(tree.exprTree);
+	return tree.var + "=" + ExprTree::toString(tree.exprTree);
 }
 
 StringToken AssignTree::getVar() {
