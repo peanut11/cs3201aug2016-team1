@@ -4,12 +4,21 @@ ResultsTable::ResultsTable()
 {
 }
 
-ResultsObject ResultsTable::getObject(SynonymString synonym) {
+ResultsObject& ResultsTable::getObject(SynonymString synonym) {
+	/*
 	for (auto value : this->resultsObject) {
 		if (value.getSynonym().compare(synonym) == 0) {
 			return value;
 		}
 	}
+	*/
+
+	for (unsigned i = 0; i < resultsObject.size(); i++) {
+		if (resultsObject[i].getSynonym().compare(synonym) == 0) {
+			return resultsObject[i];
+		}
+	}
+
 	return invalidObject;
 }
 
@@ -95,7 +104,7 @@ bool ResultsTable::insertSet(SynonymString synonym, std::set<SynonymString> newS
 
 bool ResultsTable::insertSet(SynonymString synonym, std::set<SynonymValue> newSet) {
 	if (this->contains(synonym)) {
-		this->getObject(synonym).insertSet(newSet);
+	this->getObject(synonym).insertSet(newSet);
 		return true;
 	}
 	return false;

@@ -27,6 +27,7 @@ public:
 
 	}
 	TEST_METHOD(TestQueryEvaluator_PopulateResultsTable) {
+		/*
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		// assign a, while w, variable v
 		SynonymTable *synonymTable = SynonymTable::getInstance();
@@ -36,12 +37,45 @@ public:
 		synonymTable->insert(a);
 		synonymTable->insert(w);
 		synonymTable->insert(v);
-		/*		ResultsTable resultsTable = evaluator->populateResultTable(synonymTable);
-		Assert::AreEqual(std::string("a"), resultsTable.getObject("a").getSynonym());
-		Assert::AreEqual(std::string("w"), resultsTable.getObject("w").getSynonym());
-		Assert::AreEqual(std::string("v"), resultsTable.getObject("v").getSynonym());
 		*/
+
+		/*		ResultsTable resultsTable = evaluator->populateResultTable(synonymTable);
+				Assert::AreEqual(std::string("a"), resultsTable.getObject("a").getSynonym());
+				Assert::AreEqual(std::string("w"), resultsTable.getObject("w").getSynonym());
+				Assert::AreEqual(std::string("v"), resultsTable.getObject("v").getSynonym());
+		*/
+
+		ResultsTable rt = ResultsTable();
+
+		//std::set
+		std::set<SynonymString> mSetString = { "x", "y", "z" };
+		std::set<SynonymValue> mSetInt = {1, 2, 3, 4, 5};
+
+		ResultsObject obj1 = ResultsObject("a");
+		ResultsObject obj2 = ResultsObject("v");
+
+		//obj1.insertSet(mSetString); // set of strings
+		//obj2.insertSet(mSetInt); // set of int
+
+		Assert::IsTrue(rt.insert(obj1));
+		Assert::IsTrue(rt.insert(obj2));
+
+		if (rt.contains("a")) {
+			Logger::WriteMessage("a is inserted");
+			Assert::IsTrue(rt.insertSet("a", mSetString));
+		}
+
+		if (rt.contains("v")) {
+			Logger::WriteMessage("v is inserted");
+			Assert::IsTrue(rt.insertSet("v", mSetInt));
+		}
+
+		
+		Logger::WriteMessage(std::to_string(rt.getSetString("a").size()).c_str());
+		Logger::WriteMessage(std::to_string(rt.getSetInt("v").size()).c_str());
+
 	}
+
 	};
 
 }

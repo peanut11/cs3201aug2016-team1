@@ -29,10 +29,12 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",\"y\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(_,_\"y\"_)"));
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
 		
-
+		
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
 		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		
 
 
 		// success FOLLOWS
