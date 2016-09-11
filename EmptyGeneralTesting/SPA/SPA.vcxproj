@@ -30,6 +30,7 @@
     <ClCompile Include="ResultsObject.cpp" />
     <ClCompile Include="ResultsTable.cpp" />
     <ClCompile Include="SelectObject.cpp" />
+    <ClCompile Include="DummyPKB.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="ClauseSuchThatArgObject.cpp" />
     <ClCompile Include="ClauseSuchThatObject.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="AssignTree.h" />
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseType.h" />
+    <ClInclude Include="DummyPKB.h" />
     <ClInclude Include="ExprTree.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />

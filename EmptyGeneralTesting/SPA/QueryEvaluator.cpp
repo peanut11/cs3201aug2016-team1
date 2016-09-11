@@ -36,6 +36,11 @@ SynonymTable *QueryEvaluator::getSynonymTable()
 	return this->mSynonymTable;
 }
 
+void *QueryEvaluator::setPKB(PKB *pkb)
+{
+	return this->mPKB = pkb;
+}
+
 /*
 Evaluate QueryTree
 */
@@ -90,7 +95,13 @@ ResultsTable *QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
 	for (std::vector<SynonymObject>::iterator it = synonymObjects.begin(); it != synonymObjects.end(); it++) {
 		ResultsObject resultsObject(it->getSynonym());
 		resultsTable.insert(resultsObject);
-		resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
+		if (it->getType() == VARIABLE) {
+			resultsTable.insertSet(it->getSynonym(), getPKB()->getAllVarNames());
+		}
+		else {
+			resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
+		}
+
 	}
 
 	return &resultsTable;
@@ -168,7 +179,6 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIsSynonym()) {
 			// set "_" to retrieve all statements and also get all statements of synonym
 			std::set<StmtNumber> statements = pkb->getAllStmts();
-			std::set<StmtNumber> s = pkb->getStmtsByType(argTwo.getEntityType());
 			std::set<StmtNumber> evaluatedS;
 
 			// get existing results from results table
@@ -179,7 +189,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 				for (StmtSetIterator j = currentStatements.begin(); j != currentStatements.end(); j++) {
 					if (pkb->is(type, *i, *j)) {
 						suchThatRelObject.setResultsBoolean(true);
-						evaluatedS.insert(*i);
+						evaluatedS.insert(*j);
 					}
 				}
 			}
@@ -211,7 +221,6 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 		// arg1 is synonym & arg2 is underscore : Follows(s,_);
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {			
 			// set "_" to retrieve all statements and also get all statements of synonym
-			std::set<StmtNumber> s = pkb->getStmtsByType(argOne.getEntityType());
 			std::set<StmtNumber> statements = pkb->getAllStmts();
 			std::set<StmtNumber> evaluatedS;
 
@@ -244,9 +253,10 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 		}
 		// both arguments are a synonym : Follows(s1,s2); Follow(a,s1);
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
-			// get all the statements for each synonym entity type
-			std::set<StmtNumber> s1s = pkb->getStmtsByType(argOne.getEntityType());
-			std::set<StmtNumber> s2s = pkb->getStmtsByType(argTwo.getEntityType());
+			// retrieve current statements
+			std::set<StmtNumber> s1s = resultsTable.getSetInt(argOne.getStringValue());
+			std::set<StmtNumber> s2s = resultsTable.getSetInt(argTwo.getStringValue());
+
 			std::set<StmtNumber> evaluatedS1s;
 			std::set<StmtNumber> evaluatedS2s;
 
@@ -260,17 +270,13 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 				}
 			}
 
-			// retrieve current statements
-			std::set<StmtNumber> currentStatements1 = resultsTable.getSetInt(argOne.getStringValue());
-			std::set<StmtNumber> currentStatements2 = resultsTable.getSetInt(argTwo.getStringValue());
-
 			// intersect two sets x2
 			std::set<StmtNumber> updatedStatements1;
-			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), currentStatements1.begin(), currentStatements1.end(),
+			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), s1s.begin(), s1s.end(),
 				std::inserter(updatedStatements1, updatedStatements1.begin()));
 			
 			std::set<StmtNumber> updatedStatements2;
-			set_intersection(evaluatedS2s.begin(), evaluatedS2s.end(), currentStatements2.begin(), currentStatements2.end(),
+			set_intersection(evaluatedS2s.begin(), evaluatedS2s.end(), s2s.begin(), s2s.end(),
 				std::inserter(updatedStatements2, updatedStatements2.begin()));
 
 			// check if relationship holds/have results
@@ -356,7 +362,6 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 		//if left arg is synonym, right arg is "_" (Modifies(s,_);
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
 			// set "_" to retrieve all statements and also get all statements of synonym
-			std::set<StmtNumber> s = pkb->getStmtsByType(argOne.getEntityType());
 			std::set<VarName> variables = pkb->getAllVarNames();
 			std::set<StmtNumber> evaluatedS;
 
@@ -367,7 +372,6 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 			for (StmtSetIterator cs = currentStatements.begin(); cs != currentStatements.end(); cs++) {
 				for (VarNameSetIterator s = variables.begin(); s != variables.end(); s++) {
 					if (pkb->is(type, *cs, pkb->getVarIndex(*s))) {
-						suchThatRelObject.setResultsBoolean(true);
 						evaluatedS.insert(*cs);
 					}
 				}
@@ -388,9 +392,10 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 		}
 		// both args are synonym (Modifies(a,v));Modifies(s,v)
 		else if (argOne.getIsSynonym() && argTwo.getIsSynonym()) {
-			// get all the statements for each synonym entity type
-			std::set<StmtNumber> s1s = pkb->getStmtsByType(argOne.getEntityType());
-			std::set<VarName> v1s = pkb->getAllVarNames();
+			// retrieve current statements
+			std::set<StmtNumber> s1s = resultsTable.getSetInt(argOne.getStringValue());
+			std::set<VarName> v1s = resultsTable.getSetString(argTwo.getStringValue());
+
 			std::set<StmtNumber> evaluatedS1s;
 			std::set<VarName> evaluatedV1s;
 
@@ -404,17 +409,13 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 				}
 			}
 
-			// retrieve current statements
-			std::set<StmtNumber> currentStatements = resultsTable.getSetInt(argOne.getStringValue());
-			std::set<VarName> currentVariables = resultsTable.getSetString(argTwo.getStringValue());
-
 			// intersect two sets x2
 			std::set<StmtNumber> updatedStatements;
-			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), currentStatements.begin(), currentStatements.end(),
+			set_intersection(evaluatedS1s.begin(), evaluatedS1s.end(), s1s.begin(), s1s.end(),
 				std::inserter(updatedStatements, updatedStatements.begin()));
 
 			std::set<VarName> updatedVariables;
-			set_intersection(evaluatedV1s.begin(), evaluatedV1s.end(), currentVariables.begin(), currentVariables.end(),
+			set_intersection(evaluatedV1s.begin(), evaluatedV1s.end(), v1s.begin(), v1s.end(),
 				std::inserter(updatedVariables, updatedVariables.begin()));
 
 			// check if relationship holds/have results
@@ -547,13 +548,11 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
 					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
 						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
-
 							if (pkb->isAssignHasSubexpr(*cs, secondArg)) {
 								evaluatedPatternSynonymStatements.insert(*cs);
 								evaluatedfirstArgSynonymVariables.insert(*s);
 								break;
 							}
-
 						}
 					}
 				}
@@ -590,8 +589,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 				// check all existing pattern synonym statements if it modifies the 'variable'
 				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
 					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
-						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
-							
+						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {							
 							if (pkb->isAssignHasSubexpr(*cs, secondArg)) {
 								evaluatedPatternSynonymStatements.insert(*cs);
 								break;
@@ -630,8 +628,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 						// if yes, check if this statement uses the second argument subexpression
 						if (pkb->isAssignHasSubexpr(*i, secondArg)) {
 							evaluatedS.insert(*i);
-						}
-	
+						}		
 					}
 				}
 
@@ -668,13 +665,6 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(SelectObject selectObjec
 		}
 		// else then it must be a synonym
 		else {
-			// TODO: Define resultsTable
-			// resultsTable.get(select.getStringValue());
-			// iterate through results
-			// temp code :
-			results.push_back("1");
-			results.push_back("2");
-/*
 			// iteration 1 : only if the entity is VARIABLE, then return string (variable names)
 			if (selectObject.getEntityType() == VARIABLE) {
 				std::set<VarName> setResults1 = resultsTable.getSetString(selectObject.getSynonymString());
@@ -683,10 +673,13 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(SelectObject selectObjec
 			}
 			else {
 				std::set<StmtNumber> setResults2 = resultsTable.getSetInt(selectObject.getSynonymString());
-				std::vector<std::string> vectorResults2(setResults2.begin(), setResults2.end());
+				std::vector<StmtNumber> vectorStmtNumbers(setResults2.begin(), setResults2.end());
+				std::vector<std::string> vectorResults2;
+				for (std::vector<StmtNumber>::iterator it = vectorStmtNumbers.begin(); it != vectorStmtNumbers.end(); ++it) {
+					vectorResults2.push_back(std::to_string(*it));
+				}
 				return vectorResults2;
 			}
-*/
 		}
 	}
 	else {
