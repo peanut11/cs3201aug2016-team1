@@ -106,29 +106,53 @@ void DesignExtractor::updateStmtTable() {
 		processWhileLoop(*w);
 	}
 }
+StmtNumber DesignExtractor::getwhileList() {
+	PKB* pkb = PKB::getInstance();
+	return pkb->getStmtsByType(WHILE).size();
+}
 
 void DesignExtractor::processWhileLoop(StmtNumber w) {
 	PKB* pkb = PKB::getInstance();
 	std::set<StmtNumber> followlist = pkb->getStmtsByStmt(w, FOLLOWED_BY);
-	StmtNumber followLine = *followlist.begin();
-	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
 
+	//StmtNumber followLine = *followlist.begin();
+	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
+	if (pkb->getStmtTypeForStmt((w+1)) == WHILE) {
+		processWhileLoop((w+1));
+	}
+	std::set<StmtNumber> useList = pkb->getVarsByStmt((w+1), USES);
+
+	for (StmtSetIterator u = useList.begin(); u != useList.end(); u++) {
+
+		VarName addToVartableUse = pkb->getVarName(*u);
+		pkb->putVarForStmt(w, USES, addToVartableUse);
+	}
+
+	std::set<StmtNumber> modifiesList = pkb->getVarsByStmt((w+1), MODIFIES);
+	for (StmtSetIterator m = modifiesList.begin(); m != modifiesList.end(); m++) {
+
+		VarName addToVartableMod = pkb->getVarName(*m);
+		pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
+	}
+
+	//From Second Line in while Loop
 	for (StmtSetIterator f = followStar.begin(); f != followStar.end(); f++) {
 		StmtNumber s = *f;
 		if (pkb->getStmtTypeForStmt(s) == WHILE) {
 			processWhileLoop(s);
 		}
 
-		std::set<StmtNumber> useList = pkb->getStmtsByStmt(s, USES);
+		std::set<StmtNumber> useList = pkb->getVarsByStmt(s,USES);
+			
 		for (StmtSetIterator u = useList.begin(); u != useList.end(); u++) {
-			pkb->putStmtForStmt(w, USES, *u);
+			
 			VarName addToVartableUse = pkb->getVarName(*u);
 			pkb->putVarForStmt(w, USES, addToVartableUse);
 		}
 
-		std::set<StmtNumber> modifiesList = pkb->getStmtsByStmt(s, MODIFIES);
+		std::set<StmtNumber> modifiesList = pkb->getVarsByStmt(s, MODIFIES);
 		for (StmtSetIterator m = modifiesList.begin(); m != modifiesList.end(); m++) {
-			pkb->putStmtForStmt(w, MODIFIES, *m);
+			
 			VarName addToVartableMod = pkb->getVarName(*m);
 			pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
 		}

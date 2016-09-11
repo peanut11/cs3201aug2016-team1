@@ -6,7 +6,7 @@ class ResultsTable {
 	ResultsObject invalidObject = ResultsObject("INVALID");
 public:
 	ResultsTable();
-	ResultsObject getObject(SynonymString synonym);
+	ResultsObject* getObject(SynonymString synonym);
 	std::vector<ResultsObject> getObjects();
 	std::set<SynonymString> getSetString(SynonymString synonym);
 	std::set<SynonymValue> getSetInt(SynonymString synonym);

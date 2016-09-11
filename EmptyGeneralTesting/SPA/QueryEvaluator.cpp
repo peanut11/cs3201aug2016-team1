@@ -80,7 +80,7 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 	}
 }
 
-ResultsTable QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
+ResultsTable *QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
 {
 	// get Synonym Table & list of synonyms
 	SynonymTable *mSynonymTable = synonymTable;
@@ -93,7 +93,7 @@ ResultsTable QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
 		resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
 	}
 
-	return resultsTable;
+	return &resultsTable;
 }
 
 ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchThatRelObject)
@@ -547,13 +547,13 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
 					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
 						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
-/*
-							if (pkb->getStmtsByAssignSubexpr(*cs, secondArg)) {
+
+							if (pkb->isAssignHasSubexpr(*cs, secondArg)) {
 								evaluatedPatternSynonymStatements.insert(*cs);
 								evaluatedfirstArgSynonymVariables.insert(*s);
 								break;
 							}
-*/
+
 						}
 					}
 				}
@@ -591,12 +591,12 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
 					for (VarNameSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
 						if (pkb->is(MODIFIES, *cs, pkb->getVarIndex(*s))) {
-							/*
-							if (pkb->getStmtsByAssignSubexpr(*cs, secondArg)) {
+							
+							if (pkb->isAssignHasSubexpr(*cs, secondArg)) {
 								evaluatedPatternSynonymStatements.insert(*cs);
 								break;
 							}
-							*/
+							
 						}
 					}
 				}
@@ -628,10 +628,10 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 					// check if the existing statement modifies the 'variable'
 					if (pkb->is(MODIFIES, *i, pkb->getVarIndex(firstArg))) {
 						// if yes, check if this statement uses the second argument subexpression
-	/*					if (pkb->getStmtsByAssignSubexpr(*i, secondArg)) {
+						if (pkb->isAssignHasSubexpr(*i, secondArg)) {
 							evaluatedS.insert(*i);
 						}
-	*/
+	
 					}
 				}
 

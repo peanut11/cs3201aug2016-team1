@@ -24,7 +24,7 @@ public:
 	SynonymTable *getSynonymTable();
 
 	void evaluate(QueryTable queryTable);
-	ResultsTable populateResultTable(SynonymTable *synonymTable);
+	ResultsTable *populateResultTable(SynonymTable *synonymTable);
 	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
 	ClausePatternObject evaluatePattern(ClausePatternObject patternObject);

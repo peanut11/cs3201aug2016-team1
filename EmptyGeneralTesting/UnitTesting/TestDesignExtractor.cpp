@@ -100,5 +100,20 @@ public:
 		parentStarSize = parentOfStarList.size();
 		Assert::AreEqual(parentStarSize, 5);
 	}
+	TEST_METHOD(TestDesign_UpdateStmtTable) {
+		PKB* pkb = PKB::getInstance();
+		std::set<StmtNumber> useList = pkb->getVarsByStmt(6, MODIFIES);
+		StmtSetIterator useIt = useList.begin();
+		DesignExtractor de = DesignExtractor();
+		int useSize = de.getwhileList();
+		Assert::AreEqual(useSize, 2);
+		int sz = useList.size();
+		Assert::AreEqual(sz, 2);
+		 useList = pkb->getVarsByStmt(3, USES);
+		 useIt = useList.begin();
+		 sz = useList.size();
+		Assert::AreEqual(sz, 4);
+	}
+	
 	};
 }

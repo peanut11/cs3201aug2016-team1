@@ -18,4 +18,10 @@ public :
 	AttrType::AttrType getAttrType();
 	bool getBoolean();
 
+	void setEntityType(EntityType entityType);
+	void setSynonymString(std::string synonymString);
+	void setAttrType(AttrType::AttrType attrType);
+	void setIsBoolean(bool isBoolean);
+
+
 };

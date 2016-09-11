@@ -27,7 +27,7 @@ void QueryPreProcessor::init() {
 	this->mRelTable = RelTable::getInstance();
 	this->mSynonymTable = SynonymTable::getInstance();
 	this->populateRelationshipTable();
-	this->populateSynonymTable();
+	//this->populateSynonymTable();
 }
 
 void QueryPreProcessor::populateRelationshipTable() {
@@ -83,12 +83,14 @@ void QueryPreProcessor::populateRelationshipTable() {
 	// havent include next and affects
 }
 
+/*
 void QueryPreProcessor::populateSynonymTable() {
 	SynonymObject object = this->createSynonymObject(EntityType::PROCEDURE, "p");
 	this->mSynonymTable->insert(object);
 	object = this->createSynonymObject(EntityType::ASSIGN, "a1");
 	this->mSynonymTable->insert(object);
 }
+*/
 
 SynonymObject QueryPreProcessor::createSynonymObject(EntityType type, std::string synonym) {
 	SynonymObject object = SynonymObject(type, synonym);

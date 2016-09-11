@@ -23,12 +23,29 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_)"));
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\",\"y+1\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,_) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,s1) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(_,_\"y\"_)"));
+		
+		
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		
+
 
 		// success FOLLOWS
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows (s1, 3)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows (s1, 3) pattern a1(\"x\",\"y\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s1, 2) Parent(s1, s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s1, _) Parent(s1, s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(_,\"y\")"));
+		//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(\"x\",_)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 
 		// success USES
@@ -43,16 +60,22 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Modifies(a1, \"x\")"));
 		// 1 common synonym between clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y\")"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		
 		// Failed test cases
+		// wrong expression
+		// Iteration 1 - expression cannot be  "y+1"
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\", y)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y\")"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"+y\")"));
+
+
 		// more than 1 common synonym between clauses
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Follows(s1, s2) Parent(s1, s2) pattern a1(\"x\",\"y\")"));
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
-
-
-
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Uses(_, \"x\") pattern a1(\"x\",\"y\")"));
+		
 	}
 
 	TEST_METHOD(TestQueryValidator_Procedure_Only) {
@@ -696,40 +719,29 @@ public:
 
 
 		// success
-		validator->initStringTokenizer("\"x\",");
+		validator->initStringTokenizer("\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isPatternExprArgument("\""));
 
-		validator->initStringTokenizer("\"x+1\",");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isPatternExprArgument("\""));
-
-		validator->initStringTokenizer("\"x+1\")");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isPatternExprArgument("\""));
-
-		validator->initStringTokenizer("_\"x+1\"_,");
+		validator->initStringTokenizer("_\"x\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isPatternExprArgument("_"));
 
+
 		// failure
-		validator->initStringTokenizer("_,");
+		validator->initStringTokenizer("_)");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("_"));
 
-		validator->initStringTokenizer("\"x+1\"");
+		validator->initStringTokenizer("\"x+1\")");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("\""));
 
-		validator->initStringTokenizer("_\"x+1\"_");
-		validator->getNextToken();
-		Assert::IsFalse(validator->isPatternExprArgument("_"));
-
-		validator->initStringTokenizer("\"x+1,");
+		validator->initStringTokenizer("\"x+1)");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("\""));
 
-		validator->initStringTokenizer("_\"x+1\",");
+		validator->initStringTokenizer("_\"x+1\")");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("_"));
 
@@ -737,17 +749,17 @@ public:
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("_"));
 
-		validator->initStringTokenizer("\"x+1\"_,");
+		validator->initStringTokenizer("\"x+1\"_)");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("\""));
 
-		validator->initStringTokenizer("\"+1\",");
+		validator->initStringTokenizer("\"+1\")");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("\""));
 
-		validator->initStringTokenizer(",");
+		validator->initStringTokenizer(")");
 		validator->getNextToken();
-		Assert::IsFalse(validator->isPatternExprArgument(","));
+		Assert::IsFalse(validator->isPatternExprArgument(")"));
 
 
 

@@ -42,8 +42,10 @@ std::vector<ClausePatternObject> QueryTable::getPatterns()
 std::string QueryTable::toString() {
 	std::string str = "========== QUERY TABLE ===============\n";
 
-	//str.append("== Select object ==\n");
-	//str.append(this->select.get
+	str.append("== Select object ==\n");
+	str.append(this->select.getSynonymString() + "\n");
+	
+		
 	str.append("== Such That ==\n");
 	str.append("size = " + std::to_string(this->suchThats.size()) + "\n");
 	for (auto value : this->suchThats) {
@@ -73,14 +75,14 @@ std::string QueryTable::toString() {
 	str.append("\n== Pattern ==\n");
 	for (auto value : this->patterns) {
 
-		if (value.getIsFirstArugmentSynonym()) {
+		if (value.getIsFirstArgSynonym()) {
 			str.append("true");
 		}
 		else {
 			str.append("false");
 		}
 
-		str.append(", " + value.getFirstArgument() + ", " + value.getSecondArgument() + "\n");
+		str.append(", " + value.getPatternSynonymArgument() + ", " + value.getFirstArgument() + ", " + value.getSecondArgument() + "\n");
 
 	}
 	
@@ -107,6 +109,8 @@ std::string QueryTable::getEntityString(EntityType type) {
 		return "prog_line";
 	case CALL:
 		return "call";
+	case WILDCARD:
+		return "wc";
 	default:
 		return "";
 	}
@@ -132,6 +136,12 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 bool QueryTable::replaceSelectObject(SelectObject object) {
 	try {
 		this->select = object;
+		/*
+		this->select.setAttrType(object.getAttrType());
+		this->select.setEntityType(object.getEntityType());
+		this->select.setSynonymString(object.getSynonymString());
+		this->select.setIsBoolean(object.getBoolean());
+		*/
 		return true;
 	}
 	catch (std::runtime_error e) {

@@ -1,0 +1,6 @@
+procedure Third {
+  x = 0;
+  i = 5;
+  while i {
+    z = z + x + i;
+    y = z + 2; while y{l=x+5; z=x+y;}} y=i+4;}

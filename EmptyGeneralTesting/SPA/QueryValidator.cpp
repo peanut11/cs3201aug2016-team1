@@ -87,10 +87,8 @@ QueryTable& QueryValidator::getQueryTable() {
 	return this->mQueryTable;
 }
 
-SelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, bool isBoolean) {
-	SelectObject mObj = SelectObject(entityType, attrType, isBoolean);
-	// insert into selectTable
-	return mObj;
+SelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean) {
+	return SelectObject(entityType, synonymString, attrType, isBoolean);
 }
 
 // Clause Such that object
@@ -103,12 +101,13 @@ ClauseSuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType
 }
 
 // Clause Pattern object
-ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg) {
-	return ClausePatternObject(patternType, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+
+ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg) {
+	return ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
 }
 
-ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg) {
-	return ClausePatternObject(patternType, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
+ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg, std::string thirdArg) {
+	return ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
 }
 
 
@@ -261,7 +260,7 @@ bool QueryValidator::isSelect(std::string str) {
 		std::string currentToken = st.nextToken();
 
 		if (isMatch(currentToken, QueryValidator::SYNTAX_SELECT)) {
-
+			previousClauseType = ClauseType::SELECT;
 			if (hasSelectOnce) {
 				// next string is "Select" again & already had "Select" previously
 				// cannot have more than 1 "Select"
@@ -289,16 +288,17 @@ bool QueryValidator::isSelect(std::string str) {
 				isValid = isClauseResult(currentToken);
 
 				if (isValid) {
+					
 					// insert into clause select table
-					EntityType mSynonymEntityType = this->mSynonymTable->getObject(str).getType();
+					EntityType mSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable().replaceSelectObject(this->createSelectObject(EntityType::INVALID, AttrType::INVALID, true));
+						this->getQueryTable().replaceSelectObject(SelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						this->getQueryTable().replaceSelectObject(this->createSelectObject(mSynonymEntityType, AttrType::INVALID, false));
+						this->getQueryTable().replaceSelectObject(SelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table
@@ -410,10 +410,12 @@ bool QueryValidator::isClausePattern(std::string str) {
 				if (this->mSynonymOccurence->hasMaxCommonSynonym()) { return false; }
 
 				if (numOfArgs == 2) {
-					this->mQueryTable.insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, firstArg, secondArg));
+					this->mQueryTable.insertPatternObject(
+						this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg));
 				}
 				else { // third argument 
-					this->mQueryTable.insertPatternObject(createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg));
+					this->mQueryTable.insertPatternObject(
+						this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg, thirdArg));
 				}
 
 				return true;
@@ -559,7 +561,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  return false;  }
 
 				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(),
-					ClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
+					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
 
 				return true;
 			}
@@ -666,8 +668,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				if (!(relationshipObject.getRelObjectType() == RelationshipType::MODIFIES 
 					|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
 
-					//firstArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
-					//	nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
+					firstArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
 
 					hasValidFirstArg = true; // first argument is correct
 					numberOfArgs += 1;
@@ -678,8 +680,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			// second argument is wildcard
 			if (hasComma && hasValidFirstArg) {
 
-				//secondArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
-				//	nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
+				secondArgObject = ClauseSuchThatArgObject(EntityType::WILDCARD,
+					nextToken, ClauseSuchThatArgObject::EMTPY_INT, false);
 
 				numberOfArgs += 1;
 			}
@@ -709,11 +711,12 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 	}
 
 	if (str.compare(SYNTAX_UNDERSCORE) == 0) {
+		this->validatedExpression.append("_");
 		containWildcard = true;
 		numOfWildcard += 1;
 	}
 	else if (str.compare("\"") == 0) {
-		this->validatedExpression.append("\"");
+		//this->validatedExpression.append("\"");
 		numofDoubleQuote += 1;
 	}
 
@@ -722,7 +725,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		if (!st.hasMoreTokens()) { return false; }
 
 		if ((isMatch(st.peekNextToken(), SYNTAX_COMMA) || isMatch(st.peekNextToken(), ")"))) {
-			if (containWildcard && numOfWildcard == 2 && numofDoubleQuote == 2) {
+			if (containWildcard && numOfWildcard == 2 && numofDoubleQuote == 2) {	
 				return true;
 			}
 			else if (numofDoubleQuote == 1 || numOfWildcard == 1) {
@@ -740,22 +743,28 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		std::string nextToken = st.nextToken();
 
 		if (nextToken.compare(SYNTAX_UNDERSCORE) == 0) {
+			this->validatedExpression.append("_");
 			numOfWildcard += 1;
 		}
 		else if (nextToken.compare("\"") == 0) {
-			this->validatedExpression.append("\"");
+			//this->validatedExpression.append("\"");
 			numofDoubleQuote += 1;
 		}
 
 		if (numofDoubleQuote == 1) { // passed first quote
 			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
-				isValidExpression = isExpression(nextToken);
+				
+				// NOT for Iteration 1 prototype - check expression 								
+				//isValidExpression = isExpression(nextToken);
+
+				isValidExpression = isVariableName(nextToken);
 
 				// check valid for second argument
 				if (!isValidExpression) {
 					return false;
 				}
 
+				this->validatedExpression.append(nextToken);
 			}
 			
 		}
