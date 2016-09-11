@@ -80,7 +80,7 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 	}
 }
 
-ResultsTable QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
+ResultsTable *QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
 {
 	// get Synonym Table & list of synonyms
 	SynonymTable *mSynonymTable = synonymTable;
@@ -93,7 +93,7 @@ ResultsTable QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
 		resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
 	}
 
-	return resultsTable;
+	return &resultsTable;
 }
 
 ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchThatRelObject)
