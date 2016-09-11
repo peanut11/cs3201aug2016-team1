@@ -61,12 +61,12 @@ int ResultsTable::size() {
 bool ResultsTable::insert(ResultsObject object) {
 
 	if (contains(object)) {
-//		throw std::runtime_error("ResultTable insert duplicate object synonym = " + object.getSynonym());
+		//		throw std::runtime_error("ResultTable insert duplicate object synonym = " + object.getSynonym());
 		return false;
 	}
 
 	resultsObject.push_back(object);
-	return true; 
+	return true;
 }
 
 bool ResultsTable::replaceSet(SynonymString synonym, std::set<SynonymString> newSet) {
