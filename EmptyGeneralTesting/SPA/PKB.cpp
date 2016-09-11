@@ -34,6 +34,9 @@ PKB::PKB() {
 }
 
 void PKB::clear() {
+	if (theOne != nullptr) {
+		delete theOne;
+	}
 	theOne = new PKB();
 }
 
@@ -57,7 +60,10 @@ bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
 	subexpr.erase(std::remove_if(subexpr.begin(), subexpr.end(), isspace), subexpr.end());
 	ExprString treeStr = ExprTree::toString(tree.getExprTree());
 
-	return treeStr.find(subexpr) != std::string::npos;
+	treeStr = "+" + treeStr + "+";
+	return (treeStr.find(subexpr) == 1) ||
+		(subexpr.find("+") == std::string::npos && 
+			treeStr.find("+" + subexpr + "+") != std::string::npos);
 }
 
 bool PKB::isVarExist(VarName varName) {
