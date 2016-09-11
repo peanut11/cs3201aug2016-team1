@@ -8,7 +8,7 @@
 #include "ResultsTable.h"
 #include "QueryTable.h"
 #include "SynonymTable.h"
-
+#include "DummyPKB.h"
 class QueryEvaluator {
 private:
 	static QueryEvaluator *_instance;
@@ -22,6 +22,8 @@ public:
 	static QueryEvaluator *getInstance();
 	PKB *getPKB();
 	SynonymTable *getSynonymTable();
+
+	void *setPKB(PKB *pkb);
 
 	void evaluate(QueryTable queryTable);
 	ResultsTable *populateResultTable(SynonymTable *synonymTable);

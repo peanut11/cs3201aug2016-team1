@@ -15,7 +15,7 @@ class PKB {
 private:
 	static const std::runtime_error ERROR;
 	static PKB* theOne;
-	PKB();
+
 	
 	std::vector<AssignTree> assignTrees;
 	std::set<Constant>      constants;
@@ -28,10 +28,10 @@ private:
 public:
 	static PKB* getInstance();
 	void clear();
-
+	PKB();
 	// Indexing
-	VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
-	VarName getVarName(VarIndex varIndex);
+	virtual VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
+	virtual VarName getVarName(VarIndex varIndex);
 
 	// API used by Parser and DE
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
@@ -60,20 +60,20 @@ public:
 						}
 					  }
 	*/
-	bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
-	bool isAssignHasExpr(StmtNumber assign, ExprString expr);
-	bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
+	virtual bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
+	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
+	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
 	bool isVarExist(VarName varName);
 
-	AssignTree              getAssign(StmtNumber stmt);
-	EntityType				getStmtTypeForStmt(StmtNumber stmt);
-	StmtNumber              getStmtTableSize();
-	std::set<Constant>		getAllConstantValues();
-	std::set<StmtNumber>	getAllStmts();
-	std::set<VarName>		getAllVarNames();
-	std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
-	std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);
-	std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent);
-	std::set<StmtNumber>	getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
-	std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
+	virtual AssignTree              getAssign(StmtNumber stmt);
+	virtual EntityType				getStmtTypeForStmt(StmtNumber stmt);
+	virtual StmtNumber              getStmtTableSize();
+	virtual std::set<Constant>		getAllConstantValues();
+	virtual std::set<StmtNumber>	getAllStmts();
+	virtual std::set<VarName>		getAllVarNames();
+	virtual std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
+	virtual std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);
+	virtual std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent);
+	virtual std::set<StmtNumber>	getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
+	virtual std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 };
