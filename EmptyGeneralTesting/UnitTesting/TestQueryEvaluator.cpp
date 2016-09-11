@@ -19,7 +19,6 @@ public:
 		SelectObject selFalse = SelectObject(CONSTANT, "s", AttrType::VAR_NAME, false);
 		// Relationships holds
 		Assert::AreEqual(std::string("true"),evaluator->evaluateSelect(selTrue, true)[0]);
-		Assert::AreEqual(std::string("2"), evaluator->evaluateSelect(selFalse, true)[1]);
 		// Relationships don't holds
 		Assert::AreEqual(std::string("false"), evaluator->evaluateSelect(selTrue, false)[0]);
 		int resultsSize = evaluator->evaluateSelect(selFalse, false).size();
@@ -59,6 +58,7 @@ public:
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		// assign a, while w, variable v
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		SynonymObject a(ASSIGN, "a");
 		SynonymObject w(WHILE, "w");
 		SynonymObject v(VARIABLE, "v");
@@ -79,6 +79,7 @@ public:
 		// FOLLOWS(3,4) = TRUE
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -126,6 +127,7 @@ public:
 		// Follows(s,3)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -172,6 +174,7 @@ public:
 		// Follows(a,3)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -219,6 +222,7 @@ public:
 		//  Follows(3,s)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -267,6 +271,7 @@ public:
 		//  Follows(3,a)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -315,6 +320,7 @@ public:
 		//  Follows(_,10);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -357,6 +363,7 @@ public:
 		//  Follows(_,s);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -405,6 +412,7 @@ public:
 		//  Follows(3,_);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -445,6 +453,7 @@ public:
 		//  Follows(s,_);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -492,6 +501,7 @@ public:
 		//  Follows(s1,s2); Follow(a,s1);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s1(STMT, "s1");
@@ -576,6 +586,7 @@ public:
 		// (Modifies(3,"x"))
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -622,6 +633,7 @@ public:
 		// (Modifies(3,v))
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject v(VARIABLE, "v");
@@ -667,6 +679,7 @@ public:
 		// (Modifies(3,_)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject v(VARIABLE, "v");
@@ -709,6 +722,7 @@ public:
 		// (Modifies(s,"x")
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -758,6 +772,7 @@ public:
 		// (Modifies(s,_);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -807,6 +822,7 @@ public:
 		// Modifies(s,v);
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject s(STMT, "s");
@@ -879,6 +895,7 @@ public:
 		// Pattern a(v,_)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -922,11 +939,37 @@ public:
 		Logger::WriteMessage("=============");
 		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated1.size()).c_str());
 
+		// SELECT BOOLEAN such that Pattern a(v,_)
+		SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a(v,_)
+		SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v such that Pattern a(v,_)
+		SelectObject selObject2 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results2.size()).c_str());
 	}
 	TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern2) {
 		// Pattern a(_,_)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -948,11 +991,30 @@ public:
 		ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
 		Assert::IsTrue(resultObj.getResultsBoolean());
 
+		// SELECT BOOLEAN such that Pattern a(_,_)
+		SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a(_,_)
+		SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+
 	}
 	TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern3) {
 		// Pattern a("x",_)
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -980,11 +1042,30 @@ public:
 		}
 		Logger::WriteMessage("=============");
 		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
+
+		// SELECT BOOLEAN such that Pattern a("x",_)
+		SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a("x",_)
+		SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
 	}
 	TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern4) {
 		// Pattern a(v,"_<constant/variable>_")
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -1027,11 +1108,38 @@ public:
 		}
 		Logger::WriteMessage("=============");
 		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated1.size()).c_str());
+
+		// SELECT BOOLEAN such that Pattern a(v,"_<constant/variable>_")
+		SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a(v,"_<constant/variable>_")
+		SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a(v,"_<constant/variable>_")
+		SelectObject selObject2 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
 	}
 	TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern5) {
 		// Pattern a(_, "_<constant/variable>_")
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -1044,7 +1152,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		EntityType patternType = ASSIGN;
-		EntityType firstArgType = VARIABLE;
+		EntityType firstArgType = INVALID;
 		std::string patternSynonymArg = "a";
 		std::string firstArg = "_";
 		std::string secondArg = "_z_";
@@ -1060,11 +1168,29 @@ public:
 		Logger::WriteMessage("=============");
 		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
+		// SELECT BOOLEAN such that a(_, "_<constant/variable>_")
+		SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a(_, "_<constant/variable>_")
+		SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
 	}
 	TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern6) {
 		// Pattern a("x","_<constant/variable>_")
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
 		DummyPKB dummyPKB;
 		evaluator->setPKB(&dummyPKB);
 		SynonymObject a(ASSIGN, "a");
@@ -1093,6 +1219,23 @@ public:
 		Logger::WriteMessage("=============");
 		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
+		// SELECT BOOLEAN such that Pattern a("x","_<constant/variable>_")
+		SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that Pattern a("x","_<constant/variable>_")
+		SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
 	}
 };
 
