@@ -63,13 +63,13 @@ void ExprTree::popOnce(std::stack<Node*> &nodeStack, std::stack<std::string> &op
 
 	Node* operatorNode;
 	if (oper == "+") {
-		operatorNode = new Node(PLUS);
+		operatorNode = new Node(PLUS, "+");
 	}
 	else if (oper == "-") {
-		operatorNode = new Node(MINUS);
+		operatorNode = new Node(MINUS, "-");
 	}
 	else if (oper == "*") {
-		operatorNode = new Node(TIMES);
+		operatorNode = new Node(TIMES, "*");
 	}
 
 	operatorNode->setLeft(leftOperand);

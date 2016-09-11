@@ -6,6 +6,7 @@
 // - VarTable
 
 #include "PKB.h"
+#include "algorithm"
 
 const std::runtime_error PKB::ERROR = std::runtime_error("");
 
@@ -44,12 +45,19 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
 }
 
 bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
-	return false;
+	AssignTree tree = assignTrees[assign];
+	expr.erase(std::remove_if(expr.begin(), expr.end(), isspace), expr.end());
+	ExprString treeStr = ExprTree::toString(tree.getExprTree());
+
+	return expr==treeStr;
 }
 
 bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
 	AssignTree tree = assignTrees[assign];
-	return false;
+	subexpr.erase(std::remove_if(subexpr.begin(), subexpr.end(), isspace), subexpr.end());
+	ExprString treeStr = ExprTree::toString(tree.getExprTree());
+
+	return treeStr.find(subexpr) != std::string::npos;
 }
 
 bool PKB::isVarExist(VarName varName) {
