@@ -1,9 +1,18 @@
 #pragma once
+
+#include <fstream>
+#include <sstream>
 #include <string>
-class Frontend
-{
+
+#include "Parser.h"
+#include "DesignExtractor.h"
+
+class Frontend {
+private:
+	std::string read(std::string filename);
+	void extractDesign();
+
 public:
 	Frontend();
-	void parse(std::string sourceFile);
+	void parse(std::string filename);
 };
-

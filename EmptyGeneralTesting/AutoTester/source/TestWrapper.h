@@ -7,6 +7,8 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
+#include "../SPA/Frontend.h"
+#include "../SPA/QueryProcessor.h"
 
 class TestWrapper : public AbstractWrapper {
  public:
