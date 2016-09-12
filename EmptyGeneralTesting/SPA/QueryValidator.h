@@ -39,9 +39,12 @@ class QueryValidator {
 	static const std::string SYNTAX_DOUBLE_QUOTE;
 	static const std::string SYNTAX_COMMA;
 	static const std::string SYNTAX_BOOLEAN;
+	static const std::string SYNTAX_STAR;
 
 	static const std::string SYNTAX_RELATIONSHIP_PARENT;
+	static const std::string SYNTAX_RELATIONSHIP_PARENT_STAR;
 	static const std::string SYNTAX_RELATIONSHIP_FOLLOWS;
+	static const std::string SYNTAX_RELATIONSHIP_FOLLOWS_STAR;
 	static const std::string SYNTAX_RELATIONSHIP_MODIFIES;
 	static const std::string SYNTAX_RELATIONSHIP_USES;
 

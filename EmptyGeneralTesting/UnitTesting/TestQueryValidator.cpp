@@ -30,10 +30,11 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(_,_\"y\"_)"));
 		
-		
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent*(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		
 
 
@@ -46,6 +47,9 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(_,_\"y\"_)"));
 		//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(\"x\",_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent(_, s2) pattern a1(_,_\"y\"_)"));
+
 
 
 		// success USES

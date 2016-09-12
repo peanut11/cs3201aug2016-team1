@@ -32,9 +32,12 @@ const std::string QueryValidator::SYNTAX_UNDERSCORE = "_";
 const std::string QueryValidator::SYNTAX_DOUBLE_QUOTE = "\"";
 const std::string QueryValidator::SYNTAX_COMMA = ",";
 const std::string QueryValidator::SYNTAX_BOOLEAN = "BOOLEAN";
+const std::string QueryValidator::SYNTAX_STAR = "*";
 
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT = "Parent";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT_STAR = "Parent*";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS = "Follows";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS_STAR = "Follows*";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_MODIFIES = "Modifies";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_USES = "Uses";
 
@@ -508,6 +511,11 @@ bool QueryValidator::isClausePattern(std::string str) {
 */
 bool QueryValidator::isRelationship(std::string str) {
 
+	if (isMatch(st.peekNextToken(), SYNTAX_STAR)) { // next is a star!
+		str += st.nextToken(); // e.g. Follows*, Parent*
+	}
+
+
 	RelationshipType searchedType = getSyntaxRelationshipType(str);
 
 	if (searchedType == RelationshipType::INVALID_RELATIONSHIP) {
@@ -516,7 +524,7 @@ bool QueryValidator::isRelationship(std::string str) {
 	}
 
 	// Relationship(args1,args2) e.g. Parent(stmt1, stmt2)
-
+	
 	RelObject searchedRelObject = this->mRelTable->find(searchedType);
 	if (searchedRelObject.getRelObjectType() == RelationshipType::INVALID_RELATIONSHIP) {
 		// no such relationship in table
@@ -906,8 +914,14 @@ RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_PARENT)) {
 		return RelationshipType::PARENT;
 	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_PARENT_STAR)) {
+		return RelationshipType::PARENTSTAR;
+	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS)) {
 		return RelationshipType::FOLLOWS;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS_STAR)) {
+		return RelationshipType::FOLLOWS_STAR;
 	}
 	else {
 		return RelationshipType::INVALID_RELATIONSHIP;
