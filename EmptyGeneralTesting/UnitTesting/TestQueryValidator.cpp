@@ -5,9 +5,8 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-
-
 namespace UnitTesting {
+
 	TEST_CLASS(TestQueryValidator) {
 public:
 	
@@ -54,6 +53,10 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
 		//Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		Assert::IsTrue(validator->isValidQuery("assignment a, a1; variable v;\nSelect a such that Uses(a,v) pattern a1(v,_)"));
+
+		
+		
 
 
 		// success MODIFIES
@@ -78,6 +81,7 @@ public:
 		
 	}
 
+	/*
 	TEST_METHOD(TestQueryValidator_Procedure_Only) {
 		std::string str1 = "procedure p;\n";
 
@@ -135,6 +139,7 @@ public:
 		Assert::IsFalse(validator->isValidQuery(str27));
 		validator->clearSynonymTable();
 	}
+	
 
 	TEST_METHOD(TestQueryValidator_Mix_Synonyms) {
 		QueryValidator *validator = QueryValidator::getInstance();
@@ -158,24 +163,10 @@ public:
 		validator->clearSynonymTable();
 
 	}
+	*/
 
 	TEST_METHOD(TestQueryValidator_Check_tokenizer) {
-		/*
-		StringTokenizer st = StringTokenizer("procedure p;assign a;\nSelect p.procName", QUERY_PREPROCESSOR);
-
-		Assert::AreEqual(std::string("procedure"), st.nextToken());
-		Assert::AreEqual(std::string("p"), st.nextToken());
-		Assert::AreEqual(std::string(";"), st.nextToken());
-		Assert::AreEqual(std::string("assign"), st.nextToken());
-		Assert::AreEqual(std::string("a"), st.nextToken());
-		Assert::AreEqual(std::string(";"), st.nextToken());
-		Assert::AreEqual(std::string("\n"), st.nextToken());
-		Assert::AreEqual(std::string("Select"), st.nextToken());
-		Assert::AreEqual(std::string("p"), st.nextToken());
-		Assert::AreEqual(std::string("."), st.nextToken());
-		Assert::AreEqual(std::string("procName"), st.nextToken());
-		*/
-
+		
 		StringTokenizer st = StringTokenizer("Select p such that Parent(1,2)", QUERY_PREPROCESSOR);
 		Assert::AreEqual(std::string("Select"), st.nextToken());
 		Assert::AreEqual(std::string("p"), st.nextToken());
@@ -575,27 +566,17 @@ public:
 
 		// success
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(v,\"x+y\")");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isClausePattern("a1"));
-
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(\"x\",\"x+y\")");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isClausePattern("a1"));
-
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(\"x\", _\"y\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(_,\"x+1\")");
+		validator->initStringTokenizer("a1(_,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(_,_\"x+1\"_)");
+		validator->initStringTokenizer("a1(_,_\"x\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
@@ -610,7 +591,7 @@ public:
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(_,_   \"x+1\"_)"); // spaces
+		validator->initStringTokenizer("a1(_,_   \"x\"_)"); // spaces
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
@@ -630,21 +611,32 @@ public:
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("ifstmt(\"x\",_,\"x+y\")");
+		validator->initStringTokenizer("ifstmt(\"x\",_,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("ifstmt(\"x\",\"x+1\",_)");
+		validator->initStringTokenizer("ifstmt(\"x\",\"x\",_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
 		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("ifstmt(\"x\",\"x+1\",\"x+y\")");
+		validator->initStringTokenizer("ifstmt(\"x\",\"x\",\"y\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 		
 		// Failure
+		// iteration 1 cannot have expression
+		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("a1(v,\"x+y\")");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
+
+		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("a1(\"x\",\"x+y\")");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isClausePattern("a1"));
+
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(a1,_)");			// left = a1 (synonym)
 		validator->getNextToken();

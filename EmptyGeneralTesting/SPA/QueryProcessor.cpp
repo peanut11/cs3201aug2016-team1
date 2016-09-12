@@ -28,11 +28,24 @@ void QueryProcessor::init() {
 /*
 Evaluate QueryTable
 */
-void QueryProcessor::evaluate() {
+bool QueryProcessor::evaluate(std::string queryString) {
 
 	try {
-		// call QueryEvaulator and evaluate QueryTable
-		//this->mEvaluator->evaluate();
+		
+		// Call QueryPreProcessor
+		// Populate RelationshipTable
+		// Validate the query string, call QueryValidator
+		// QueryValidator verified and populate QueryTable
+		// return true or false
+
+		bool isQueryValid = this->getQueryPreProcessor()->isValidQuery(queryString);
+
+		return isQueryValid;
+
+		if (isQueryValid) {
+			// QueryEvaluator get result from PKB
+		}
+
 	}
 	catch (std::runtime_error e) {
 		std::cout << e.what() << std::endl;

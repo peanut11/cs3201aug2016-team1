@@ -1,11 +1,38 @@
-#include "Frontend.h"
-#include "Parser.h"
+// Maintained by: Aaron
+//
+// Accessed by:
+// - AutoTester::TestWrapper::parse
 
-Frontend::Frontend()
-{
+#include "Frontend.h"
+
+std::string Frontend::read(std::string filename) {
+	std::string foldername = "../AutoTester/tests/";
+	std::string filepath = foldername.append(filename);
+	std::stringstream buffer;
+	std::ifstream infile(filepath);
+
+	if (infile.good()) {
+		buffer << infile.rdbuf();
+		infile.close();
+		return buffer.str();
+	}
+
+	return std::string();
 }
 
-void Frontend::parse(std::string sourceFile)
-{
+void Frontend::extractDesign() {
+	DesignExtractor de = DesignExtractor();
+	de.process();
+}
+
+Frontend::Frontend() {}
+
+void Frontend::parse(std::string filename) {
+	std::string sourceFile = read(filename);
+
 	Parser parser = Parser();
+	if (parser.isValidProgram(sourceFile)) {
+		parser.convert(sourceFile);
+		extractDesign();
+	}
 }
