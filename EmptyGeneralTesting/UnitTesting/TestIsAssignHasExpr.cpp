@@ -92,6 +92,7 @@ public:
 		Assert::IsTrue(pkb->isAssignHasSubexpr(0, "  longname +  longername  +  1234567  "));
 		Assert::IsTrue(pkb->isAssignHasSubexpr(0, "  other"));
 		Assert::IsTrue(pkb->isAssignHasSubexpr(0, "  othe  r")); //this should not happens
+		Assert::IsTrue(pkb->isAssignHasSubexpr(0, " 1234567 "));
 	}
 
 	TEST_METHOD(TestIsAssignHasSubexpr_False_LongExpr) {
