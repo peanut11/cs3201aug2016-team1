@@ -91,14 +91,6 @@ class QueryValidator {
 	//bool isSelect(std::string str);
 	bool isInteger(std::string str);
 
-	bool isBoolean(std::string str); // BOOLEAN
-	bool isSuchThat(std::string str); // match such+that
-	bool isAnd(std::string str);
-	bool isFollow(std::string str);
-	bool isParent(std::string str);
-	bool isPattern(std::string str); // match pattern+assign+(+"variable"|_+,+"exp"|_+)
-	bool isWith(std::string str);
-
 	bool isFactor(std::string str);
 	//bool isExpression(std::string str);
 	bool isName(std::string str);
