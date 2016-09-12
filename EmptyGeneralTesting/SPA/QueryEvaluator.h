@@ -8,6 +8,7 @@
 #include "ResultsTable.h"
 #include "QueryTable.h"
 #include "SynonymTable.h"
+#include "QueryResultProjector.h"
 #include "DummyPKB.h"
 class QueryEvaluator {
 private:

@@ -12,7 +12,7 @@ class QueryProcessor {
 
 	QueryPreProcessor *mPreProcessor;
 	QueryEvaluator *mEvaluator;
-
+	QueryResultProjector *mResultProjector;
 	void init();
 
 public:
@@ -21,7 +21,7 @@ public:
 	std::vector <std::string> evaluate(std::string queryString);
 	QueryPreProcessor *getQueryPreProcessor();
 	QueryEvaluator *getQueryEvaluator();
-
+	QueryResultProjector *getQueryResultProjector();
 
 	
 
