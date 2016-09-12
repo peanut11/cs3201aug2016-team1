@@ -1,0 +1,22 @@
+procedure Panda {
+x = 10;
+y = x + z + 123 + name;
+z = 6 + u + 7 + 8 + 9 + 10;
+while t {
+    s = z + u + 100 + 200 + txt;
+    while z {
+        name = y + z + 200;
+        while dumb {
+            while dumber {
+                verydumb = dumb;
+                notdumb = 1;
+            }
+        }
+    }
+}
+
+while s {
+    x =   123   +   456    +    789  + 10;
+    xx  =  
+}
+}
