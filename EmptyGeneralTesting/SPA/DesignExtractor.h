@@ -6,8 +6,7 @@
 #include "PKB.h"
 
 class DesignExtractor {
-private:
-	std::vector<StmtRow> stmtTable;
+
 
 public:
 	DesignExtractor();
