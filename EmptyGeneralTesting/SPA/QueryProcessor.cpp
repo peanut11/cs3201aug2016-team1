@@ -28,7 +28,7 @@ void QueryProcessor::init() {
 /*
 Evaluate QueryTable
 */
-bool QueryProcessor::evaluate(std::string queryString) {
+std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 
 	try {
 		
@@ -40,11 +40,11 @@ bool QueryProcessor::evaluate(std::string queryString) {
 
 		bool isQueryValid = this->getQueryPreProcessor()->isValidQuery(queryString);
 
-		return isQueryValid;
-
 		if (isQueryValid) {
 			// QueryEvaluator get result from PKB
 		}
+
+		return std::vector <std::string>();
 
 	}
 	catch (std::runtime_error e) {
