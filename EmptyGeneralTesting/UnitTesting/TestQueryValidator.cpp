@@ -53,7 +53,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
 		//Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-		Assert::IsTrue(validator->isValidQuery("assignment a, a1; variable v;\nSelect a such that Uses(a,v) pattern a1(v,_)"));
+		Assert::IsTrue(validator->isValidQuery("assign a, a1; variable v;\nSelect a such that Uses(a,v) pattern a1(v,_)"));
 
 		
 		
