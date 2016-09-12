@@ -165,7 +165,6 @@ bool QueryValidator::isValidQuery(std::string str) {
 
 }
 
-
 bool QueryValidator::isDeclaration(std::string str) {
 
 	EntityType mEntityType = getSyntaxEntityType(str);
@@ -326,7 +325,6 @@ bool QueryValidator::isSelect(std::string str) {
 	return isValid;
 	
 }
-
 
 bool QueryValidator::isMatch(std::string s1, std::string s2) {
 	//std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
@@ -754,10 +752,23 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		if (numofDoubleQuote == 1) { // passed first quote
 			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
 				
-				// NOT for Iteration 1 prototype - check expression 								
-				//isValidExpression = isExpression(nextToken);
+				// Iteration 1 
+				// cannot have expression "x+y"
+				// cannot have single variable "x"
+				// only can have _ and _"x"_
 
-				isValidExpression = isVariableName(nextToken);
+				if (numOfWildcard == 0) {
+					if (isFactor(str)) {
+						if (isMatch(st.peekNextToken(), "+")) {
+							isValidExpression = false;
+						}
+						isValidExpression = true;
+					}
+				}
+				else {
+					//isValidExpression = isExpression(nextToken);
+					isValidExpression = isVariableName(nextToken);
+				}
 
 				// check valid for second argument
 				if (!isValidExpression) {
@@ -812,6 +823,7 @@ bool QueryValidator::isVariableName(std::string str) {
 
 bool QueryValidator::isExpression(std::string str) {
 	this->validatedExpression.append(str);
+	
 	if (isFactor(str)) {
 		if (isMatch(st.peekNextToken(), "+")) {
 			this->validatedExpression.append(st.peekNextToken());
@@ -820,6 +832,7 @@ bool QueryValidator::isExpression(std::string str) {
 		}
 		return true;
 	}
+	
 	return false;
 }
 
