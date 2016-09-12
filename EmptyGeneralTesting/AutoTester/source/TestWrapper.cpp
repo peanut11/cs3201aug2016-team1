@@ -19,13 +19,19 @@ TestWrapper::TestWrapper() {
 void TestWrapper::parse(std::string filename) {
 	// call your parser to do the parsing
   // ...rest of your code...
+	Frontend frontend = Frontend();
+	frontend.parse(filename);
 }
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 // call your evaluator to evaluate the query here
   // ...code to evaluate query...
+	QueryProcessor qp = QueryProcessor();
+	std::vector<std::string> vector;
+	// vector = qp.evaluate(query);
 
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
+	std::copy(vector.begin(), vector.end(), std::back_inserter(results));
 }
