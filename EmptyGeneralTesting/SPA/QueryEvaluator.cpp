@@ -44,7 +44,7 @@ void *QueryEvaluator::setPKB(PKB *pkb)
 /*
 Evaluate QueryTree
 */
-void QueryEvaluator::evaluate(QueryTable queryTable) {
+std::vector <std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 	try {
 
 		// gets all the clauses and select objects
@@ -77,7 +77,7 @@ void QueryEvaluator::evaluate(QueryTable queryTable) {
 		}
 
 		// evaluate results by constraint of select object
-		evaluateSelect(select, relationshipHolds);
+		return evaluateSelect(select, relationshipHolds);
 
 	}
 	catch (std::runtime_error e) {

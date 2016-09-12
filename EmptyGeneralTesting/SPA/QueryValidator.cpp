@@ -32,9 +32,12 @@ const std::string QueryValidator::SYNTAX_UNDERSCORE = "_";
 const std::string QueryValidator::SYNTAX_DOUBLE_QUOTE = "\"";
 const std::string QueryValidator::SYNTAX_COMMA = ",";
 const std::string QueryValidator::SYNTAX_BOOLEAN = "BOOLEAN";
+const std::string QueryValidator::SYNTAX_STAR = "*";
 
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT = "Parent";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT_STAR = "Parent*";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS = "Follows";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS_STAR = "Follows*";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_MODIFIES = "Modifies";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_USES = "Uses";
 
@@ -164,7 +167,6 @@ bool QueryValidator::isValidQuery(std::string str) {
 	//return isDeclaration(st.nextToken()) && isSelect(st.hasMoreTokens() ? st.nextToken() : "");  //
 
 }
-
 
 bool QueryValidator::isDeclaration(std::string str) {
 
@@ -326,7 +328,6 @@ bool QueryValidator::isSelect(std::string str) {
 	return isValid;
 	
 }
-
 
 bool QueryValidator::isMatch(std::string s1, std::string s2) {
 	//std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
@@ -510,6 +511,11 @@ bool QueryValidator::isClausePattern(std::string str) {
 */
 bool QueryValidator::isRelationship(std::string str) {
 
+	if (isMatch(st.peekNextToken(), SYNTAX_STAR)) { // next is a star!
+		str += st.nextToken(); // e.g. Follows*, Parent*
+	}
+
+
 	RelationshipType searchedType = getSyntaxRelationshipType(str);
 
 	if (searchedType == RelationshipType::INVALID_RELATIONSHIP) {
@@ -518,7 +524,7 @@ bool QueryValidator::isRelationship(std::string str) {
 	}
 
 	// Relationship(args1,args2) e.g. Parent(stmt1, stmt2)
-
+	
 	RelObject searchedRelObject = this->mRelTable->find(searchedType);
 	if (searchedRelObject.getRelObjectType() == RelationshipType::INVALID_RELATIONSHIP) {
 		// no such relationship in table
@@ -754,10 +760,23 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		if (numofDoubleQuote == 1) { // passed first quote
 			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
 				
-				// NOT for Iteration 1 prototype - check expression 								
-				//isValidExpression = isExpression(nextToken);
+				// Iteration 1 
+				// cannot have expression "x+y"
+				// cannot have single variable "x"
+				// only can have _ and _"x"_
 
-				isValidExpression = isVariableName(nextToken);
+				if (numOfWildcard == 0) {
+					if (isFactor(str)) {
+						if (isMatch(st.peekNextToken(), "+")) {
+							isValidExpression = false;
+						}
+						isValidExpression = true;
+					}
+				}
+				else {
+					//isValidExpression = isExpression(nextToken);
+					isValidExpression = isVariableName(nextToken);
+				}
 
 				// check valid for second argument
 				if (!isValidExpression) {
@@ -812,6 +831,7 @@ bool QueryValidator::isVariableName(std::string str) {
 
 bool QueryValidator::isExpression(std::string str) {
 	this->validatedExpression.append(str);
+	
 	if (isFactor(str)) {
 		if (isMatch(st.peekNextToken(), "+")) {
 			this->validatedExpression.append(st.peekNextToken());
@@ -820,6 +840,7 @@ bool QueryValidator::isExpression(std::string str) {
 		}
 		return true;
 	}
+	
 	return false;
 }
 
@@ -893,8 +914,14 @@ RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_PARENT)) {
 		return RelationshipType::PARENT;
 	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_PARENT_STAR)) {
+		return RelationshipType::PARENTSTAR;
+	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS)) {
 		return RelationshipType::FOLLOWS;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS_STAR)) {
+		return RelationshipType::FOLLOWS_STAR;
 	}
 	else {
 		return RelationshipType::INVALID_RELATIONSHIP;

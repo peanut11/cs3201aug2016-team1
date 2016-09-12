@@ -31,6 +31,35 @@ namespace UnitTesting
 
 		}
 
-
+		TEST_METHOD(TestQueryProcessor_Modifies) {
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			DummyPKB dummyPKB;
+			queryProcessor->getQueryEvaluator()->setPKB(&dummyPKB);
+			std::string declaration = "assign a1;stmt s;\n";
+			std::vector<std::string> results = queryProcessor->evaluate(declaration + "Select s such that Modifies(s,\"x\")");
+			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+		TEST_METHOD(TestQueryProcessor_ModifiesPattern) {
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			DummyPKB dummyPKB;
+			queryProcessor->getQueryEvaluator()->setPKB(&dummyPKB);
+			std::string declaration = "assign a1;stmt s;variable v1;\n";
+			std::vector<std::string> results = queryProcessor->evaluate(declaration + "Select s such that Modifies(s,\"x\") and pattern a1(v1, _\"x\"_");
+			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+		TEST_METHOD(TestQueryProcessor_ModifiesPattern1) {
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			DummyPKB dummyPKB;
+			queryProcessor->getQueryEvaluator()->setPKB(&dummyPKB);
+			std::string declaration = "assign a1;stmt s;variable v1;\n";
+			std::vector<std::string> results = queryProcessor->evaluate(declaration + "Select s such that Modifies(s,\"x\") and pattern a1(v1, _)");
+			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
 	};
 }

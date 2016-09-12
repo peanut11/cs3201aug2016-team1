@@ -22,13 +22,14 @@ QueryProcessor *QueryProcessor::getInstance()
 void QueryProcessor::init() {
 	this->mPreProcessor = QueryPreProcessor::getInstance();
 	this->mEvaluator = QueryEvaluator::getInstance();
+	this->mResultProjector = new QueryResultProjector();
 	// do other initialization here
 }
 
 /*
 Evaluate QueryTable
 */
-bool QueryProcessor::evaluate(std::string queryString) {
+std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 
 	try {
 		
@@ -40,11 +41,14 @@ bool QueryProcessor::evaluate(std::string queryString) {
 
 		bool isQueryValid = this->getQueryPreProcessor()->isValidQuery(queryString);
 
-		return isQueryValid;
-
 		if (isQueryValid) {
 			// QueryEvaluator get result from PKB
+			std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(this->getQueryPreProcessor()->getQueryTable());
+			// QP pass result to QResultProjector for data representation
+			return this->getQueryResultProjector()->evaluate(evaluatedResults);
 		}
+
+		return std::vector <std::string>();
 
 	}
 	catch (std::runtime_error e) {
@@ -59,5 +63,10 @@ QueryPreProcessor *QueryProcessor::getQueryPreProcessor() {
 
 QueryEvaluator *QueryProcessor::getQueryEvaluator() {
 	return this->mEvaluator;
+}
+
+QueryResultProjector * QueryProcessor::getQueryResultProjector()
+{
+	return this->mResultProjector;
 }
 

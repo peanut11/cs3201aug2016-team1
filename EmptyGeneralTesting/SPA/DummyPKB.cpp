@@ -16,6 +16,8 @@ DummyPKB::DummyPKB()
 
 VarIndex DummyPKB::getVarIndex(VarName varName) 
 {
+	// "x" = 0
+	// "w" = 1;
 	if (varName == "x") {
 		return 0;
 	} else if (varName == "w") {
@@ -26,6 +28,8 @@ VarIndex DummyPKB::getVarIndex(VarName varName)
 
 VarName DummyPKB::getVarName(VarIndex varIndex)
 {
+	// 0 = "x"
+	// 1 = "w"
 	if (varIndex == 0) {
 		return "x";
 	} else if (varIndex == 1) {
@@ -36,6 +40,8 @@ VarName DummyPKB::getVarName(VarIndex varIndex)
 
 bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item)
 {
+	// Follows (3,4),(6,7)
+	// Modifies (3,"x"), (8,"x"), (4,"w"), (5,"w")
 	// case 1&7&9&10 : follows 
 	if (rel == FOLLOWS && stmt == 3 && item == 4) {
 		return true;
@@ -67,6 +73,7 @@ bool DummyPKB::isAssignHasExpr(StmtNumber assign, ExprString expr)
 
 bool DummyPKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr)
 {
+	// pattern a(8,"_z_"), a(5,_3_)
 	if (assign == 8 && subexpr == "_z_") {
 		return true;
 	}
@@ -78,18 +85,23 @@ bool DummyPKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr)
 
 std::set<StmtNumber> DummyPKB::getAllStmts()
 {
+	// statement : 1,2,3,4,5,6,7,8,9
 	std::set<StmtNumber> stmts = { 1,2,3,4,5,6,7,8,9 };
 	return stmts;
 }
 
 std::set<VarName> DummyPKB::getAllVarNames()
 {
+	// variables : x,y,w,z
 	std::set<VarName> vars = { "x","y","w","z" };
 	return vars;
 }
 
 std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 {
+	// assignments = 5,6,7,8,9
+	// statement : 1,2,3,4,5,6,7,8,9
+	// while : 2,3
 	if (stmtType == ASSIGN) {
 		std::set<StmtNumber> assigns = { 5,6,7,8,9 };
 		return assigns;
@@ -106,6 +118,8 @@ std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 
 std::set<StmtNumber> DummyPKB::getStmtsByVar(RelationshipType modifiesOrUses, VarName varName)
 {
+	// Modifies(s,"x") : s => 3,8
+	// Modifies(s,"w") : s => 4,5
 	if (modifiesOrUses == MODIFIES && varName == "x") {
 		std::set<StmtNumber> cases = { 3,8 };
 		return cases;
@@ -119,7 +133,9 @@ std::set<StmtNumber> DummyPKB::getStmtsByVar(RelationshipType modifiesOrUses, Va
 
 std::set<StmtNumber> DummyPKB::getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent)
 {
-	// case 2&3
+	// (3,follows) => 1,2,7 => Follows(s,3)
+	// (10,follows) => 8,9 => Follows(s,3)
+	// (7,follows) => 6 => Follows(s,7)
 	if (followsOrParent == FOLLOWS && stmt == 3) {
 		std::set<StmtNumber> cases = { 1,2,7 };
 		return cases;
@@ -128,11 +144,16 @@ std::set<StmtNumber> DummyPKB::getStmtsByStmt(StmtNumber stmt, RelationshipType 
 		std::set<StmtNumber> cases = { 8,9 };
 		return cases;
 	}
+	else if (followsOrParent == FOLLOWS && stmt == 7) {
+		std::set<StmtNumber> cases = { 6 };
+		return cases;
+	}
 	return std::set<StmtNumber>();
 }
 
 std::set<StmtNumber> DummyPKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt)
 {
+	// (follows,3) => 4,5,8 => Follows(3,s)
 	// case 4&5
 	if (followsOrParent == FOLLOWS && stmt == 3) {
 		std::set<StmtNumber> cases = { 4,5,8 };
@@ -143,7 +164,12 @@ std::set<StmtNumber> DummyPKB::getStmtsByStmt(RelationshipType followsOrParent, 
 
 std::set<VarIndex> DummyPKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses)
 {
+	// (3,modifies) = "x" = Modifies(3,v)
+	// (8,modifies) = "x" = Modifies(8,v)
 	if (modifiesOrUses == MODIFIES && stmt == 3) {
+		std::set<VarIndex> vars = { 0 };
+		return vars;
+	} else if (modifiesOrUses == MODIFIES && stmt == 8) {
 		std::set<VarIndex> vars = { 0 };
 		return vars;
 	}

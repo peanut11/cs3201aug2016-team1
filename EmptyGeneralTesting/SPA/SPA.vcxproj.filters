@@ -88,6 +88,9 @@
     <ClCompile Include="DummyPKB.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="QueryResultProjector.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -193,6 +196,9 @@
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="DummyPKB.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryResultProjector.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>
