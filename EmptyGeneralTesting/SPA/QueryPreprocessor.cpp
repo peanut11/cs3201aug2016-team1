@@ -102,6 +102,10 @@ RelTable *QueryPreProcessor::getRelationshipTable() {
 	return this->mRelTable;
 }
 
+QueryTable QueryPreProcessor::getQueryTable() {
+	return this->validator->getQueryTable();
+}
+
 bool QueryPreProcessor::isValidQuery(std::string queryString) {
 	return this->validator->isValidQuery(queryString);
 }

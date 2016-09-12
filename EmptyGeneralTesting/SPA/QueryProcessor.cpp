@@ -43,8 +43,8 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 
 		if (isQueryValid) {
 			// QueryEvaluator get result from PKB
-	//		std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(queryTable);
-	//		return this->getQueryResultProjector()->evaluate(evaluatedResults);
+			//std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(this->getQueryPreProcessor()->getQueryTable());
+			//return this->getQueryResultProjector()->evaluate(evaluatedResults);
 		}
 
 

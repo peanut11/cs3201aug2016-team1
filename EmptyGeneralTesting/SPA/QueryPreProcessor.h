@@ -29,6 +29,7 @@ public:
 	static QueryPreProcessor *getInstance();
 	SynonymTable *getSynonymTable();
 	RelTable *getRelationshipTable();
+	QueryTable getQueryTable();
 	EntityType *getRelationType();
 
 	bool isValidQuery(std::string queryString);
