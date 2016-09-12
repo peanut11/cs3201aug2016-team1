@@ -128,6 +128,10 @@ std::set<StmtNumber> DummyPKB::getStmtsByStmt(StmtNumber stmt, RelationshipType 
 		std::set<StmtNumber> cases = { 8,9 };
 		return cases;
 	}
+	else if (followsOrParent == FOLLOWS && stmt == 7) {
+		std::set<StmtNumber> cases = { 6 };
+		return cases;
+	}
 	return std::set<StmtNumber>();
 }
 
@@ -144,6 +148,9 @@ std::set<StmtNumber> DummyPKB::getStmtsByStmt(RelationshipType followsOrParent, 
 std::set<VarIndex> DummyPKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses)
 {
 	if (modifiesOrUses == MODIFIES && stmt == 3) {
+		std::set<VarIndex> vars = { 0 };
+		return vars;
+	} else if (modifiesOrUses == MODIFIES && stmt == 8) {
 		std::set<VarIndex> vars = { 0 };
 		return vars;
 	}
