@@ -26,7 +26,7 @@ public:
 
 	void *setPKB(PKB *pkb);
 
-	void evaluate(QueryTable queryTable);
+	std::vector <std::string> evaluate(QueryTable queryTable);
 	ResultsTable *populateResultTable(SynonymTable *synonymTable);
 	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
