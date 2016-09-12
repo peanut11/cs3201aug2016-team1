@@ -41,6 +41,10 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENTSTAR) {
+		rel = RelationshipType ((int)rel + 1);
+	}
+
 	StmtEntry::iterator it;
 	StmtEntry entry = stmtTable[stmt][rel];
 	it = entry.find(item);

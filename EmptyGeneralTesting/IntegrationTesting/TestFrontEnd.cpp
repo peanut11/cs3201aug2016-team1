@@ -32,15 +32,15 @@ namespace IntegrationTesting {
 			expectedType = WHILE;
 			Assert::IsTrue(expectedType == actualType);
 
-			bool actual = pkb->is(FOLLOWS, 2, 1),
+			bool actual = pkb->is(FOLLOWS, 1, 2),
 				expected = true;
 			Assert::IsTrue(expected == actual);
 
-			actual = pkb->is(FOLLOWS, 4, 3);
+			actual = pkb->is(FOLLOWS, 3, 4);
 			expected = false;
 			Assert::IsTrue(expected == actual);
 
-			actual = pkb->is(FOLLOWS, 5, 4);
+			actual = pkb->is(FOLLOWS, 4, 5);
 			expected = true;
 			Assert::IsTrue(expected == actual);
 
