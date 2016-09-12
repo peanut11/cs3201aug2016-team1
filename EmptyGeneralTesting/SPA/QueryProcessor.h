@@ -17,7 +17,7 @@ class QueryProcessor {
 public:
 	
 	static QueryProcessor *getInstance();
-	void evaluate();
+	bool evaluate(std::string queryString);
 	QueryPreProcessor *getQueryPreProcessor();
 	QueryEvaluator *getQueryEvaluator();
 

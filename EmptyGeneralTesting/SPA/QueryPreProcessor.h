@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "QueryValidator.h"
 #include "SynonymTable.h"
 #include "SynonymObject.h"
 #include "RelTable.h"
@@ -10,6 +11,9 @@
 class QueryPreProcessor {
 
 	static QueryPreProcessor *_instance;
+
+	QueryValidator *validator;
+
 	SynonymTable *mSynonymTable;
 	RelTable *mRelTable;
 
@@ -26,6 +30,8 @@ public:
 	SynonymTable *getSynonymTable();
 	RelTable *getRelationshipTable();
 	EntityType *getRelationType();
+
+	bool isValidQuery(std::string queryString);
 
 };
 

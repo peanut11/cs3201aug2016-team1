@@ -17,25 +17,20 @@ namespace UnitTesting
 	{
 	public:
 
-		TEST_METHOD(TestQueryProcessor_init){
+		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
+
+		TEST_METHOD(TestQueryProcessor_Init){
+			QueryProcessor *processor = QueryProcessor::getInstance();
+		}
+
+		TEST_METHOD(TestQueryProcessor_Valid_Query) {
 
 			QueryProcessor *processor = QueryProcessor::getInstance();
 
-			int currentRelSize = processor->getQueryPreProcessor()->getRelationshipTable()->size();
-			Assert::AreEqual(currentRelSize, 1);
+			//Assert::IsTrue(processor->evaluate(declaration + "Select p such that Parent(s1,s2)"));
 
-			int currentSynonymSize = processor->getQueryPreProcessor()->getSynonymTable()->size();
-			Assert::AreEqual(currentSynonymSize, 2);
-
-			// test tokenizer for synonym first
-
-			std::string str = "procedure p;"; // Select p such that p.procName=\"First\"
-			//str.append("procedure p").append("\n");
-
-			StringTokenizer st = StringTokenizer(str, QUERY_PREPROCESSOR);
-			Assert::AreEqual(st.nextToken(), std::string("procedure"));
-			Assert::AreEqual(st.nextToken(), std::string("p"));
 		}
+
 
 	};
 }
