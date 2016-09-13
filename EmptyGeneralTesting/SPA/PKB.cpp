@@ -41,7 +41,7 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
-	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENTSTAR) {
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
 		rel = RelationshipType ((int)rel + 1);
 	}
 

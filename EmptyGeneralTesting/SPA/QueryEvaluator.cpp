@@ -115,8 +115,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 	bool relationshipHolds = true;
 	PKB *pkb = getPKB();
 
-	// FOLLOW/FOLLOWS_STAR/PARENT/PARENTSTAR RELATIFONSHIP :
-	if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENTSTAR) {
+	// FOLLOW/FOLLOWS_STAR/PARENT/PARENT_STAR RELATIFONSHIP :
+	if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR) {
 		// both are statements number : Follows(3,4)
 		if (argOne.getIntegerValue() > 0 && argTwo.getIntegerValue() > 0) {
 			suchThatRelObject.setResultsBoolean(pkb->is(type, argOne.getIntegerValue(), argTwo.getIntegerValue()));

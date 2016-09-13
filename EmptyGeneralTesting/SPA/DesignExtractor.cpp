@@ -17,7 +17,7 @@ DesignExtractor::DesignExtractor() {}
 
 void DesignExtractor::process() {
 	processFollowedByStar();
-	processParentStar();
+	processPARENT_STAR();
 	processFollowsStar();
 	processParentOfStar();
 	updateStmtTable();
@@ -70,13 +70,13 @@ void DesignExtractor::processFollowsStar() {
 
 			for (StmtSetIterator fs = followsStarList.begin(); fs != followsStarList.end(); fs++) {
 				StmtNumber add2 = *fs;
-				pkb->putStmtForStmt(stmt, PARENTSTAR, add2);
+				pkb->putStmtForStmt(stmt, PARENT_STAR, add2);
 			}
 		}
 	}
 }
 
-void DesignExtractor::processParentStar() {
+void DesignExtractor::processPARENT_STAR() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
 
@@ -86,12 +86,12 @@ void DesignExtractor::processParentStar() {
 		if (!parentList.empty()) {
 			
 			StmtNumber add = *parentList.begin();
-			pkb->putStmtForStmt(stmt, PARENTSTAR, add);
-			std::set<StmtNumber> parentStarList = pkb->getStmtsByStmt(add, PARENTSTAR);
+			pkb->putStmtForStmt(stmt, PARENT_STAR, add);
+			std::set<StmtNumber> PARENT_STARList = pkb->getStmtsByStmt(add, PARENT_STAR);
 
-			for (StmtSetIterator ps = parentStarList.begin(); ps != parentStarList.end(); ps++) {
+			for (StmtSetIterator ps = PARENT_STARList.begin(); ps != PARENT_STARList.end(); ps++) {
 				StmtNumber add2 = *ps;
-				pkb->putStmtForStmt(stmt, PARENTSTAR,add2);
+				pkb->putStmtForStmt(stmt, PARENT_STAR,add2);
 			}
 		}
 	}
