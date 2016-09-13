@@ -81,12 +81,18 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",_\"y+1\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
-
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(_,_\"y\"_)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		
 		// Failed test cases
 		// wrong expression
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(0,s1)"));
+		//Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(-1,s1)")); throws runtime error
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1,0)"));
+		//Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1,-1)")); throws runtime error
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\"_)"));
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\")"));
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"+1\"_)"));
@@ -303,20 +309,25 @@ public:
 
 		// failure
 		validator->initStringTokenizer("(1,)"); // no second arg, with comma
-		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
-	
+		//Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
+		auto funcPtr = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<std::runtime_error>(funcPtr);
+
 		validator->initStringTokenizer("(1)"); // only 1 arg, no comma
-		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
+		auto funcPtr2 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<std::runtime_error>(funcPtr2);
 
 		validator->initStringTokenizer("(,2)"); // no first arg, with comma
-		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
+		auto funcPtr3 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<std::runtime_error>(funcPtr3);
 
 		validator->initStringTokenizer("p,p)"); // parent should have stmt args, but both args are procedure
-		Assert::IsFalse(validator->isRelationshipArgument("p", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent can only have stmt
+		auto funcPtr4 = [validator] { validator->isRelationshipArgument("p", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<std::runtime_error>(funcPtr4);
 
 		validator->initStringTokenizer("p,1)"); // parent should have stmt args, but both args are procedure
-		Assert::IsFalse(validator->isRelationshipArgument("p", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent can only have stmt
-
+		auto funcPtr5 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<std::runtime_error>(funcPtr5);
 
 	}
 
@@ -600,6 +611,16 @@ public:
 
 		// success
 		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("a1(v,\"x+y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
+
+		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("a1(\"x\",\"x+y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
+
+		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(\"x\", _\"y\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
@@ -660,16 +681,8 @@ public:
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 		
 		// Failure
-		// iteration 1 cannot have expression
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(v,\"x+y\")");
-		validator->getNextToken();
-		Assert::IsFalse(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("a1(\"x\",\"x+y\")");
-		validator->getNextToken();
-		Assert::IsFalse(validator->isClausePattern("a1"));
+
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(a1,_)");			// left = a1 (synonym)
@@ -749,6 +762,10 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isPatternExprArgument("\""));
 
+		validator->initStringTokenizer("\"x+1\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isPatternExprArgument("\""));
+
 		validator->initStringTokenizer("_\"x\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isPatternExprArgument("_"));
@@ -758,10 +775,6 @@ public:
 		validator->initStringTokenizer("_)");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isPatternExprArgument("_"));
-
-		validator->initStringTokenizer("\"x+1\")");
-		validator->getNextToken();
-		Assert::IsFalse(validator->isPatternExprArgument("\""));
 
 		validator->initStringTokenizer("\"x+1)");
 		validator->getNextToken();

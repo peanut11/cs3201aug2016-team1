@@ -797,26 +797,6 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 		if (numofDoubleQuote == 1) { // passed first quote
 			if (nextToken.compare("\"") != 0) { // don't want compare the same double quote
 				
-				// Iteration 1 
-				// cannot have expression "x+y"
-				// cannot have single variable "x"
-				// only can have _ and _"x"_
-
-				/*
-				if (numOfWildcard == 0) {
-					if (isFactor(str)) {
-						if (isMatch(st.peekNextToken(), "+")) {
-							isValidExpression = false;
-						}
-						isValidExpression = true;
-					}
-				}
-				else {
-
-					isValidExpression = isVariableName(nextToken);
-				}
-				*/
-
 				isValidExpression = isExpression(nextToken);
 
 				// check valid for second argument
@@ -824,7 +804,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 					return false;
 				}
 
-				this->validatedExpression.append(nextToken);
+				//this->validatedExpression.append(nextToken);
 			}
 			
 		}
@@ -926,8 +906,11 @@ bool QueryValidator::isStatementNumber(std::string str) {
 		return false;
 	}
 
-	if (std::isdigit(str[0])) {
-		return true;
+	if (std::isdigit(str[0])) { //[0] atoi(str.c_str())
+		if (atoi(str.c_str()) > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	return false;
