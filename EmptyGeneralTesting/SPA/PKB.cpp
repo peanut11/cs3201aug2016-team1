@@ -52,6 +52,7 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
 }
 
 bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
+	if (expr[0] == '_') return isAssignHasSubexpr(assign, expr.substr(1, expr.size() - 2));
 	AssignTree tree = assignTrees[assign];
 	expr.erase(std::remove_if(expr.begin(), expr.end(), isspace), expr.end());
 	ExprString treeStr = ExprTree::toString(tree.getExprTree());
@@ -60,6 +61,8 @@ bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
 }
 
 bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
+	if (subexpr[0] == '_') return isAssignHasSubexpr(assign, subexpr.substr(1, subexpr.size() - 2));
+
 	AssignTree tree = assignTrees[assign];
 	subexpr.erase(std::remove_if(subexpr.begin(), subexpr.end(), isspace), subexpr.end());
 	ExprString treeStr = ExprTree::toString(tree.getExprTree());
