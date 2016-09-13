@@ -71,5 +71,8 @@
     <ClCompile Include="TestIsAssignHasExpr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

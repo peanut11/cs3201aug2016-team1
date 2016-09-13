@@ -30,9 +30,12 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
 	QueryProcessor *qp = QueryProcessor::getInstance();
 	std::vector<std::string> vector = qp->evaluate(query);
 	if (AbstractWrapper::GlobalStop) {
-		// do clean up
+		//return;
+		throw std::exception("ERROR HERE!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	}
-  // store the answers to the query in the results list (it is initially empty)
-  // each result must be a string.
-	std::copy(vector.begin(), vector.end(), std::back_inserter(results));
+	else {
+		// store the answers to the query in the results list (it is initially empty)
+		// each result must be a string.
+		std::copy(vector.begin(), vector.end(), std::back_inserter(results));
+	}
 }
