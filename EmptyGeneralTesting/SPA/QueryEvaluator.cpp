@@ -62,23 +62,24 @@ std::vector <std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 		bool relationshipHolds = true;
 
 		this->resultsTable = *populateResultTable(getSynonymTable());
+		for (int i = 0; i < 2; i++) {
+			// iterate the such that clauses vectors and evaluate them
+			for (std::vector<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
+				ClauseSuchThatObject suchThatObject = evaluateSuchThat(*it);
+				relationshipHolds = relationshipHolds && suchThatObject.getResultsBoolean();
+			}
 
-		// iterate the such that clauses vectors and evaluate them
-		for (std::vector<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
-			ClauseSuchThatObject suchThatObject = evaluateSuchThat(*it);
-			relationshipHolds = relationshipHolds && suchThatObject.getResultsBoolean();
-		}
+			// iterate the with clauses vectors and evaluate them
+			for (std::vector<ClauseWithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
+				ClauseWithObject withObject = evaluateWith(*it);
+				relationshipHolds = relationshipHolds && withObject.getResultsBoolean();
+			}
 
-		// iterate the with clauses vectors and evaluate them
-		for (std::vector<ClauseWithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
-			ClauseWithObject withObject = evaluateWith(*it);
-			relationshipHolds = relationshipHolds && withObject.getResultsBoolean();
-		}
-
-		// iterate the pattern clauses vectors and evaluate them
-		for (std::vector<ClausePatternObject>::iterator it = patterns.begin(); it != patterns.end(); it++) {
-			ClausePatternObject patternObject = evaluatePattern(*it);
-			relationshipHolds = relationshipHolds && patternObject.getResultsBoolean();
+			// iterate the pattern clauses vectors and evaluate them
+			for (std::vector<ClausePatternObject>::iterator it = patterns.begin(); it != patterns.end(); it++) {
+				ClausePatternObject patternObject = evaluatePattern(*it);
+				relationshipHolds = relationshipHolds && patternObject.getResultsBoolean();
+			}
 		}
 
 		// evaluate results by constraint of select object
