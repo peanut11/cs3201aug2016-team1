@@ -10,10 +10,13 @@ namespace IntegrationTesting {
 	public:
 		
 		TEST_METHOD(TestPKB_AllBasicMethods) {
+			PKB* pkb = PKB::getInstance();
+			pkb->clear();
+
 			Frontend frontend = Frontend();
 			frontend.parse(std::string("Source1_Basic.txt"));
 
-			PKB* pkb = PKB::getInstance();
+			pkb = PKB::getInstance();
 
 			VarIndex index = pkb->getVarIndex("i");
 			VarName actualName = pkb->getVarName(index),
@@ -33,6 +36,14 @@ namespace IntegrationTesting {
 			Assert::IsTrue(expected == actual);
 
 			actual = pkb->is(FOLLOWS_STAR, 1, 3);
+			expected = true;
+			Assert::IsTrue(expected == actual);
+
+			actual = pkb->is(PARENT, 3, 5);
+			expected = true;
+			Assert::IsTrue(expected == actual);
+
+			actual = pkb->is(PARENT_STAR, 3, 5);
 			expected = true;
 			Assert::IsTrue(expected == actual);
 
@@ -99,10 +110,59 @@ namespace IntegrationTesting {
 			std::set<StmtNumber> expectedAssigns(assigns, assigns + 4),
 				actualAssigns = pkb->getStmtsByType(ASSIGN);
 			Assert::IsTrue(expectedAssigns == actualAssigns);
+
+			StmtNumber usesZ[] = { 3, 4, 5 };
+			std::set<StmtNumber> expectedUsesZ(usesZ, usesZ + 3),
+				actualUsesZ = pkb->getStmtsByVar(USES, "z");
+			Assert::IsTrue(expectedUsesZ == actualUsesZ);
+
+			StmtNumber modifiesY[] = { 3, 5 };
+			std::set<StmtNumber> expectedModifiesY(modifiesY, modifiesY + 2),
+				actualModifiesY = pkb->getStmtsByVar(MODIFIES, "y");
+			Assert::IsTrue(expectedModifiesY == actualModifiesY);
+
+			StmtNumber stmt3[] = {2, 3};
+			std::set<StmtNumber> expectedStmt3(stmt3, stmt3 + 2),
+				actualStmt3 = pkb->getStmtsByStmt(FOLLOWS_STAR, 1);
+			Assert::IsTrue(expectedStmt3 == actualStmt3);
+
+			StmtNumber stmt4[] = { 3 };
+			std::set<StmtNumber> expectedStmt4(stmt4, stmt4 + 1),
+				actualStmt4 = pkb->getStmtsByStmt(5, PARENT_STAR);
+			Assert::IsTrue(expectedStmt4 == actualStmt4);
+
+			VarIndex usedBy3[] = { pkb->getVarIndex("z"), pkb->getVarIndex("x"), 
+				pkb->getVarIndex("i") };
+			std::set<VarIndex> expectedUsedBy3(usedBy3, usedBy3 + 3),
+				actualUsedBy3 = pkb->getVarsByStmt(3, USES);
+			Assert::IsTrue(expectedUsedBy3 == actualUsedBy3);
 		}
 
 		TEST_METHOD(TestPKB_LongProcedure) {
+			PKB* pkb = PKB::getInstance();
+			pkb->clear();
 
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Source2.txt"));
+
+			pkb = PKB::getInstance();
+
+			StmtNumber parentStar10[] = { 4, 6, 8, 9 };
+			std::set<StmtNumber> expectedParentStar10(parentStar10, parentStar10 + 4),
+				actualParentStar10 = pkb->getStmtsByStmt(10, PARENT_STAR);
+			Assert::IsTrue(expectedParentStar10 == actualParentStar10);
+
+			StmtNumber usesX[] = { 2, 12, 14 };
+			std::set<StmtNumber> expectedUsesX(usesX, usesX + 3),
+				actualUsesX = pkb->getStmtsByVar(USES, "x");
+			Assert::IsTrue(expectedUsesX == actualUsesX);
+
+			VarIndex usedBy6[] = { pkb->getVarIndex("y"), pkb->getVarIndex("z"),
+				pkb->getVarIndex("dumb"), pkb->getVarIndex("dumber") };
+
+			std::set<VarIndex> expectedUsedBy6(usedBy6, usedBy6 + 4),
+				actualUsedBy6 = pkb->getVarsByStmt(6, USES);
+			Assert::IsTrue(expectedUsedBy6 == actualUsedBy6);
 		}
 	};
 }
