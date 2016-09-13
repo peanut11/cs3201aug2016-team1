@@ -361,7 +361,7 @@ bool QueryValidator::isSelect(std::string str) {
 					}
 
 					// insert into synonym occurence table
-					this->mSynonymOccurence->setIncrementOccurence(currentToken, ClauseType::SELECT);
+					//this->mSynonymOccurence->setIncrementOccurence(currentToken, ClauseType::SELECT);
 
 				}
 
