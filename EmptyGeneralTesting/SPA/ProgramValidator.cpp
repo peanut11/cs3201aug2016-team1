@@ -10,10 +10,18 @@ ProgramValidator::ProgramValidator() {}
 bool ProgramValidator::isValidSyntax(std::string str) {
 	st = StringTokenizer(str, DelimiterMode::PARSER);
 	const std::string token = st.nextToken();
-	if (isProcedure(token) && !st.hasMoreTokens()) {
-		return true;
+
+	if (isProcedure(token)) {
+		while (st.hasMoreTokens) {
+			if (!isMatch(st.nextToken(), "\n")) {
+				throw std::runtime_error("Invalid syntax");
+			}
+		}
+	} else {
+		throw std::runtime_error("Invalid syntax");
 	}
-	return false;
+
+	return true;
 }
 
 bool ProgramValidator::isMatch(std::string s1, std::string s2) {
