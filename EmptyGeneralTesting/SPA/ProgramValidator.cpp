@@ -27,8 +27,14 @@ bool ProgramValidator::isValidSyntax(std::string str) {
 bool ProgramValidator::isMatch(std::string actual, std::string expected) {
 	bool isIgnoreNewlines = true;
 
-	if (isIgnoreNewlines && actual == "\n" && expected != "\n") {
-		return isMatch(st.nextToken(), expected);
+	if (isIgnoreNewlines) {
+		if (actual != "\n" && expected == "\n") {
+			st.returnToken(actual);
+			return true;
+
+		} else if (actual == "\n" && expected != "\n") {
+			return isMatch(st.nextToken(), expected);
+		}
 	}
 
 	return actual == expected;
