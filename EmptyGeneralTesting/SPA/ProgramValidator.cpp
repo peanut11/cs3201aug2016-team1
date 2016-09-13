@@ -12,7 +12,7 @@ bool ProgramValidator::isValidSyntax(std::string str) {
 	const std::string token = st.nextToken();
 
 	if (isProcedure(token)) {
-		while (st.hasMoreTokens) {
+		while (st.hasMoreTokens()) {
 			if (!isMatch(st.nextToken(), "\n")) {
 				throw std::runtime_error("Invalid syntax");
 			}
