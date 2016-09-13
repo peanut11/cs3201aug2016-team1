@@ -9,10 +9,15 @@ namespace UnitTesting {
 public:
 
 	TEST_METHOD(TestIsValidProgram_False_CallNotImplemented) {
-		std::string str = Tools::readFile("prototype_procedure_First.txt");
+		try {
+			std::string str = Tools::readFile("prototype_procedure_First.txt");
 
-		ProgramValidator pv = ProgramValidator();
-		Assert::IsFalse(pv.isValidSyntax(str));
+			ProgramValidator pv = ProgramValidator();
+			Assert::IsFalse(pv.isValidSyntax(str));
+
+		} catch (std::runtime_error e) {
+			Assert::AreEqual("Invalid syntax", e.what());
+		}
 	}
 
 	TEST_METHOD(TestIsValidProgram_True_While) {
