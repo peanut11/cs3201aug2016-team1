@@ -818,7 +818,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 			}
 			else {
 				this->throwsInvalidPatternArgument(st.peekNextToken());
-				return false;
+				//return false;
 			}
 		}
 		

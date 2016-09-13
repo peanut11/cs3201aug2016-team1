@@ -61,7 +61,8 @@ public:
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent(_, s2) pattern a1(_,_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(2, s1)"));
-
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 
 		// success USES
@@ -85,7 +86,7 @@ public:
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		Assert::IsTrue(validator->isValidQuery("assign a1;Select a1 pattern a1(_,_\"y\"_)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		
 
 		
 		// Failed test cases
@@ -109,10 +110,6 @@ public:
 
 		auto funcPtrExprError5 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",y)"); };
 		Assert::ExpectException<std::runtime_error>(funcPtrExprError5);
-
-		//auto funcPtr = [validator] { validator->isValidQuery("procedure p;procedure p;procedure r;\n"); };
-		//Assert::ExpectException<std::runtime_error>(funcPtr); // try insert two procedure p, return exception
-
 
 
 		// more than 1 common synonym between clauses
