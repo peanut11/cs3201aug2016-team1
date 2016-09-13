@@ -29,6 +29,11 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(_,_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\", \"y+1\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_)"));
+		
+
 		
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
@@ -39,12 +44,16 @@ public:
 
 
 		// success FOLLOWS
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt such that Follows (5, ifstmt)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows (s1, 3)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows (s1, 3) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s1, 2) Parent(s1, s2) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s1, _) Parent(s1, s2) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(_,_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(_,_\"y+1\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(_,_\"1+y+x\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(_,\"1+y+x\")"));
 		//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_, _) Parent(_, s2) pattern a1(\"x\",_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
@@ -56,11 +65,11 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Uses(a1, \"x\")"));
 		// 1 common synonym between clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",_\"y+1\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
+		Assert::IsTrue(validator->isValidQuery("assign a, a1; variable v;\nSelect a such that Uses(a,v) pattern a1(v,_)"));
 		//Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-		Assert::IsTrue(validator->isValidQuery("assign a, a1; variable v;\nSelect a such that Uses(a,v) pattern a1(v,_)"));
-
-		
 		
 
 
@@ -68,17 +77,19 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Modifies(a1, \"x\")"));
 		// 1 common synonym between clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",_\"y+1\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
+
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		
 		// Failed test cases
 		// wrong expression
-		// Iteration 1 - second arg expression cannot be  "y+1"
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\", \"y+1\")"));
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_)"));
-
-		// Iteration 1 - second arg expression cannot have single variable name "x"
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\"_)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\")"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"+1\"_)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"_\")"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",y)"));
 
 
 

@@ -17,6 +17,8 @@
 
 class QueryValidator {
 
+	~QueryValidator();
+
 	static const std::string SYNTAX_PROCEDURE;
 	static const std::string SYNTAX_ASSIGN;
 	static const std::string SYNTAX_WHILE;
@@ -60,7 +62,6 @@ class QueryValidator {
 
 	QueryTable mQueryTable;
 
-
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
 
 	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
@@ -80,15 +81,11 @@ class QueryValidator {
 	ClauseWithRefObject createClauseRefObject(WithRefType refType, std::string synonym);
 	ClauseWithRefObject createClauseRefObject(WithRefType refType, int integerValue);
 
-	
-
-
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
 	ClauseType::ClauseType getClauseType(std::string syntax);
 	
 	std::string getEntitySyntax(std::string str);
-
 
 	bool isMatch(std::string s1, std::string s2);
 	//bool isSelect(std::string str);
@@ -123,10 +120,13 @@ class QueryValidator {
 public:
 	static QueryValidator *getInstance();
 
+	static void deallocateMemory();
+
 	void initStringTokenizer(std::string str);
 	void clearSynonymOccurence();
 	void clearSynonymTable();
 	void clearQueryTable();
+	
 
 	void addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object);
 

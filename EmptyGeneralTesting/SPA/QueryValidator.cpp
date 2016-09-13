@@ -66,6 +66,20 @@ QueryValidator *QueryValidator::getInstance()
 	return _instance;
 }
 
+void QueryValidator::deallocateMemory() {
+	delete _instance;
+}
+
+/*
+Destructor
+*/
+QueryValidator::~QueryValidator() {
+	delete _instance->mSynonymOccurence;
+	delete _instance->mSynonymTable;
+	delete _instance->mRelTable;
+}
+
+
 void QueryValidator::initStringTokenizer(std::string str) {
 	this->st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
 }
@@ -81,6 +95,8 @@ void QueryValidator::clearSynonymTable() {
 void QueryValidator::clearQueryTable() {
 	this->mQueryTable.clearAll();
 }
+
+
 
 void QueryValidator::addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object) {
 	objects.push_back(object);
@@ -765,6 +781,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 				// cannot have single variable "x"
 				// only can have _ and _"x"_
 
+				/*
 				if (numOfWildcard == 0) {
 					if (isFactor(str)) {
 						if (isMatch(st.peekNextToken(), "+")) {
@@ -774,9 +791,11 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 					}
 				}
 				else {
-					//isValidExpression = isExpression(nextToken);
 					isValidExpression = isVariableName(nextToken);
 				}
+				*/
+
+				isValidExpression = isExpression(nextToken);
 
 				// check valid for second argument
 				if (!isValidExpression) {
