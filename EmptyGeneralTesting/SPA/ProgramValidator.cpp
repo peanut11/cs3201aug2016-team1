@@ -17,7 +17,8 @@ bool ProgramValidator::isValidSyntax(std::string str) {
 }
 
 bool ProgramValidator::isMatch(std::string s1, std::string s2) {
-	return s1 == s2;
+	bool isIgnoreNewlines = true;
+	return (isIgnoreNewlines && s2 == "\n") ? true : s1 == s2;
 }
 
 bool ProgramValidator::isName(std::string str) {
