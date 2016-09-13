@@ -9,7 +9,7 @@ namespace IntegrationTesting {
 	TEST_CLASS(IntegrationTest) {
 	public:
 		
-		TEST_METHOD(TestPKB_Basic) {
+		TEST_METHOD(TestPKB_AllBasicMethods) {
 			Frontend frontend = Frontend();
 			frontend.parse(std::string("Source1_Basic.txt"));
 
@@ -80,6 +80,21 @@ namespace IntegrationTesting {
 			std::set<Constant> expectedConstSet(consts, consts + 3),
 				actualConstSet = pkb->getAllConstantValues();
 			Assert::IsTrue(expectedConstSet == actualConstSet);
+
+			StmtNumber stmts[] = { 1, 2, 3, 4, 5 };
+			std::set<StmtNumber> expectedStmtSet(stmts, stmts + 5),
+				actualStmtSet = pkb->getAllStmts();
+			Assert::IsTrue(expectedStmtSet == actualStmtSet);
+
+			VarName varNames[] = { "x", "i", "y", "z" };
+			std::set<VarName> expectedVarSet(varNames, varNames + 4),
+				actualVarSet = pkb->getAllVarNames();
+			Assert::IsTrue(expectedVarSet == actualVarSet);
+
+			StmtNumber assigns[] = { 1, 2, 4, 5 };
+			std::set<StmtNumber> expectedAssigns(assigns, assigns + 4),
+				actualAssigns = pkb->getStmtsByType(ASSIGN);
+			Assert::IsTrue(expectedAssigns == actualAssigns);
 		}
 
 		TEST_METHOD(TestPKB_LongProcedure) {
