@@ -6,11 +6,10 @@
 #include "StringTokenizer.h"
 
 class ProgramValidator {
+private:
 	StringTokenizer st;
-public:
-	ProgramValidator();
-	bool isValidSyntax(std::string program);
-	bool isMatch(std::string s1, std::string s2);
+
+	bool isMatch(std::string actual, std::string expected);
 	bool isName(std::string str);
 	bool isInteger(std::string str);
 	bool isProcedure(std::string str);
@@ -22,4 +21,9 @@ public:
 	bool isFactor(std::string str);
 	bool isVarName(std::string str);
 	bool isConstValue(std::string str);
+
+public:
+	ProgramValidator();
+
+	bool isValidSyntax(std::string program);
 };

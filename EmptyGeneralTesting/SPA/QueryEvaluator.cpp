@@ -36,6 +36,11 @@ SynonymTable *QueryEvaluator::getSynonymTable()
 	return this->mSynonymTable;
 }
 
+ResultsTable QueryEvaluator::getResultsTable()
+{
+	return this->resultsTable;
+}
+
 void *QueryEvaluator::setPKB(PKB *pkb)
 {
 	return this->mPKB = pkb;
@@ -56,7 +61,7 @@ std::vector <std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 		// boolean status on relationships holds
 		bool relationshipHolds = true;
 
-		populateResultTable(getSynonymTable());
+		this->resultsTable = *populateResultTable(getSynonymTable());
 
 		// iterate the such that clauses vectors and evaluate them
 		for (std::vector<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
@@ -96,10 +101,10 @@ ResultsTable *QueryEvaluator::populateResultTable(SynonymTable *synonymTable)
 		ResultsObject resultsObject(it->getSynonym());
 		resultsTable.insert(resultsObject);
 		if (it->getType() == VARIABLE) {
-			resultsTable.insertSet(it->getSynonym(), getPKB()->getAllVarNames());
+			resultsTable.insertSet(it->getSynonym(), mPKB->getAllVarNames());
 		}
 		else {
-			resultsTable.insertSet(it->getSynonym(), getPKB()->getStmtsByType(it->getType()));
+			resultsTable.insertSet(it->getSynonym(), mPKB->getStmtsByType(it->getType()));
 		}
 
 	}
@@ -115,8 +120,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 	bool relationshipHolds = true;
 	PKB *pkb = getPKB();
 
-	// FOLLOW/FOLLOWS_STAR/PARENT/PARENTSTAR RELATIFONSHIP :
-	if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENTSTAR) {
+	// FOLLOW/FOLLOWS_STAR/PARENT/PARENT_STAR RELATIFONSHIP :
+	if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR) {
 		// both are statements number : Follows(3,4)
 		if (argOne.getIntegerValue() > 0 && argTwo.getIntegerValue() > 0) {
 			suchThatRelObject.setResultsBoolean(pkb->is(type, argOne.getIntegerValue(), argTwo.getIntegerValue()));
@@ -675,7 +680,7 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(SelectObject selectObjec
 				std::set<StmtNumber> setResults2 = resultsTable.getSetInt(selectObject.getSynonymString());
 				std::vector<StmtNumber> vectorStmtNumbers(setResults2.begin(), setResults2.end());
 				std::vector<std::string> vectorResults2;
-				for (std::vector<StmtNumber>::iterator it = vectorStmtNumbers.begin(); it != vectorStmtNumbers.end(); ++it) {
+				for (std::vector<StmtNumber>::iterator it = vectorStmtNumbers.begin(); it != vectorStmtNumbers.end(); it++) {
 					vectorResults2.push_back(std::to_string(*it));
 				}
 				return vectorResults2;

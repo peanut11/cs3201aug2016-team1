@@ -19,4 +19,5 @@ public:
 	bool contains(ResultsObject object);
 	bool contains(SynonymString synonym);
 	int size();
+	std::string toString();
 };

@@ -102,3 +102,35 @@ bool ResultsTable::insertSet(SynonymString synonym, std::set<SynonymValue> newSe
 	}
 	return false;
 }
+
+std::string ResultsTable::toString() {
+	std::string str = "========== RESULTS TABLE ===============\n";
+
+	str.append("== Result Table ==\n");
+	//str.append(this->select.getSynonymString() + "\n");
+
+	str.append("size = " + std::to_string(this->resultsObject.size()) + "\n");
+	for (auto value : this->resultsObject) {
+
+		str.append(value.getSynonym() + ": ");
+
+		if (value.getSetInt().size() > 0) {
+			for (auto value2 : value.getSetInt()) {
+				str.append(std::to_string(value2) + " | ");
+			}
+			str.append("\n");
+		}
+
+	
+		if (value.getSetString().size() > 0) {
+			for (auto value2 : value.getSetString()) {
+				str.append(value2 + " | ");
+			}
+			str.append("\n");
+		}
+
+
+	}
+
+	return str;
+}

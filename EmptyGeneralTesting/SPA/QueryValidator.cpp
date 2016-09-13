@@ -956,7 +956,7 @@ RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 		return RelationshipType::PARENT;
 	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_PARENT_STAR)) {
-		return RelationshipType::PARENTSTAR;
+		return RelationshipType::PARENT_STAR;
 	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS)) {
 		return RelationshipType::FOLLOWS;
