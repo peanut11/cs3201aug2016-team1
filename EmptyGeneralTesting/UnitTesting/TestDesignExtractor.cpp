@@ -68,37 +68,37 @@ public:
 
 		//Assert::AreEqual(f, 0);
 	}
-	TEST_METHOD(TestDesign_ParentStar) {
+	TEST_METHOD(TestDesign_PARENT_STAR) {
 		
 
 		PKB* pkb = PKB::getInstance();
-		std::set<StmtNumber> parentStarList = pkb->getStmtsByStmt(1, PARENTSTAR);
-		StmtSetIterator parentStarIt = parentStarList.begin();
+		std::set<StmtNumber> PARENT_STARList = pkb->getStmtsByStmt(1, PARENT_STAR);
+		StmtSetIterator PARENT_STARIt = PARENT_STARList.begin();
 
-		int parentStarSize = parentStarList.size();
-		Assert::AreEqual(parentStarSize, 0);
-		parentStarList = pkb->getStmtsByStmt(7, PARENTSTAR);
-		parentStarIt = parentStarList.begin();
+		int PARENT_STARSize = PARENT_STARList.size();
+		Assert::AreEqual(PARENT_STARSize, 0);
+		PARENT_STARList = pkb->getStmtsByStmt(7, PARENT_STAR);
+		PARENT_STARIt = PARENT_STARList.begin();
 
-		parentStarSize = parentStarList.size();
-		Assert::AreEqual(parentStarSize, 2);
-		int test = *parentStarIt;
+		PARENT_STARSize = PARENT_STARList.size();
+		Assert::AreEqual(PARENT_STARSize, 2);
+		int test = *PARENT_STARIt;
 		Assert::AreEqual(test, 3);
-		parentStarIt++;
-		test = *parentStarIt;
+		PARENT_STARIt++;
+		test = *PARENT_STARIt;
 		Assert::AreEqual(test, 6);
 	}
 	TEST_METHOD(TestDesign_ParentOFStar) {
 		
 		PKB* pkb = PKB::getInstance();
 		std::set<StmtNumber> parentOfStarList = pkb->getStmtsByStmt(1, PARENT_OF_STAR);
-		StmtSetIterator parentStarIt = parentOfStarList.begin();
-		int parentStarSize = parentOfStarList.size();
-		Assert::AreEqual(parentStarSize, 0);
+		StmtSetIterator PARENT_STARIt = parentOfStarList.begin();
+		int PARENT_STARSize = parentOfStarList.size();
+		Assert::AreEqual(PARENT_STARSize, 0);
 		parentOfStarList = pkb->getStmtsByStmt(3, PARENT_OF_STAR);
-		parentStarIt = parentOfStarList.begin();
-		parentStarSize = parentOfStarList.size();
-		Assert::AreEqual(parentStarSize, 5);
+		PARENT_STARIt = parentOfStarList.begin();
+		PARENT_STARSize = parentOfStarList.size();
+		Assert::AreEqual(PARENT_STARSize, 5);
 	}
 	TEST_METHOD(TestDesign_UpdateStmtTable) {
 		PKB* pkb = PKB::getInstance();

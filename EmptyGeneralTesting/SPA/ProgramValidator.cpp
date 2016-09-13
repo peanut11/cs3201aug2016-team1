@@ -10,14 +10,34 @@ ProgramValidator::ProgramValidator() {}
 bool ProgramValidator::isValidSyntax(std::string str) {
 	st = StringTokenizer(str, DelimiterMode::PARSER);
 	const std::string token = st.nextToken();
-	if (isProcedure(token) && !st.hasMoreTokens()) {
-		return true;
+
+	if (isProcedure(token)) {
+		while (st.hasMoreTokens()) {
+			if (!isMatch(st.nextToken(), "\n")) {
+				throw std::runtime_error("Invalid syntax");
+			}
+		}
+	} else {
+		throw std::runtime_error("Invalid syntax");
 	}
-	return false;
+
+	return true;
 }
 
-bool ProgramValidator::isMatch(std::string s1, std::string s2) {
-	return s1 == s2;
+bool ProgramValidator::isMatch(std::string actual, std::string expected) {
+	bool isIgnoreNewlines = true;
+
+	if (isIgnoreNewlines) {
+		if (actual == "}" && expected == "\n") {
+			// st.returnToken(actual);
+			// return true;
+
+		} else if (actual == "\n" && expected != "\n") {
+			return isMatch(st.nextToken(), expected);
+		}
+	}
+
+	return actual == expected;
 }
 
 bool ProgramValidator::isName(std::string str) {

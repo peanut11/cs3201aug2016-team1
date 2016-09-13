@@ -15,22 +15,10 @@ namespace IntegrationTesting {
 
 			PKB* pkb = PKB::getInstance();
 
-			int consts[] = { 0, 2, 5 };
-			std::set<Constant> expectedConstSet(consts, consts + 3),
-				actualConstSet = pkb->getAllConstantValues();
-			Assert::IsTrue(expectedConstSet == actualConstSet);
-
-			EntityType actualType = pkb->getStmtTypeForStmt(1),
-				expectedType = ASSIGN;
-			Assert::IsTrue(expectedType == actualType);
-
-			actualType = pkb->getStmtTypeForStmt(2);
-			expectedType = ASSIGN;
-			Assert::IsTrue(expectedType == actualType);
-
-			actualType = pkb->getStmtTypeForStmt(3);
-			expectedType = WHILE;
-			Assert::IsTrue(expectedType == actualType);
+			VarIndex index = pkb->getVarIndex("i");
+			VarName actualName = pkb->getVarName(index),
+				expectedName = "i";
+			Assert::IsTrue(expectedName == actualName);
 
 			bool actual = pkb->is(FOLLOWS, 1, 2),
 				expected = true;
@@ -44,7 +32,6 @@ namespace IntegrationTesting {
 			expected = true;
 			Assert::IsTrue(expected == actual);
 
-			VarIndex index = pkb->getVarIndex("i");
 			actual = pkb->is(MODIFIES, 2, index);
 			expected = true;
 			Assert::IsTrue(expected == actual);
@@ -60,6 +47,43 @@ namespace IntegrationTesting {
 			actual = pkb->is(USES, 2, index);
 			expected = false;
 			Assert::IsTrue(expected == actual);
+
+			Assert::IsTrue(pkb->isAssignHasExpr(2, "5"));
+			Assert::IsFalse(pkb->isAssignHasExpr(2, "x"));
+
+			Assert::IsTrue(pkb->isAssignHasExpr(4, "z   +  x  + i "));
+			Assert::IsFalse(pkb->isAssignHasExpr(4, "z+x"));
+
+			Assert::IsTrue(pkb->isAssignHasSubexpr(4, "  z  + x +i"));
+			Assert::IsTrue(pkb->isAssignHasSubexpr(4, " z + x   "));
+			Assert::IsTrue(pkb->isAssignHasSubexpr(4, " i "));
+			Assert::IsFalse(pkb->isAssignHasSubexpr(4, "x + i"));
+
+			Assert::IsTrue(pkb->isVarExist("z"));
+			Assert::IsFalse(pkb->isVarExist("t"));
+
+			EntityType actualType = pkb->getStmtTypeForStmt(1),
+				expectedType = ASSIGN;
+			Assert::IsTrue(expectedType == actualType);
+
+			actualType = pkb->getStmtTypeForStmt(2);
+			expectedType = ASSIGN;
+			Assert::IsTrue(expectedType == actualType);
+
+			actualType = pkb->getStmtTypeForStmt(3);
+			expectedType = WHILE;
+			Assert::IsTrue(expectedType == actualType);
+
+			Assert::IsTrue(pkb->getStmtTableSize() == 5);
+
+			int consts[] = { 0, 2, 5 };
+			std::set<Constant> expectedConstSet(consts, consts + 3),
+				actualConstSet = pkb->getAllConstantValues();
+			Assert::IsTrue(expectedConstSet == actualConstSet);
+		}
+
+		TEST_METHOD(TestPKB_LongProcedure) {
+
 		}
 	};
 }
