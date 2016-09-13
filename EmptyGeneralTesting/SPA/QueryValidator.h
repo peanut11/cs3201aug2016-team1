@@ -67,7 +67,12 @@ class QueryValidator {
 	void throwsInvalidRelationship(RelationshipType type);
 	void throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment);
 	void throwsIncorrectSyntax(std::string syntax);
-
+	void throwsInvalidPattern(std::string syntax);
+	void throwsInvalidPatternMissingSyntax();
+	void throwsInvalidPatternTypeSyntax();
+	void throwsInvalidPatternArgument(std::string arugment);
+	void throwsInvalidPatternExpression(std::string expression);
+	void throwsExceedCommonSynonymCount();
 
 	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
 	

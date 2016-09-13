@@ -116,6 +116,29 @@ void QueryValidator::throwsIncorrectSyntax(std::string syntax) {
 	throw std::runtime_error("Invalid syntax near " + syntax);
 }
 
+void QueryValidator::throwsInvalidPattern(std::string syntax) {
+	throw std::runtime_error("Invalid pattern near " + syntax);
+}
+
+void QueryValidator::throwsInvalidPatternMissingSyntax() {
+	throw std::runtime_error("Invalid pattern, missing syntax");
+}
+
+void QueryValidator::throwsInvalidPatternTypeSyntax() {
+	throw std::runtime_error("Invalid pattern syntax type");
+}
+
+void QueryValidator::throwsInvalidPatternArgument(std::string arugment) {
+	throw std::runtime_error("Invalid pattern argument near " + arugment);
+}
+
+void QueryValidator::throwsInvalidPatternExpression(std::string expression) {
+	throw std::runtime_error("Invalid pattern expression near " + expression);
+}
+
+void QueryValidator::throwsExceedCommonSynonymCount() {
+	throw std::runtime_error("Exceed number of common synonym between clauses");
+}
 
 QueryTable& QueryValidator::getQueryTable() {
 	return this->mQueryTable;
@@ -399,16 +422,22 @@ bool QueryValidator::isClausePattern(std::string str) {
 	int numOfArgs = 0;
 	
 	// start is a synonym (assign, while, if) must be written next
-	if (!isSynonym(str)) { return false; }
+	if (!isSynonym(str)) { 
+		this->throwsInvalidPatternMissingSyntax();
+		//return false; 
+	}
 
 	selectedSynonymObj = this->mSynonymTable->getObject(str); // st.peekNextToken()
 	if (selectedSynonymObj.getType() == EntityType::INVALID) {
-		return false; // invalid synonym, did not declare in the first place
+		this->throwsInvalidPattern(str);
+		//return false; // invalid synonym, did not declare in the first place
 	}
 
 	if (selectedSynonymObj.getType() != EntityType::ASSIGN
 		&& selectedSynonymObj.getType() != EntityType::WHILE
 		&& selectedSynonymObj.getType() != EntityType::IF) {
+
+		this->throwsInvalidPatternTypeSyntax();
 		return false; // since the synonym is not within one of these, its wrong
 	}
 
@@ -427,7 +456,10 @@ bool QueryValidator::isClausePattern(std::string str) {
 	//st.nextToken(); // point to valid synonym
 
 	// check if there's open bracket
-	if (st.peekNextToken().compare("(") != 0) {  return false;  }
+	if (st.peekNextToken().compare("(") != 0) {  
+		this->throwsInvalidPattern(st.peekNextToken());
+		//return false;  
+	}
 	st.nextToken(); // point to "("
 
 	while (isUnderPattern) {
@@ -442,7 +474,9 @@ bool QueryValidator::isClausePattern(std::string str) {
 			if (numOfArgs == maxNumOfArgs) { // WHILE and ASSIGN have max 2 args, IF has max 3 args
 
 				// check the number of common synonyms in clauses
-				if (this->mSynonymOccurence->hasMaxCommonSynonym()) { return false; }
+				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {
+					this->throwsExceedCommonSynonymCount();
+				}
 
 				if (numOfArgs == 2) {
 					this->mQueryTable.insertPatternObject(
@@ -600,7 +634,9 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
 				
 				// check the number of common synonyms in clauses
-				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  return false;  }
+				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
+					this->throwsExceedCommonSynonymCount();
+				}
 
 				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(),
 					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
@@ -608,6 +644,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				return true;
 			}
 			else {
+				//this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), );
 				return false;
 			}
 		}
@@ -772,13 +809,15 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 				return true;
 			}
 			else if (numofDoubleQuote == 1 || numOfWildcard == 1) {
-				return false; // did not end a second quote and jump to next comma or close bracket
+				this->throwsInvalidPatternArgument(st.peekNextToken());
+				//return false; // did not end a second quote and jump to next comma or close bracket
 			}
 			else if (numofDoubleQuote == 2 && numOfWildcard == 0) {
 
 				return isValidExpression; // only have double quotes
 			}
 			else {
+				this->throwsInvalidPatternArgument(st.peekNextToken());
 				return false;
 			}
 		}
@@ -801,7 +840,8 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 
 				// check valid for second argument
 				if (!isValidExpression) {
-					return false;
+					this->throwsInvalidPatternExpression(nextToken);
+					//return false;
 				}
 
 				//this->validatedExpression.append(nextToken);
