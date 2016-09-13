@@ -60,7 +60,9 @@ public:
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent(_, s2) pattern a1(_,_\"y\"_)"));
-
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(2, s1)"));
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 
 		// success USES
@@ -83,8 +85,8 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(_,_\"y\"_)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		Assert::IsTrue(validator->isValidQuery("assign a1;Select a1 pattern a1(_,_\"y\"_)"));
+		
 
 		
 		// Failed test cases
@@ -93,21 +95,29 @@ public:
 		//Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(-1,s1)")); throws runtime error
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1,0)"));
 		//Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1,-1)")); throws runtime error
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\"_)"));
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\")"));
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"+1\"_)"));
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"_\")"));
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",y)"));
 
-		//auto funcPtr = [validator] { validator->isValidQuery("procedure p;procedure p;procedure r;\n"); };
-		//Assert::ExpectException<std::runtime_error>(funcPtr); // try insert two procedure p, return exception
+		auto funcPtrExprError1 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\"_)"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrExprError1);
 
+		auto funcPtrExprError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\")"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrExprError2);
+
+		auto funcPtrExprError3 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",\"+1\"_)"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrExprError3);
+
+		auto funcPtrExprError4 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",\"_\")"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrExprError4);
+
+		auto funcPtrExprError5 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",y)"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrExprError5);
 
 
 		// more than 1 common synonym between clauses
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Follows(s1, s2) Parent(s1, s2) pattern a1(\"x\",\"y\")"));
-		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
+		auto funcPtrError1 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows(s1, s2) Parent(s1, s2) pattern a1(\"x\",\"y\")"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError1);
 		
+		auto funcPtrError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError2);
 		
 		// USES and MODIFIES cannot have wildcard as first argument
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Modifies(_, \"x\") pattern a1(\"x\",\"y\")"));
