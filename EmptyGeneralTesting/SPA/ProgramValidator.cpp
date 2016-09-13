@@ -24,9 +24,14 @@ bool ProgramValidator::isValidSyntax(std::string str) {
 	return true;
 }
 
-bool ProgramValidator::isMatch(std::string s1, std::string s2) {
+bool ProgramValidator::isMatch(std::string actual, std::string expected) {
 	bool isIgnoreNewlines = true;
-	return (isIgnoreNewlines && s2 == "\n") ? true : s1 == s2;
+
+	if (isIgnoreNewlines && actual == "\n" && expected != "\n") {
+		return st.nextToken() == expected;
+	}
+
+	return actual == expected;
 }
 
 bool ProgramValidator::isName(std::string str) {

@@ -9,7 +9,7 @@ class ProgramValidator {
 private:
 	StringTokenizer st;
 
-	bool isMatch(std::string s1, std::string s2);
+	bool isMatch(std::string actual, std::string expected);
 	bool isName(std::string str);
 	bool isInteger(std::string str);
 	bool isProcedure(std::string str);
