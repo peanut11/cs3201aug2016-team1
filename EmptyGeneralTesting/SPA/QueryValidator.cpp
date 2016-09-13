@@ -227,6 +227,9 @@ bool QueryValidator::isDeclaration(std::string str) {
 				st.nextToken();
 				return isValid;
 			}
+			else if (isMatch(st.peekNextToken(), SYNTAX_SELECT)) {
+				return isValid;
+			}
 
 			mEntityType = getSyntaxEntityType(st.peekNextToken()); // get type of entity (procedure, assign, if etc...)
 			entitySyntax = getEntitySyntax(st.peekNextToken());

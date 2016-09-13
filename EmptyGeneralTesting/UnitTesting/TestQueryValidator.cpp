@@ -16,6 +16,9 @@ public:
 
 		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
 
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;Select p such that Parent(s1,s2)"));
+
 		// Success PARENT
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(3,s1)"));
