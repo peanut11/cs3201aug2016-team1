@@ -23,7 +23,7 @@ public:
 	static QueryEvaluator *getInstance();
 	PKB *getPKB();
 	SynonymTable *getSynonymTable();
-
+	ResultsTable getResultsTable();
 	void *setPKB(PKB *pkb);
 
 	std::vector <std::string> evaluate(QueryTable queryTable);

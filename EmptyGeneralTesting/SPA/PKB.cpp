@@ -125,10 +125,15 @@ std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtN
 
 std::set<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
 	std::set<StmtNumber> stmts;
+	
+	if (stmtType == STMT) {
+		stmts = getAllStmts();
 
-	for (StmtNumber i = 1; i < stmtTable.size(); i++) { // StmtNumber starts from 1
-		if (stmtTypeTable[i] == stmtType) {
-			stmts.insert(i);
+	} else {
+		for (StmtNumber i = 1; i < stmtTable.size(); i++) { // StmtNumber starts from 1
+			if (stmtTypeTable[i] == stmtType) {
+				stmts.insert(i);
+			}
 		}
 	}
 
