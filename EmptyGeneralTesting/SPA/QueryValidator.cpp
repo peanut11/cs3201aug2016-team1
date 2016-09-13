@@ -1086,7 +1086,7 @@ std::string QueryValidator::getRelationshipSyntax(RelationshipType type) {
 		return "follows";
 	case FOLLOWS_STAR:
 		return "follows*";
-	case PARENTSTAR:
+	case PARENT_STAR:
 		return "parent*";
 	default:
 		return "";
