@@ -83,16 +83,23 @@ namespace UnitTesting
 				Logger::WriteMessage(std::to_string(*it).c_str());
 			}
 
-			std::string declaration2 = "assign a;\n";
+/*			std::string declaration2 = "assign a;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select a pattern a(_,_\"z\"_)");
 			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
 			Logger::WriteMessage(queryProcessor->getQueryEvaluator()->getResultsTable().toString().c_str());
 			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("2", std::to_string(results2.size()).c_str());
+			Assert::AreEqual("2", std::to_string(results2.size()).c_str()); */
 
-			
+			std::string declaration2 = "stmt s;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s such that Follows*(2, s)");
+			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
+			Logger::WriteMessage(queryProcessor->getQueryEvaluator()->getResultsTable().toString().c_str());
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+			Assert::AreEqual("2", std::to_string(results2.size()).c_str());
 
 
 		}

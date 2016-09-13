@@ -24,11 +24,15 @@ namespace IntegrationTesting {
 				expected = true;
 			Assert::IsTrue(expected == actual);
 
-			actual = pkb->is(FOLLOWS, 3, 4);
+			actual = pkb->is(FOLLOWS, 1, 3);
 			expected = false;
 			Assert::IsTrue(expected == actual);
 
 			actual = pkb->is(FOLLOWS, 4, 5);
+			expected = true;
+			Assert::IsTrue(expected == actual);
+
+			actual = pkb->is(FOLLOWS_STAR, 1, 3);
 			expected = true;
 			Assert::IsTrue(expected == actual);
 
