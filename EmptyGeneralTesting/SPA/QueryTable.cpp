@@ -128,6 +128,8 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 		return "follows";
 	case FOLLOWS_STAR:
 		return "follows*";
+	case PARENT:
+		return "parent";
 	case PARENTSTAR:
 		return "parent*";
 	default:

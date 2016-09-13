@@ -18,6 +18,7 @@ public:
 
 		// Success PARENT
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(3,s1)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,2)"));
@@ -32,14 +33,12 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"y\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(_,_) pattern a1(\"x\", \"y+1\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_)"));
-		
 
-		
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent*(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		
 		
 
 
@@ -90,6 +89,9 @@ public:
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"+1\"_)"));
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",\"_\")"));
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",y)"));
+
+		//auto funcPtr = [validator] { validator->isValidQuery("procedure p;procedure p;procedure r;\n"); };
+		//Assert::ExpectException<std::runtime_error>(funcPtr); // try insert two procedure p, return exception
 
 
 
@@ -323,7 +325,7 @@ public:
 		validator->clearSynonymTable();
 		validator->clearSynonymOccurence();
 		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;\nSelect p")); //
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
 		validator->clearSynonymOccurence();
@@ -382,6 +384,12 @@ public:
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		// failure
+		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("Parents(bb,cc)");
+		validator->getNextToken();
+		auto funcPtr = [validator] { validator->isRelationship("Parents"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr);
+
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,q)"); // parent should have stmt args, but both args are procedure
 		validator->getNextToken();

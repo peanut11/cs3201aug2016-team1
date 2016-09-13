@@ -59,10 +59,15 @@ class QueryValidator {
 	SynonymOccurence *mSynonymOccurence;
 	SynonymTable *mSynonymTable;
 	RelTable *mRelTable;
-
 	QueryTable mQueryTable;
 
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
+
+	void throwsInvalidExpression(std::string expression);
+	void throwsInvalidRelationship(RelationshipType type);
+	void throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment);
+	void throwsIncorrectSyntax(std::string syntax);
+
 
 	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
 	
@@ -86,6 +91,7 @@ class QueryValidator {
 	ClauseType::ClauseType getClauseType(std::string syntax);
 	
 	std::string getEntitySyntax(std::string str);
+	std::string getRelationshipSyntax(RelationshipType type);
 
 	bool isMatch(std::string s1, std::string s2);
 	//bool isSelect(std::string str);

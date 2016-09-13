@@ -96,11 +96,26 @@ void QueryValidator::clearQueryTable() {
 	this->mQueryTable.clearAll();
 }
 
-
-
 void QueryValidator::addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object) {
 	objects.push_back(object);
 }
+
+void QueryValidator::throwsInvalidExpression(std::string expression) {
+	throw std::runtime_error("Invalid expression found near " + expression);
+}
+
+void QueryValidator::throwsInvalidRelationship(RelationshipType type) {
+	throw std::runtime_error("Invalid query near relationship " + getRelationshipSyntax(type));
+}
+
+void QueryValidator::throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment) {
+	throw std::runtime_error("Invalid argument for relationship " + getRelationshipSyntax(type) + " near " + arugment);
+}
+
+void QueryValidator::throwsIncorrectSyntax(std::string syntax) {
+	throw std::runtime_error("Invalid syntax near " + syntax);
+}
+
 
 QueryTable& QueryValidator::getQueryTable() {
 	return this->mQueryTable;
@@ -531,12 +546,12 @@ bool QueryValidator::isRelationship(std::string str) {
 		str += st.nextToken(); // e.g. Follows*, Parent*
 	}
 
-
 	RelationshipType searchedType = getSyntaxRelationshipType(str);
 
 	if (searchedType == RelationshipType::INVALID_RELATIONSHIP) {
-		// no such relationship
-		return false;
+		// no such relationships
+		this->throwsInvalidRelationship(searchedType);
+		//return false;
 	}
 
 	// Relationship(args1,args2) e.g. Parent(stmt1, stmt2)
@@ -544,7 +559,8 @@ bool QueryValidator::isRelationship(std::string str) {
 	RelObject searchedRelObject = this->mRelTable->find(searchedType);
 	if (searchedRelObject.getRelObjectType() == RelationshipType::INVALID_RELATIONSHIP) {
 		// no such relationship in table
-		return false;
+		this->throwsInvalidRelationship(searchedRelObject.getRelObjectType());
+		//return false;
 	}
 
 	//st.nextToken(); // point to relationship
@@ -565,7 +581,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 	int numberOfArgs = 0;
 
 	if (str == "" || str.compare("(") != 0) {
-		return false;
+		this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), str);
+		//return false;
 	}
 
 	st.nextToken(); // point to "("
@@ -598,6 +615,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 			// havent read first argument and current token is correct first arugment type
 			if (!hasValidFirstArg) {
+
 				if (relationshipObject.doesFirstArgsContains(EntityType::CONSTANT)) {
 
 					firstArgObject = ClauseSuchThatArgObject(EntityType::CONSTANT,
@@ -791,6 +809,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 					}
 				}
 				else {
+
 					isValidExpression = isVariableName(nextToken);
 				}
 				*/
@@ -1050,6 +1069,25 @@ std::string QueryValidator::getEntityTypeString(EntityType type) {
 	}
 
 	return "";
+}
+
+std::string QueryValidator::getRelationshipSyntax(RelationshipType type) {
+	switch (type) {
+	case MODIFIES:
+		return "modifies";
+	case USES:
+		return "uses";
+	case CALLS:
+		return "calls";
+	case FOLLOWS:
+		return "follows";
+	case FOLLOWS_STAR:
+		return "follows*";
+	case PARENTSTAR:
+		return "parent*";
+	default:
+		return "";
+	}
 }
 
 std::string QueryValidator::getNextToken() {
