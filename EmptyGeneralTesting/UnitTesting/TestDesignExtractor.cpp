@@ -67,7 +67,58 @@ public:
 		//Assert::AreEqual(f, 5);
 
 		//Assert::AreEqual(f, 0);
-	}
+	}/*
+	TEST_METHOD(TestDesign_FollowsStar) {
+
+
+		PKB* pkb = PKB::getInstance();
+		std::set<StmtNumber> followsStarList = pkb->getStmtsByStmt(12,FOLLOWS_STAR);
+
+		StmtSetIterator followsStarIt = followsStarList.begin();
+
+		int followsStarSize = followsStarList.size();
+		Assert::AreEqual(followsStarSize, 6);
+		int test = *followsStarIt;
+		Assert::AreEqual(test, 1);
+		followsStarIt++;
+		test = *followsStarIt;
+		Assert::AreEqual(test, 2);
+		followsStarIt++;
+		test = *followsStarIt;
+		Assert::AreEqual(test, 3);
+		followsStarIt++;
+		test = *followsStarIt;
+		Assert::AreEqual(test, 4);
+		followsStarIt++;
+		test = *followsStarIt;
+		Assert::AreEqual(test, 5);
+		followsStarIt++;
+		test = *followsStarIt;
+		Assert::AreEqual(test, 11);
+		
+		//std::set<StmtNumber> k= pkb->getStmtsByStmt(5, PARENT);
+		//StmtSetIterator it = k.begin();
+		//it++;
+		//int a = *it;
+		//Assert::AreEqual(0, a);
+		//int a = k.begin();
+		//int expected = 2;
+		//int b = 5;
+		//if (a == expected) {
+		//for (int j = 0; j < a; j++) {
+
+		//}
+		//}
+
+		//std::set<VarName> actual;
+		//actual = pkb->getAllVarNames();
+		//int f = k.size();
+		//Assert::AreEqual(l,2);
+		//l++;
+		//Assert::AreEqual(f, 5);
+
+		//Assert::AreEqual(f, 0);
+	}*/
 	TEST_METHOD(TestDesign_PARENT_STAR) {
 		
 
