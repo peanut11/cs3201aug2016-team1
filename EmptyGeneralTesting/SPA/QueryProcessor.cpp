@@ -5,6 +5,7 @@
 // - QueryEvaluator
 
 #include "QueryProcessor.h"
+#include "../AutoTester/source/AbstractWrapper.h"
 
 QueryProcessor *QueryProcessor::_instance;
 
@@ -42,6 +43,12 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 		bool isQueryValid = this->getQueryPreProcessor()->isValidQuery(queryString);
 
 		if (isQueryValid) {
+
+			//if (AbstractWrapper::GlobalStop) {
+			//	return std::vector<std::string>();
+			//}
+
+
 			// QueryEvaluator get result from PKB
 			std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(this->getQueryPreProcessor()->getQueryTable());
 			// QP pass result to QResultProjector for data representation
@@ -54,6 +61,8 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 	catch (std::runtime_error e) {
 		std::cout << e.what() << std::endl;
 	}
+
+	return std::vector <std::string>();
 
 }
 

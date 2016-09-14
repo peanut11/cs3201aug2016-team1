@@ -128,6 +128,10 @@ void QueryValidator::throwsInvalidPatternTypeSyntax() {
 	throw std::runtime_error("Invalid pattern syntax type");
 }
 
+void QueryValidator::throwsInvalidPatternArgument() {
+	throw std::runtime_error("Invalid pattern argument(s)");
+}
+
 void QueryValidator::throwsInvalidPatternArgument(std::string arugment) {
 	throw std::runtime_error("Invalid pattern argument near " + arugment);
 }
@@ -490,7 +494,8 @@ bool QueryValidator::isClausePattern(std::string str) {
 				return true;
 			}
 			else {
-				return false;
+				this->throwsInvalidPatternArgument();
+				//return false;
 			}
 		}
 
@@ -644,8 +649,8 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				return true;
 			}
 			else {
-				//this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), );
-				return false;
+				this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), st.peekNextToken());
+				//return false;
 			}
 		}
 
@@ -787,7 +792,8 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 	int numOfWildcard = 0;
 
 	if (str.compare("") == 0) { // empty
-		return false;
+		this->throwsInvalidPatternArgument();
+		//return false;
 	}
 
 	if (str.compare(SYNTAX_UNDERSCORE) == 0) {

@@ -5,6 +5,7 @@
 
 #include "QueryPreProcessor.h"
 #include "QueryEvaluator.h"
+#include "../AutoTester/source/AbstractWrapper.h"
 
 class QueryProcessor {
 

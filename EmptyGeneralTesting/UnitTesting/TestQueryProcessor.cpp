@@ -8,6 +8,7 @@
 #include "../SPA/RelObject.h"
 #include "../SPA/RelationshipType.h"
 #include "../SPA/EntityType.h"
+#include "../AutoTester/source/AbstractWrapper.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

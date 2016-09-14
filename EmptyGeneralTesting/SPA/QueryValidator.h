@@ -70,6 +70,7 @@ class QueryValidator {
 	void throwsInvalidPattern(std::string syntax);
 	void throwsInvalidPatternMissingSyntax();
 	void throwsInvalidPatternTypeSyntax();
+	void throwsInvalidPatternArgument();
 	void throwsInvalidPatternArgument(std::string arugment);
 	void throwsInvalidPatternExpression(std::string expression);
 	void throwsExceedCommonSynonymCount();
