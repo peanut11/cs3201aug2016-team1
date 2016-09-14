@@ -70,7 +70,7 @@ void DesignExtractor::processFollowsStar() {
 
 			for (StmtSetIterator fs = followsStarList.begin(); fs != followsStarList.end(); fs++) {
 				StmtNumber add2 = *fs;
-				pkb->putStmtForStmt(stmt, PARENT_STAR, add2);
+				pkb->putStmtForStmt(stmt, FOLLOWS_STAR, add2);
 			}
 		}
 	}
