@@ -429,43 +429,58 @@ public:
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,q)"); // parent should have stmt args, but both args are procedure
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr2 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr2);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,q)"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr3 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr3);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,s2)"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr4 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr4);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1)"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr5 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr5);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,)"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr6 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr6);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,)"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr7 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr7);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr8 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr8);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(\"x\",_)"); // parent
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Parent"));
-
+		//Assert::IsFalse(validator->isRelationship("Parent"));
+		auto funcPtr9 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr9);
 
 
 	}
@@ -500,8 +515,9 @@ public:
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(p,q)"); // follows
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Follows"));
-
+		//Assert::IsFalse(validator->isRelationship("Follows"));
+		auto funcPtrError1 = [validator] { validator->isRelationship("Follows"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError1);
 
 	}
 
@@ -547,7 +563,9 @@ public:
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(_,var1)"); // _ & var
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Modifies"));
+		//Assert::IsFalse(validator->isRelationship("Modifies"));
+		auto funcPtrError1 = [validator] { validator->isRelationship("Modifies"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError1);
 
 	}
 
@@ -590,12 +608,17 @@ public:
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(_,var1)"); // _ & var
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Uses"));
+		//Assert::IsFalse(validator->isRelationship("Uses"));
+		auto funcPtrError1 = [validator] { validator->isRelationship("Uses"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(c1,3)"); // call & constant
 		validator->getNextToken();
-		Assert::IsFalse(validator->isRelationship("Uses"));
+		//Assert::IsFalse(validator->isRelationship("Uses"));
+		auto funcPtrError2 = [validator] { validator->isRelationship("Uses"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError2);
 
 	}
 
