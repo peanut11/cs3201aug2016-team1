@@ -82,6 +82,30 @@ void QueryPreProcessor::populateRelationshipTable() {
 	this->mRelTable->insert(object);
 
 	// havent include next and affects
+	object = this->createRelationshipObject(RelationshipType::NEXT,
+	{ EntityType::PROGRAM_LINE, EntityType::WILDCARD },
+	{ EntityType::PROGRAM_LINE, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::NEXT_STAR,
+	{ EntityType::PROGRAM_LINE, EntityType::WILDCARD },
+	{ EntityType::PROGRAM_LINE, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::AFFECTS,
+	{ EntityType::ASSIGN, EntityType::WILDCARD },
+	{ EntityType::ASSIGN, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::AFFECTS_STAR,
+	{ EntityType::ASSIGN, EntityType::WILDCARD },
+	{ EntityType::ASSIGN, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
 }
 
 SynonymObject QueryPreProcessor::createSynonymObject(EntityType type, std::string synonym) {
