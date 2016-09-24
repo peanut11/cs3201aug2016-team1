@@ -10,12 +10,28 @@ namespace UnitTesting {
 	TEST_CLASS(TestQueryValidator) {
 public:
 	
-	TEST_METHOD(TestQueryValidator_Full_Query) {
+	TEST_METHOD(TestQueryValidator__Iteration_2_Full_Query) {
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
 
+		// Success
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1")); // 1 with clause
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_) with s1.stmt# = 1 s2.stmt# = 4")); // 2 with clauses
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1 such that Follows(s1, _)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+	}
+
+	TEST_METHOD(TestQueryValidator__Iteration_1_Full_Query) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
 
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;Select p such that Parent(s1,s2)"));
 
@@ -38,13 +54,8 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_)"));
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
-		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent*(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		
-		
-
-
 		// success FOLLOWS
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt such that Follows (5, ifstmt)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows (s1, 3)"));
@@ -272,6 +283,15 @@ public:
 		Assert::AreEqual(std::string(","), st.nextToken());
 		Assert::AreEqual(std::string("_"), st.nextToken());
 		Assert::AreEqual(std::string(")"), st.nextToken());
+
+		st = StringTokenizer("p.procName=\"First\"", QUERY_PREPROCESSOR);
+		Assert::AreEqual(std::string("p"), st.nextToken());
+		Assert::AreEqual(std::string("."), st.nextToken());
+		Assert::AreEqual(std::string("procName"), st.nextToken());
+		Assert::AreEqual(std::string("="), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string("First"), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
 
 	}
 
@@ -870,6 +890,100 @@ public:
 		auto funcPtrError6 = [validator] { validator->isPatternExprArgument("\""); };
 		Assert::ExpectException<std::runtime_error>(funcPtrError6);
 
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Clause_With) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success
+		validator->initStringTokenizer("p.procName=\"First\"");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("p"));
+
+
+		validator->initStringTokenizer("c.procName=\"First\"");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+		
+		validator->initStringTokenizer("c.stmt#=10");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+		validator->initStringTokenizer("const.value=1");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("const"));
+
+		validator->initStringTokenizer("pl1=2");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("pl1"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		validator->initStringTokenizer("c.stmt# = const.value");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+		
+
+		validator->initStringTokenizer("const.value = c.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("const"));
+
+		validator->initStringTokenizer("c.stmt# = ifstmt.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+		validator->initStringTokenizer("c.procName = p.procName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+		
+		validator->initStringTokenizer("c.procName = v.varName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+		
+		// Failure
+		validator->initStringTokenizer("2 = pl1");
+		validator->getNextToken();
+		auto error1 = [validator] { validator->isClauseWith("2"); }; // invalid format
+		Assert::ExpectException<std::runtime_error>(error1);
+
+		validator->initStringTokenizer("c.stmt# = \"hello\"");
+		validator->getNextToken();
+		auto error2 = [validator] { validator->isClauseWith("c"); }; // incorrect value type
+		Assert::ExpectException<std::runtime_error>(error2);
+
+		validator->initStringTokenizer("p.procName = 1");
+		validator->getNextToken();
+		auto error3 = [validator] { validator->isClauseWith("p"); }; // incorrect value type
+		Assert::ExpectException<std::runtime_error>(error3);
+
+		validator->initStringTokenizer("p.varName = \"hello\"");
+		validator->getNextToken();
+		auto error4 = [validator] { validator->isClauseWith("p"); }; // incorrect attribute name
+		Assert::ExpectException<std::runtime_error>(error4);
+
+		validator->initStringTokenizer("const.procName = \"hello\"");
+		validator->getNextToken();
+		auto error5 = [validator] { validator->isClauseWith("const"); }; // incorrect attribute name
+		Assert::ExpectException<std::runtime_error>(error5);
+
+		validator->initStringTokenizer("c.stmt# = def.value");
+		validator->getNextToken();
+		auto error100 = [validator] { validator->isClauseWith("c"); }; // not declared synonym
+		Assert::ExpectException<std::runtime_error>(error100);
+
+		validator->initStringTokenizer("c.stmt# = p.procName");
+		validator->getNextToken();
+		auto error101 = [validator] { validator->isClauseWith("c"); }; // incorrect type
+		Assert::ExpectException<std::runtime_error>(error101);
+
+		validator->initStringTokenizer("p.procName = const.value");
+		validator->getNextToken();
+		auto error102 = [validator] { validator->isClauseWith("p"); }; // incorrect type
+		Assert::ExpectException<std::runtime_error>(error102);
 
 	}
 

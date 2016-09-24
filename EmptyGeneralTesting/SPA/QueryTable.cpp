@@ -85,6 +85,14 @@ std::string QueryTable::toString() {
 		str.append(", " + value.getPatternSynonymArgument() + ", " + value.getFirstArgument() + ", " + value.getSecondArgument() + "\n");
 
 	}
+
+	str.append("\n== With ==\n");
+	str.append("refType, synonym, str, int\n");
+	for (auto value : this->withs) {
+		str.append(getWithRefString(value.getRefObject1().getRefType()) + ", " + value.getRefObject1().getSynonym() + ", " + value.getRefObject1().getStringValue() + ", " + std::to_string(value.getRefObject1().getIntegerValue()));
+		str.append(" | " + getWithRefString(value.getRefObject2().getRefType()) + ", " + value.getRefObject2().getSynonym() + ", " + value.getRefObject2().getStringValue() + ", " + std::to_string(value.getRefObject2().getIntegerValue()) + "\n");
+	}
+
 	
 	return str;
 }
@@ -135,6 +143,39 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 	default:
 		return "";
 	}
+}
+
+std::string QueryTable::getWithRefString(WithRefType type) {
+	switch (type)
+	{
+	case ATTRREF:
+		return "attrRef";
+	case SYNONYM:
+		return "synonym";
+	case IDENTIFIER:
+		return "IDENT";
+	case INTEGER:
+		return "INTEGER";
+	default:
+		return "-";
+	}
+}
+
+std::string QueryTable::getAttrString(AttrType::AttrType type) {
+	switch (type) {
+	case AttrType::PROC_NAME:
+		return "procName";
+
+	case AttrType::STMT_NO:
+		return "stmt#";
+
+	case AttrType::VAR_NAME:
+		return "varName";
+
+	case AttrType::VALUE:
+		return "value";
+	}
+	
 }
 
 bool QueryTable::replaceSelectObject(SelectObject object) {
