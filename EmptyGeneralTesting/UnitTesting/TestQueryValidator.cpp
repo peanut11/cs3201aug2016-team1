@@ -14,16 +14,107 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 
-		// Success
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1")); // 1 with clause
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_) with s1.stmt# = 1 s2.stmt# = 4")); // 2 with clauses
+		// Success Next
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(_,_)"));
+
+		// Success Next*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,_)"));
+		
+
+		// Success Affects
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,_)"));
+		
+		// Success Affects*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 
+
+
+
+		// Success With
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1")); // 1 with clause
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_) with s1.stmt# = 1 s2.stmt# = 4")); // 2 with clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1 such that Follows(s1, _)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+
+		// Failure
+		auto error1 = [validator] { 
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
+		};
+		Assert::ExpectException<std::runtime_error>(error1);
+		
+		auto error2 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(_,s2)");
+		};
+		Assert::ExpectException<std::runtime_error>(error2);
+
+		auto error3 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
+		};
+		Assert::ExpectException<std::runtime_error>(error3);
+
+		auto error4 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,_)");
+		};
+		Assert::ExpectException<std::runtime_error>(error4);
+
+		auto error5 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(_,s2)");
+		};
+		Assert::ExpectException<std::runtime_error>(error5);
+
+		auto error6 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,p)");
+		};
+		Assert::ExpectException<std::runtime_error>(error6);
 
 	}
 

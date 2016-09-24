@@ -132,6 +132,8 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 		return "uses";
 	case CALLS:
 		return "calls";
+	case CALLSSTAR:
+		return "calls*";
 	case FOLLOWS:
 		return "follows";
 	case FOLLOWS_STAR:
@@ -140,6 +142,14 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 		return "parent";
 	case PARENT_STAR:
 		return "parent*";
+	case NEXT:
+		return "next";
+	case NEXT_STAR:
+		return "next*";
+	case AFFECTS:
+		return "affects";
+	case AFFECTS_STAR:
+		return "affects*";
 	default:
 		return "";
 	}

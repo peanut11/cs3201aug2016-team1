@@ -44,6 +44,12 @@ const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS = "Follows";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS_STAR = "Follows*";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_MODIFIES = "Modifies";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_USES = "Uses";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_CALLS = "Calls";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_CALLS_STAR = "Calls*";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_NEXT = "Next";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_NEXT_STAR = "Next*";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_AFFECTS = "Affects";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_AFFECTS_STAR = "Affects*";
 
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_PROCEDURE_NAME = "procName";
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_VARIABLE_NAME = "varName";
@@ -905,7 +911,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 bool QueryValidator::isRelationship(std::string str) {
 
 	if (isMatch(st.peekNextToken(), SYNTAX_STAR)) { // next is a star!
-		str += st.nextToken(); // e.g. Follows*, Parent*
+		str += st.nextToken(); // e.g. Follows*, Parent*, Next*, Affects*, Calls*
 	}
 
 	RelationshipType searchedType = getSyntaxRelationshipType(str);
@@ -1328,6 +1334,24 @@ RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS_STAR)) {
 		return RelationshipType::FOLLOWS_STAR;
 	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_CALLS)) {
+		return RelationshipType::CALLS;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_CALLS_STAR)) {
+		return RelationshipType::CALLSSTAR;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_NEXT)) {
+		return RelationshipType::NEXT;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_NEXT_STAR)) {
+		return RelationshipType::NEXT_STAR;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_AFFECTS)) {
+		return RelationshipType::AFFECTS;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_AFFECTS_STAR)) {
+		return RelationshipType::AFFECTS_STAR;
+	}
 	else {
 		return RelationshipType::INVALID_RELATIONSHIP;
 	}
@@ -1460,12 +1484,22 @@ std::string QueryValidator::getRelationshipSyntax(RelationshipType type) {
 		return "uses";
 	case CALLS:
 		return "calls";
+	case CALLSSTAR:
+		return "calls*";
 	case FOLLOWS:
 		return "follows";
 	case FOLLOWS_STAR:
 		return "follows*";
 	case PARENT_STAR:
 		return "parent*";
+	case NEXT:
+		return "next";
+	case NEXT_STAR:
+		return "next*";
+	case AFFECTS:
+		return "affects";
+	case AFFECTS_STAR:
+		return "affects*";
 	default:
 		return "";
 	}

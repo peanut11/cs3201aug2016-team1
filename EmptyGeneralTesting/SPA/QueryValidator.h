@@ -53,6 +53,12 @@ class QueryValidator {
 	static const std::string SYNTAX_RELATIONSHIP_FOLLOWS_STAR;
 	static const std::string SYNTAX_RELATIONSHIP_MODIFIES;
 	static const std::string SYNTAX_RELATIONSHIP_USES;
+	static const std::string SYNTAX_RELATIONSHIP_CALLS;
+	static const std::string SYNTAX_RELATIONSHIP_CALLS_STAR;
+	static const std::string SYNTAX_RELATIONSHIP_NEXT;
+	static const std::string SYNTAX_RELATIONSHIP_NEXT_STAR;
+	static const std::string SYNTAX_RELATIONSHIP_AFFECTS;
+	static const std::string SYNTAX_RELATIONSHIP_AFFECTS_STAR;
 
 	static const std::string SYNTAX_ATTRIBUTE_PROCEDURE_NAME;
 	static const std::string SYNTAX_ATTRIBUTE_VARIABLE_NAME;
