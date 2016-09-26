@@ -1,0 +1,155 @@
+1 - Modifies 1
+stmt s;
+Select s such that Modifies(s, "apple")
+1, 2, 3
+5000
+2 - Modifies 2
+variable v;
+Select v such that Modifies(1, v)
+apple, pears, orange, h3ll0
+5000
+3 - Modifies 3
+assign a;
+Select a such that Modifies(a, _)
+2, 3, 5, 6, 7, 9
+5000
+4 - Uses 1
+while w;
+Select w such that Uses(w, "apple")
+1, 4
+5000
+5 - Uses 2
+variable v;
+Select v such that Uses(6, v)
+orange, pears, apple
+5000
+6 - Uses 3
+assign a; variable v;
+Select v such that Uses(a, v)
+orange, pears, apples, apple
+5000
+7 - Follows 1
+stmt s1;
+Select s1 such that Follows(1, s1)
+
+5000
+8 - Follows 2
+while w; assign a;
+Select a such that Follows(a,w)
+3, 7
+5000
+9 - Follows 3
+assign a1, a2;
+Select a1 such that Follows(a1, a2)
+2, 5
+5000
+10 - Parent 1
+stmt s1;
+Select s1 such that Parent(1, s1)
+2, 3, 4, 7, 8
+5000
+11 - Parent 2
+while w1, w2;
+Select w2 such that Parent(w1, w2)
+4, 8
+5000
+12 - Parent 3
+assign a;
+Select a such that Parent(a, _)
+
+5000
+13 - Follows* 1
+stmt s1;
+Select s1 such that Follows*(2, s1)
+3, 4, 7, 8
+5000
+14 - Follows* 2
+stmt s;
+Select s such that Follows*(s, 8)
+2, 3, 4, 7
+5000
+15 - Follows* 3
+variable v;
+Select v such that Follows*(_, 9)
+
+5000
+16 - Parent* 1
+stmt s1;
+Select s1 such that Parent*(s1, 5)
+1, 4
+5000
+17 - Parent* 2
+while w1, w2;
+Select w1 such that Parent*(w2, w1)
+4, 8
+5000
+18 - Parent* 3
+assign a; variable v; 
+Select v such that Parent*(_, a)
+Crazyyyyyy, apple, orange, pears, apples, x, h3ll0
+5000
+19 - pattern 1
+assign a;
+Select a pattern a("apple", _)
+2, 3
+5000
+20 - pattern 2
+assign a;
+Select a pattern a(_, _"1"_)
+3, 5, 9
+5000
+21 - pattern 3
+assign a; variable v;
+Select v pattern a(_, _"orange"_)
+Crazyyyyyy, apple, orange, pears, apples, x, h3ll0
+5000
+22 - Mix1: Follow+Pattern
+assign a1, a2;
+Select a2 such that Follows(a1, a2) pattern a1("apple", _)
+3
+5000
+23 - Mix2: Pattern+Follow
+assign a1, a2;
+Select a2 pattern a1("apple", _) such that Follows(a1, a2)
+3
+5000
+24 - Mix3: True+Pattern
+assign a; variable v;
+Select v such that Modifies(8, "h3ll0") pattern a(v, _)
+apple, pears, orange, h3ll0
+5000
+25 - Mix4: Modifies+Pattern
+assign a1;
+Select a1 such that Modifies(a1, "pears") pattern a1(_, _"1"_)
+5
+5000
+26 - Mix5: True+Uses
+assign a1, a2;
+Select a2 pattern a1(_, _"apple"_) such that Uses(a2, "pears")
+2, 6
+5000
+27 - Mix6: Uses+Pattern
+assign a; variable v;
+Select v such that Uses(a, "pears") pattern a(v, _"orange"_)
+apple, pears
+5000
+28 - Mix7: Parent+Pattern
+assign a; while w; variable v;
+Select v such that Parent(w, a) pattern a(v, _)
+pears, h3ll0, apple, orange
+5000
+29 - Mix8: Pattern+Parent
+assign a1; stmt s1;
+Select s1 pattern a1(_, _"1"_) such that Parent(s1, a1) 
+1, 4, 8
+5000
+30 - Mix9: Pattern+Follows*
+assign a1, a2;
+Select a2 pattern a1("pears", _"apple"_) such that Follows*(a2, a1)
+5
+5000
+31 - Mix10: Parent*+Pattern
+assign a; stmt s;
+Select s such that Parent*(s, a) pattern a(_, _"83910"_)
+1
+5000

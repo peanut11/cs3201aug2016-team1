@@ -1,0 +1,10 @@
+procedure IamCrazy {
+	while Crazyyyyyy {
+		apple = orange + pears;
+		apple = 1;
+		while orange {
+			pears = apples + 1 + orange;
+			pears = orange + pears + apple;}
+		orange = 83910;
+		while x {
+			h3ll0 = apples + 1;}}}

@@ -6,7 +6,7 @@
 #include "Frontend.h"
 
 std::string Frontend::read(std::string filename) {
-	std::string foldername = "../AutoTester/tests/";
+	std::string foldername = "../Release/"; // Used by AutoTester
 	std::string filepath = foldername.append(filename);
 	std::stringstream buffer;
 	std::ifstream infile(filepath);
