@@ -47,6 +47,9 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 				buffer.clear();
 			}
 			if (isDelimiter(ch)) {
+                if (isIgnoreNewlines && isNewline(ch)) {
+                    continue;
+                }
 				tokens.push_back(charString);
 			}
 		} else {

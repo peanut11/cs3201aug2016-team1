@@ -62,6 +62,21 @@ bool ProgramValidator::isInteger(std::string str) {
 	return true;
 }
 
+bool ProgramValidator::isProgram(std::string str) {
+    bool isProgram = false;
+
+    while (st.hasMoreTokens()) {
+        while (isMatch(st.peekNextToken(), "\n")) {
+            st.popNextToken();
+        }
+
+        if (st.hasMoreTokens()) {
+            isProgram = isProcedure(st.nextToken());
+        }
+    }
+    return isProgram;
+}
+
 bool ProgramValidator::isProcedure(std::string str) {
 	return isMatch(str, "procedure")
 		&& isName(st.nextToken())
@@ -86,7 +101,16 @@ bool ProgramValidator::isStmtLst(std::string str) {
 }
 
 bool ProgramValidator::isStmt(std::string str) {
-	return isAssign(str) || isWhile(str);
+	return isAssign(str) || isWhile(str) || isCall(str);
+}
+
+bool ProgramValidator::isCall(std::string str) {
+    // Note: 'call' is a valid varName if followed by '=' instead of another varName
+    if (isMatch(str, "call") && isProcName(st.peekNextToken())) {
+        st.popNextToken();
+        return true;
+    }
+    return false;
 }
 
 bool ProgramValidator::isWhile(std::string str) {
@@ -101,8 +125,27 @@ bool ProgramValidator::isWhile(std::string str) {
 	return false;
 }
 
+bool ProgramValidator::isIf(std::string str) {
+    // Note: 'if' is a valid varName if followed by '=' instead of another varName
+    if (isMatch(str, "if") && isVarName(st.peekNextToken())) {
+        st.popNextToken();
+        return isMatch(st.nextToken(), "then")
+            && isMatch(st.nextToken(), "{")
+            && isMatch(st.nextToken(), "\n")
+            && isStmtLst(st.nextToken())
+            && isMatch(st.nextToken(), "}")
+            && isMatch(st.nextToken(), "\n")
+            && isMatch(st.nextToken(), "else")
+            && isMatch(st.nextToken(), "{")
+            && isMatch(st.nextToken(), "\n")
+            && isStmtLst(st.nextToken())
+            && isMatch(st.nextToken(), "}");
+    }
+    return false;
+}
+
 bool ProgramValidator::isAssign(std::string str) {
-		// Note: 'while' is a valid varName if followed by '=' instead of another varName
+    // Note: 'call/if/while' are valid varNames if followed by '=' instead of another varName
 	if (isVarName(str) && isMatch(st.peekNextToken(), "=")) {
 		st.popNextToken();
 		return isExpr(st.nextToken())
@@ -128,6 +171,10 @@ bool ProgramValidator::isFactor(std::string str) {
 
 bool ProgramValidator::isVarName(std::string str) {
 	return isName(str);
+}
+
+bool ProgramValidator::isProcName(std::string str) {
+    return isName(str);
 }
 
 bool ProgramValidator::isConstValue(std::string str) {
