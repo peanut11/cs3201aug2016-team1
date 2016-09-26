@@ -31,4 +31,5 @@ public:
 	std::string peekNextToken();
 	void popNextToken();
 	void returnToken(std::string);
+    bool getIsIgnoreNewlines();
 };

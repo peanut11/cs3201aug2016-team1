@@ -7,12 +7,21 @@
 
 const std::string StringTokenizer::EMPTY_TOKEN = "";
 
+bool StringTokenizer::getIsIgnoreNewlines() {
+    return isIgnoreNewlines;
+}
+
+bool StringTokenizer::isNewline(char ch) {
+    return ch == '\n';
+}
+
 bool StringTokenizer::isDelimiter(char ch) {
 	return delimiters.find(ch) != std::string::npos;
 }
 
 StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 	const std::string WHITESPACE = " ";
+    isIgnoreNewlines = false;
 	
 	switch(mode) {
 	case PARSER:
