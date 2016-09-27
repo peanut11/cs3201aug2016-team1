@@ -190,6 +190,7 @@ public:
 	bool isPatternExprArgument(std::string str);
 	bool isExpression(std::string str);
 	bool isTurple(std::string str);
+	bool isAttributeReference(std::string str);
 	bool isSyntaxBoolean(std::string str);
 
 	int totalArg;

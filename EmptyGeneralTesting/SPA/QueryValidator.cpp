@@ -740,6 +740,8 @@ bool QueryValidator::isClauseWith(std::string str) {
 	return false;
 }
 
+
+
 bool QueryValidator::isClausePattern(std::string str) {
 	SynonymObject selectedSynonymObj;
 
@@ -1256,6 +1258,99 @@ bool QueryValidator::isTurple(std::string str) {
 
 bool QueryValidator::isSyntaxBoolean(std::string str) {
 	return isMatch(str, SYNTAX_BOOLEAN);
+}
+
+bool QueryValidator::isAttributeReference(std::string str) {
+
+	SynonymObject selectedSynonymObj;
+
+	if (this->isSynonym(str) && this->isDeclaredSynonym(str)) {
+
+		selectedSynonymObj = this->mSynonymTable->getObject(str); // get synonym object which is found in synonymTable
+		if (selectedSynonymObj.getType() == EntityType::INVALID) { // check declared
+			//this->throwsInvalidPattern(str);
+			return false;
+		}
+
+		// prog_line does not need ".", no attrName
+		if (selectedSynonymObj.getType() == EntityType::PROGRAM_LINE && !isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
+			return true;
+		}
+
+		st.nextToken(); // point to "."
+
+		switch (selectedSynonymObj.getType()) {
+		case STMT:
+		case IF:
+		case WHILE:
+		case ASSIGN:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+
+				st.nextToken(); // points to stmt
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+					st.nextToken(); // points to "#"
+					return true;
+				}
+				
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case PROCEDURE:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+				st.nextToken(); // points to procName
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case CALL:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+
+				st.nextToken(); // points to stmt
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+					st.nextToken(); // points to "#"
+					return true;
+				}
+
+			}
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+				st.nextToken(); // points to procName
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case VARIABLE:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case CONSTANT:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_VALUE)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+		}
+
+
+
+	}
+
+	return false;
 }
 
 bool QueryValidator::isName(std::string str) {

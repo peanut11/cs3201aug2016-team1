@@ -1078,5 +1078,91 @@ public:
 
 	}
 
+	TEST_METHOD(TestQueryValidator_Attribute_Ref) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+
+		// success
+		validator->initStringTokenizer("p.procName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("c.procName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("c.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("v.varName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("v"));
+
+		validator->initStringTokenizer("const.value");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("const"));
+
+
+		// Failure
+		validator->initStringTokenizer("p.varName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("p.stmt#");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("p.value");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("c.varName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("c.value");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("const.varName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("const"));
+
+		validator->initStringTokenizer("const.procName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("const"));
+
+		validator->initStringTokenizer("const.stmt#");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("const"));
+
+		// Failure, format error
+		validator->initStringTokenizer("p.");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("procName.p");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("procName"));
+
+		// Failure, syntax error
+		validator->initStringTokenizer("p.proc");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("c.stmt");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("c"));
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Tuple) {
+
+	}
+
 	};
 }
