@@ -65,6 +65,8 @@
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
+    <ClInclude Include="ResultGrid.h" />
+    <ClInclude Include="ResultGridManager.h" />
     <ClInclude Include="StringTokenizer.h" />
     <ClInclude Include="ResultsObject.h" />
     <ClInclude Include="ResultsTable.h" />
