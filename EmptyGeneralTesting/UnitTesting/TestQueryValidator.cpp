@@ -1161,6 +1161,15 @@ public:
 	}
 
 	TEST_METHOD(TestQueryValidator_Tuple) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		validator->initStringTokenizer("<p, a1, a2>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
 
 	}
 

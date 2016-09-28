@@ -46,6 +46,8 @@ class QueryValidator {
 	static const std::string SYNTAX_BOOLEAN;
 	static const std::string SYNTAX_STAR;
 	static const std::string SYNTAX_DOT;
+	static const std::string SYNTAX_LEFT_ARROW_BRACKET;
+	static const std::string SYNTAX_RIGHT_ARROW_BRACKET;
 
 	static const std::string SYNTAX_RELATIONSHIP_PARENT;
 	static const std::string SYNTAX_RELATIONSHIP_PARENT_STAR;
@@ -189,7 +191,7 @@ public:
 	bool isClausePattern(std::string str);
 	bool isPatternExprArgument(std::string str);
 	bool isExpression(std::string str);
-	bool isTurple(std::string str);
+	bool isTuple(std::string str);
 	bool isAttributeReference(std::string str);
 	bool isSyntaxBoolean(std::string str);
 

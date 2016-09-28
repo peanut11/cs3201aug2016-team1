@@ -37,6 +37,8 @@ const std::string QueryValidator::SYNTAX_EQUAL = "=";
 const std::string QueryValidator::SYNTAX_BOOLEAN = "BOOLEAN";
 const std::string QueryValidator::SYNTAX_STAR = "*";
 const std::string QueryValidator::SYNTAX_DOT = ".";
+const std::string QueryValidator::SYNTAX_LEFT_ARROW_BRACKET = "<";
+const std::string QueryValidator::SYNTAX_RIGHT_ARROW_BRACKET = ">";
 
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT = "Parent";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT_STAR = "Parent*";
@@ -450,7 +452,7 @@ bool QueryValidator::isDeclaredSynonym(std::string str) {
 }
 
 bool QueryValidator::isClauseResult(std::string str) {
-	if (isTurple(str)) {
+	if (isTuple(str)) {
 		return true;
 	}
 	else if (isSyntaxBoolean(str)) {
@@ -739,8 +741,6 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 	return false;
 }
-
-
 
 bool QueryValidator::isClausePattern(std::string str) {
 	SynonymObject selectedSynonymObj;
@@ -1251,9 +1251,47 @@ bool QueryValidator::isWildcard(std::string str) {
 	return (str.compare(SYNTAX_UNDERSCORE) == 0);
 }
 
-bool QueryValidator::isTurple(std::string str) {
-	return isSynonym(str) 
-		&& this->mSynonymTable->getObject(str).getType() != EntityType::INVALID;
+bool QueryValidator::isTuple(std::string str) {
+
+	if (!isMatch(str, this->SYNTAX_LEFT_ARROW_BRACKET)) {
+		return isSynonym(str)
+			&& this->mSynonymTable->getObject(str).getType() != EntityType::INVALID;
+	}
+
+	std::string currentToken = "";
+	bool isWithinTuple = true;
+	bool isValid = true;
+	bool hasRightArrowBracket = false;
+	//bool hasComma = false;
+	while (isWithinTuple) {
+		
+		if (hasRightArrowBracket) {
+			return isValid;
+		}
+
+		currentToken = st.nextToken();
+		
+		if (isMatch(currentToken, this->SYNTAX_RIGHT_ARROW_BRACKET)) {
+			hasRightArrowBracket = true;
+			continue;
+		}
+
+		if (isMatch(currentToken, this->SYNTAX_COMMA)) {
+			if (isSynonym(st.peekNextToken()) && this->isDeclaredSynonym(st.peekNextToken())) {
+				st.popNextToken(); // points to synonym, after ","
+				isValid = true;
+				continue;
+			}
+		}
+
+		if (isSynonym(currentToken)) {
+			isValid = this->isDeclaredSynonym(currentToken);
+		}
+
+
+	}
+
+	
 }
 
 bool QueryValidator::isSyntaxBoolean(std::string str) {
