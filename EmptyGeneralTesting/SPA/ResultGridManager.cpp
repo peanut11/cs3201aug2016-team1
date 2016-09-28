@@ -5,13 +5,12 @@
 
 #include "ResultGridManager.h"
 
-ResultGrid* ResultGridManager::createGridForSynonym(SynonymString syn, std::set<SynonymValue> vals) {
+ResultGrid* ResultGridManager::createGridForSynonym(SynonymString syn, ValueSet vals) {
     ResultGrid* grid = new ResultGrid(syn, vals);
     refTable.push_back(grid);
 
     GridIndex index = gridTable.size();
-    GridColumn column = 0;
-    refMap[syn] = GridRefTuple(index, column);
+    refMap[syn] = index;
 
     std::vector<SynonymString> synonyms;
     synonyms.push_back(syn);
@@ -21,13 +20,14 @@ ResultGrid* ResultGridManager::createGridForSynonym(SynonymString syn, std::set<
 }
 
 ResultGrid* ResultGridManager::getGridForSynonym(SynonymString syn) {
-    GridRefMap::const_iterator it = refMap.find(syn);
+    GridIndexMap::const_iterator it = refMap.find(syn);
     ResultGrid* grid;
 
     if (it == refMap.end()) {
         throw INVALID_SYNONYM_ERROR;
     } else {
-        grid = refTable[extractGridIndex(it)];
+        GridIndex index = it->second;
+        grid = refTable[index];
     }
 
     return grid;
@@ -44,35 +44,35 @@ ResultGridManager::GridIndex ResultGridManager::extractGridIndex(GridRefMap::con
     return std::get<indexPosition>(tuple);
 }
 
-ResultGridManager::GridIndex ResultGridManager::getGridIndexForSynonym(SynonymString syn) {
-    GridRefMap::const_iterator it = refMap.find(syn);
-    return extractGridIndex(it);
+GridIndex ResultGridManager::getGridIndexForSynonym(SynonymString syn) {
+    GridIndexMap::const_iterator it = refMap.find(syn);
+    return it->second;
 }
 
 bool ResultGridManager::areInSameGrid(SynonymString syn1, SynonymString syn2) {
     return getGridIndexForSynonym(syn1) == getGridIndexForSynonym(syn2);
 }
 
-void ResultGridManager::initialiseValuesForSynonym(SynonymString syn, std::set<SynonymValue> vals) {
+void ResultGridManager::initialiseValuesForSynonym(SynonymString syn, ValueSet vals) {
     createGridForSynonym(syn, vals);
 }
 
-void ResultGridManager::updateSynonym(SynonymString syn, std::set<SynonymValue> vals) {
+void ResultGridManager::updateSynonym(SynonymString syn, ValueSet vals) {
     ResultGrid* grid = getGridForSynonym(syn);
     grid->updateSynonym(syn, vals);
 }
 
-void ResultGridManager::updateSynonymTuple(std::tuple<SynonymString> synTuple, std::set<std::tuple<SynonymValue>> valTuples) {
     ResultGrid* grid = getGridForSynonymTuple(synTuple);
     grid->updateSynonymTuple(synTuple, valTuples);
+void ResultGridManager::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples) {
 }
 
-std::set<SynonymValue> ResultGridManager::getValuesForSynonym(SynonymString syn) {
+ValueSet ResultGridManager::getValuesForSynonym(SynonymString syn) {
     ResultGrid* grid = getGridForSynonym(syn);
     return grid->getValuesForSynonym(syn);
 }
 
-std::set<std::tuple<SynonymValue>> ResultGridManager::getValuesForSynonymTuple(std::tuple<SynonymString> synTuple) {
     ResultGrid* grid = getGridForSynonymTuple(synTuple);
     return grid->getValuesForSynonymTuple(synTuple);
+ValueTupleSet ResultGridManager::getValuesForSynonymTuple(SynonymTuple synTuple) {
 }

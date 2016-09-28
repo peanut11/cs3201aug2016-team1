@@ -3,6 +3,19 @@
 #include <list>
 #include "Types.h"
 
+typedef unsigned int TuplePosition;
+typedef unsigned int GridIndexOrCol;
+typedef GridIndexOrCol GridIndex;
+typedef GridIndexOrCol GridColumn;
+typedef std::map<SynonymString, GridIndex> GridIndexMap;
+typedef std::map<SynonymString, GridColumn> GridColumnMap;
+typedef std::tuple<SynonymString, SynonymString> SynonymTuple;
+typedef std::tuple<SynonymValue, SynonymValue> ValueTuple;
+typedef std::vector<SynonymValue> GridRow;
+typedef std::set<SynonymValue> ValueSet;
+typedef std::set<ValueTuple> ValueTupleSet;
+typedef std::list<GridRow>::iterator GridListIterator;
+
 class ResultGrid {
 private:
     static unsigned int gridCount;
