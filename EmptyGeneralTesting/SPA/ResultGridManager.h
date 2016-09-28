@@ -9,11 +9,10 @@ private:
     std::vector<ResultGrid*> refTable;                 // getGridByIndex
     std::vector<std::vector<SynonymString>> gridTable; // getSynonymsInGrid
 
-    ResultGrid* getGridForSynonymTuple(std::tuple<SynonymString> synTuple);
-    GridIndex extractGridIndex(GridRefMap::const_iterator it);
     GridIndex getGridIndexForSynonym(SynonymString syn);
     ResultGrid* createGridForSynonym(SynonymString syn, ValueSet vals);
     ResultGrid* getGridForSynonym(SynonymString syn);
+    ValueTupleSet permutate(ValueSet vals1, ValueSet vals2);
 
 public:
     bool areInSameGrid(SynonymString syn1, SynonymString syn2);

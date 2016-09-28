@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include "Exceptions.h"
 #include "Types.h"
 
 typedef unsigned int TuplePosition;
@@ -18,19 +19,28 @@ typedef std::list<GridRow>::iterator GridListIterator;
 
 class ResultGrid {
 private:
-    static unsigned int gridCount;
+    const TuplePosition LEFT = 0;
+    const TuplePosition RIGHT = 0;
 
-    unsigned int gridIndex; 
-    std::list<std::vector<SynonymValue>> resultGrid;
+    GridColumn columnCount;
+    GridColumnMap refMap;              // getColumnForSynonym
+    std::list<GridRow> resultList;     // Possible combinations of SynonymValues
+    std::vector<ValueSet> resultTable; // Unique SynonymValues for each SynonymString
+
+    bool contains(ValueSet valSet, SynonymValue val);
+    bool contains(ValueTupleSet valTupleSet, ValueTuple valTuple);
+    bool contains(TuplePosition pos, ValueTuple valTuple, SynonymValue val);
+    bool contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val);
+    void addColumnForSynonym(SynonymString syn, ValueSet vals);
+    GridColumn extractColumn(TuplePosition pos, SynonymTuple synTuple);
+    GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
 
 public:
-    ResultGrid(SynonymString syn, std::set<SynonymValue> vals);
+    ResultGrid(SynonymString syn, ValueSet vals);
 
-    unsigned int getGridIndex();
-    void mergeGrid(ResultGrid other);
-    void updateSynonym(SynonymString syn, std::set<SynonymValue> vals);
-    void updateSynonymTuple(std::tuple<SynonymString> synTuple, std::set<std::tuple<SynonymValue>> valTuples);
-    std::set<SynonymValue> getValuesForSynonym(SynonymString syn);
-    std::set<SynonymValue> getValueTuplesForSynonymTuple(std::tuple<SynonymString> synTuple);
-    std::set<std::tuple<SynonymValue>> getTuple(SynonymString syn1, SynonymString syn2);
+    void mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet valTuples);
+    void updateSynonym(SynonymString syn, ValueSet vals);
+    void updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples);
+    ValueSet getValuesForSynonym(SynonymString syn);
+    ValueTupleSet getValuesForSynonymTuple(SynonymTuple synTuple);
 };
