@@ -91,6 +91,9 @@
     <ClCompile Include="QueryResultProjector.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="ResultGridManager.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">

@@ -28,6 +28,7 @@
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
+    <ClCompile Include="ResultGridManager.cpp" />
     <ClCompile Include="ResultsObject.cpp" />
     <ClCompile Include="ResultsTable.cpp" />
     <ClCompile Include="SelectObject.cpp" />
