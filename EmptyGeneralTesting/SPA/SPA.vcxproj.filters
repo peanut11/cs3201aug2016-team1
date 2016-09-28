@@ -201,6 +201,12 @@
     <ClInclude Include="QueryResultProjector.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
+    <ClInclude Include="ResultGrid.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultGridManager.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
