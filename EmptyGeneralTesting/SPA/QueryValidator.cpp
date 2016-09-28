@@ -126,6 +126,10 @@ void QueryValidator::throwsInvalidRelationshipArgument(RelationshipType type, st
 	throw std::runtime_error("Invalid argument for relationship " + getRelationshipSyntax(type) + " near " + arugment);
 }
 
+void QueryValidator::throwsInvalidRelationshipSameSynonymArguments(RelationshipType type, std::string argument1, std::string argument2) {
+	throw std::runtime_error("Invalid relationship " + getRelationshipSyntax(type) + " due to same synonym for both argument arg1 = " + argument1 + " and arg2 = " + argument2);
+}
+
 void QueryValidator::throwsIncorrectSyntax(std::string syntax) {
 	throw std::runtime_error("Invalid syntax near " + syntax);
 }
@@ -967,9 +971,19 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
 				
 				// check the number of common synonyms in clauses
-				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
-					this->throwsExceedCommonSynonymCount();
+				//if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
+				//	this->throwsExceedCommonSynonymCount();
+				//}
+
+				if (relationshipObject.getRelObjectType() != RelationshipType::NEXT 
+						&& relationshipObject.getRelObjectType() != RelationshipType::NEXT_STAR 
+						&& firstArgObject.getIsSynonym() 
+						&& secondArgObject.getIsSynonym() 
+						&& isMatch(firstArgObject.getStringValue(), secondArgObject.getStringValue())) {
+					this->throwsInvalidRelationshipSameSynonymArguments(relationshipObject.getRelObjectType(), firstArgObject.getStringValue(), secondArgObject.getStringValue());
+					isUnderArg = false;
 				}
+
 
 				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(),
 					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
@@ -978,7 +992,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			}
 			else {
 				this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), st.peekNextToken());
-				//return false;
+				isUnderArg = false;
 			}
 		}
 
@@ -1019,17 +1033,14 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 				if (relationshipObject.doesFirstArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
 					
-					// check if haven't reach max synonym occurence
-					//if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
-						// update synonym occurence
-						this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
+					// update synonym occurence
+					//this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
 						
-						firstArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
-							nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
+					firstArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
 
-						hasValidFirstArg = true; // first argument is correct
-						numberOfArgs += 1;
-					//} // end of check synonym occurence
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
 					
 				}
 
@@ -1039,16 +1050,14 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (hasComma && hasValidFirstArg) {
 
 				if (relationshipObject.doesSecondArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
-					// check if reach max synonym occurence
-					//if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
-						// update synonym occurence
-						this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
-						
-						secondArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
-							nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
 
-						numberOfArgs += 1;
-					//} // end of check synonym occurence
+					// update synonym occurence
+					//this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
+						
+					secondArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
+
+					numberOfArgs += 1;
 				}
 
 			}
@@ -1255,7 +1264,7 @@ bool QueryValidator::isTuple(std::string str) {
 
 	if (!isMatch(str, this->SYNTAX_LEFT_ARROW_BRACKET)) {
 		return isSynonym(str)
-			&& this->mSynonymTable->getObject(str).getType() != EntityType::INVALID;
+			&& this->isDeclaredSynonym(str);
 	}
 
 	std::string currentToken = "";
@@ -1280,18 +1289,23 @@ bool QueryValidator::isTuple(std::string str) {
 			if (isSynonym(st.peekNextToken()) && this->isDeclaredSynonym(st.peekNextToken())) {
 				st.popNextToken(); // points to synonym, after ","
 				isValid = true;
-				continue;
 			}
+			else {
+				isWithinTuple = false;
+				isValid = false;
+			}
+
+			continue;
 		}
 
 		if (isSynonym(currentToken)) {
 			isValid = this->isDeclaredSynonym(currentToken);
+			continue;
 		}
-
 
 	}
 
-	
+	return false;
 }
 
 bool QueryValidator::isSyntaxBoolean(std::string str) {

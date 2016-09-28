@@ -80,6 +80,7 @@ class QueryValidator {
 	void throwsInvalidExpression(std::string expression);
 	void throwsInvalidRelationship(RelationshipType type);
 	void throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment);
+	void throwsInvalidRelationshipSameSynonymArguments(RelationshipType type, std::string argument1, std::string argument2);
 	void throwsIncorrectSyntax(std::string syntax);
 	void throwsInvalidPattern(std::string syntax);
 	void throwsInvalidPatternMissingSyntax();

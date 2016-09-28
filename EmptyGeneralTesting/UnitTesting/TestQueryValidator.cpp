@@ -16,6 +16,11 @@ public:
 
 		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 
+		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
+		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
+		// output is "wrong". Select v such that Modifies (a1, "iter") pattern a("left", _)
+		// crash. assign a; Select a such that Parent*(38, a)
+		
 		// Success Next
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,2)"));
@@ -33,6 +38,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,n2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,n1)")); // same synonym in Next
 		
 
 		// Success Affects
@@ -115,6 +121,40 @@ public:
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,p)");
 		};
 		Assert::ExpectException<std::runtime_error>(error6);
+
+		// Failure, same synonym in relationships
+		auto error7 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error7);
+
+		auto error8 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects(a1, a1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error8);
+
+		auto error9 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error9);
+
+		// Failure, incorrect number of arguments
+		auto error100 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a2, _)");
+		};
+		Assert::ExpectException<std::runtime_error>(error100);
+
+		auto error101 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error101);
+
+
 
 	}
 
@@ -475,124 +515,100 @@ public:
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(1,2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,s2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(1,s2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(ifstmt1, ifstmt2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(ifstmt1, 1)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(w1, w2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(w1, 1)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,_)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,s1)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,_)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		// failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parents(bb,cc)");
 		validator->getNextToken();
 		auto funcPtr = [validator] { validator->isRelationship("Parents"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,q)"); // parent should have stmt args, but both args are procedure
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr2 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr2);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(s1,q)"); // parent
+		validator->initStringTokenizer("Parent(s1,q)"); // 2nd arugment is procedure
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr3 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr3);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,s2)"); // parent
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr4 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr4);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(s1)"); // parent
+		validator->initStringTokenizer("Parent(s1)"); // missing 2nd argument
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr5 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr5);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(s1,)"); // parent
+		validator->initStringTokenizer("Parent(s1,)"); // missing 2nd argument
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr6 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr6);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,)"); // parent
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr7 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr7);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // parent
+		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // 
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr8 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr8);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(\"x\",_)"); // parent
+		validator->initStringTokenizer("Parent(\"x\",_)"); // 
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr9 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr9);
 
+		validator->initStringTokenizer("Parent(s1,s1)"); // same synonyms in both arguments
+		validator->getNextToken();
+		auto funcPtr10 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr10);
 
 	}
 
@@ -623,12 +639,15 @@ public:
 
 
 		// failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(p,q)"); // follows
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Follows"));
 		auto funcPtrError1 = [validator] { validator->isRelationship("Follows"); };
 		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+
+		validator->initStringTokenizer("Follows(s1,s1)"); // same synonym for both args
+		validator->getNextToken();
+		auto funcPtrError2 = [validator] { validator->isRelationship("Follows"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError2);
 
 	}
 
@@ -1165,12 +1184,21 @@ public:
 
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-
+		/*
+		// Success
 		validator->initStringTokenizer("<p, a1, a2>");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isTuple("<"));
 
+		// Failure
+		validator->initStringTokenizer("<p, >");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
 
+		validator->initStringTokenizer("<p such");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+		*/
 	}
 
 	};
