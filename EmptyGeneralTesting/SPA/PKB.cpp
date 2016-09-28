@@ -41,6 +41,10 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
+    if (stmt >= stmtTable.size()) {
+        return false;
+    }
+
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
 		rel = RelationshipType ((int)rel + 1);
 	}
@@ -102,6 +106,10 @@ AssignTree PKB::getAssign(StmtNumber stmt) {
 }
 
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
+    if (stmt >= stmtTypeTable.size()) {
+        throw ERROR;
+    }
+
 	return stmtTypeTable[stmt];
 }
 
@@ -114,6 +122,10 @@ std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtR
 		throw ERROR;
 	}
 
+    if (stmt >= stmtTable.size()) {
+        return std::set<StmtNumber>();
+    }
+
 	return stmtTable[stmt][stmtRel];
 }
 
@@ -121,6 +133,10 @@ std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtN
 	if (followsOrParent != FOLLOWS && followsOrParent != PARENT && followsOrParent != FOLLOWS_STAR && followsOrParent!= PARENT_STAR) {
 		throw ERROR;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return std::set<StmtNumber>();
+    }
 
 	int supplementaryRel = followsOrParent + 1;
 	return stmtTable[stmt][supplementaryRel];
@@ -176,6 +192,10 @@ std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifies
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw ERROR;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return std::set<VarIndex>();
+    }
 
 	return stmtTable[stmt][modifiesOrUses];
 }
