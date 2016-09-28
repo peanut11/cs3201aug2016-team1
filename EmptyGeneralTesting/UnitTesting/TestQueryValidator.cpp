@@ -10,11 +10,23 @@ namespace UnitTesting {
 	TEST_CLASS(TestQueryValidator) {
 public:
 	
+	TEST_METHOD(TestQueryValidator__Iteration_3_Full_Query) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+
+		// Success Next
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
+
+
+	}
+
 	TEST_METHOD(TestQueryValidator__Iteration_2_Full_Query) {
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
 		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
@@ -29,6 +41,9 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(_,n2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,n1)")); // same synonym in Next
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(a1,w)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(ifstmt,s1)"));
 
 		// Success Next*
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,2)"));
@@ -39,7 +54,9 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,n1)")); // same synonym in Next
-		
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(a1,w)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(ifstmt,s1)"));
+
 
 		// Success Affects
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,2)"));
@@ -86,6 +103,7 @@ public:
 
 
 		// Failure
+		/*
 		auto error1 = [validator] { 
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
@@ -103,7 +121,7 @@ public:
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
 		};
 		Assert::ExpectException<std::runtime_error>(error3);
-
+		*/
 		auto error4 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,_)");
@@ -1184,9 +1202,21 @@ public:
 
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-		/*
+		
 		// Success
+		validator->initStringTokenizer("<p>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
 		validator->initStringTokenizer("<p, a1, a2>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
+		validator->initStringTokenizer("<p, a1, a2, w, v, c, pl1>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
+		validator->initStringTokenizer("<p>>"); // althought its true, then next clause check will return false as the next token is ">"
 		validator->getNextToken();
 		Assert::IsTrue(validator->isTuple("<"));
 
@@ -1198,7 +1228,18 @@ public:
 		validator->initStringTokenizer("<p such");
 		validator->getNextToken();
 		Assert::IsFalse(validator->isTuple("<"));
-		*/
+		
+		validator->initStringTokenizer("<p");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+
+
+		validator->initStringTokenizer("<<p>");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+
+
+
 	}
 
 	};

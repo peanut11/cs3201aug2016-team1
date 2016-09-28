@@ -83,14 +83,14 @@ void QueryPreProcessor::populateRelationshipTable() {
 
 	// havent include next and affects
 	object = this->createRelationshipObject(RelationshipType::NEXT,
-	{ EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
-	{ EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
 		2);
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::NEXT_STAR,
-	{ EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
-	{ EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
 		2);
 	this->mRelTable->insert(object);
 

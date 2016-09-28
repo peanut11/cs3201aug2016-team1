@@ -1283,9 +1283,8 @@ bool QueryValidator::isTuple(std::string str) {
 		if (isMatch(currentToken, this->SYNTAX_RIGHT_ARROW_BRACKET)) {
 			hasRightArrowBracket = true;
 			continue;
-		}
-
-		if (isMatch(currentToken, this->SYNTAX_COMMA)) {
+		} 
+		else if (isMatch(currentToken, this->SYNTAX_COMMA)) {
 			if (isSynonym(st.peekNextToken()) && this->isDeclaredSynonym(st.peekNextToken())) {
 				st.popNextToken(); // points to synonym, after ","
 				isValid = true;
@@ -1297,10 +1296,13 @@ bool QueryValidator::isTuple(std::string str) {
 
 			continue;
 		}
-
-		if (isSynonym(currentToken)) {
+		else if (isSynonym(currentToken)) {
 			isValid = this->isDeclaredSynonym(currentToken);
 			continue;
+		}
+		else {
+			isValid = false;
+			isWithinTuple = false;
 		}
 
 	}
