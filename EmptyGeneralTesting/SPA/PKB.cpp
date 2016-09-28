@@ -49,9 +49,8 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
 		rel = RelationshipType ((int)rel + 1);
 	}
 
-	StmtEntry::iterator it;
 	StmtEntry entry = stmtTable[stmt][rel];
-	it = entry.find(item);
+    StmtEntry::iterator it = entry.find(item);
 	return it != entry.end();
 }
 
@@ -130,7 +129,8 @@ std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtR
 }
 
 std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
-	if (followsOrParent != FOLLOWS && followsOrParent != PARENT && followsOrParent != FOLLOWS_STAR && followsOrParent!= PARENT_STAR) {
+	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
+        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
 		throw ERROR;
 	}
 
@@ -229,8 +229,6 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	bool success;
-
 	if (rel == MODIFIES || rel == USES) {
 		throw ERROR;
 	}
@@ -240,10 +238,8 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 	}
 
 	int prevSize = stmtTable[stmtA][rel].size();
-
-	prevSize = stmtTable[stmtA][rel].size();
 	stmtTable[stmtA][rel].insert(stmtB);
-	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
+	bool success = (prevSize + 1 == stmtTable[stmtA][rel].size());
 
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
 		const int OFFSET = 1;
