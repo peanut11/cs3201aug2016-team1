@@ -8,14 +8,13 @@
 
 #include "AssignTree.h"
 #include "EntityType.h"
+#include "Exceptions.h"
 #include "RelationshipType.h"
 #include "Types.h"
 
 class PKB {
 private:
-	static const std::runtime_error ERROR;
 	static PKB* theOne;
-
 	
 	std::vector<AssignTree> assignTrees;
 	std::set<Constant>      constants;

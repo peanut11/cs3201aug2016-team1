@@ -47,6 +47,7 @@
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="DummyPKB.h" />
+    <ClInclude Include="Exceptions.h" />
     <ClInclude Include="ExprTree.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
