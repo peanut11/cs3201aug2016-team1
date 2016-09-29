@@ -91,11 +91,9 @@ ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
     }
 }
 
-void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet valTuples) {
     std::list<GridRow> otherList = other->resultList;
+void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples) {
 
-    SynonymValue value = extractValue(0, *valTuples.begin());
-    SynonymValue otherValue = other->extractValue(0, *valTuples.begin());;
 
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
         GridColumn column = extractColumn(LEFT, synTuple);
@@ -124,7 +122,7 @@ void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
     }
 }
 
-void ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples) {
+void ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples) {
     GridColumn column1 = getColumnForSynonym(extractSynonym(LEFT, synTuple));
     GridColumn column2 = getColumnForSynonym(extractSynonym(RIGHT, synTuple));
 
@@ -133,7 +131,7 @@ void ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTupl
         SynonymValue value2 = (*row)[column2];
         ValueTuple valueTuple = ValueTuple(value1, value2);
 
-        if (!contains(valTuples, valueTuple)) {
+        if (!contains(validTuples, valueTuple)) {
             row = resultList.erase(row);
         }
     }
