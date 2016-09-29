@@ -36,6 +36,10 @@ private:
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
     GridColumn getColumnForSynonym(SynonymString syn);
 
+    unsigned int gridRowComparatorColumn;
+    bool gridRowComparator(GridRow row1, GridRow row2);
+    void sortResultListBySynonym(SynonymString syn);
+
 public:
     ResultGrid(SynonymString syn, ValueSet vals);
 
