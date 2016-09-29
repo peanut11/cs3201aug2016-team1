@@ -47,7 +47,7 @@ void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
     }
 }
 
-GridColumn ResultGrid::extractColumn(TuplePosition pos, SynonymTuple synTuple) {
+SynonymString ResultGrid::extractSynonym(TuplePosition pos, SynonymTuple synTuple) {
     SynonymString syn;
     if (pos == LEFT) {
         syn = std::get<0>(synTuple);
@@ -56,7 +56,7 @@ GridColumn ResultGrid::extractColumn(TuplePosition pos, SynonymTuple synTuple) {
     } else {
         throw INVALID_TUPLE_POSITION;
     }
-    return refMap[syn];
+    return syn;
 }
 
 GridColumn ResultGrid::extractValue(TuplePosition pos, ValueTuple valTuple) {
@@ -69,6 +69,10 @@ GridColumn ResultGrid::extractValue(TuplePosition pos, ValueTuple valTuple) {
         throw INVALID_TUPLE_POSITION;
     }
     return val;
+}
+
+GridColumn ResultGrid::getColumnForSynonym(SynonymString syn) {
+    return refMap[syn];
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
@@ -121,8 +125,8 @@ void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
 }
 
 void ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples) {
-    GridColumn column1 = extractColumn(LEFT, synTuple);
-    GridColumn column2 = extractColumn(RIGHT, synTuple);
+    GridColumn column1 = getColumnForSynonym(extractSynonym(LEFT, synTuple));
+    GridColumn column2 = getColumnForSynonym(extractSynonym(RIGHT, synTuple));
 
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
         SynonymValue value1 = (*row)[column1];
@@ -141,8 +145,8 @@ ValueSet ResultGrid::getValuesForSynonym(SynonymString syn) {
 }
 
 ValueTupleSet ResultGrid::getValuesForSynonymTuple(SynonymTuple synTuple) {
-    GridColumn column1 = extractColumn(LEFT, synTuple);
-    GridColumn column2 = extractColumn(RIGHT, synTuple);
+    GridColumn column1 = getColumnForSynonym(extractSynonym(LEFT, synTuple));
+    GridColumn column2 = getColumnForSynonym(extractSynonym(RIGHT, synTuple));
 
     ValueTupleSet results;
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {

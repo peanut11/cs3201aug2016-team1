@@ -32,8 +32,9 @@ private:
     bool contains(TuplePosition pos, ValueTuple valTuple, SynonymValue val);
     bool contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
-    GridColumn extractColumn(TuplePosition pos, SynonymTuple synTuple);
+    SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
+    GridColumn getColumnForSynonym(SynonymString syn);
 
 public:
     ResultGrid(SynonymString syn, ValueSet vals);
