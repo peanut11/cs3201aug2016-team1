@@ -14,7 +14,7 @@ bool ProgramValidator::isValidSyntax(std::string str) {
 	if (isProcedure(token)) {
 		while (st.hasMoreTokens()) {
 			if (!isMatch(st.nextToken(), "\n")) {
-				throw std::runtime_error("Invalid syntax");
+                Exception::INVALID_SIMPLE_SYNTAX;
 			}
 		}
 	} else {
