@@ -18,7 +18,7 @@ std::logic_error
 */
 
 // PKB
-const std::invalid_argument INCORRECT_API_ERROR("API only for Follows & Parent");
+const std::invalid_argument INCORRECT_PKB_API("API only for Follows & Parent");
 const std::invalid_argument INVALID_STMT_RELATION("Invalid stmt-stmt relation");
 const std::invalid_argument INVALID_VAR_RELATION("Invalid var-stmt relation");
 const std::invalid_argument NOT_ASSIGN_ERROR("Statement is not an assignment");

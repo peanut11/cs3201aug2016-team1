@@ -128,7 +128,7 @@ std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtR
 std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
         && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
-		throw INCORRECT_API_ERROR;
+		throw INCORRECT_PKB_API;
 	}
 
     if (stmt >= stmtTable.size()) {
