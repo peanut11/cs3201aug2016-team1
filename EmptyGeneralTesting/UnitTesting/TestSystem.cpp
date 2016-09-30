@@ -95,7 +95,7 @@ namespace UnitTesting
 			std::string declaration2 = "stmt s;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s such that Follows*(2, s)");
 			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
-			Logger::WriteMessage(queryProcessor->getQueryEvaluator()->getResultsTable().toString().c_str());
+			// Logger::WriteMessage(queryProcessor->getQueryEvaluator()->getResultsTable().toString().c_str());
 			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}

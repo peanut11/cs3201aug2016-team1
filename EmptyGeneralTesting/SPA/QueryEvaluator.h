@@ -7,29 +7,32 @@
 #include "PKB.h"
 #include "QueryResultProjector.h"
 #include "QueryTable.h"
+#include "ResultGridManager.h"
 #include "SelectObject.h"
 #include "SynonymTable.h"
 
 class QueryEvaluator {
 private:
-	static QueryEvaluator *_instance;
+	static QueryEvaluator* _instance;
+    QueryEvaluator();
 
-	PKB *mPKB; 
-	QueryTable *queryTable;
-	SynonymTable *mSynonymTable;
-	ResultsTable resultsTable;
+	PKB* pkb; 
+	QueryTable* queryTable;
+    ResultGridManager* resultManager;
+    SynonymTable* synonymTable;
 
 public:
-	static QueryEvaluator *getInstance();
-	PKB *getPKB();
-	SynonymTable *getSynonymTable();
-	ResultsTable getResultsTable();
-	void *setPKB(PKB *pkb);
+	static QueryEvaluator* getInstance();
+    static VarName to_var_name(VarIndex varIndex);
 
-	std::vector <std::string> evaluate(QueryTable queryTable);
-	ResultsTable *populateResultTable(SynonymTable *synonymTable);
-	ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
+    ClausePatternObject evaluatePattern(ClausePatternObject patternObject); 
+    ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
-	ClausePatternObject evaluatePattern(ClausePatternObject patternObject);
+    std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(SelectObject selectObject, bool relationshipHolds);
+    void populateResultGrids();
+
+    // For unit tests
+    void setPKB(PKB* pkb);
+    PKB* getPKB();
 };
