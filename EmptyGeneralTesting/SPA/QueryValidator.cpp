@@ -1347,7 +1347,7 @@ bool QueryValidator::isTuple(std::string str) {
 			st.popNextToken(); // remove "."
 
 			if (this->isDeclaredSynonym(currentToken)
-				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.nextToken())) {
+				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.peekNextToken())) {
 				
 				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
 					st.popNextToken();
