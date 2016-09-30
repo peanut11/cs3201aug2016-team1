@@ -31,18 +31,20 @@ ResultGrid* ResultGridManager::createGridForSynonym(SynonymString syn, ValueSet 
     return grid;
 }
 
+ResultGrid* ResultGridManager::getGridByIndex(GridIndex index) {
+    return refTable[index];
+}
+
 ResultGrid* ResultGridManager::getGridForSynonym(SynonymString syn) {
     GridIndexMap::const_iterator it = refMap.find(syn);
     ResultGrid* grid;
 
     if (it == refMap.end()) {
         throw INVALID_SYNONYM_ERROR;
-    } else {
-        GridIndex index = it->second;
-        grid = refTable[index];
     }
 
-    return grid;
+    GridIndex index = it->second;
+    return getGridByIndex(index);
 }
 
 GridIndex ResultGridManager::getGridIndexForSynonym(SynonymString syn) {

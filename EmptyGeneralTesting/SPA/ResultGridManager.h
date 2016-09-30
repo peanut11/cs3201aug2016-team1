@@ -11,6 +11,7 @@ private:
 
     GridIndex getGridIndexForSynonym(SynonymString syn);
     ResultGrid* createGridForSynonym(SynonymString syn, ValueSet vals);
+    ResultGrid* getGridByIndex(GridIndex index);
     ResultGrid* getGridForSynonym(SynonymString syn);
     ValueTupleSet permutate(ValueSet vals1, ValueSet vals2);
 
