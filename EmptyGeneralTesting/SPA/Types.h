@@ -20,7 +20,8 @@ typedef StmtVarIndex ProcIndex;  // Index of procedure name in ProcTable
 typedef StmtVarIndex StmtNumber;
 typedef StmtVarIndex VarIndex;   // Index of variable/constant in VarTable
 typedef StmtNumber ProgLineNumber;
-typedef std::set<StmtNumber>::const_iterator StmtSetIterator;
+typedef std::set<StmtNumber> StmtSet;
+typedef StmtSet::const_iterator StmtSetIterator;
 
 typedef StringToken VarName;
 typedef VarName SynonymString; 

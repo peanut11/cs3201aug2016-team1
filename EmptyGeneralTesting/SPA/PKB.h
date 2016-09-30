@@ -22,6 +22,7 @@ private:
 	std::vector<VarName>    refTable;
 	std::vector<StmtRow>    stmtTable;
 	std::vector<EntityType> stmtTypeTable;
+    std::vector<StmtSet>    stmtByTypeTable;
 	std::vector<VarRow>     varTable;
 
 public:

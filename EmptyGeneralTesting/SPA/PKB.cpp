@@ -20,6 +20,10 @@ PKB* PKB::getInstance() {
 PKB::PKB() {
 	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
+
+    while (stmtByTypeTable.size() <= EntityType::STMT) {
+        stmtByTypeTable.push_back(StmtSet());
+    }
 }
 
 void PKB::clear() {
@@ -73,12 +77,8 @@ std::set<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
 
-std::set<StmtNumber> PKB::getAllStmts() {
-	std::set<StmtNumber> stmts;
-	for (StmtNumber stmt = 1; stmt < stmtTable.size(); stmt++) {
-		stmts.insert(stmt);
-	}
-	return stmts;
+StmtSet PKB::getAllStmts() {
+	return stmtByTypeTable[STMT];
 }
 
 std::set<VarName> PKB::getAllVarNames() {
@@ -101,51 +101,42 @@ EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
 	return stmtTypeTable[stmt];
 }
 
-std::set<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
+StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 	return varTable[getVarIndex(varName)][rel];
 }
 
-std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
+StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
 		throw Exception::INVALID_STMT_RELATION;
 	}
 
     if (stmt >= stmtTable.size()) {
-        return std::set<StmtNumber>();
+        return StmtSet();
     }
 
 	return stmtTable[stmt][stmtRel];
 }
 
-std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
+StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
         && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
 		throw Exception::INCORRECT_PKB_API;
 	}
 
     if (stmt >= stmtTable.size()) {
-        return std::set<StmtNumber>();
+        return StmtSet();
     }
 
 	int supplementaryRel = followsOrParent + 1;
 	return stmtTable[stmt][supplementaryRel];
 }
 
-std::set<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
-	std::set<StmtNumber> stmts;
-	
-	if (stmtType == STMT) {
-		stmts = getAllStmts();
+StmtSet PKB::getStmtsByType(EntityType stmtType) {
+    if (stmtType > STMT) {
+        throw Exception::INVALID_STMT_TYPE;
+    }
 
-	} else {
-		for (StmtNumber i = 1; i < stmtTable.size(); i++) { // StmtNumber starts from 1
-			if (stmtTypeTable[i] == stmtType) {
-				stmts.insert(i);
-			}
-		}
-	}
-
-	return stmts;
+	return stmtByTypeTable[stmtType];
 }
 
 StmtNumber PKB::getStmtTableSize() {
@@ -253,8 +244,17 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 		throw Exception::UNEXPECTED_STMT_ERROR;
 	}
 
-	stmtTypeTable.push_back(stmtType);
-	return (stmtTypeTable.size() == stmt+1);
+    int prevSize = stmtByTypeTable[stmtType].size();
+    stmtByTypeTable[stmtType].emplace_hint(stmtByTypeTable[stmtType].end(), stmt);
+    bool success = (prevSize + 1 == stmtByTypeTable[stmtType].size());
+
+    stmtByTypeTable[STMT].emplace_hint(stmtByTypeTable[STMT].end(), stmt);
+    success = (stmt + 1 == stmtByTypeTable[STMT].size()) && success;
+
+    stmtTypeTable.push_back(stmtType);
+    success = (stmt + 1 == stmtTypeTable.size()) && success;
+
+	return success;
 }
 
 bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
