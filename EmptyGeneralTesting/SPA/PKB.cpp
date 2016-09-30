@@ -18,14 +18,6 @@ PKB* PKB::getInstance() {
 }
 
 PKB::PKB() {
-	assignTrees = std::vector<AssignTree>();
-	constants = std::set<Constant>();
-	refMap = RefMap();
-	refTable = std::vector<VarName>();
-	stmtTable = std::vector<StmtRow>();
-	stmtTypeTable = std::vector<EntityType>();
-	varTable = std::vector<VarRow>();
-
 	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
 }
