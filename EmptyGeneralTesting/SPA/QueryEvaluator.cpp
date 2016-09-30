@@ -32,13 +32,16 @@ QueryEvaluator::QueryEvaluator() {
 PKB* QueryEvaluator::getPKB() {
     return this->pkb;
 }
-/*
-SynonymTable* QueryEvaluator::getSynonymTable() {
-    return this->synonymTable;
-}
-*/
+
 void QueryEvaluator::setPKB(PKB *pkb) {
     this->pkb = pkb;
+}
+
+std::set<VarName> QueryEvaluator::getValuesForSynonym(SynonymString syn) {
+    std::set<VarIndex> indexSet = resultManager->getValuesForSynonym(syn);
+    std::set<VarName> nameSet;
+    std::transform(indexSet.begin(), indexSet.end(), std::inserter(nameSet, nameSet.begin()), to_var_name);
+    return nameSet;
 }
 
 std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
@@ -87,7 +90,7 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
     }
 }
 
-void QueryEvaluator::populateResultGrids() {
+ResultGridManager* QueryEvaluator::populateResultGrids() {
     // Get synonym table & list of synonyms
     std::vector<SynonymObject> synonymObjects = synonymTable->getObjects();
 
@@ -100,6 +103,7 @@ void QueryEvaluator::populateResultGrids() {
             resultManager->initialiseSynonym(syn, pkb->getStmtsByType(it->getType()));
         }
     }
+    return resultManager;
 }
 
 ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchThatRelObject) {

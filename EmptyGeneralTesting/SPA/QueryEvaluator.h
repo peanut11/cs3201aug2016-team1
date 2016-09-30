@@ -30,9 +30,10 @@ public:
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
     std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(SelectObject selectObject, bool relationshipHolds);
-    void populateResultGrids();
+    ResultGridManager* populateResultGrids();
 
     // For unit tests
-    void setPKB(PKB* pkb);
     PKB* getPKB();
+    void setPKB(PKB* pkb);
+    std::set<VarName> getValuesForSynonym(SynonymString);
 };
