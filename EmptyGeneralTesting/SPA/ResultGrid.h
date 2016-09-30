@@ -18,6 +18,7 @@ typedef std::vector<SynonymValue> GridRow;
 typedef std::set<SynonymValue> ValueSet;
 typedef std::set<ValueTuple> ValueTupleSet;
 typedef std::list<GridRow>::iterator GridListIterator;
+typedef GridColumnMap::const_iterator GridMapConstIter;
 
 class ResultGrid {
 private:
@@ -35,6 +36,7 @@ private:
     bool contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val);
     void addSynonym(SynonymString syn);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
+    void clearGrid();
     SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
     GridColumn getColumnForSynonym(SynonymString syn);

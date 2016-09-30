@@ -52,6 +52,11 @@ void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
     }
 }
 
+void ResultGrid::clearGrid() {
+    resultList = std::list<GridRow>();
+    resultTable = std::vector<ValueSet>();
+}
+
 SynonymString ResultGrid::extractSynonym(TuplePosition pos, SynonymTuple synTuple) {
     SynonymString syn;
     if (pos == LEFT) {
@@ -106,9 +111,16 @@ ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
 }
 
 void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples) {
+    // Transfer columns
+    for (GridMapConstIter keyVal = other->refMap.begin(); keyVal != other->refMap.end(); ++keyVal) {
+        SynonymString otherSyn = keyVal->first;
+        addSynonym(otherSyn);
+    }
+
+    // If no valid tuples, then clear grid and return
     if (validTuples.empty()) {
-        // Clear both grids
-        // Transfer columns
+        clearGrid();
+        return;
     }
 
     // Sort resultList in both grids by the synonyms of interest
@@ -123,7 +135,7 @@ void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
     GridColumn otherColumn = getColumnForSynonym(otherSyn);
 
     // Loop through resultList
-    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+    for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
 
         // Go to a valid row in resultList
         SynonymValue currentValue = (*row)[column];
@@ -137,30 +149,41 @@ void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
             break;
         }
 
-        // Go to a valid otherRow in other->ResultList
-        SynonymValue otherValidValue = extractValue(RIGHT, *validTuple);
-        GridListIterator otherRow = other->resultList.begin();
-        while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] != otherValidValue) {
-            otherRow = other->resultList.erase(otherRow);
-        }
-
+        // Continue down the validTuples while the left side is the same as currentValue
         while (validTuple != validTuples.end() && extractValue(LEFT, *validTuple) == currentValue) {
+
+            // Go to a valid otherRow in other->ResultList
+            GridListIterator otherRow = other->resultList.begin();
+            SynonymValue otherValidValue = extractValue(RIGHT, *validTuple);
+            while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] != otherValidValue) {
+                otherRow = other->resultList.erase(otherRow);
+            }
+
+            // If at end of other->resultList, stop looping
+            if (otherRow == other->resultList.end()) {
+                break;
+            }
             
             // Permutate
             while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] == otherValidValue) {
-                // newRow = row, keeping row as template
+
+                // Keep row as template
+                GridRow newRow = *row;
+                
                 // Contatenate otherRow to newRow
+                std::copy((*otherRow).begin(), (*otherRow).end(), std::back_inserter(newRow));
+                
                 // Insert newRow before row
+                resultList.insert(row, newRow);
+
+                // Proceed to next otherRow
+                otherRow++;
             }
 
-            // Erase row
-
-            // 
+            // Proceed to next validTuple
             validTuple++;
         }
     }
-
-    // Update column in refTable and resultTable
 }
 
 void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {

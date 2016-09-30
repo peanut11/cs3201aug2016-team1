@@ -26,6 +26,7 @@ const std::length_error UNEXPECTED_STMT_ERROR("StmtType not recorded in order");
 const std::out_of_range INVALID_VAR_INDEX("VarIndex does not exist");
 
 // ResultGrid
+const std::invalid_argument INCORRECT_GRID_API("mergeGrid(other) for no result");
 const std::invalid_argument INVALID_TUPLE_POSITION("Tuple position must be 0/1");
 
 // ResultGridManager
