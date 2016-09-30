@@ -144,6 +144,8 @@ class QueryValidator {
 	bool isDeclaredSynonym(std::string str); // pass in a string, check against synonymtable
 	//bool isRelationship(std::string str); // string can be a relationship (parent, follows, etc)
 
+	bool isSynonymContainsAttrName(EntityType type, std::string attrName);
+
 
 	/*
 	bool isStmt(std::string str);		// stmt

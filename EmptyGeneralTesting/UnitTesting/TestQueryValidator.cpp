@@ -14,10 +14,57 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
 
-		// Success Next
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		// Success Tuple with synonyms only
+		//Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// Success Tuple with synonym and attrName
+		//Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, q> such that Parent(s1,_) and Next(s1, s2)"));
+
+		// Success Tuple with similar synonyms
+		
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, p> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, p> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, p.procName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q.procName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, c.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, c.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, w.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <var1.varName, w.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <const.value, w.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <w.stmt#, var1.varName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <a1.stmt#, const.value> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, const.value> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <a1.stmt#, n2> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, n2> such that Parent(s1,_) and Next(s1, s2)"));
+
+		
+		// Failure, Tuple with wrong format
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <<p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, q>> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <<p, q>> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, q such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select p, q such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p q> such that Parent(s1,_) and Next(s1, s2)"));
+
+		// Failure, Tuple correct format, wrong element
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <z, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, z> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <z, abc> such that Parent(s1,_) and Next(s1, s2)"));
+
+
+		// Failure, Tuple with wrong synonym attrName
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p.value, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, q.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p.value, q.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <c.value, q.varName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <var1.procName, q.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <n1.stmt#, n2> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <n1, n2.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <n1.stmt#, n2.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
 
 
 	}

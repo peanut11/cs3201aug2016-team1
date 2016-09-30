@@ -370,7 +370,6 @@ bool QueryValidator::isSelect(std::string str) {
 			return false;
 		}
 
-
 		std::string currentToken = st.nextToken();
 
 		if (isMatch(currentToken, QueryValidator::SYNTAX_SELECT)) {
@@ -1268,10 +1267,14 @@ bool QueryValidator::isTuple(std::string str) {
 	}
 
 	std::string currentToken = "";
+	std::string previousValidSynonym = "";
 	bool isWithinTuple = true;
 	bool isValid = true;
 	bool hasRightArrowBracket = false;
-	//bool hasComma = false;
+	
+	int synonymCount = 0;
+
+
 	while (isWithinTuple) {
 		
 		if (hasRightArrowBracket) {
@@ -1285,23 +1288,99 @@ bool QueryValidator::isTuple(std::string str) {
 			continue;
 		} 
 		else if (isMatch(currentToken, this->SYNTAX_COMMA)) {
-			if (isSynonym(st.peekNextToken()) && this->isDeclaredSynonym(st.peekNextToken())) {
-				st.popNextToken(); // points to synonym, after ","
+			if (isSynonym(st.peekNextToken()) 
+				&& this->isDeclaredSynonym(st.peekNextToken())) {
+
+				previousValidSynonym = st.nextToken(); // points to synonym, after ","
 				isValid = true;
+				synonymCount++;
 			}
 			else {
 				isWithinTuple = false;
-				isValid = false;
 			}
 
 			continue;
 		}
-		else if (isSynonym(currentToken)) {
-			isValid = this->isDeclaredSynonym(currentToken);
+		else if (isMatch(currentToken, this->SYNTAX_DOT)) {
+			// means before that there's a synonym
+			if (isSynonym(previousValidSynonym)
+				&& this->isDeclaredSynonym(previousValidSynonym)
+				&& this->isSynonymContainsAttrName(this->mSynonymTable->getObject(previousValidSynonym).getType(), st.peekNextToken())) {
+				
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+					st.popNextToken();
+					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+						st.popNextToken();
+						isValid = true;
+					}
+					else {
+						isValid = false;
+					}
+				}
+				else {
+					st.popNextToken();
+					isValid = true;
+				}
+
+				
+			}
+		}
+		// current token is a synonym with a "," or ">" 
+		else if (isSynonym(currentToken) 
+				&& (isMatch(st.peekNextToken(), this->SYNTAX_COMMA) 
+					|| isMatch(st.peekNextToken(), this->SYNTAX_RIGHT_ARROW_BRACKET))) {
+
+			if (this->isDeclaredSynonym(currentToken)) {
+				previousValidSynonym = currentToken;
+				isValid = true;
+				synonymCount++;
+			}
+			else {
+				isWithinTuple = false;
+			}
+			continue;
+		}
+		// current token is a synonym with a dot next
+		else if (isSynonym(currentToken)
+			&& isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
+
+			st.popNextToken(); // remove "."
+
+			if (this->isDeclaredSynonym(currentToken)
+				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.nextToken())) {
+				
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+					st.popNextToken();
+					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+						st.popNextToken();
+
+						previousValidSynonym = currentToken;
+						isValid = true;
+						synonymCount++;
+					}
+					else {
+						isValid = false;
+					}
+				}
+				else {
+					st.popNextToken();
+					previousValidSynonym = currentToken;
+					isValid = true;
+					synonymCount++;
+				}
+
+
+				//previousValidSynonym = currentToken;
+				//isValid = true;
+				//synonymCount++;
+			}
+			else {
+				isWithinTuple = false;
+			}
+
 			continue;
 		}
 		else {
-			isValid = false;
 			isWithinTuple = false;
 		}
 
@@ -1331,8 +1410,11 @@ bool QueryValidator::isAttributeReference(std::string str) {
 			return true;
 		}
 
-		st.nextToken(); // point to "."
+		st.popNextToken(); // remove "." from stack
 
+		return this->isSynonymContainsAttrName(selectedSynonymObj.getType(), st.nextToken());
+
+		/*
 		switch (selectedSynonymObj.getType()) {
 		case STMT:
 		case IF:
@@ -1399,8 +1481,7 @@ bool QueryValidator::isAttributeReference(std::string str) {
 			}
 			break;
 		}
-
-
+		*/
 
 	}
 
@@ -1463,6 +1544,49 @@ bool QueryValidator::isInteger(std::string str) {
 	}
 	return true;
 }
+
+bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string attrName) {
+	switch (type) {
+	case STMT:
+	case IF:
+	case WHILE:
+	case ASSIGN:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT);
+		break;
+
+	case PROCEDURE:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME);
+		break;
+
+	case CALL:
+		if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+				st.popNextToken(); // remove "#" from stack
+				return true;
+			}
+
+		} 
+		else if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		break;
+
+	case VARIABLE:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_VARIABLE_NAME);
+		break;
+
+	case CONSTANT:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_VALUE);
+		break;
+	default:
+		return false;
+	}
+}
+
 
 RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	if (isMatch(syntax, SYNTAX_RELATIONSHIP_USES)) {

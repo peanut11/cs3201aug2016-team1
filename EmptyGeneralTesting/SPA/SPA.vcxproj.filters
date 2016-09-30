@@ -165,9 +165,6 @@
     <ClInclude Include="DesignExtractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SynonymOccurence.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
     <ClInclude Include="QueryTable.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
@@ -205,6 +202,9 @@
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="ResultGridManager.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymOccurence.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>
