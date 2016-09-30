@@ -171,9 +171,7 @@ VarName PKB::getVarName(VarIndex varIndex) {
 	if (varIndex >= refTable.size()) {
 		throw Exception::INVALID_VAR_INDEX;
 	}
-
-	VarName varName = refTable[varIndex];
-	return varName;
+	return refTable[varIndex];
 }
 
 std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
