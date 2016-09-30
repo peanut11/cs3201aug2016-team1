@@ -20,7 +20,8 @@ QueryEvaluator* QueryEvaluator::getInstance() {
 }
 
 VarName QueryEvaluator::to_var_name(VarIndex varIndex) {
-    return PKB::getInstance()->getVarName(varIndex);
+    // return PKB::getInstance()->getVarName(varIndex);              // Original
+    return QueryEvaluator::getInstance()->pkb->getVarName(varIndex); // DummyPKB
 }
 
 QueryEvaluator::QueryEvaluator() {
@@ -373,7 +374,6 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
     return ClauseWithObject();
 }
-
 
 ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternObject) {
     EntityType patternType = patternObject.getPatternType();
