@@ -85,13 +85,10 @@ GridColumn ResultGrid::getColumnForSynonym(SynonymString syn) {
     return refMap[syn];
 }
 
-bool ResultGrid::gridRowComparator(GridRow row1, GridRow row2) {
-    return (row1[gridRowComparatorColumn] < row2[gridRowComparatorColumn]);
-}
-
 void ResultGrid::sortResultListBySynonym(SynonymString syn) {
-    gridRowComparatorColumn = getColumnForSynonym(syn);
-    std::stable_sort(resultList.begin(), resultList.end(), gridRowComparator);
+    GridColumn column = getColumnForSynonym(syn);
+    std::stable_sort(resultList.begin(), resultList.end(), [column](GridRow row1, GridRow row2) {
+        return (row1[column] < row2[column]); });
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {

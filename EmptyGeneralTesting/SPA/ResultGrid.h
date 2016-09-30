@@ -37,14 +37,10 @@ private:
     void addSynonym(SynonymString syn);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
     void clearGrid();
+    void sortResultListBySynonym(SynonymString syn); 
     SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
     GridColumn getColumnForSynonym(SynonymString syn);
-
-    // Sort resultList
-    static unsigned int gridRowComparatorColumn;
-    static bool gridRowComparator(GridRow row1, GridRow row2);
-    void sortResultListBySynonym(SynonymString syn);
 
 public:
     ResultGrid(SynonymString syn, ValueSet vals);
