@@ -26,16 +26,22 @@ VarIndex DummyPKB::getVarIndex(VarName varName)
 	return -1;
 }
 
-VarName DummyPKB::getVarName(VarIndex varIndex)
-{
+VarName DummyPKB::getVarName(VarIndex varIndex) {
 	// 0 = "x"
 	// 1 = "w"
+    // 2 = "y"
+    // 3 = "z"
 	if (varIndex == 0) {
 		return "x";
 	} else if (varIndex == 1) {
 		return "w";
-	}
-	return "";
+    } else if (varIndex == 2) {
+        return "y";
+    } else if (varIndex == 3) {
+        return "z";
+    } else {
+        return "";
+    }
 }
 
 bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item)
@@ -88,6 +94,10 @@ std::set<StmtNumber> DummyPKB::getAllStmts()
 	// statement : 1,2,3,4,5,6,7,8,9
 	std::set<StmtNumber> stmts = { 1,2,3,4,5,6,7,8,9 };
 	return stmts;
+}
+
+std::set<VarIndex> DummyPKB::getAllVarIndex() {
+    return std::set<VarIndex>({ 0,1,2,3 });
 }
 
 std::set<VarName> DummyPKB::getAllVarNames()
