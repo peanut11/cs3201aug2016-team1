@@ -27,10 +27,15 @@ bool ResultGrid::contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymV
     return valTuple == valTupleSet.end();
 }
 
-void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
+void ResultGrid::addSynonym(SynonymString syn) {
     GridColumn column = columnCount++;
     refMap[syn] = column;
     resultTable.push_back(ValueSet());
+}
+
+void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
+    addSynonym(syn);
+    GridColumn column = getColumnForSynonym(syn);
 
     std::list<GridRow> oldList = resultList;
     resultList = std::list<GridRow>();

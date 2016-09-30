@@ -33,6 +33,7 @@ private:
     bool contains(ValueTupleSet valTupleSet, ValueTuple valTuple);
     bool contains(TuplePosition pos, ValueTuple valTuple, SynonymValue val);
     bool contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val);
+    void addSynonym(SynonymString syn);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
     SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
