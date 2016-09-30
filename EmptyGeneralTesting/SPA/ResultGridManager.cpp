@@ -55,7 +55,7 @@ bool ResultGridManager::areInSameGrid(SynonymString syn1, SynonymString syn2) {
     return getGridIndexForSynonym(syn1) == getGridIndexForSynonym(syn2);
 }
 
-void ResultGridManager::initialiseValuesForSynonym(SynonymString syn, ValueSet vals) {
+void ResultGridManager::initialiseSynonym(SynonymString syn, ValueSet vals) {
     createGridForSynonym(syn, vals);
 }
 

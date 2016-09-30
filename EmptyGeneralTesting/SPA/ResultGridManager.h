@@ -17,7 +17,7 @@ private:
 
 public:
     bool areInSameGrid(SynonymString syn1, SynonymString syn2);
-    void initialiseValuesForSynonym(SynonymString syn, ValueSet vals);
+    void initialiseSynonym(SynonymString syn, ValueSet vals);
     void updateSynonym(SynonymString syn, ValueSet vals);
     void updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples);
     ValueSet getValuesForSynonym(SynonymString syn);
