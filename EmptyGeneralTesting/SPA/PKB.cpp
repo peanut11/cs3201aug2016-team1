@@ -81,6 +81,14 @@ StmtSet PKB::getAllStmts() {
 	return stmtByTypeTable[STMT];
 }
 
+std::set<VarIndex> PKB::getAllVarIndex() {
+    std::set<VarIndex> allVarIndex;
+    for (VarIndex varIndex = 0; varIndex < refTable.size(); varIndex++) {
+        allVarIndex.emplace(varIndex);
+    }
+    return allVarIndex;
+}
+
 std::set<VarName> PKB::getAllVarNames() {
 	return std::set<VarName>(refTable.begin(),refTable.end());
 }
