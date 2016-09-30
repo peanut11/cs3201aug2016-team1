@@ -37,7 +37,6 @@ ResultGrid* ResultGridManager::getGridByIndex(GridIndex index) {
 
 ResultGrid* ResultGridManager::getGridForSynonym(SynonymString syn) {
     GridIndexMap::const_iterator it = refMap.find(syn);
-    ResultGrid* grid;
 
     if (it == refMap.end()) {
         throw Exception::INVALID_SYNONYM_ERROR;
