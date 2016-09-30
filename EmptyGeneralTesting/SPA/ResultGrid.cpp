@@ -64,7 +64,7 @@ SynonymString ResultGrid::extractSynonym(TuplePosition pos, SynonymTuple synTupl
     } else if (pos == RIGHT) {
         syn = std::get<1>(synTuple);
     } else {
-        throw INVALID_TUPLE_POSITION;
+        throw Exception::INVALID_TUPLE_POSITION;
     }
     return syn;
 }
@@ -76,7 +76,7 @@ GridColumn ResultGrid::extractValue(TuplePosition pos, ValueTuple valTuple) {
     } else if (pos == RIGHT) {
         val = std::get<1>(valTuple);
     } else {
-        throw INVALID_TUPLE_POSITION;
+        throw Exception::INVALID_TUPLE_POSITION;
     }
     return val;
 }

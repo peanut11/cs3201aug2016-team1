@@ -40,7 +40,7 @@ ResultGrid* ResultGridManager::getGridForSynonym(SynonymString syn) {
     ResultGrid* grid;
 
     if (it == refMap.end()) {
-        throw INVALID_SYNONYM_ERROR;
+        throw Exception::INVALID_SYNONYM_ERROR;
     }
 
     GridIndex index = it->second;

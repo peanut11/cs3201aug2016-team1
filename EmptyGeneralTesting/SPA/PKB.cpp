@@ -95,7 +95,7 @@ std::set<VarName> PKB::getAllVarNames() {
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
-		throw NOT_ASSIGN_ERROR;
+		throw Exception::NOT_ASSIGN_ERROR;
 	}
 
 	return assignTrees[stmt];
@@ -115,7 +115,7 @@ std::set<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 
 std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
-		throw INVALID_STMT_RELATION;
+		throw Exception::INVALID_STMT_RELATION;
 	}
 
     if (stmt >= stmtTable.size()) {
@@ -128,7 +128,7 @@ std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtR
 std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
         && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
-		throw INCORRECT_PKB_API;
+		throw Exception::INCORRECT_PKB_API;
 	}
 
     if (stmt >= stmtTable.size()) {
@@ -178,7 +178,7 @@ VarIndex PKB::getVarIndex(VarName varName) {
 
 VarName PKB::getVarName(VarIndex varIndex) {
 	if (varIndex >= refTable.size()) {
-		throw INVALID_VAR_INDEX;
+		throw Exception::INVALID_VAR_INDEX;
 	}
 
 	VarName varName = refTable[varIndex];
@@ -187,7 +187,7 @@ VarName PKB::getVarName(VarIndex varIndex) {
 
 std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw INVALID_VAR_RELATION;
+		throw Exception::INVALID_VAR_RELATION;
 	}
 
     if (stmt >= stmtTable.size()) {
@@ -203,7 +203,7 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	VarIndex varIndex = getVarIndex(varName);
 
 	if (rel != MODIFIES && rel != USES) {
-		throw INVALID_VAR_RELATION;
+		throw Exception::INVALID_VAR_RELATION;
 	}
 	
 	while (stmt >= stmtTable.size()) {
@@ -227,7 +227,7 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
 	if (rel == MODIFIES || rel == USES) {
-		throw INVALID_STMT_RELATION;
+		throw Exception::INVALID_STMT_RELATION;
 	}
 
 	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
@@ -258,7 +258,7 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	if (stmtTypeTable.size() != stmt) {
-		throw UNEXPECTED_STMT_ERROR;
+		throw Exception::UNEXPECTED_STMT_ERROR;
 	}
 
 	stmtTypeTable.push_back(stmtType);
