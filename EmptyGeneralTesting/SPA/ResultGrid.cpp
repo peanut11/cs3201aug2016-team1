@@ -191,11 +191,14 @@ void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
                      std::inserter(intersection, intersection.begin()));
     resultTable[column] = intersection;
 
-    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+    GridListIterator row = resultList.begin();
+    while (row != resultList.end()) {
         SynonymValue value = (*row)[column];
-        
+
         if (!contains(vals, value)) {
             row = resultList.erase(row);
+        } else {
+            row++;
         }
     }
 }
