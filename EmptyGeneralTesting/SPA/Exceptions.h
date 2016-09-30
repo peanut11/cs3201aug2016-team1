@@ -27,10 +27,16 @@ namespace Exception {
     const std::length_error UNEXPECTED_STMT_ERROR("StmtType not recorded in order");
     const std::out_of_range INVALID_VAR_INDEX("VarIndex does not exist");
 
+    // ProgramValidator
+    const std::domain_error INVALID_SIMPLE_SYNTAX("Invalid SIMPLE source code");
+
     // ResultGrid
     const std::invalid_argument INCORRECT_GRID_API("mergeGrid(other) for no result");
     const std::invalid_argument INVALID_TUPLE_POSITION("Tuple position must be 0/1");
 
     // ResultGridManager
     const std::invalid_argument INVALID_SYNONYM_ERROR("Synonym does not exist");
+
+    // SynonymTable
+    const std::out_of_range INVALID_OBJECT_INDEX("getObject index is out of vector size");
 };

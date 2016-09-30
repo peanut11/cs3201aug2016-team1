@@ -1,14 +1,15 @@
 #pragma once
+
 #include <vector>
 
+#include "Exceptions.h"
 #include "RelObject.h"
 
 class RelTable {
-
 	static RelTable *_instance;
 	static RelObject nullRelObject;
-	std::vector<RelObject> relObjects;
 
+	std::vector<RelObject> relObjects;
 
 public:
 	static RelTable *getInstance();
@@ -17,9 +18,4 @@ public:
 	RelObject find(RelationshipType type);
 	int insert(RelObject object);
 	int size();
-
-
-
-
-
 };

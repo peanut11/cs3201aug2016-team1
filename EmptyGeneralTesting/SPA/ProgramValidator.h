@@ -3,6 +3,7 @@
 #include <cctype>
 #include <string>
 
+#include "Exceptions.h"
 #include "StringTokenizer.h"
 
 class ProgramValidator {

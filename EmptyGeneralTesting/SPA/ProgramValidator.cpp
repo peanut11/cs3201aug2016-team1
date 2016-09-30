@@ -18,7 +18,7 @@ bool ProgramValidator::isValidSyntax(std::string str) {
 			}
 		}
 	} else {
-		throw std::runtime_error("Invalid syntax");
+        throw Exception::INVALID_SIMPLE_SYNTAX;
 	}
 
 	return true;
