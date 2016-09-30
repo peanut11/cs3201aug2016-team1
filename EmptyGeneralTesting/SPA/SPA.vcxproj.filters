@@ -64,12 +64,6 @@
     <ClCompile Include="QueryTable.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="ResultsTable.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
-    <ClCompile Include="ResultsObject.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="ClausePatternObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -176,12 +170,6 @@
     </ClInclude>
     <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResultsTable.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="ResultsObject.h">
-      <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="ClauseSuchThatObject.h">
       <Filter>Header Files\QP</Filter>
