@@ -10,6 +10,7 @@
 #include "SynonymTable.h"
 #include "QueryResultProjector.h"
 #include "DummyPKB.h"
+
 class QueryEvaluator {
 private:
 	static QueryEvaluator *_instance;
@@ -32,5 +33,4 @@ public:
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
 	ClausePatternObject evaluatePattern(ClausePatternObject patternObject);
 	std::vector<std::string> evaluateSelect(SelectObject selectObject, bool relationshipHolds);
-
 };
