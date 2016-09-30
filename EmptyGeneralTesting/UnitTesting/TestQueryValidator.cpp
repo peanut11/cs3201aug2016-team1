@@ -17,11 +17,11 @@ public:
 		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
 
 		// Success Tuple with synonyms only
-		//Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// Success Tuple with synonym and attrName
-		//Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, q> such that Parent(s1,_) and Next(s1, s2)"));
 
 		// Success Tuple with similar synonyms
 		
