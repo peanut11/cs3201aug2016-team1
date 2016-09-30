@@ -161,7 +161,7 @@ public:
 		expected.insert(ASSIGN);
 		expected.insert(ASSIGN);
 
-		for (int stmt = 1; stmt < pkb->getStmtTableSize(); stmt++) {
+		for (unsigned int stmt = 1; stmt < pkb->getStmtTableSize(); stmt++) {
 			actual.insert(pkb->getStmtTypeForStmt(stmt));
 		}
 		Assert::IsTrue(expected == actual);

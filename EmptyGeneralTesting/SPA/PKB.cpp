@@ -6,9 +6,6 @@
 // - VarTable
 
 #include "PKB.h"
-#include "algorithm"
-
-const std::runtime_error PKB::ERROR = std::runtime_error("");
 
 PKB* PKB::theOne = nullptr;
 
@@ -41,13 +38,16 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
+    if (stmt >= stmtTable.size()) {
+        return false;
+    }
+
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
 		rel = RelationshipType ((int)rel + 1);
 	}
 
-	StmtEntry::iterator it;
 	StmtEntry entry = stmtTable[stmt][rel];
-	it = entry.find(item);
+    StmtEntry::iterator it = entry.find(item);
 	return it != entry.end();
 }
 
@@ -95,13 +95,17 @@ std::set<VarName> PKB::getAllVarNames() {
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
-		throw ERROR;
+		throw NOT_ASSIGN_ERROR;
 	}
 
 	return assignTrees[stmt];
 }
 
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
+    if (stmt >= stmtTypeTable.size()) {
+        return INVALID;
+    }
+
 	return stmtTypeTable[stmt];
 }
 
@@ -111,16 +115,25 @@ std::set<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 
 std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
-		throw ERROR;
+		throw INVALID_STMT_RELATION;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return std::set<StmtNumber>();
+    }
 
 	return stmtTable[stmt][stmtRel];
 }
 
 std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
-	if (followsOrParent != FOLLOWS && followsOrParent != PARENT && followsOrParent != FOLLOWS_STAR && followsOrParent!= PARENT_STAR) {
-		throw ERROR;
+	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
+        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
+		throw INCORRECT_PKB_API;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return std::set<StmtNumber>();
+    }
 
 	int supplementaryRel = followsOrParent + 1;
 	return stmtTable[stmt][supplementaryRel];
@@ -165,7 +178,7 @@ VarIndex PKB::getVarIndex(VarName varName) {
 
 VarName PKB::getVarName(VarIndex varIndex) {
 	if (varIndex >= refTable.size()) {
-		throw ERROR;
+		throw INVALID_VAR_INDEX;
 	}
 
 	VarName varName = refTable[varIndex];
@@ -174,8 +187,12 @@ VarName PKB::getVarName(VarIndex varIndex) {
 
 std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw ERROR;
+		throw INVALID_VAR_RELATION;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return std::set<VarIndex>();
+    }
 
 	return stmtTable[stmt][modifiesOrUses];
 }
@@ -186,7 +203,7 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	VarIndex varIndex = getVarIndex(varName);
 
 	if (rel != MODIFIES && rel != USES) {
-		throw ERROR;
+		throw INVALID_VAR_RELATION;
 	}
 	
 	while (stmt >= stmtTable.size()) {
@@ -209,10 +226,8 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	bool success;
-
 	if (rel == MODIFIES || rel == USES) {
-		throw ERROR;
+		throw INVALID_STMT_RELATION;
 	}
 
 	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
@@ -220,10 +235,8 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 	}
 
 	int prevSize = stmtTable[stmtA][rel].size();
-
-	prevSize = stmtTable[stmtA][rel].size();
 	stmtTable[stmtA][rel].insert(stmtB);
-	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
+	bool success = (prevSize + 1 == stmtTable[stmtA][rel].size());
 
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
 		const int OFFSET = 1;
@@ -245,7 +258,7 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	if (stmtTypeTable.size() != stmt) {
-		throw ERROR;
+		throw UNEXPECTED_STMT_ERROR;
 	}
 
 	stmtTypeTable.push_back(stmtType);
