@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm> // std::stable_sort
 #include <list>
+
 #include "Exceptions.h"
 #include "Types.h"
 
@@ -36,8 +38,9 @@ private:
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
     GridColumn getColumnForSynonym(SynonymString syn);
 
-    unsigned int gridRowComparatorColumn;
-    bool gridRowComparator(GridRow row1, GridRow row2);
+    // Sort resultList
+    static unsigned int gridRowComparatorColumn;
+    static bool gridRowComparator(GridRow row1, GridRow row2);
     void sortResultListBySynonym(SynonymString syn);
 
 public:
