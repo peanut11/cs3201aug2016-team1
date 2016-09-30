@@ -74,10 +74,16 @@ void ResultGridManager::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet 
         return grid->updateSynonymTuple(synTuple, valTuples);
 
     } else {
-        ResultGrid* grid1 = getGridForSynonym(syn1);
-        ResultGrid* grid2 = getGridForSynonym(syn2);
+        GridIndex index1 = getGridIndexForSynonym(syn1);
+        GridIndex index2 = getGridIndexForSynonym(syn2); 
+        ResultGrid* grid1 = getGridByIndex(index1);
+        ResultGrid* grid2 = getGridByIndex(index2);
 
         grid1->mergeGrid(grid2, synTuple, valTuples);
+
+        // Update refMap and gridTable
+        refMap[syn2] = index1;
+        std::copy(gridTable[index2].begin(), gridTable[index2].end(), std::back_inserter(gridTable[index1]));
     }
 }
 
