@@ -1,15 +1,14 @@
 #pragma once
 
-#include "PKB.h"
 #include "ClausePatternObject.h"
-#include "SelectObject.h"
 #include "ClauseSuchThatObject.h"
 #include "ClauseWithObject.h"
-#include "ResultsTable.h"
-#include "QueryTable.h"
-#include "SynonymTable.h"
-#include "QueryResultProjector.h"
 #include "DummyPKB.h"
+#include "PKB.h"
+#include "QueryResultProjector.h"
+#include "QueryTable.h"
+#include "SelectObject.h"
+#include "SynonymTable.h"
 
 class QueryEvaluator {
 private:

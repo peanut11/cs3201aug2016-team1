@@ -9,7 +9,6 @@
 // SelectObject
 
 #include "QueryEvaluator.h"
-#include "ResultsTable.h"
 
 QueryEvaluator* QueryEvaluator::_instance = nullptr;
 
