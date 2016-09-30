@@ -17,7 +17,7 @@ ValueTupleSet ResultGridManager::permutate(ValueSet vals1, ValueSet vals2) {
     return results;
 }
 
-ResultGrid* ResultGridManager::createGridForSynonym(SynonymString syn, ValueSet vals) {
+bool ResultGridManager::createGridForSynonym(SynonymString syn, ValueSet vals) {
     ResultGrid* grid = new ResultGrid(syn, vals);
     refTable.push_back(grid);
 
@@ -28,7 +28,7 @@ ResultGrid* ResultGridManager::createGridForSynonym(SynonymString syn, ValueSet 
     synonyms.push_back(syn);
     gridTable.push_back(synonyms);
 
-    return grid;
+    return refTable.size() == refMap.size() && refMap.size() == gridTable.size();
 }
 
 ResultGrid* ResultGridManager::getGridByIndex(GridIndex index) {
@@ -55,8 +55,8 @@ bool ResultGridManager::areInSameGrid(SynonymString syn1, SynonymString syn2) {
     return getGridIndexForSynonym(syn1) == getGridIndexForSynonym(syn2);
 }
 
-void ResultGridManager::initialiseSynonym(SynonymString syn, ValueSet vals) {
-    createGridForSynonym(syn, vals);
+bool ResultGridManager::initialiseSynonym(SynonymString syn, ValueSet vals) {
+    return createGridForSynonym(syn, vals);
 }
 
 void ResultGridManager::updateSynonym(SynonymString syn, ValueSet vals) {
