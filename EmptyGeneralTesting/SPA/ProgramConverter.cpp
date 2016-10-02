@@ -148,6 +148,11 @@ bool ProgramConverter::isWhile(ProgLine line) {
 	return FIRST_TOKEN == "while";
 }
 
+bool ProgramConverter::isIf(ProgLine line) {
+	const std::string FIRST_TOKEN = line[0];
+	return FIRST_TOKEN == "if";
+}
+
 bool ProgramConverter::isEnterParent(std::string str) {
 	return str == "{";
 }
@@ -208,6 +213,12 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	} else if (isWhile(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, WHILE) && success;
 		
+		const VarName varName = line[1];
+		success = pkb->putControlVarForStmt(lineNum, varName) && success;
+		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
+	} else if (isIf(line)) {
+		success = pkb->putStmtTypeForStmt(lineNum, IF) && success;
+
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
