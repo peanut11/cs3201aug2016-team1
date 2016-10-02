@@ -19,6 +19,7 @@ PKB* PKB::getInstance() {
 
 PKB::PKB() {
 	assignTrees = std::vector<AssignTree>();
+	controlVars = std::vector<VarIndex>();
 	constants = std::set<Constant>();
 	varRefMap = VarRefMap();
 	varRefTable = std::vector<VarName>();
@@ -86,6 +87,13 @@ bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
 
 bool PKB::isVarExist(VarName varName) {
 	return (varRefMap.find(varName) != varRefMap.end());
+}
+
+bool PKB::isWhilePattern(StmtNumber whileStmt, VarIndex varIndex) {
+	return getStmtTypeForStmt(whileStmt) == WHILE && varIndex <varRefTable.size() && controlVars[whileStmt] == varIndex;
+}
+bool PKB::isIfPattern(StmtNumber ifStmt, VarIndex varIndex) {
+	return getStmtTypeForStmt(ifStmt) == IF && varIndex < varRefTable.size() && controlVars[ifStmt] == varIndex;
 }
 
 std::set<Constant> PKB::getAllConstantValues() {
@@ -414,4 +422,18 @@ bool PKB::putProcForProc(ProcName procA, RelationshipType calls, ProcName procB)
 	success = procTable[procIndexB][calls + 1].find(procIndexA) != procTable[procIndexB][calls + 1].end();
 
 	return success;
+}
+
+bool PKB::putControlVarForStmt(StmtNumber ifOrWhile, VarName varName) {
+	EntityType stmtType = getStmtTypeForStmt(ifOrWhile);
+	if (stmtType != IF && stmtType != WHILE) {
+		throw Exception::NOT_WHILE_OR_IF_ERROR;
+	}
+	while (controlVars.size() < ifOrWhile) {
+		controlVars.push_back(UINT_MAX);
+	}
+
+	int prevSize = controlVars.size();
+	controlVars.push_back(getVarIndex(varName));
+	return prevSize + 1 == controlVars.size();
 }

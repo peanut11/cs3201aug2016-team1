@@ -17,6 +17,7 @@ private:
 	static PKB* theOne;
 	
 	std::vector<AssignTree>				assignTrees;
+	std::vector<VarIndex>				controlVars;
 	std::set<Constant>					constants;
 	VarRefMap							varRefMap;
 	std::vector<VarName>				varRefTable;
@@ -46,6 +47,7 @@ public:
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName); //updates MODIFIES and USES relationships in Vartable and StmtTable
+	bool putControlVarForStmt(StmtNumber ifOrWhile, VarName varName);
 	bool putConstant(Constant constant);
 	bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
 	bool putProcForProc(ProcName procA, RelationshipType calls, ProcName procB);
@@ -73,6 +75,8 @@ public:
 	virtual bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
 	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
 	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
+	virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
+	virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
 	bool isVarExist(VarName varName);
 
 	virtual AssignTree              getAssign(StmtNumber stmt);
@@ -85,7 +89,6 @@ public:
 	virtual ProcIndex				getProcByStmt(StmtNumber stmt);
 
 	//getting statements
-	virtual std::set<StmtNumber>	getAllStmts();
 	virtual std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
 	virtual std::set<StmtNumber>	getStmtsByProc(ProcName procName);
 	virtual std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);

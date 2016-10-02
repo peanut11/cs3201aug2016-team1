@@ -29,7 +29,7 @@ typedef StmtSet::const_iterator StmtSetIterator;
 typedef StringToken VarName;
 typedef VarName SynonymString; 
 typedef std::map<VarName, VarIndex> VarRefMap;
-typedef std::set<VarName>::const_iterator VarNameSetIterator;
+typedef std::set<VarIndex>::const_iterator VarIndexSetIterator;
 
 //VarTable
 typedef std::set<StmtNumber> VarEntry;
