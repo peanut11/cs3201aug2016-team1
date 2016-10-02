@@ -34,6 +34,7 @@ PKB::PKB() {
 
 	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
+	stmtToProcTable.push_back(UINT_MAX); //StmtNumber starts from 1. Not sure of better invalid values to put here
 
     while (stmtByTypeTable.size() <= EntityType::STMT) {
         stmtByTypeTable.push_back(StmtSet());
@@ -264,6 +265,9 @@ std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
 }
 
 ProcIndex PKB::getProcByStmt(StmtNumber stmt) {
+	if (stmt >= stmtToProcTable.size()) {
+		throw Exception::UNEXPECTED_STMT_ERROR;
+	}
 	return stmtToProcTable[stmt];
 }
 
@@ -369,4 +373,45 @@ bool PKB::putConstant(Constant constant) {
 	int prevSize = constants.size();
 	constants.insert(constant);
 	return (prevSize + 1 == constants.size());
+}
+
+bool PKB::putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt) {
+	ProcIndex procIndex = getProcIndex(procNameContainingStmt);
+	bool success;
+	int prevSize;
+	
+	// assumes previous entries were all inserted correctly
+	
+	// update StmtToProcTable
+	prevSize = stmtToProcTable.size();
+	stmtToProcTable.push_back(procIndex);
+	success = (prevSize + 1 == stmtToProcTable.size());
+
+	// update ProcToStmtTable
+	prevSize = procToStmtTable[procIndex].size();
+	procToStmtTable[procIndex].insert(stmt);
+	success = (prevSize + 1 == procToStmtTable[procIndex].size() && success); // size should always increase as there should be no repetition of stmt
+	return success;
+}
+
+bool PKB::putProcForProc(ProcName procA, RelationshipType calls, ProcName procB) {
+	if (calls != CALLS && calls != CALLSSTAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	bool success;
+	int prevSize;
+	ProcIndex procIndexA = getProcIndex(procA);
+	ProcIndex procIndexB = getProcIndex(procB);
+	ProcIndex it;
+
+	// updates A CALLS B
+	procTable[procIndexA][calls].insert(procIndexB);
+	success = procTable[procIndexA][calls].find(procIndexB) != procTable[procIndexA][calls].end();
+
+	// updates B CALLED_BY A
+	procTable[procIndexB][calls + 1].insert(procIndexA);
+	success = procTable[procIndexB][calls + 1].find(procIndexA) != procTable[procIndexB][calls + 1].end();
+
+	return success;
 }
