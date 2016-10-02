@@ -296,17 +296,17 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	// update StmtTable
 	prevSize = stmtTable[stmt][rel].size();
 	stmtTable[stmt][rel].insert(varIndex);
-	success = (prevSize + 1 == stmtTable[stmt][rel].size());
+	success = stmtTable[stmt][rel].find(varIndex) != stmtTable[stmt][rel].end();
 
 	// update VarTable
 	prevSize = varTable[varIndex][rel].size();
 	varTable[varIndex][rel].insert(stmt);
-	success = (prevSize + 1 == varTable[varIndex][rel].size()) && success;
+	success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
 
 	// update ProcTable
 	prevSize = procTable[procIndex][rel].size();
 	procTable[procIndex][rel].insert(varIndex);
-	success = (prevSize + 1 == procTable[procIndex][rel].size()) && success;
+	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 	return success;
 }
 
@@ -372,7 +372,7 @@ bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 bool PKB::putConstant(Constant constant) {
 	int prevSize = constants.size();
 	constants.insert(constant);
-	return (prevSize + 1 == constants.size());
+	return constants.find(constant) != constants.end();
 }
 
 bool PKB::putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt) {
