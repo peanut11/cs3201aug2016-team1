@@ -207,8 +207,9 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 
 	} else if (isWhile(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, WHILE) && success;
-
+		
 		const VarName varName = line[1];
+		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
 	}
 
