@@ -53,6 +53,7 @@ int ProgramConverter::convert(std::string source) {
 	st = StringTokenizer(source, DelimiterMode::PARSER);
 	lineCount = 0;
 	ProgLine currentLine;
+	ProcName procName;
 
 	while (!(currentLine = nextLine()).empty()) {
 		const std::string FIRST_TOKEN = currentLine[0];
@@ -60,6 +61,7 @@ int ProgramConverter::convert(std::string source) {
 		if (FIRST_TOKEN == "procedure") {
 			currentLeader = 0;
 			currentParent = 0;
+			procName = currentLine[1];
 			continue;
 		}
 
@@ -84,6 +86,7 @@ int ProgramConverter::convert(std::string source) {
 		}
 
 		const ProgLineNumber lineNum = lineCount;
+		pkb->putStmtProc(lineNum, procName);
 		updateStmtInStmtTable(currentLine, lineNum);
 	}
 
@@ -222,7 +225,7 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
-	}
+	} 
 
 	if (currentParent != 0) {
 		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent) && success;
