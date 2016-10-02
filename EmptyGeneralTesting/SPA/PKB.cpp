@@ -271,6 +271,7 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	bool success; 
 	int prevSize;
 	VarIndex varIndex = getVarIndex(varName);
+	ProcIndex procIndex = getProcByStmt(stmt);
 
 	if (rel != MODIFIES && rel != USES) {
 		throw Exception::INVALID_VAR_STMT_RELATION;
@@ -280,18 +281,28 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 		stmtTable.push_back(StmtRow());
 	}
 
-	while (varIndex >= varTable.size()) {
+	while (varIndex >= varTable.size()) { // unnecessary but just in case lol
 		varTable.push_back(VarRow());
 	}
+
+	while (procIndex >= procTable.size()) { //unnecessary but just in case lol
+		procTable.push_back(ProcRow());
+	}
 	
+	// update StmtTable
 	prevSize = stmtTable[stmt][rel].size();
 	stmtTable[stmt][rel].insert(varIndex);
 	success = (prevSize + 1 == stmtTable[stmt][rel].size());
 
+	// update VarTable
 	prevSize = varTable[varIndex][rel].size();
 	varTable[varIndex][rel].insert(stmt);
 	success = (prevSize + 1 == varTable[varIndex][rel].size()) && success;
 
+	// update ProcTable
+	prevSize = procTable[procIndex][rel].size();
+	procTable[procIndex][rel].insert(varIndex);
+	success = (prevSize + 1 == procTable[procIndex][rel].size()) && success;
 	return success;
 }
 
