@@ -15,23 +15,27 @@ class PKB {
 private:
 	static const std::runtime_error ERROR;
 	static PKB* theOne;
-
 	
 	std::vector<AssignTree> assignTrees;
 	std::set<Constant>      constants;
-	RefMap                  refMap;
-	std::vector<VarName>    refTable;
+	VarRefMap               varRefMap;
+	std::vector<VarName>    varRefTable;
+	std::vector<VarRow>     varTable;
 	std::vector<StmtRow>    stmtTable;
 	std::vector<EntityType> stmtTypeTable;
-	std::vector<VarRow>     varTable;
+	ProcRefMap				procRefMap;
+	std::vector<ProcName>	procRefTable;
+	std::vector<ProcRow>	procTable;
 
 public:
 	static PKB* getInstance();
 	void clear();
 	PKB();
 	// Indexing
-	virtual VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
+	virtual VarIndex getVarIndex(VarName varName); //gets index of variable and adds to tables if variable not found
 	virtual VarName getVarName(VarIndex varIndex);
+	virtual ProcIndex getProcIndex(ProcName procName);
+	virtual ProcName getProcName(ProcIndex procIndex);
 
 	// API used by Parser and DE
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);

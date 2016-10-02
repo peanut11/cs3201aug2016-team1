@@ -23,8 +23,8 @@ PKB* PKB::getInstance() {
 PKB::PKB() {
 	assignTrees = std::vector<AssignTree>();
 	constants = std::set<Constant>();
-	refMap = RefMap();
-	refTable = std::vector<VarName>();
+	varRefMap = VarRefMap();
+	varRefTable = std::vector<VarName>();
 	stmtTable = std::vector<StmtRow>();
 	stmtTypeTable = std::vector<EntityType>();
 	varTable = std::vector<VarRow>();
@@ -74,7 +74,7 @@ bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
 }
 
 bool PKB::isVarExist(VarName varName) {
-	return (refMap.find(varName) != refMap.end());
+	return (varRefMap.find(varName) != varRefMap.end());
 }
 
 std::set<Constant> PKB::getAllConstantValues() {
@@ -90,7 +90,7 @@ std::set<StmtNumber> PKB::getAllStmts() {
 }
 
 std::set<VarName> PKB::getAllVarNames() {
-	return std::set<VarName>(refTable.begin(),refTable.end());
+	return std::set<VarName>(varRefTable.begin(),varRefTable.end());
 }
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
@@ -148,14 +148,14 @@ StmtNumber PKB::getStmtTableSize() {
 }
 
 VarIndex PKB::getVarIndex(VarName varName) {
-	RefMap::const_iterator it = refMap.find(varName);
+	VarRefMap::const_iterator it = varRefMap.find(varName);
 	VarIndex varIndex;
 	
-	if (it == refMap.end()) {
+	if (it == varRefMap.end()) {
 		varIndex = varTable.size();
 		varTable.push_back(VarRow());
-		refTable.push_back(varName);
-		refMap[varName] = varIndex;
+		varRefTable.push_back(varName);
+		varRefMap[varName] = varIndex;
 	} else {
 		varIndex = it->second;
 	}
@@ -163,13 +163,39 @@ VarIndex PKB::getVarIndex(VarName varName) {
 	return varIndex;
 }
 
+ProcIndex PKB::getProcIndex(ProcName procName) {
+	ProcRefMap::const_iterator it = procRefMap.find(procName);
+	ProcIndex procIndex;
+
+	if (it == procRefMap.end()) {
+		procIndex = procTable.size();
+		procTable.push_back(ProcRow());
+		procRefTable.push_back(procName);
+		procRefMap[procName] = procIndex;
+	}
+	else {
+		procIndex = it->second;
+	}
+
+	return procIndex;
+}
+
 VarName PKB::getVarName(VarIndex varIndex) {
-	if (varIndex >= refTable.size()) {
+	if (varIndex >= varRefTable.size()) {
 		throw ERROR;
 	}
 
-	VarName varName = refTable[varIndex];
+	VarName varName = varRefTable[varIndex];
 	return varName;
+}
+
+ProcName PKB::getProcName(ProcIndex procIndex) {
+	if (procIndex >= procRefTable.size()) {
+		throw ERROR;
+	}
+
+	ProcName procName = procRefTable[procIndex];
+	return procName;
 }
 
 std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
