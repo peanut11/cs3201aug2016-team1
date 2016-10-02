@@ -16,16 +16,18 @@ private:
 	static const std::runtime_error ERROR;
 	static PKB* theOne;
 	
-	std::vector<AssignTree> assignTrees;
-	std::set<Constant>      constants;
-	VarRefMap               varRefMap;
-	std::vector<VarName>    varRefTable;
-	std::vector<VarRow>     varTable;
-	std::vector<StmtRow>    stmtTable;
-	std::vector<EntityType> stmtTypeTable;
-	ProcRefMap				procRefMap;
-	std::vector<ProcName>	procRefTable;
-	std::vector<ProcRow>	procTable;
+	std::vector<AssignTree>				assignTrees;
+	std::set<Constant>					constants;
+	VarRefMap							varRefMap;
+	std::vector<VarName>				varRefTable;
+	std::vector<VarRow>					varTable;
+	std::vector<StmtRow>				stmtTable;
+	std::vector<EntityType>				stmtTypeTable;
+	ProcRefMap							procRefMap;
+	std::vector<ProcName>				procRefTable;
+	std::vector<ProcRow>				procTable;
+	std::vector<ProcIndex>				stmtToProcTable;
+	std::vector<std::set<StmtNumber>>	procToStmtTable;
 
 public:
 	static PKB* getInstance();
@@ -41,8 +43,10 @@ public:
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
-	bool putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName);
+	bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName); //updates MODIFIES and USES relationships in Vartable and StmtTable
 	bool putConstant(Constant constant);
+	bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
+	bool putProcForProc(ProcName procA, RelationshipType calls, ProcName procB);
 
 	// API used by QP and DE
 	/*
@@ -73,11 +77,23 @@ public:
 	virtual EntityType				getStmtTypeForStmt(StmtNumber stmt);
 	virtual StmtNumber              getStmtTableSize();
 	virtual std::set<Constant>		getAllConstantValues();
-	virtual std::set<StmtNumber>	getAllStmts();
 	virtual std::set<VarName>		getAllVarNames();
+	virtual ProcIndex				getProcByStmt(StmtNumber stmt);
+
+	//getting statements
+	virtual std::set<StmtNumber>	getAllStmts();
 	virtual std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
+	virtual std::set<StmtNumber>	getStmtsByProc(ProcName procName);
 	virtual std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);
 	virtual std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent);
 	virtual std::set<StmtNumber>	getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
+	//getting variables
 	virtual std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
+	virtual std::set<VarIndex>		getVarsByProc(ProcName procName, RelationshipType modifiesOrUses);
+	//getting procedures
+	virtual std::set<ProcIndex>		getProcsByProc(ProcName procName, RelationshipType calls);
+	virtual std::set<ProcIndex>		getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
+	
+	
+		set<stmt> getStmtsByProc(ProcIndex) gets the stmts in procedure
 };

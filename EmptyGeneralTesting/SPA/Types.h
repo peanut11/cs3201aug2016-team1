@@ -15,10 +15,13 @@ typedef StringToken ExprString;
 
 typedef unsigned int ProcStmtVarIndex;
 typedef ProcStmtVarIndex SynonymValue; 
-typedef ProcStmtVarIndex StmtVarIndex;
-typedef StmtVarIndex ProcIndex;  // Index of procedure name in ProcTable
+typedef ProcStmtVarIndex StmtVarIndex; //Entry in StmtTable
 typedef StmtVarIndex StmtNumber;
-typedef StmtVarIndex VarIndex;   // Index of variable/constant in VarTable
+typedef StmtVarIndex VarIndex;   // Index of variable in VarTable
+typedef ProcStmtVarIndex ProcVarIndex; //Entry in ProcTable
+typedef ProcVarIndex ProcIndex;
+typedef ProcVarIndex VarIndex;  
+
 typedef StmtNumber ProgLineNumber;
 typedef std::set<StmtNumber>::const_iterator StmtSetIterator;
 
@@ -41,4 +44,4 @@ typedef std::map<ProcName, ProcIndex> ProcRefMap;
 
 //ProcTable
 typedef std::set<ProcStmtVarIndex> ProcEntry;
-typedef std::array<ProcEntry, 5> ProcRow; //StartStmt, EndStmt, Modifies, Uses, Calls
+typedef std::array<ProcEntry, 6> ProcRow; //Modifies, Uses, Calls, Called_by, CallsStar, called_bystar

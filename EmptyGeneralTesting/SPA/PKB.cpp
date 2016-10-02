@@ -28,6 +28,11 @@ PKB::PKB() {
 	stmtTable = std::vector<StmtRow>();
 	stmtTypeTable = std::vector<EntityType>();
 	varTable = std::vector<VarRow>();
+	procRefMap = ProcRefMap();
+	procRefTable = std::vector<ProcName>();
+	procTable = std::vector<ProcRow>();
+	stmtToProcTable = std::vector<ProcIndex>();
+	procToStmtTable = std::vector<std::set<StmtNumber>>();
 
 	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
@@ -204,6 +209,45 @@ std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifies
 	}
 
 	return stmtTable[stmt][modifiesOrUses];
+}
+
+std::set<VarIndex> PKB::getVarsByProc(ProcName procName, RelationshipType modifiesOrUses) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw ERROR;
+	}
+	return procTable[getProcIndex(procName)][modifiesOrUses];
+}
+
+std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType calls) {
+	if (calls != CALLS && calls != CALLSSTAR) {
+		throw ERROR;
+	}
+	return procTable[getProcIndex(procName)][calls];
+}
+
+std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw ERROR;
+	}
+	std::set<ProcIndex> procedures;
+
+	// gets the stmts that modifiesOrUses varName
+	std::set<StmtNumber> stmts = getStmtsByVar(modifiesOrUses, varName);
+
+	// iterates through the stmts to get procedures
+	for each(StmtNumber stmt in stmts) {
+		procedures.insert(stmtToProcTable[stmt]);
+	}
+	return procedures;
+}
+
+std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
+	ProcIndex procIndex = getProcIndex(procName);
+	return procToStmtTable[procIndex];
+}
+
+ProcIndex PKB::getProcByStmt(StmtNumber stmt) {
+	return stmtToProcTable[stmt];
 }
 
 bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) {
