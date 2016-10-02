@@ -251,8 +251,12 @@ paket-files/
 .idea/
 *.sln.iml
 
-# Testcases
+# UnitTesting
 !Debug
 **/Debug/*
-!*/Debug/Testcases/
+!*/Debug/UnitTesting/
 
+# AutoTester
+!Release
+**/Release/*
+!*/Release/*.txt

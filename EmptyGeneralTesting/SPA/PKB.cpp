@@ -6,9 +6,6 @@
 // - VarTable
 
 #include "PKB.h"
-#include "algorithm"
-
-const std::runtime_error PKB::ERROR = std::runtime_error("");
 
 PKB* PKB::theOne = nullptr;
 
@@ -27,6 +24,7 @@ PKB::PKB() {
 	varRefTable = std::vector<VarName>();
 	stmtTable = std::vector<StmtRow>();
 	stmtTypeTable = std::vector<EntityType>();
+	stmtByTypeTable = std::vector<StmtSet>();
 	varTable = std::vector<VarRow>();
 	procRefMap = ProcRefMap();
 	procRefTable = std::vector<ProcName>();
@@ -36,6 +34,10 @@ PKB::PKB() {
 
 	stmtTable.push_back(StmtRow());   // StmtNumber starts from 1
 	stmtTypeTable.push_back(INVALID); // StmtNumber starts from 1
+
+    while (stmtByTypeTable.size() <= EntityType::STMT) {
+        stmtByTypeTable.push_back(StmtSet());
+    }
 }
 
 void PKB::clear() {
@@ -46,13 +48,16 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
+    if (stmt >= stmtTable.size()) {
+        return false;
+    }
+
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
 		rel = RelationshipType ((int)rel + 1);
 	}
 
-	StmtEntry::iterator it;
 	StmtEntry entry = stmtTable[stmt][rel];
-	it = entry.find(item);
+    StmtEntry::iterator it = entry.find(item);
 	return it != entry.end();
 }
 
@@ -86,12 +91,16 @@ std::set<Constant> PKB::getAllConstantValues() {
 	return constants;
 }
 
-std::set<StmtNumber> PKB::getAllStmts() {
-	std::set<StmtNumber> stmts;
-	for (StmtNumber stmt = 1; stmt < stmtTable.size(); stmt++) {
-		stmts.insert(stmt);
-	}
-	return stmts;
+StmtSet PKB::getAllStmts() {
+	return stmtByTypeTable[STMT];
+}
+
+std::set<VarIndex> PKB::getAllVarIndex() {
+    std::set<VarIndex> allVarIndex;
+    for (VarIndex varIndex = 0; varIndex < varRefTable.size(); varIndex++) {
+        allVarIndex.emplace(varIndex);
+    }
+    return allVarIndex;
 }
 
 std::set<VarName> PKB::getAllVarNames() {
@@ -100,52 +109,56 @@ std::set<VarName> PKB::getAllVarNames() {
 
 AssignTree PKB::getAssign(StmtNumber stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
-		throw ERROR;
+		throw Exception::NOT_ASSIGN_ERROR;
 	}
 
 	return assignTrees[stmt];
 }
 
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
+    if (stmt >= stmtTypeTable.size()) {
+        return INVALID;
+    }
+
 	return stmtTypeTable[stmt];
 }
 
-std::set<StmtNumber> PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
+StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 	return varTable[getVarIndex(varName)][rel];
 }
 
-std::set<StmtNumber> PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
+StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
-		throw ERROR;
+		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return StmtSet();
+    }
 
 	return stmtTable[stmt][stmtRel];
 }
 
-std::set<StmtNumber> PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
-	if (followsOrParent != FOLLOWS && followsOrParent != PARENT && followsOrParent != FOLLOWS_STAR && followsOrParent!= PARENT_STAR) {
-		throw ERROR;
+StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
+	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
+        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
+		throw Exception::INCORRECT_PKB_API;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return StmtSet();
+    }
 
 	int supplementaryRel = followsOrParent + 1;
 	return stmtTable[stmt][supplementaryRel];
 }
 
-std::set<StmtNumber> PKB::getStmtsByType(EntityType stmtType) {
-	std::set<StmtNumber> stmts;
-	
-	if (stmtType == STMT) {
-		stmts = getAllStmts();
+StmtSet PKB::getStmtsByType(EntityType stmtType) {
+    if (stmtType > STMT) {
+        throw Exception::INVALID_STMT_TYPE;
+    }
 
-	} else {
-		for (StmtNumber i = 1; i < stmtTable.size(); i++) { // StmtNumber starts from 1
-			if (stmtTypeTable[i] == stmtType) {
-				stmts.insert(i);
-			}
-		}
-	}
-
-	return stmts;
+	return stmtByTypeTable[stmtType];
 }
 
 StmtNumber PKB::getStmtTableSize() {
@@ -186,17 +199,17 @@ ProcIndex PKB::getProcIndex(ProcName procName) {
 }
 
 VarName PKB::getVarName(VarIndex varIndex) {
-	if (varIndex >= varRefTable.size()) {
-		throw ERROR;
-	}
 
-	VarName varName = varRefTable[varIndex];
-	return varName;
+	if (varIndex >= varRefTable.size()) {
+		throw Exception::INVALID_VAR_INDEX;
+	}
+	return varRefTable[varIndex];
+
 }
 
 ProcName PKB::getProcName(ProcIndex procIndex) {
 	if (procIndex >= procRefTable.size()) {
-		throw ERROR;
+		throw Exception::INVALID_PROC_INDEX;
 	}
 
 	ProcName procName = procRefTable[procIndex];
@@ -205,29 +218,33 @@ ProcName PKB::getProcName(ProcIndex procIndex) {
 
 std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw ERROR;
+		throw Exception::INVALID_VAR_STMT_RELATION;
 	}
+
+    if (stmt >= stmtTable.size()) {
+        return std::set<VarIndex>();
+    }
 
 	return stmtTable[stmt][modifiesOrUses];
 }
 
 std::set<VarIndex> PKB::getVarsByProc(ProcName procName, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw ERROR;
+		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 	return procTable[getProcIndex(procName)][modifiesOrUses];
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType calls) {
 	if (calls != CALLS && calls != CALLSSTAR) {
-		throw ERROR;
+		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 	return procTable[getProcIndex(procName)][calls];
 }
 
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw ERROR;
+		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 	std::set<ProcIndex> procedures;
 
@@ -256,7 +273,7 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	VarIndex varIndex = getVarIndex(varName);
 
 	if (rel != MODIFIES && rel != USES) {
-		throw ERROR;
+		throw Exception::INVALID_VAR_STMT_RELATION;
 	}
 	
 	while (stmt >= stmtTable.size()) {
@@ -279,10 +296,8 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	bool success;
-
 	if (rel == MODIFIES || rel == USES) {
-		throw ERROR;
+		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
 
 	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
@@ -290,10 +305,8 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 	}
 
 	int prevSize = stmtTable[stmtA][rel].size();
-
-	prevSize = stmtTable[stmtA][rel].size();
 	stmtTable[stmtA][rel].insert(stmtB);
-	success = (prevSize + 1 == stmtTable[stmtA][rel].size());
+	bool success = (prevSize + 1 == stmtTable[stmtA][rel].size());
 
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
 		const int OFFSET = 1;
@@ -315,11 +328,20 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	if (stmtTypeTable.size() != stmt) {
-		throw ERROR;
+		throw Exception::UNEXPECTED_STMT_ERROR;
 	}
 
-	stmtTypeTable.push_back(stmtType);
-	return (stmtTypeTable.size() == stmt+1);
+    int prevSize = stmtByTypeTable[stmtType].size();
+    stmtByTypeTable[stmtType].emplace_hint(stmtByTypeTable[stmtType].end(), stmt);
+    bool success = (prevSize + 1 == stmtByTypeTable[stmtType].size());
+
+    stmtByTypeTable[STMT].emplace_hint(stmtByTypeTable[STMT].end(), stmt);
+    success = (stmt + 1 == stmtByTypeTable[STMT].size()) && success;
+
+    stmtTypeTable.push_back(stmtType);
+    success = (stmt + 1 == stmtTypeTable.size()) && success;
+
+	return success;
 }
 
 bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {

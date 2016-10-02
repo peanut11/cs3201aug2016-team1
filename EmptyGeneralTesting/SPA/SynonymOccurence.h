@@ -22,9 +22,9 @@ public:
 
 	void clearAll();
 	void setIncrementOccurence(std::string synonym, ClauseType::ClauseType type);
-	
+
 	std::string toString();
-	
+
 	bool hasMaxCommonSynonym();
 
 	bool hasMaximumOccurence(std::string synonym, ClauseType::ClauseType type);
@@ -32,4 +32,3 @@ public:
 
 
 };
-

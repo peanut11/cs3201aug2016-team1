@@ -7,19 +7,28 @@
 
 const std::string StringTokenizer::EMPTY_TOKEN = "";
 
+bool StringTokenizer::getIsIgnoreNewlines() {
+    return isIgnoreNewlines;
+}
+
+bool StringTokenizer::isNewline(char ch) {
+    return ch == '\n';
+}
+
 bool StringTokenizer::isDelimiter(char ch) {
 	return delimiters.find(ch) != std::string::npos;
 }
 
 StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 	const std::string WHITESPACE = " ";
+    isIgnoreNewlines = false;
 	
 	switch(mode) {
 	case PARSER:
 		delimiters = "{=+-*};\n";
 		break;
 	case QUERY_PREPROCESSOR:
-		delimiters = "*(,._+);\n\"";
+		delimiters = "*<>(#,._+=);\n\"";
 		break;
 	default:
 		delimiters = "";
@@ -38,6 +47,9 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 				buffer.clear();
 			}
 			if (isDelimiter(ch)) {
+                if (isIgnoreNewlines && isNewline(ch)) {
+                    continue;
+                }
 				tokens.push_back(charString);
 			}
 		} else {

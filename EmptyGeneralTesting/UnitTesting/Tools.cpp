@@ -4,7 +4,7 @@
 #include <fstream>
 
 std::string Tools::readFile(std::string filename) {
-	std::string foldername = "Testcases/";
+	std::string foldername = "UnitTesting/";
 	std::string filepath = foldername.append(filename);
 	std::stringstream buffer;
 	std::ifstream infile;

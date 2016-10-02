@@ -26,6 +26,8 @@ class QueryValidator {
 	static const std::string SYNTAX_STATEMENT;
 	static const std::string SYNTAX_VARIABLE;
 	static const std::string SYNTAX_CONSTANT;
+	static const std::string SYNTAX_PROG;
+	static const std::string SYNTAX_LINE;
 	static const std::string SYNTAX_PROG_LINE;
 	static const std::string SYNTAX_CALL;
 
@@ -40,8 +42,12 @@ class QueryValidator {
 	static const std::string SYNTAX_UNDERSCORE;
 	static const std::string SYNTAX_DOUBLE_QUOTE;
 	static const std::string SYNTAX_COMMA;
+	static const std::string SYNTAX_EQUAL;
 	static const std::string SYNTAX_BOOLEAN;
 	static const std::string SYNTAX_STAR;
+	static const std::string SYNTAX_DOT;
+	static const std::string SYNTAX_LEFT_ARROW_BRACKET;
+	static const std::string SYNTAX_RIGHT_ARROW_BRACKET;
 
 	static const std::string SYNTAX_RELATIONSHIP_PARENT;
 	static const std::string SYNTAX_RELATIONSHIP_PARENT_STAR;
@@ -49,9 +55,17 @@ class QueryValidator {
 	static const std::string SYNTAX_RELATIONSHIP_FOLLOWS_STAR;
 	static const std::string SYNTAX_RELATIONSHIP_MODIFIES;
 	static const std::string SYNTAX_RELATIONSHIP_USES;
+	static const std::string SYNTAX_RELATIONSHIP_CALLS;
+	static const std::string SYNTAX_RELATIONSHIP_CALLS_STAR;
+	static const std::string SYNTAX_RELATIONSHIP_NEXT;
+	static const std::string SYNTAX_RELATIONSHIP_NEXT_STAR;
+	static const std::string SYNTAX_RELATIONSHIP_AFFECTS;
+	static const std::string SYNTAX_RELATIONSHIP_AFFECTS_STAR;
 
 	static const std::string SYNTAX_ATTRIBUTE_PROCEDURE_NAME;
 	static const std::string SYNTAX_ATTRIBUTE_VARIABLE_NAME;
+	static const std::string SYNTAX_ATTRIBUTE_STATEMENT;
+	static const std::string SYNTAX_ATTRIBUTE_HEX;
 	static const std::string SYNTAX_ATTRIBUTE_STATEMENT_NUMBER;
 	static const std::string SYNTAX_ATTRIBUTE_VALUE;
 
@@ -66,6 +80,7 @@ class QueryValidator {
 	void throwsInvalidExpression(std::string expression);
 	void throwsInvalidRelationship(RelationshipType type);
 	void throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment);
+	void throwsInvalidRelationshipSameSynonymArguments(RelationshipType type, std::string argument1, std::string argument2);
 	void throwsIncorrectSyntax(std::string syntax);
 	void throwsInvalidPattern(std::string syntax);
 	void throwsInvalidPatternMissingSyntax();
@@ -73,6 +88,12 @@ class QueryValidator {
 	void throwsInvalidPatternArgument();
 	void throwsInvalidPatternArgument(std::string arugment);
 	void throwsInvalidPatternExpression(std::string expression);
+	void throwsInvalidAttributeFormat();
+	void throwsInvalidAttributeMissingSynonym();
+	void throwsInvalidAttributeSyntax(std::string syntax);
+	void throwsInvalidAttributeName(std::string syntax);
+	void throwsInvalidAttributeSingleSynonym(std::string syntax);
+	void throwsInvalidAttributeValue(std::string value);
 	void throwsExceedCommonSynonymCount();
 
 	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
@@ -88,16 +109,18 @@ class QueryValidator {
 	
 	// Clause With object
 	ClauseWithObject createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg);
-	ClauseWithRefObject createClauseRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
-	ClauseWithRefObject createClauseRefObject(WithRefType refType, std::string synonym);
-	ClauseWithRefObject createClauseRefObject(WithRefType refType, int integerValue);
+	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
+	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, std::string stringValue);
+	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, int integerValue);
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
 	ClauseType::ClauseType getClauseType(std::string syntax);
+	AttrType::AttrType getAttrType(std::string syntax);
 	
 	std::string getEntitySyntax(std::string str);
 	std::string getRelationshipSyntax(RelationshipType type);
+	std::string getAttrSyntax(AttrType::AttrType type);
 
 	bool isMatch(std::string s1, std::string s2);
 	//bool isSelect(std::string str);
@@ -113,11 +136,15 @@ class QueryValidator {
 	//bool isVariable(std::string str);
 	//bool isArguments(std::string str);
 	//bool isStatementNumber(std::string str);
+	bool isNumber(std::string str);
+
 
 	// Synonym declaration
 	bool isDeclaration(std::string str); // procedure, assign ,if, stmt, variable, constant etc
 	bool isDeclaredSynonym(std::string str); // pass in a string, check against synonymtable
 	//bool isRelationship(std::string str); // string can be a relationship (parent, follows, etc)
+
+	bool isSynonymContainsAttrName(EntityType type, std::string attrName);
 
 
 	/*
@@ -167,7 +194,8 @@ public:
 	bool isClausePattern(std::string str);
 	bool isPatternExprArgument(std::string str);
 	bool isExpression(std::string str);
-	bool isTurple(std::string str);
+	bool isTuple(std::string str);
+	bool isAttributeReference(std::string str);
 	bool isSyntaxBoolean(std::string str);
 
 	int totalArg;

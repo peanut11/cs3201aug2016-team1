@@ -15,8 +15,8 @@ public:
 			ProgramValidator pv = ProgramValidator();
 			Assert::IsFalse(pv.isValidSyntax(str));
 
-		} catch (std::runtime_error e) {
-			Assert::AreEqual("Invalid syntax", e.what());
+		} catch (std::domain_error e) {
+            Assert::AreEqual(Exception::INVALID_SIMPLE_SYNTAX.what(), e.what());
 		}
 	}
 

@@ -20,6 +20,8 @@ class StringTokenizer {
 
 	std::deque<std::string> tokens;
 	std::string delimiters;
+    bool isIgnoreNewlines;
+    bool isNewline(char ch);
 	bool isDelimiter(char ch);
 
 public:
@@ -31,4 +33,5 @@ public:
 	std::string peekNextToken();
 	void popNextToken();
 	void returnToken(std::string);
+    bool getIsIgnoreNewlines();
 };

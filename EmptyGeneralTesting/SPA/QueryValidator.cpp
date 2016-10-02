@@ -17,6 +17,8 @@ const std::string QueryValidator::SYNTAX_IF = "if";
 const std::string QueryValidator::SYNTAX_STATEMENT = "stmt";
 const std::string QueryValidator::SYNTAX_VARIABLE = "variable";
 const std::string QueryValidator::SYNTAX_CONSTANT = "constant";
+const std::string QueryValidator::SYNTAX_PROG = "prog";
+const std::string QueryValidator::SYNTAX_LINE = "line";
 const std::string QueryValidator::SYNTAX_PROG_LINE = "prog_line";
 const std::string QueryValidator::SYNTAX_SELECT = "Select";
 const std::string QueryValidator::SYNTAX_SUCH = "such";
@@ -31,8 +33,12 @@ const std::string QueryValidator::SYNTAX_NEXT_LINE = "\n";
 const std::string QueryValidator::SYNTAX_UNDERSCORE = "_";
 const std::string QueryValidator::SYNTAX_DOUBLE_QUOTE = "\"";
 const std::string QueryValidator::SYNTAX_COMMA = ",";
+const std::string QueryValidator::SYNTAX_EQUAL = "=";
 const std::string QueryValidator::SYNTAX_BOOLEAN = "BOOLEAN";
 const std::string QueryValidator::SYNTAX_STAR = "*";
+const std::string QueryValidator::SYNTAX_DOT = ".";
+const std::string QueryValidator::SYNTAX_LEFT_ARROW_BRACKET = "<";
+const std::string QueryValidator::SYNTAX_RIGHT_ARROW_BRACKET = ">";
 
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT = "Parent";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_PARENT_STAR = "Parent*";
@@ -40,9 +46,17 @@ const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS = "Follows";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_FOLLOWS_STAR = "Follows*";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_MODIFIES = "Modifies";
 const std::string QueryValidator::SYNTAX_RELATIONSHIP_USES = "Uses";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_CALLS = "Calls";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_CALLS_STAR = "Calls*";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_NEXT = "Next";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_NEXT_STAR = "Next*";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_AFFECTS = "Affects";
+const std::string QueryValidator::SYNTAX_RELATIONSHIP_AFFECTS_STAR = "Affects*";
 
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_PROCEDURE_NAME = "procName";
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_VARIABLE_NAME = "varName";
+const std::string QueryValidator::SYNTAX_ATTRIBUTE_STATEMENT = "stmt";
+const std::string QueryValidator::SYNTAX_ATTRIBUTE_HEX = "#";
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_STATEMENT_NUMBER = "stmt#";
 const std::string QueryValidator::SYNTAX_ATTRIBUTE_VALUE = "value";
 
@@ -112,6 +126,10 @@ void QueryValidator::throwsInvalidRelationshipArgument(RelationshipType type, st
 	throw std::runtime_error("Invalid argument for relationship " + getRelationshipSyntax(type) + " near " + arugment);
 }
 
+void QueryValidator::throwsInvalidRelationshipSameSynonymArguments(RelationshipType type, std::string argument1, std::string argument2) {
+	throw std::runtime_error("Invalid relationship " + getRelationshipSyntax(type) + " due to same synonym for both argument arg1 = " + argument1 + " and arg2 = " + argument2);
+}
+
 void QueryValidator::throwsIncorrectSyntax(std::string syntax) {
 	throw std::runtime_error("Invalid syntax near " + syntax);
 }
@@ -138,6 +156,30 @@ void QueryValidator::throwsInvalidPatternArgument(std::string arugment) {
 
 void QueryValidator::throwsInvalidPatternExpression(std::string expression) {
 	throw std::runtime_error("Invalid pattern expression near " + expression);
+}
+
+void QueryValidator::throwsInvalidAttributeFormat() {
+	throw std::runtime_error("Invalid attribute format");
+}
+
+void QueryValidator::throwsInvalidAttributeMissingSynonym() {
+	throw std::runtime_error("Invalid attribute missing synonym");
+}
+
+void QueryValidator::throwsInvalidAttributeSyntax(std::string syntax) {
+	throw std::runtime_error("Invalid attribute syntax near " + syntax);
+}
+
+void QueryValidator::throwsInvalidAttributeName(std::string syntax) {
+	throw std::runtime_error("Invalid attribute name near " + syntax);
+}
+
+void QueryValidator::throwsInvalidAttributeSingleSynonym(std::string syntax) {
+	throw std::runtime_error("Invalid attribute single synonym near " + syntax);
+}
+
+void QueryValidator::throwsInvalidAttributeValue(std::string value) {
+	throw std::runtime_error("Invalid attribute value near" + value);
 }
 
 void QueryValidator::throwsExceedCommonSynonymCount() {
@@ -178,15 +220,15 @@ ClauseWithObject QueryValidator::createClauseWithObject(ClauseWithRefObject firs
 	return ClauseWithObject(firstArg, secondArg);
 }
 
-ClauseWithRefObject QueryValidator::createClauseRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
+ClauseWithRefObject QueryValidator::createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
 	return ClauseWithRefObject(refType, synonym, attributeName);
 }
 
-ClauseWithRefObject QueryValidator::createClauseRefObject(WithRefType refType, std::string synonym) {
-	return ClauseWithRefObject(refType, synonym);
+ClauseWithRefObject QueryValidator::createClauseWithRefObject(WithRefType refType, std::string stringValue) {
+	return ClauseWithRefObject(refType, stringValue);
 }
 
-ClauseWithRefObject QueryValidator::createClauseRefObject(WithRefType refType, int integerValue) {
+ClauseWithRefObject QueryValidator::createClauseWithRefObject(WithRefType refType, int integerValue) {
 	return ClauseWithRefObject(refType, integerValue);
 }
 
@@ -258,10 +300,19 @@ bool QueryValidator::isDeclaration(std::string str) {
 				return isValid;
 			}
 
-			mEntityType = getSyntaxEntityType(st.peekNextToken()); // get type of entity (procedure, assign, if etc...)
-			entitySyntax = getEntitySyntax(st.peekNextToken());
 
-			st.nextToken();
+			if (isMatch(st.peekNextToken(), SYNTAX_PROG)) { // start is prog
+				st.nextToken();
+				if (isMatch(st.nextToken(), SYNTAX_UNDERSCORE) && isMatch(st.nextToken(), SYNTAX_LINE)) {
+					mEntityType = EntityType::PROGRAM_LINE;
+					entitySyntax = SYNTAX_PROG_LINE;
+				}
+			}
+			else {
+				mEntityType = getSyntaxEntityType(st.peekNextToken()); // get type of entity (procedure, assign, if etc...)
+				entitySyntax = getEntitySyntax(st.peekNextToken());
+				st.nextToken();
+			}
 
 			if (mEntityType != EntityType::INVALID && entitySyntax != "") {
 				nextToken = st.nextToken();
@@ -319,7 +370,6 @@ bool QueryValidator::isSelect(std::string str) {
 			return false;
 		}
 
-
 		std::string currentToken = st.nextToken();
 
 		if (isMatch(currentToken, QueryValidator::SYNTAX_SELECT)) {
@@ -342,6 +392,9 @@ bool QueryValidator::isSelect(std::string str) {
 		}
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_AND)) {
 			// remain the same previous clause type
+		}
+		else if (isMatch(currentToken, QueryValidator::SYNTAX_WITH)) {
+			previousClauseType = ClauseType::WITH;
 		}
 		else {
 			// not clauses (such that, with, pattern, and)
@@ -376,6 +429,7 @@ bool QueryValidator::isSelect(std::string str) {
 				break;
 
 			case ClauseType::WITH:
+				isValid = isClauseWith(currentToken);
 				break;
 
 			case ClauseType::PATTERN:
@@ -401,7 +455,7 @@ bool QueryValidator::isDeclaredSynonym(std::string str) {
 }
 
 bool QueryValidator::isClauseResult(std::string str) {
-	if (isTurple(str)) {
+	if (isTuple(str)) {
 		return true;
 	}
 	else if (isSyntaxBoolean(str)) {
@@ -411,6 +465,283 @@ bool QueryValidator::isClauseResult(std::string str) {
 }
 
 bool QueryValidator::isClauseWith(std::string str) {
+	
+	AttrType::AttrType mAttributeType = AttrType::AttrType::INVALID;
+	SynonymObject selectedSynonymObj;
+	ClauseWithRefObject leftRefObject;
+	ClauseWithRefObject rightRefObject;
+		
+
+	std::string currentToken;
+	
+	bool hasValidAttrValue = false;	// check if value after "=" exists	
+	bool hasValidSynonym = false;	// check if synonym declared is valid
+	bool hasValidProgLine = false;	// check if prog_line is correctly used e.g. pl = 2
+	bool hasDot = false;			// check if "." exists
+	bool hasAttribute = false;		// check if attribute (procName, varName) exists
+	bool hasEqualSign = false;
+
+	bool isUnderWith = true;
+	bool isValueInteger = false;	// true if integer, false if string
+	bool flag = false;
+
+	bool hasFirstAttribute = false;
+
+	/*
+	1. Any statement synonyms have attr = stmt# e.g. w.stmt# = 2
+	2. Procedure synonym has attr = procName e.g. p.procName = "test"
+	3. Call synonym has attr = procName e.g. c.procName = "test" and c.stmt# = 4
+	4. Variable synonym has attr = varName e.g. var.varName = "hello"
+	5. Constant synonym has attr = value
+	*/
+
+
+	while (isUnderWith) {
+		
+		
+		if (hasValidProgLine || (hasAttribute && hasValidAttrValue)) {
+			this->mQueryTable.insertWithObject(ClauseWithObject(leftRefObject, rightRefObject));
+			return true;
+		}
+		
+
+		if (!flag) {
+			currentToken = str;
+			flag = true;
+		}
+		else {
+			currentToken = st.nextToken();
+		}
+
+		if (isMatch(currentToken, this->SYNTAX_EQUAL)) {
+			hasEqualSign = true;
+		}
+
+
+		
+		if (!hasValidSynonym && this->isSynonym(currentToken) && this->isDeclaredSynonym(currentToken)) {
+
+			selectedSynonymObj = this->mSynonymTable->getObject(str); // get synonym object which is found in synonymTable
+			if (selectedSynonymObj.getType() == EntityType::INVALID) { // check declared
+				this->throwsInvalidPattern(str);
+				isUnderWith = false;
+			}
+
+			hasValidSynonym = true;
+
+			if (selectedSynonymObj.getType() == EntityType::PROGRAM_LINE && isMatch(st.peekNextToken(), this->SYNTAX_EQUAL)) {
+				leftRefObject = this->createClauseWithRefObject(WithRefType::SYNONYM, selectedSynonymObj.getSynonym(), AttrType::INVALID);
+			}
+
+
+
+		} // end of synonym
+
+		if (hasValidSynonym) {
+			if (isMatch(currentToken, this->SYNTAX_DOT)) {
+				hasDot = true;
+				continue; // goto next while cycle
+			}
+		}
+
+		if (isMatch(currentToken, this->SYNTAX_EQUAL)) {
+			hasEqualSign = true;
+			continue; // goto next while cycle
+		}
+
+		
+		if (hasValidSynonym && hasDot && !hasAttribute) {
+
+			switch (selectedSynonymObj.getType()) {
+			case STMT:
+			case IF:
+			case WHILE:
+			case ASSIGN:
+				if (isMatch(currentToken, this->SYNTAX_ATTRIBUTE_STATEMENT) && isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+					mAttributeType = AttrType::AttrType::STMT_NO;
+					hasAttribute = true;
+					st.nextToken(); // points to "#"
+				}
+				else {
+					this->throwsInvalidAttributeName(currentToken);
+					isUnderWith = false;
+				}
+				break;
+
+			case PROCEDURE:
+				if (isMatch(currentToken, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+					mAttributeType = AttrType::AttrType::PROC_NAME;
+					hasAttribute = true;
+				}
+				else {
+					this->throwsInvalidAttributeName(currentToken);
+					isUnderWith = false;
+				}
+				break;
+
+			case CALL:
+				if (isMatch(currentToken, this->SYNTAX_ATTRIBUTE_STATEMENT) && isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+					mAttributeType = AttrType::AttrType::STMT_NO;
+					hasAttribute = true;
+					st.nextToken(); // points to "#"
+				}
+				else if (isMatch(currentToken, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+					mAttributeType = AttrType::AttrType::PROC_NAME;
+					hasAttribute = true;
+				}
+				else {
+					this->throwsInvalidAttributeName(currentToken);
+					isUnderWith = false;
+				}
+				break;
+
+			case VARIABLE:
+				if (isMatch(currentToken, this->SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+					mAttributeType = AttrType::AttrType::VAR_NAME;
+					hasAttribute = true;
+				}
+				else {
+					this->throwsInvalidAttributeName(currentToken);
+					isUnderWith = false;
+				}
+				break;
+
+			case CONSTANT:
+				if (isMatch(currentToken, this->SYNTAX_ATTRIBUTE_VALUE)) {
+					mAttributeType = AttrType::AttrType::VALUE;
+					hasAttribute = true;
+				}
+				else {
+					this->throwsInvalidAttributeName(currentToken);
+					isUnderWith = false;
+				}
+				break;
+
+			}
+
+			if (hasAttribute) {
+				leftRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF, 
+					selectedSynonymObj.getSynonym(), 
+					mAttributeType);
+			}
+
+
+		}
+		else if (hasValidSynonym && hasDot && hasAttribute) {
+
+			if (hasEqualSign && !isMatch(currentToken,this->SYNTAX_EQUAL)) { // has EQUAL but current token is not EQUAL
+
+				switch (mAttributeType) {
+				case AttrType::AttrType::STMT_NO:
+				case AttrType::AttrType::VALUE:
+					// check if value is integer
+					if (isNumber(currentToken)) {
+
+						hasValidAttrValue = true;
+						// declare right attr reference object
+						rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, atoi(currentToken.c_str()));
+
+					}
+					else if (isSynonym(currentToken) && isDeclaredSynonym(currentToken) && isMatch(st.peekNextToken(), this->SYNTAX_DOT)) { // another synonym attribute on the right
+
+						AttrType::AttrType type = AttrType::INVALID;
+						std::string secondSynonym = currentToken; // save the synonym value
+
+						currentToken = st.nextToken(); // point to "."
+
+						if (isMatch(st.peekNextToken(), SYNTAX_STATEMENT)) {
+							currentToken = st.nextToken(); // point to stmt
+							if (isMatch(st.peekNextToken(), SYNTAX_ATTRIBUTE_HEX)) {
+								currentToken = st.nextToken(); // point to #
+
+								type = AttrType::STMT_NO;
+							}
+						}
+						else {
+							type = this->getAttrType(st.peekNextToken());
+						}
+
+						if (type == AttrType::VALUE || type == AttrType::STMT_NO) {
+							st.nextToken(); // point to second attrName
+							hasValidAttrValue = true;
+
+							// declare right attr reference object
+							rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF, 
+																				secondSynonym, 
+																				type);
+
+						}
+
+					}
+					else {
+						this->throwsInvalidAttributeValue(currentToken);
+						isUnderWith = false;
+					}
+					break;
+
+				case AttrType::AttrType::PROC_NAME:
+				case AttrType::AttrType::VAR_NAME:
+					// check if value is string with double quotes
+					if (isVariable(currentToken)) {
+
+						hasValidAttrValue = true;
+						// declare right attr reference object
+						rightRefObject = this->createClauseWithRefObject(WithRefType::IDENTIFIER, this->validatedVariableName);
+
+					}
+					else if (isSynonym(currentToken) && isDeclaredSynonym(currentToken) && isMatch(st.peekNextToken(), this->SYNTAX_DOT)) { // another synonym attribute on the right
+						
+						st.nextToken(); // point to "."
+
+						AttrType::AttrType type = this->getAttrType(st.peekNextToken());
+						std::string secondSynonym = currentToken; // save the synonym value
+
+						if (type == AttrType::PROC_NAME || type == AttrType::VAR_NAME) {
+							st.nextToken(); // point to second attrName
+							hasValidAttrValue = true;
+
+							// declare right attr reference object
+							rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF,
+								secondSynonym,
+								type);
+						}
+
+					}
+					else {
+						this->throwsInvalidAttributeValue(currentToken);
+						isUnderWith = false;
+					}
+					break;
+				}
+
+				
+			}
+
+		}
+		else if (hasValidSynonym && !hasDot && !hasAttribute) { // there exists synonym but without dot and attribute 
+			
+			if (hasEqualSign && !isMatch(currentToken, this->SYNTAX_EQUAL)) { // has EQUAL but current token is not EQUAL
+				if (isNumber(currentToken)) {
+					hasValidAttrValue = true;
+					hasValidProgLine = true;
+					// declare right attr reference object
+					rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, atoi(currentToken.c_str()));
+				}
+				else { // Programe Line must have integer value after "=" 
+					this->throwsInvalidAttributeSingleSynonym(selectedSynonymObj.getSynonym());
+					isUnderWith = false;
+				}
+			}
+
+		}
+		else {
+			this->throwsInvalidAttributeFormat();
+			isUnderWith = false;
+		}
+
+		
+	}
+
 	return false;
 }
 
@@ -585,7 +916,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 bool QueryValidator::isRelationship(std::string str) {
 
 	if (isMatch(st.peekNextToken(), SYNTAX_STAR)) { // next is a star!
-		str += st.nextToken(); // e.g. Follows*, Parent*
+		str += st.nextToken(); // e.g. Follows*, Parent*, Next*, Affects*, Calls*
 	}
 
 	RelationshipType searchedType = getSyntaxRelationshipType(str);
@@ -639,9 +970,19 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (numberOfArgs == relationshipObject.getNumOfArgs()) {
 				
 				// check the number of common synonyms in clauses
-				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
-					this->throwsExceedCommonSynonymCount();
+				//if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
+				//	this->throwsExceedCommonSynonymCount();
+				//}
+
+				if (relationshipObject.getRelObjectType() != RelationshipType::NEXT 
+						&& relationshipObject.getRelObjectType() != RelationshipType::NEXT_STAR 
+						&& firstArgObject.getIsSynonym() 
+						&& secondArgObject.getIsSynonym() 
+						&& isMatch(firstArgObject.getStringValue(), secondArgObject.getStringValue())) {
+					this->throwsInvalidRelationshipSameSynonymArguments(relationshipObject.getRelObjectType(), firstArgObject.getStringValue(), secondArgObject.getStringValue());
+					isUnderArg = false;
 				}
+
 
 				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(),
 					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
@@ -650,7 +991,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			}
 			else {
 				this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), st.peekNextToken());
-				//return false;
+				isUnderArg = false;
 			}
 		}
 
@@ -691,17 +1032,14 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 				if (relationshipObject.doesFirstArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
 					
-					// check if haven't reach max synonym occurence
-					//if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
-						// update synonym occurence
-						this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
+					// update synonym occurence
+					//this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
 						
-						firstArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
-							nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
+					firstArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
 
-						hasValidFirstArg = true; // first argument is correct
-						numberOfArgs += 1;
-					//} // end of check synonym occurence
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
 					
 				}
 
@@ -711,16 +1049,14 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			if (hasComma && hasValidFirstArg) {
 
 				if (relationshipObject.doesSecondArgsContains(this->mSynonymTable->getObject(nextToken).getType())) {
-					// check if reach max synonym occurence
-					//if (!this->getSynonymOccurence()->hasMaximumOccurence(nextToken, ClauseType::SUCH_THAT)) {
-						// update synonym occurence
-						this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
-						
-						secondArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
-							nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
 
-						numberOfArgs += 1;
-					//} // end of check synonym occurence
+					// update synonym occurence
+					//this->getSynonymOccurence()->setIncrementOccurence(nextToken, ClauseType::SUCH_THAT);
+						
+					secondArgObject = ClauseSuchThatArgObject(this->mSynonymTable->getObject(nextToken).getType(),
+						nextToken, ClauseSuchThatArgObject::EMTPY_INT, true);
+
+					numberOfArgs += 1;
 				}
 
 			}
@@ -923,13 +1259,233 @@ bool QueryValidator::isWildcard(std::string str) {
 	return (str.compare(SYNTAX_UNDERSCORE) == 0);
 }
 
-bool QueryValidator::isTurple(std::string str) {
-	return isSynonym(str) 
-		&& this->mSynonymTable->getObject(str).getType() != EntityType::INVALID;
+bool QueryValidator::isTuple(std::string str) {
+
+	if (!isMatch(str, this->SYNTAX_LEFT_ARROW_BRACKET)) {
+		return isSynonym(str)
+			&& this->isDeclaredSynonym(str);
+	}
+
+	std::string currentToken = "";
+	std::string previousValidSynonym = "";
+	bool isWithinTuple = true;
+	bool isValid = true;
+	bool hasRightArrowBracket = false;
+	
+	int synonymCount = 0;
+
+
+	while (isWithinTuple) {
+		
+		if (hasRightArrowBracket) {
+			return isValid;
+		}
+
+		currentToken = st.nextToken();
+		
+		if (isMatch(currentToken, this->SYNTAX_RIGHT_ARROW_BRACKET)) {
+			hasRightArrowBracket = true;
+			continue;
+		} 
+		else if (isMatch(currentToken, this->SYNTAX_COMMA)) {
+			if (isSynonym(st.peekNextToken()) 
+				&& this->isDeclaredSynonym(st.peekNextToken())) {
+
+				previousValidSynonym = st.nextToken(); // points to synonym, after ","
+				isValid = true;
+				synonymCount++;
+			}
+			else {
+				isWithinTuple = false;
+			}
+
+			continue;
+		}
+		else if (isMatch(currentToken, this->SYNTAX_DOT)) {
+			// means before that there's a synonym
+			if (isSynonym(previousValidSynonym)
+				&& this->isDeclaredSynonym(previousValidSynonym)
+				&& this->isSynonymContainsAttrName(this->mSynonymTable->getObject(previousValidSynonym).getType(), st.peekNextToken())) {
+				
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+					st.popNextToken();
+					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+						st.popNextToken();
+						isValid = true;
+					}
+					else {
+						isValid = false;
+					}
+				}
+				else {
+					st.popNextToken();
+					isValid = true;
+				}
+
+				
+			}
+		}
+		// current token is a synonym with a "," or ">" 
+		else if (isSynonym(currentToken) 
+				&& (isMatch(st.peekNextToken(), this->SYNTAX_COMMA) 
+					|| isMatch(st.peekNextToken(), this->SYNTAX_RIGHT_ARROW_BRACKET))) {
+
+			if (this->isDeclaredSynonym(currentToken)) {
+				previousValidSynonym = currentToken;
+				isValid = true;
+				synonymCount++;
+			}
+			else {
+				isWithinTuple = false;
+			}
+			continue;
+		}
+		// current token is a synonym with a dot next
+		else if (isSynonym(currentToken)
+			&& isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
+
+			st.popNextToken(); // remove "."
+
+			if (this->isDeclaredSynonym(currentToken)
+				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.peekNextToken())) {
+				
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+					st.popNextToken();
+					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+						st.popNextToken();
+
+						previousValidSynonym = currentToken;
+						isValid = true;
+						synonymCount++;
+					}
+					else {
+						isValid = false;
+					}
+				}
+				else {
+					st.popNextToken();
+					previousValidSynonym = currentToken;
+					isValid = true;
+					synonymCount++;
+				}
+
+
+				//previousValidSynonym = currentToken;
+				//isValid = true;
+				//synonymCount++;
+			}
+			else {
+				isWithinTuple = false;
+			}
+
+			continue;
+		}
+		else {
+			isWithinTuple = false;
+		}
+
+	}
+
+	return false;
 }
 
 bool QueryValidator::isSyntaxBoolean(std::string str) {
 	return isMatch(str, SYNTAX_BOOLEAN);
+}
+
+bool QueryValidator::isAttributeReference(std::string str) {
+
+	SynonymObject selectedSynonymObj;
+
+	if (this->isSynonym(str) && this->isDeclaredSynonym(str)) {
+
+		selectedSynonymObj = this->mSynonymTable->getObject(str); // get synonym object which is found in synonymTable
+		if (selectedSynonymObj.getType() == EntityType::INVALID) { // check declared
+			//this->throwsInvalidPattern(str);
+			return false;
+		}
+
+		// prog_line does not need ".", no attrName
+		if (selectedSynonymObj.getType() == EntityType::PROGRAM_LINE && !isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
+			return true;
+		}
+
+		st.popNextToken(); // remove "." from stack
+
+		return this->isSynonymContainsAttrName(selectedSynonymObj.getType(), st.nextToken());
+
+		/*
+		switch (selectedSynonymObj.getType()) {
+		case STMT:
+		case IF:
+		case WHILE:
+		case ASSIGN:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+
+				st.nextToken(); // points to stmt
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+					st.nextToken(); // points to "#"
+					return true;
+				}
+				
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case PROCEDURE:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+				st.nextToken(); // points to procName
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case CALL:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+
+				st.nextToken(); // points to stmt
+				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+					st.nextToken(); // points to "#"
+					return true;
+				}
+
+			}
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+				st.nextToken(); // points to procName
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case VARIABLE:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+
+		case CONSTANT:
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_VALUE)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+			break;
+		}
+		*/
+
+	}
+
+	return false;
 }
 
 bool QueryValidator::isName(std::string str) {
@@ -962,6 +1518,21 @@ bool QueryValidator::isStatementNumber(std::string str) {
 	return false;
 }
 
+bool QueryValidator::isNumber(std::string str) {
+	if (str.empty()) {
+		return false;
+	}
+
+	if (std::isdigit(str[0])) { //[0] atoi(str.c_str())
+		if (atoi(str.c_str()) > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	return false;
+}
+
 bool QueryValidator::isInteger(std::string str) {
 	if (str.empty()) {
 		return false;
@@ -973,6 +1544,49 @@ bool QueryValidator::isInteger(std::string str) {
 	}
 	return true;
 }
+
+bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string attrName) {
+	switch (type) {
+	case STMT:
+	case IF:
+	case WHILE:
+	case ASSIGN:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT);
+		break;
+
+	case PROCEDURE:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME);
+		break;
+
+	case CALL:
+		if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+				st.popNextToken(); // remove "#" from stack
+				return true;
+			}
+
+		} 
+		else if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		break;
+
+	case VARIABLE:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_VARIABLE_NAME);
+		break;
+
+	case CONSTANT:
+		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_VALUE);
+		break;
+	default:
+		return false;
+	}
+}
+
 
 RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	if (isMatch(syntax, SYNTAX_RELATIONSHIP_USES)) {
@@ -992,6 +1606,24 @@ RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_FOLLOWS_STAR)) {
 		return RelationshipType::FOLLOWS_STAR;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_CALLS)) {
+		return RelationshipType::CALLS;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_CALLS_STAR)) {
+		return RelationshipType::CALLSSTAR;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_NEXT)) {
+		return RelationshipType::NEXT;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_NEXT_STAR)) {
+		return RelationshipType::NEXT_STAR;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_AFFECTS)) {
+		return RelationshipType::AFFECTS;
+	}
+	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_AFFECTS_STAR)) {
+		return RelationshipType::AFFECTS_STAR;
 	}
 	else {
 		return RelationshipType::INVALID_RELATIONSHIP;
@@ -1054,6 +1686,20 @@ ClauseType::ClauseType QueryValidator::getClauseType(std::string syntax) {
 	}
 }
 
+AttrType::AttrType QueryValidator::getAttrType(std::string syntax) {
+	if (isMatch(syntax, SYNTAX_ATTRIBUTE_VALUE)) {
+		return AttrType::AttrType::VALUE;
+	} else if (isMatch(syntax, SYNTAX_ATTRIBUTE_STATEMENT_NUMBER)) {
+		return AttrType::AttrType::STMT_NO;
+	} else if (isMatch(syntax, SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+		return AttrType::AttrType::PROC_NAME;
+	} else if (isMatch(syntax, SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+		return AttrType::AttrType::VAR_NAME;
+	}
+
+	return AttrType::AttrType::INVALID;
+}
+
 std::string QueryValidator::getEntitySyntax(std::string str) {
 	if (isMatch(str, SYNTAX_PROCEDURE)) {
 		return SYNTAX_PROCEDURE;
@@ -1111,14 +1757,40 @@ std::string QueryValidator::getRelationshipSyntax(RelationshipType type) {
 		return "uses";
 	case CALLS:
 		return "calls";
+	case CALLSSTAR:
+		return "calls*";
 	case FOLLOWS:
 		return "follows";
 	case FOLLOWS_STAR:
 		return "follows*";
 	case PARENT_STAR:
 		return "parent*";
+	case NEXT:
+		return "next";
+	case NEXT_STAR:
+		return "next*";
+	case AFFECTS:
+		return "affects";
+	case AFFECTS_STAR:
+		return "affects*";
 	default:
 		return "";
+	}
+}
+
+std::string QueryValidator::getAttrSyntax(AttrType::AttrType type) {
+	switch (type) {
+	case AttrType::PROC_NAME:
+		return SYNTAX_ATTRIBUTE_PROCEDURE_NAME;
+
+	case AttrType::STMT_NO:
+		return SYNTAX_ATTRIBUTE_STATEMENT_NUMBER;
+
+	case AttrType::VAR_NAME:
+		return SYNTAX_ATTRIBUTE_VARIABLE_NAME;
+
+	case AttrType::VALUE:
+		return SYNTAX_ATTRIBUTE_VALUE;
 	}
 }
 

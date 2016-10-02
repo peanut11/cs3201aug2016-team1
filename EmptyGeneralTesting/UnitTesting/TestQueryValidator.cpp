@@ -10,12 +10,227 @@ namespace UnitTesting {
 	TEST_CLASS(TestQueryValidator) {
 public:
 	
-	TEST_METHOD(TestQueryValidator_Full_Query) {
+	TEST_METHOD(TestQueryValidator__Iteration_3_Full_Query) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
+
+		// Success Tuple with synonyms only
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
+
+		// Success Tuple with single synonym with or without attrName
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName> such that Parent(s1,_) and Next(s1, s2)"));
+
+		
+		// Success Tuple with mutliple synonym and attrName
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, q> such that Parent(s1,_) and Next(s1, s2)"));
+
+		// Success Tuple with similar synonyms and attrNames
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, p> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, p> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, p.procName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q.procName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, c.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, c.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, w.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <var1.varName, w.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <const.value, w.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <w.stmt#, var1.varName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <a1.stmt#, const.value> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, const.value> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <a1.stmt#, n2> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, n2> such that Parent(s1,_) and Next(s1, s2)"));
+
+		
+		// Failure, Tuple with wrong format
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <<p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, q>> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <<p, q>> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select p, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, q such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select p, q such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p q> such that Parent(s1,_) and Next(s1, s2)"));
+
+		// Failure, Tuple correct format, wrong element
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <z, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, z> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <z, abc> such that Parent(s1,_) and Next(s1, s2)"));
+
+
+		// Failure, Tuple with wrong synonym attrName
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p.value, q> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p, q.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <p.value, q.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <c.value, q.varName> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <var1.procName, q.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <n1.stmt#, n2> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <n1, n2.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsFalse(validator->isValidQuery(declaration + "Select <n1.stmt#, n2.stmt#> such that Parent(s1,_) and Next(s1, s2)"));
+		
+
+	}
+
+	TEST_METHOD(TestQueryValidator__Iteration_2_Full_Query) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+
+		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
+		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
+		// output is "wrong". Select v such that Modifies (a1, "iter") pattern a("left", _)
+		// crash. assign a; Select a such that Parent*(38, a)
+		
+		// Success Next
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,n1)")); // same synonym in Next
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(a1,w)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(ifstmt,s1)"));
+
+		// Success Next*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,n1)")); // same synonym in Next
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(a1,w)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(ifstmt,s1)"));
+
+
+		// Success Affects
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,_)"));
+		
+		// Success Affects*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,a2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,_)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+
+
+
+
+		// Success With
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1")); // 1 with clause
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_) with s1.stmt# = 1 s2.stmt# = 4")); // 2 with clauses
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1 such that Follows(s1, _)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+
+		// Failure
+		/*
+		auto error1 = [validator] { 
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
+		};
+		Assert::ExpectException<std::runtime_error>(error1);
+		
+		auto error2 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(_,s2)");
+		};
+		Assert::ExpectException<std::runtime_error>(error2);
+
+		auto error3 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
+		};
+		Assert::ExpectException<std::runtime_error>(error3);
+		*/
+		auto error4 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,_)");
+		};
+		Assert::ExpectException<std::runtime_error>(error4);
+
+		auto error5 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(_,s2)");
+		};
+		Assert::ExpectException<std::runtime_error>(error5);
+
+		auto error6 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,p)");
+		};
+		Assert::ExpectException<std::runtime_error>(error6);
+
+		// Failure, same synonym in relationships
+		auto error7 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error7);
+
+		auto error8 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects(a1, a1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error8);
+
+		auto error9 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error9);
+
+		// Failure, incorrect number of arguments
+		auto error100 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a2, _)");
+		};
+		Assert::ExpectException<std::runtime_error>(error100);
+
+		auto error101 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1)");
+		};
+		Assert::ExpectException<std::runtime_error>(error101);
+
+
+
+	}
+
+	TEST_METHOD(TestQueryValidator__Iteration_1_Full_Query) {
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
-
 
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;Select p such that Parent(s1,s2)"));
 
@@ -38,13 +253,8 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_)"));
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
-		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Parent*(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		
-		
-
-
 		// success FOLLOWS
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt such that Follows (5, ifstmt)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows (s1, 3)"));
@@ -273,6 +483,15 @@ public:
 		Assert::AreEqual(std::string("_"), st.nextToken());
 		Assert::AreEqual(std::string(")"), st.nextToken());
 
+		st = StringTokenizer("p.procName=\"First\"", QUERY_PREPROCESSOR);
+		Assert::AreEqual(std::string("p"), st.nextToken());
+		Assert::AreEqual(std::string("."), st.nextToken());
+		Assert::AreEqual(std::string("procName"), st.nextToken());
+		Assert::AreEqual(std::string("="), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+		Assert::AreEqual(std::string("First"), st.nextToken());
+		Assert::AreEqual(std::string("\""), st.nextToken());
+
 	}
 
 	TEST_METHOD(TestQueryValidator_Variable_Only) {
@@ -364,124 +583,100 @@ public:
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(1,2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,s2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(1,s2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(ifstmt1, ifstmt2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(ifstmt1, 1)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(w1, w2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(w1, 1)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(s1,_)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,s1)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,_)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		// failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parents(bb,cc)");
 		validator->getNextToken();
 		auto funcPtr = [validator] { validator->isRelationship("Parents"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,q)"); // parent should have stmt args, but both args are procedure
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr2 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr2);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(s1,q)"); // parent
+		validator->initStringTokenizer("Parent(s1,q)"); // 2nd arugment is procedure
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr3 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr3);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(p,s2)"); // parent
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr4 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr4);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(s1)"); // parent
+		validator->initStringTokenizer("Parent(s1)"); // missing 2nd argument
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr5 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr5);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(s1,)"); // parent
+		validator->initStringTokenizer("Parent(s1,)"); // missing 2nd argument
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr6 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr6);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Parent(_,)"); // parent
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr7 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr7);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // parent
+		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // 
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr8 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr8);
 
-		validator->clearSynonymOccurence();
-		validator->initStringTokenizer("Parent(\"x\",_)"); // parent
+		validator->initStringTokenizer("Parent(\"x\",_)"); // 
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Parent"));
 		auto funcPtr9 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<std::runtime_error>(funcPtr9);
 
+		validator->initStringTokenizer("Parent(s1,s1)"); // same synonyms in both arguments
+		validator->getNextToken();
+		auto funcPtr10 = [validator] { validator->isRelationship("Parent"); };
+		Assert::ExpectException<std::runtime_error>(funcPtr10);
 
 	}
 
@@ -512,12 +707,15 @@ public:
 
 
 		// failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(p,q)"); // follows
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Follows"));
 		auto funcPtrError1 = [validator] { validator->isRelationship("Follows"); };
 		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+
+		validator->initStringTokenizer("Follows(s1,s1)"); // same synonym for both args
+		validator->getNextToken();
+		auto funcPtrError2 = [validator] { validator->isRelationship("Follows"); };
+		Assert::ExpectException<std::runtime_error>(funcPtrError2);
 
 	}
 
@@ -869,6 +1067,227 @@ public:
 		//Assert::IsFalse(validator->isPatternExprArgument("\""));
 		auto funcPtrError6 = [validator] { validator->isPatternExprArgument("\""); };
 		Assert::ExpectException<std::runtime_error>(funcPtrError6);
+
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Clause_With) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success
+		validator->initStringTokenizer("p.procName=\"First\"");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("p"));
+
+
+		validator->initStringTokenizer("c.procName=\"First\"");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+		
+		validator->initStringTokenizer("c.stmt#=10");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+		validator->initStringTokenizer("const.value=1");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("const"));
+
+		validator->initStringTokenizer("pl1=2");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("pl1"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		validator->initStringTokenizer("c.stmt# = const.value");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+		
+
+		validator->initStringTokenizer("const.value = c.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("const"));
+
+		validator->initStringTokenizer("c.stmt# = ifstmt.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+		validator->initStringTokenizer("c.procName = p.procName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+		
+		validator->initStringTokenizer("c.procName = v.varName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+		
+		// Failure
+		validator->initStringTokenizer("2 = pl1");
+		validator->getNextToken();
+		auto error1 = [validator] { validator->isClauseWith("2"); }; // invalid format
+		Assert::ExpectException<std::runtime_error>(error1);
+
+		validator->initStringTokenizer("c.stmt# = \"hello\"");
+		validator->getNextToken();
+		auto error2 = [validator] { validator->isClauseWith("c"); }; // incorrect value type
+		Assert::ExpectException<std::runtime_error>(error2);
+
+		validator->initStringTokenizer("p.procName = 1");
+		validator->getNextToken();
+		auto error3 = [validator] { validator->isClauseWith("p"); }; // incorrect value type
+		Assert::ExpectException<std::runtime_error>(error3);
+
+		validator->initStringTokenizer("p.varName = \"hello\"");
+		validator->getNextToken();
+		auto error4 = [validator] { validator->isClauseWith("p"); }; // incorrect attribute name
+		Assert::ExpectException<std::runtime_error>(error4);
+
+		validator->initStringTokenizer("const.procName = \"hello\"");
+		validator->getNextToken();
+		auto error5 = [validator] { validator->isClauseWith("const"); }; // incorrect attribute name
+		Assert::ExpectException<std::runtime_error>(error5);
+
+		validator->initStringTokenizer("c.stmt# = def.value");
+		validator->getNextToken();
+		auto error100 = [validator] { validator->isClauseWith("c"); }; // not declared synonym
+		Assert::ExpectException<std::runtime_error>(error100);
+
+		validator->initStringTokenizer("c.stmt# = p.procName");
+		validator->getNextToken();
+		auto error101 = [validator] { validator->isClauseWith("c"); }; // incorrect type
+		Assert::ExpectException<std::runtime_error>(error101);
+
+		validator->initStringTokenizer("p.procName = const.value");
+		validator->getNextToken();
+		auto error102 = [validator] { validator->isClauseWith("p"); }; // incorrect type
+		Assert::ExpectException<std::runtime_error>(error102);
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Attribute_Ref) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+
+		// success
+		validator->initStringTokenizer("p.procName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("c.procName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("c.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("v.varName");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("v"));
+
+		validator->initStringTokenizer("const.value");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("const"));
+
+
+		// Failure
+		validator->initStringTokenizer("p.varName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("p.stmt#");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("p.value");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("c.varName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("c.value");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("c"));
+
+		validator->initStringTokenizer("const.varName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("const"));
+
+		validator->initStringTokenizer("const.procName");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("const"));
+
+		validator->initStringTokenizer("const.stmt#");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("const"));
+
+		// Failure, format error
+		validator->initStringTokenizer("p.");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("procName.p");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("procName"));
+
+		// Failure, syntax error
+		validator->initStringTokenizer("p.proc");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("p"));
+
+		validator->initStringTokenizer("c.stmt");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isAttributeReference("c"));
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Tuple) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		
+		// Success
+		validator->initStringTokenizer("<p>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
+		validator->initStringTokenizer("<p, a1, a2>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
+		validator->initStringTokenizer("<p, a1, a2, w, v, c, pl1>");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
+		validator->initStringTokenizer("<p>>"); // althought its true, then next clause check will return false as the next token is ">"
+		validator->getNextToken();
+		Assert::IsTrue(validator->isTuple("<"));
+
+		// Failure
+		validator->initStringTokenizer("<p, >");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+
+		validator->initStringTokenizer("<p such");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+		
+		validator->initStringTokenizer("<p");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+
+
+		validator->initStringTokenizer("<<p>");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isTuple("<"));
+
 
 
 	}

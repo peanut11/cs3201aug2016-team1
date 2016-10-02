@@ -8,12 +8,12 @@
 
 #include "AssignTree.h"
 #include "EntityType.h"
+#include "Exceptions.h"
 #include "RelationshipType.h"
 #include "Types.h"
 
 class PKB {
 private:
-	static const std::runtime_error ERROR;
 	static PKB* theOne;
 	
 	std::vector<AssignTree>				assignTrees;
@@ -23,11 +23,13 @@ private:
 	std::vector<VarRow>					varTable;
 	std::vector<StmtRow>				stmtTable;
 	std::vector<EntityType>				stmtTypeTable;
+	std::vector<StmtSet>				stmtByTypeTable;
 	ProcRefMap							procRefMap;
 	std::vector<ProcName>				procRefTable;
 	std::vector<ProcRow>				procTable;
 	std::vector<ProcIndex>				stmtToProcTable;
 	std::vector<std::set<StmtNumber>>	procToStmtTable;
+
 
 public:
 	static PKB* getInstance();
@@ -77,6 +79,8 @@ public:
 	virtual EntityType				getStmtTypeForStmt(StmtNumber stmt);
 	virtual StmtNumber              getStmtTableSize();
 	virtual std::set<Constant>		getAllConstantValues();
+	virtual std::set<StmtNumber>	getAllStmts();
+    virtual std::set<VarIndex>		getAllVarIndex();
 	virtual std::set<VarName>		getAllVarNames();
 	virtual ProcIndex				getProcByStmt(StmtNumber stmt);
 

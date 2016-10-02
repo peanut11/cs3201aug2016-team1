@@ -1,4 +1,3 @@
-
 #include "SynonymTable.h"
 
 SynonymTable *SynonymTable::_instance;
@@ -16,8 +15,6 @@ SynonymTable *SynonymTable::getInstance()
 void SynonymTable::clearAll() {
 	synonymObjects.clear();
 }
-
-
 
 std::set<SynonymString> SynonymTable::getSetString(SynonymString synonym) {
 	if (synonym.compare("_") == 0) {
@@ -136,7 +133,7 @@ SynonymObject SynonymTable::getObject(SynonymString synonym) {
 
 SynonymObject SynonymTable::getObject(SynonymValue index) {
 	if (index >= this->synonymObjects.size() || index < 0) {
-		throw std::runtime_error("getObject index is out of vector size");
+        throw Exception::INVALID_OBJECT_INDEX;
 	}
 
 	return this->synonymObjects.at(index);

@@ -1,17 +1,18 @@
 #pragma once
 enum EntityType {
-	PROCEDURE,		// procedure
-	PROGRAM_LINE,	// program line
-	STMT,		// statement
-	ASSIGN,		// assignment
-	CALL,		// call 
-	WHILE,		// while
-	IF,			// if
+    ASSIGN,
+    CALL,
+    IF,
+    WHILE,
+    STMT,
+
+	PROCEDURE,
+	PROGRAM_LINE,
 	PLUS,
 	MINUS,
 	TIMES,
-	VARIABLE,			// variable (string)
-	CONSTANT,			// constant (integer)
-	WILDCARD,			// wildcard
+	VARIABLE, // String
+	CONSTANT, // Integer
+	WILDCARD,
 	INVALID
 };

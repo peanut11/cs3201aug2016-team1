@@ -14,4 +14,5 @@ public:
 	ClauseWithRefObject getRefObject2();
 	bool getResultsBoolean();
 	void setResultsBoolean(bool boolean);
+
 };

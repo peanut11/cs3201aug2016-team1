@@ -20,7 +20,8 @@ public:
 	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
 	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
 	virtual std::set<StmtNumber>	getAllStmts();
-	virtual std::set<VarName>		getAllVarNames();
+    virtual std::set<VarIndex>      getAllVarIndex();
+	virtual std::set<VarName>       getAllVarNames();
 	virtual std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
 	virtual std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);
 	virtual std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent);

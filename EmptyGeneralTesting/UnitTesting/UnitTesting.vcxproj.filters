@@ -62,12 +62,6 @@
     <ClCompile Include="TestQueryEvaluator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestResultsTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestResultsObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestIsAssignHasExpr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

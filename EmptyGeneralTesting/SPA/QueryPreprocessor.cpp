@@ -82,6 +82,30 @@ void QueryPreProcessor::populateRelationshipTable() {
 	this->mRelTable->insert(object);
 
 	// havent include next and affects
+	object = this->createRelationshipObject(RelationshipType::NEXT,
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::NEXT_STAR,
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN,EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::AFFECTS,
+	{ EntityType::ASSIGN, EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::ASSIGN, EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
+	object = this->createRelationshipObject(RelationshipType::AFFECTS_STAR,
+	{ EntityType::ASSIGN, EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+	{ EntityType::ASSIGN, EntityType::PROGRAM_LINE, EntityType::CONSTANT, EntityType::WILDCARD },
+		2);
+	this->mRelTable->insert(object);
+
 }
 
 SynonymObject QueryPreProcessor::createSynonymObject(EntityType type, std::string synonym) {

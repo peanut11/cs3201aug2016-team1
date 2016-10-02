@@ -28,8 +28,8 @@
     <ClCompile Include="QueryValidator.cpp" />
     <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
-    <ClCompile Include="ResultsObject.cpp" />
-    <ClCompile Include="ResultsTable.cpp" />
+    <ClCompile Include="ResultGrid.cpp" />
+    <ClCompile Include="ResultGridManager.cpp" />
     <ClCompile Include="SelectObject.cpp" />
     <ClCompile Include="DummyPKB.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
@@ -47,6 +47,7 @@
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="DummyPKB.h" />
+    <ClInclude Include="Exceptions.h" />
     <ClInclude Include="ExprTree.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
@@ -65,9 +66,9 @@
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />
+    <ClInclude Include="ResultGrid.h" />
+    <ClInclude Include="ResultGridManager.h" />
     <ClInclude Include="StringTokenizer.h" />
-    <ClInclude Include="ResultsObject.h" />
-    <ClInclude Include="ResultsTable.h" />
     <ClInclude Include="SelectObject.h" />
     <ClInclude Include="ClauseSuchThatArgObject.h" />
     <ClInclude Include="ClauseSuchThatObject.h" />

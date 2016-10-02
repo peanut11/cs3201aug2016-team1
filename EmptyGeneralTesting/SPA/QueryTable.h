@@ -17,6 +17,8 @@ class QueryTable {
 
 	std::string getEntityString(EntityType type);
 	std::string getRelationshipString(RelationshipType type);
+	std::string getAttrString(AttrType::AttrType type);
+	std::string getWithRefString(WithRefType type);
 
 public:
 	QueryTable();

@@ -64,12 +64,6 @@
     <ClCompile Include="QueryTable.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
-    <ClCompile Include="ResultsTable.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
-    <ClCompile Include="ResultsObject.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="ClausePatternObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -89,6 +83,12 @@
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="QueryResultProjector.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultGrid.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultGridManager.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -165,20 +165,11 @@
     <ClInclude Include="DesignExtractor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SynonymOccurence.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
     <ClInclude Include="QueryTable.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="Types.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResultsTable.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
-    <ClInclude Include="ResultsObject.h">
-      <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="ClauseSuchThatObject.h">
       <Filter>Header Files\QP</Filter>
@@ -200,6 +191,18 @@
     </ClInclude>
     <ClInclude Include="QueryResultProjector.h">
       <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultGrid.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultGridManager.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymOccurence.h">
+      <Filter>Header Files\QP</Filter>
+	</ClInclude> 
+    <ClInclude Include="Exceptions.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

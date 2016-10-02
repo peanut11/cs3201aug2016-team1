@@ -1,7 +1,7 @@
-
 #include "RelTable.h"
 
 RelTable *RelTable::_instance;
+
 RelObject RelTable::nullRelObject = RelObject(RelationshipType::INVALID_RELATIONSHIP, std::vector<EntityType>(), std::vector<EntityType>(), 0);
 
 /*
@@ -22,10 +22,9 @@ int RelTable::insert(RelObject object) {
 	return relObjects.size() - 1; // last index of the object
 }
 
-
 RelObject RelTable::getObject(int index) {
 	if (index >= this->relObjects.size() || index < 0) {
-		throw std::runtime_error("getObject index is out of vector size");
+        throw Exception::INVALID_OBJECT_INDEX;
 	}
 
 	return this->relObjects.at(index);
@@ -47,5 +46,3 @@ Get the size of table
 int RelTable::size() {
 	return relObjects.size();
 }
-
-
