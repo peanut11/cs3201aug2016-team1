@@ -93,7 +93,4 @@ public:
 	//getting procedures
 	virtual std::set<ProcIndex>		getProcsByProc(ProcName procName, RelationshipType calls);
 	virtual std::set<ProcIndex>		getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
-	
-	
-		set<stmt> getStmtsByProc(ProcIndex) gets the stmts in procedure
 };
