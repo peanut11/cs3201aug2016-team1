@@ -198,14 +198,25 @@ bool ProgramValidator::isAssign(std::string str) {
 }
 
 bool ProgramValidator::isExpr(std::string str) {
+    bool hasNoParentheses = true;
+    bool isExpression = false;
+
+    if (isMatch(str, "(")) {
+        hasNoParentheses = false;
+        str = st.nextToken();
+    }
+
 	if (isFactor(str)) {
-		if (isMatch(st.peekNextToken(), "+")) {
-			st.popNextToken();
-			return isExpr(st.nextToken());
-		}
-		return true;
+        isExpression = true;
+        str = st.peekNextToken();
 	}
-	return false;
+
+    if (isExpression && ( isMatch(str, "+") || isMatch(str, "-") || isMatch(str, "*") )) {
+        st.popNextToken();
+        isExpression = isExpr(st.nextToken());
+    }
+
+	return isExpression && (hasNoParentheses || isMatch(st.nextToken(), ")"));;
 }
 
 bool ProgramValidator::isFactor(std::string str) {
