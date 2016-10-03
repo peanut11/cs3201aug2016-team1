@@ -33,6 +33,7 @@ namespace Exception {
 
     // ProgramValidator
     const std::domain_error INVALID_SIMPLE_SYNTAX("Invalid SIMPLE source code");
+    const std::invalid_argument RECURSIVE_CALL_ERROR("Procedure is called recursively");
 
     // ResultGrid
     const std::invalid_argument INCORRECT_GRID_API("mergeGrid(other) for no result");

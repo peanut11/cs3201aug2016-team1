@@ -1,7 +1,11 @@
 #pragma once
 
 #include <cctype>
+#include <map>
+#include <queue>
+#include <set>
 #include <string>
+#include <vector>
 
 #include "Exceptions.h"
 #include "StringTokenizer.h"
@@ -9,11 +13,15 @@
 class ProgramValidator {
 private:
 	StringTokenizer st;
+    std::string currentProcedure;
+    std::map<std::string, std::vector<std::string>> procAdjList;
 
     void discardNewlines();
 	bool isMatch(std::string actual, std::string expected);
 	bool isName(std::string str);
 	bool isInteger(std::string str);
+    bool isNotRecursiveCall(std::string procName);
+    bool breadthFirstSearch(std::string procName);
 
     bool isProgram(std::string str);
 	bool isProcedure(std::string str);

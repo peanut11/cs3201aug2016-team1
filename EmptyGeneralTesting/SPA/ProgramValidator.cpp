@@ -64,7 +64,40 @@ bool ProgramValidator::isInteger(std::string str) {
 	return true;
 }
 
+bool ProgramValidator::isNotRecursiveCall(std::string procName) {
+    if (breadthFirstSearch(procName)) {
+        throw Exception::RECURSIVE_CALL_ERROR;
+    }
 
+    return true;
+}
+
+bool ProgramValidator::breadthFirstSearch(std::string procName) {
+    std::set<std::string> traversed;
+    std::queue<std::string> toVisit;
+
+    traversed.emplace(procName);
+    toVisit.push(procName);
+
+    while (!toVisit.empty()) {
+        std::string parent = toVisit.front();
+        toVisit.pop();
+
+        std::vector<std::string> children = procAdjList[parent];
+        for (unsigned int i = 0; i < children.size(); i++) {
+            std::string child = children[i];
+
+            if (child == currentProcedure) {
+                return true;
+            } else if (traversed.find(child) == traversed.end()) {
+                traversed.emplace(child);
+                toVisit.push(child);
+            }
+        }
+    }
+
+    return false;
+}
 
 bool ProgramValidator::isProgram(std::string str) {
     while (isProcedure(str)) {
@@ -82,7 +115,7 @@ bool ProgramValidator::isProgram(std::string str) {
 
 bool ProgramValidator::isProcedure(std::string str) {
 	return isMatch(str, "procedure")
-		&& isName(st.nextToken())
+		&& isName(currentProcedure = st.nextToken()) // Update currentProcedure
 		&& isMatch(st.nextToken(), "{")
 		&& isMatch(st.nextToken(), "\n")
 		&& isStmtLst(st.nextToken())
