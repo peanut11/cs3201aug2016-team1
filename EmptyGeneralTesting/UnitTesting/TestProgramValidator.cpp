@@ -8,6 +8,19 @@ namespace UnitTesting {
 	TEST_CLASS(TestProgramValidator) {
 public:
 
+    TEST_METHOD(TestIsValidProgram_Proc_MultipleProc) {
+        try {
+            std::string str = Tools::readFile("program_MultipleProcedure.txt");
+
+            ProgramValidator pv = ProgramValidator();
+            Assert::IsTrue(pv.isValidSyntax(str));
+
+        } catch (std::domain_error e) {
+            Assert::AreEqual(Exception::INVALID_SIMPLE_SYNTAX.what(), e.what());
+            Assert::Fail();
+        }
+    }
+    
     TEST_METHOD(TestIsValidProgram_Stmt_Call) {
 		try {
 			std::string str = Tools::readFile("prototype_procedure_First.txt");

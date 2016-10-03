@@ -9,19 +9,18 @@ ProgramValidator::ProgramValidator() {}
 
 bool ProgramValidator::isValidSyntax(std::string str) {
 	st = StringTokenizer(str, DelimiterMode::PARSER);
-	const std::string token = st.nextToken();
 
-	if (isProcedure(token)) {
-		while (st.hasMoreTokens()) {
-			if (!isMatch(st.nextToken(), "\n")) {
-                Exception::INVALID_SIMPLE_SYNTAX;
-			}
-		}
-	} else {
+	if (!st.hasMoreTokens() || !isProgram(st.nextToken())) {
         throw Exception::INVALID_SIMPLE_SYNTAX;
 	}
 
-	return true;
+    return true;
+}
+
+void ProgramValidator::discardNewlines() {
+    while (isMatch(st.peekNextToken(), "\n")) {
+        st.popNextToken();
+    }
 }
 
 bool ProgramValidator::isMatch(std::string actual, std::string expected) {
@@ -65,19 +64,20 @@ bool ProgramValidator::isInteger(std::string str) {
 	return true;
 }
 
+
+
 bool ProgramValidator::isProgram(std::string str) {
-    bool isProgram = false;
-
-    while (st.hasMoreTokens()) {
-        while (isMatch(st.peekNextToken(), "\n")) {
-            st.popNextToken();
+    while (isProcedure(str)) {
+        if (st.hasMoreTokens() && !isMatch(st.nextToken(), "\n")) {
+            return false;
         }
-
+        discardNewlines();
         if (st.hasMoreTokens()) {
-            isProgram = isProcedure(st.nextToken());
+            str = st.nextToken();
         }
     }
-    return isProgram;
+
+    return !st.hasMoreTokens();
 }
 
 bool ProgramValidator::isProcedure(std::string str) {

@@ -1,0 +1,7 @@
+procedure one {
+  modified = used;
+}
+
+procedure two {
+  modified = used;
+}

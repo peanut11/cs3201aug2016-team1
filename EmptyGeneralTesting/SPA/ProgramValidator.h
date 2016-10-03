@@ -10,6 +10,7 @@ class ProgramValidator {
 private:
 	StringTokenizer st;
 
+    void discardNewlines();
 	bool isMatch(std::string actual, std::string expected);
 	bool isName(std::string str);
 	bool isInteger(std::string str);
