@@ -47,6 +47,7 @@ bool ProgramValidator::isName(std::string str) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -54,11 +55,13 @@ bool ProgramValidator::isInteger(std::string str) {
 	if (str.empty()) {
 		return false;
 	}
+
 	for (unsigned int i = 0; i < str.length(); i++) {
 		if (!std::isdigit(str.at(i))) {
 			return false;
 		}
 	}
+
 	return true;
 }
 
@@ -97,6 +100,7 @@ bool ProgramValidator::isStmtLst(std::string str) {
 		}
 		return true;
 	}
+
 	return false;
 }
 
@@ -107,9 +111,12 @@ bool ProgramValidator::isStmt(std::string str) {
 bool ProgramValidator::isCall(std::string str) {
     // Note: 'call' is a valid varName if followed by '=' instead of another varName
     if (isMatch(str, "call") && isProcName(st.peekNextToken())) {
-        st.popNextToken();
-        return true;
+        std::string calledProcedure = st.nextToken();
+        procAdjList[currentProcedure].push_back(calledProcedure);
+
+        return isMatch(st.nextToken(), ";") && isNotRecursiveCall(calledProcedure);
     }
+
     return false;
 }
 
@@ -122,6 +129,7 @@ bool ProgramValidator::isWhile(std::string str) {
 			&& isStmtLst(st.nextToken())
 			&& isMatch(st.nextToken(), "}");
 	}
+
 	return false;
 }
 
@@ -141,6 +149,7 @@ bool ProgramValidator::isIf(std::string str) {
             && isStmtLst(st.nextToken())
             && isMatch(st.nextToken(), "}");
     }
+
     return false;
 }
 
@@ -151,6 +160,7 @@ bool ProgramValidator::isAssign(std::string str) {
 		return isExpr(st.nextToken())
 			&& isMatch(st.nextToken(), ";");
 	}
+
 	return false;
 }
 
