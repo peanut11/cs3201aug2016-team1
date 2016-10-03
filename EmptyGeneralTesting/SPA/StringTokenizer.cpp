@@ -25,7 +25,7 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 	
 	switch(mode) {
 	case PARSER:
-		delimiters = "{=+-*};\n";
+		delimiters = "({=+-*});\n";
 		break;
 	case QUERY_PREPROCESSOR:
 		delimiters = "*<>(#,._+=);\n\"";
