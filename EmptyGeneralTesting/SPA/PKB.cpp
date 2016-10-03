@@ -199,6 +199,8 @@ ProcIndex PKB::getProcIndex(ProcName procName) {
 		procTable.push_back(ProcRow());
 		procRefTable.push_back(procName);
 		procRefMap[procName] = procIndex;
+
+        procToStmtTable.push_back(std::set<StmtNumber>());
 	}
 	else {
 		procIndex = it->second;
@@ -397,7 +399,7 @@ bool PKB::putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt) {
 
 	// update ProcToStmtTable
 	prevSize = procToStmtTable[procIndex].size();
-	procToStmtTable[procIndex].insert(stmt);
+    procToStmtTable[procIndex].emplace_hint(procToStmtTable[procIndex].end(), stmt);
 	success = (prevSize + 1 == procToStmtTable[procIndex].size() && success); // size should always increase as there should be no repetition of stmt
 	return success;
 }
