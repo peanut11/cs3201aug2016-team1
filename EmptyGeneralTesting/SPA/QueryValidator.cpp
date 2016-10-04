@@ -1262,8 +1262,24 @@ bool QueryValidator::isWildcard(std::string str) {
 bool QueryValidator::isTuple(std::string str) {
 
 	if (!isMatch(str, this->SYNTAX_LEFT_ARROW_BRACKET)) {
-		return isSynonym(str)
-			&& this->isDeclaredSynonym(str);
+		if (isSynonym(str)
+			&& this->isDeclaredSynonym(str)) {
+			
+			if (isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
+				st.popNextToken();
+				if (isSynonymContainsAttrName(this->getSynonymTable()->getObject(str).getType(), st.peekNextToken())) {
+					st.popNextToken();
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		
+			return true;
+		}
+
+		return false;
 	}
 
 	std::string currentToken = "";
@@ -1305,8 +1321,10 @@ bool QueryValidator::isTuple(std::string str) {
 			// means before that there's a synonym
 			if (isSynonym(previousValidSynonym)
 				&& this->isDeclaredSynonym(previousValidSynonym)
-				&& this->isSynonymContainsAttrName(this->mSynonymTable->getObject(previousValidSynonym).getType(), st.peekNextToken())) {
-				
+				&& this->isSynonymContainsAttrName(this->mSynonymTable->getObject(previousValidSynonym).getType(), st.nextToken())) {
+
+				isValid = true;
+				/*
 				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
 					st.popNextToken();
 					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
@@ -1321,8 +1339,10 @@ bool QueryValidator::isTuple(std::string str) {
 					st.popNextToken();
 					isValid = true;
 				}
+				*/
 
-				
+			} else {
+				isValid = false;
 			}
 		}
 		// current token is a synonym with a "," or ">" 
@@ -1347,8 +1367,13 @@ bool QueryValidator::isTuple(std::string str) {
 			st.popNextToken(); // remove "."
 
 			if (this->isDeclaredSynonym(currentToken)
-				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.peekNextToken())) {
+				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.nextToken())) {
 				
+				previousValidSynonym = currentToken;
+				isValid = true;
+				synonymCount++;
+
+				/*
 				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
 					st.popNextToken();
 					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
@@ -1368,14 +1393,12 @@ bool QueryValidator::isTuple(std::string str) {
 					isValid = true;
 					synonymCount++;
 				}
+				*/
 
-
-				//previousValidSynonym = currentToken;
-				//isValid = true;
-				//synonymCount++;
 			}
 			else {
 				isWithinTuple = false;
+				isValid = false;
 			}
 
 			continue;
@@ -1551,7 +1574,18 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 	case IF:
 	case WHILE:
 	case ASSIGN:
-		return isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT);
+		if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
+				st.popNextToken(); // remove "#" from stack
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
 		break;
 
 	case PROCEDURE:
@@ -1564,6 +1598,9 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
 				st.popNextToken(); // remove "#" from stack
 				return true;
+			}
+			else {
+				return false;
 			}
 
 		} 

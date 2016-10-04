@@ -16,6 +16,10 @@ public:
 
 		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
 
+
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
+		
+		
 		// Success Tuple with synonyms only
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, q> such that Parent(s1,_) and Next(s1, s2)"));
 
@@ -327,14 +331,14 @@ public:
 		Assert::ExpectException<std::runtime_error>(funcPtrExprError7);
 
 
-
+		/*
 		// more than 1 common synonym between clauses
 		auto funcPtrError1 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows(s1, s2) Parent(s1, s2) pattern a1(\"x\",\"y\")"); };
 		Assert::ExpectException<std::runtime_error>(funcPtrError1);
 		
 		auto funcPtrError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;variable v\nSelect a such that Uses (a1, v) pattern a1(v, _)"); };
 		Assert::ExpectException<std::runtime_error>(funcPtrError2);
-
+		*/
 
 
 		// USES and MODIFIES cannot have wildcard as first argument
@@ -533,7 +537,7 @@ public:
 
 		// populate the synonym table first
 		validator->clearSynonymTable();
-		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;\nSelect p"));
+		Assert::IsTrue(validator->isValidQuery("procedure p, q;variable var1;\nSelect p"));
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 
@@ -541,7 +545,7 @@ public:
 		validator->initStringTokenizer("(1,2)"); // stmt numbers
 		Assert::IsTrue(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // Parent
 		
-		validator->initStringTokenizer("(p,p)");
+		validator->initStringTokenizer("(p,q)");
 		Assert::IsTrue(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::CALLS))); // Calls
 
 		validator->initStringTokenizer("(p,var1)");
