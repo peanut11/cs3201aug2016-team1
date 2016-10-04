@@ -1267,8 +1267,7 @@ bool QueryValidator::isTuple(std::string str) {
 			
 			if (isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
 				st.popNextToken();
-				if (isSynonymContainsAttrName(this->getSynonymTable()->getObject(str).getType(), st.peekNextToken())) {
-					st.popNextToken();
+				if (isSynonymContainsAttrName(this->getSynonymTable()->getObject(str).getType(), st.nextToken())) {
 					return true;
 				}
 				else {
