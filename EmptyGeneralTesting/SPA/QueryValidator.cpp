@@ -409,12 +409,12 @@ bool QueryValidator::isSelect(std::string str) {
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable().replaceSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
+						this->getQueryTable().insertSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						this->getQueryTable().replaceSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
+						this->getQueryTable().insertSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table

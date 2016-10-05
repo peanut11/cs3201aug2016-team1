@@ -52,7 +52,8 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 
     try {
         // Get select object and all clause objects
-        ClauseSelectObject select = queryTable.getSelect();
+		ClauseSelectObject select;
+		//ClauseSelectObject select = queryTable.getSelect();
         std::vector<ClausePatternObject> patterns = queryTable.getPatterns();
         std::vector<ClauseSuchThatObject> suchThats = queryTable.getSuchThats();
         std::vector<ClauseWithObject> withs = queryTable.getWiths();

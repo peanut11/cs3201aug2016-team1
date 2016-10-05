@@ -15,6 +15,28 @@ void QueryOptimization::beginClausesGrouping(QueryTable mQueryTable) {
 	// Second check with clauses
 	// Third check pattern clauses
 
+	std::vector<ClauseObject> clausesNoSynonymList;
+	std::vector<ClauseObject> clausesNoRelatedToResultList;
+	std::vector<ClauseObject> withClauseContainsConstantList;
+	std::vector<ClauseObject> clausesRelatedToResultList;
+	std::vector<ClauseObject> otherClausesList;
+
+	for (auto value : mQueryTable.getSuchThats()) {
+		if (value.getArgsOne().getEntityType() == EntityType::CONSTANT 
+			|| value.getArgsOne().getEntityType() == EntityType::VARIABLE
+			&& value.getArgsTwo().getEntityType() == EntityType::CONSTANT 
+			|| value.getArgsTwo().getEntityType() == EntityType::VARIABLE)
+		{
+			clausesNoSynonymList.push_back(value);
+		} 
+		else if ((value.getArgsOne().getIsSynonym() 
+				&& !mQueryTable.getResult().doesClauseSelectObjectExist(value.getArgsOne().getStringValue()))
+			|| (value.getArgsTwo().getIsSynonym() 
+				&& !mQueryTable.getResult().doesClauseSelectObjectExist(value.getArgsTwo().getStringValue()))) {
+
+		}
+
+	}
 
 
 
