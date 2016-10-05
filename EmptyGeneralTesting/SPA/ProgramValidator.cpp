@@ -10,6 +10,10 @@ ProgramValidator::ProgramValidator() {}
 bool ProgramValidator::isValidSyntax(std::string str) {
 	st = StringTokenizer(str, DelimiterMode::PARSER);
 
+    if (!st.hasMoreTokens()) {
+        throw Exception::EMPTY_PROGRAM_ERROR;
+    }
+
 	if (!st.hasMoreTokens() || !isProgram(st.nextToken())) {
         throw Exception::INVALID_SIMPLE_SYNTAX;
 	}
@@ -70,9 +74,11 @@ bool ProgramValidator::isName(std::string str) {
 	if (str.empty()) {
 		return false;
 	}
+
 	if (!std::isalpha(str.at(0))) {
 		return false;
 	}
+
 	for (unsigned int i = 1; i < str.length(); i++) {
 		if (!std::isalnum(str.at(i))) {
 			return false;
@@ -132,7 +138,9 @@ bool ProgramValidator::breadthFirstSearch(std::string procName) {
 }
 
 bool ProgramValidator::isProgram(std::string str) {
-    while (isProcedure(str)) {
+    bool isProgram = false;
+
+    while (isProgram = isProcedure(str)) {
         if (st.hasMoreTokens() && !isMatch(st.nextToken(), "\n")) {
             return false;
         }
@@ -141,10 +149,13 @@ bool ProgramValidator::isProgram(std::string str) {
 
         if (st.hasMoreTokens()) {
             str = st.nextToken();
+        } else {
+            break;
         }
     }
 
-    return !st.hasMoreTokens() && hasNoInvalidCalls();
+    isProgram = isProgram && !st.hasMoreTokens() && hasNoInvalidCalls();
+    return isProgram;
 }
 
 bool ProgramValidator::isProcedure(std::string str) {
