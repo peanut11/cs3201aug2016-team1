@@ -50,7 +50,7 @@ public:
 	bool putControlVarForStmt(StmtNumber ifOrWhile, VarName varName);
 	bool putConstant(Constant constant);
 	bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
-	bool putProcForProc(ProcName procA, RelationshipType callsOrStar, ProcName procB);
+	bool putProcForProc(ProcIndex procA, RelationshipType callsOrStar, ProcName procB);
 
 	// API used by QP and DE
 	/*
@@ -72,7 +72,7 @@ public:
 						}
 					  }
 	*/
-	virtual bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
+	virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
 	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
 	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
 	virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
@@ -87,6 +87,7 @@ public:
 	virtual std::set<StmtNumber>	getAllStmts();
     virtual std::set<VarIndex>		getAllVarIndex();
 	virtual std::set<VarName>		getAllVarNames();
+	virtual std::set<ProcName>		getAllProcNames();
 
 	// Get statements
 	virtual std::set<StmtNumber>	getStmtsByType(EntityType stmtType);

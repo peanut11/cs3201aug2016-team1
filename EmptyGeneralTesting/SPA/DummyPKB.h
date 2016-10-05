@@ -16,7 +16,7 @@ public:
 	virtual VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
 	virtual VarName getVarName(VarIndex varIndex);
 
-	virtual bool is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item);
+	virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
 	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
 	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
 	virtual std::set<StmtNumber>	getAllStmts();

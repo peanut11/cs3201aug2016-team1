@@ -50,7 +50,7 @@ void PKB::clear() {
 	theOne = new PKB();
 }
 
-bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
+bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
     if (stmt >= stmtTable.size()) {
         return false;
     }
@@ -383,12 +383,12 @@ bool PKB::putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt) {
 	return success;
 }
 
-bool PKB::putProcForProc(ProcName procA, RelationshipType callsOrStar, ProcName procB) {
+bool PKB::putProcForProc(ProcIndex procA, RelationshipType callsOrStar, ProcName procB) {
 	if (callsOrStar != CALLS && callsOrStar != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 
-	ProcIndex procIndexA = getProcIndex(procA);
+	ProcIndex procIndexA = procA;
 	ProcIndex procIndexB = getProcIndex(procB);
 
 	// Updates A CALLS B
