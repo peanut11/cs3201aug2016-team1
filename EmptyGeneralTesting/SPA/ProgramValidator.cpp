@@ -26,7 +26,7 @@ void ProgramValidator::registerCalled(std::string procName) {
 }
 
 bool ProgramValidator::registerProcedure(std::string procName) {
-    bool success = procedures.emplace(procName).second;
+    bool success = procedures.insert(procName).second;
 
     if (!success) {
         throw Exception::DUPLICATE_PROCEDURE_NAME;
@@ -108,7 +108,7 @@ bool ProgramValidator::breadthFirstSearch(std::string procName) {
     std::set<std::string> traversed;
     std::queue<std::string> toVisit;
 
-    traversed.emplace(procName);
+    traversed.insert(procName);
     toVisit.push(procName);
 
     while (!toVisit.empty()) {
@@ -122,7 +122,7 @@ bool ProgramValidator::breadthFirstSearch(std::string procName) {
             if (child == currentProcedure) {
                 return true;
             } else if (traversed.find(child) == traversed.end()) {
-                traversed.emplace(child);
+                traversed.insert(child);
                 toVisit.push(child);
             }
         }

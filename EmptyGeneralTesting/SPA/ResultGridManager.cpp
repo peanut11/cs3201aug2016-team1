@@ -10,7 +10,7 @@ ValueTupleSet ResultGridManager::permutate(ValueSet vals1, ValueSet vals2) {
 
     for (ValueSet::const_iterator val1 = vals1.begin(); val1 != vals1.end(); val1++) {
         for (ValueSet::const_iterator val2 = vals2.begin(); val2 != vals2.end(); val2++) {
-            results.emplace_hint(results.end(), ValueTuple(*val1, *val2));
+            results.insert(results.end(), ValueTuple(*val1, *val2));
         }
     }
 
