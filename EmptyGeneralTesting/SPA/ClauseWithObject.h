@@ -1,7 +1,8 @@
 #pragma once
+#include "ClauseObject.h"
 #include "ClauseWithRefObject.h"
 
-class ClauseWithObject {
+class ClauseWithObject: public ClauseObject {
 	ClauseWithRefObject obj1;
 	ClauseWithRefObject obj2;
 	bool isResultsBoolean = false;

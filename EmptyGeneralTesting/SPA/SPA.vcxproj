@@ -45,6 +45,7 @@
   <ItemGroup>
     <ClInclude Include="AssignTree.h" />
     <ClInclude Include="AttrType.h" />
+    <ClInclude Include="ClauseObject.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="DummyPKB.h" />
     <ClInclude Include="Exceptions.h" />
@@ -57,6 +58,7 @@
     <ClInclude Include="ProgramConverter.h" />
     <ClInclude Include="ProgramValidator.h" />
     <ClInclude Include="QueryEvaluator.h" />
+    <ClInclude Include="QueryOptimization.h" />
     <ClInclude Include="QueryPreProcessor.h" />
     <ClInclude Include="QueryProcessor.h" />
     <ClInclude Include="EntityType.h" />

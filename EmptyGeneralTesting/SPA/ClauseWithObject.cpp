@@ -1,6 +1,7 @@
 #include "ClauseWithObject.h"
 
 ClauseWithObject::ClauseWithObject() {
+	this->mClauseType = ClauseType::ClauseType::WITH;
 }
 
 ClauseWithObject::ClauseWithObject(ClauseWithRefObject obj1, ClauseWithRefObject obj2) {

@@ -1,8 +1,9 @@
 #pragma once
+#include "ClauseObject.h"
 #include "RelationshipType.h"
 #include "ClauseSuchThatArgObject.h"
 
-class ClauseSuchThatObject {
+class ClauseSuchThatObject: public ClauseObject {
 private:
 
 	RelationshipType type;

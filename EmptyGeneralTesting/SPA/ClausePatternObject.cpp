@@ -2,6 +2,7 @@
 #include "ClausePatternObject.h"
 
 ClausePatternObject::ClausePatternObject() {
+	this->mClauseType = ClauseType::ClauseType::PATTERN;
 }
 
 ClausePatternObject::ClausePatternObject(EntityType patternType, std::string patternSynonymArg, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg) {

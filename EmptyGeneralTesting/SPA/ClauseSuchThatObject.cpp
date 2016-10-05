@@ -2,6 +2,7 @@
 
 ClauseSuchThatObject::ClauseSuchThatObject()
 {
+	this->mClauseType = ClauseType::ClauseType::SUCH_THAT;
 }
 
 ClauseSuchThatObject::ClauseSuchThatObject(RelationshipType type, ClauseSuchThatArgObject argsOne, ClauseSuchThatArgObject argsTwo)

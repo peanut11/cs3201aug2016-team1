@@ -200,9 +200,15 @@
     </ClInclude>
     <ClInclude Include="SynonymOccurence.h">
       <Filter>Header Files\QP</Filter>
-	</ClInclude> 
+    </ClInclude>
     <ClInclude Include="Exceptions.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryOptimization.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ClauseObject.h">
+      <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
