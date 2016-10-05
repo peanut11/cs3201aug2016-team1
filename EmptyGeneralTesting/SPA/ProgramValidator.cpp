@@ -17,6 +17,16 @@ bool ProgramValidator::isValidSyntax(std::string str) {
     return true;
 }
 
+bool ProgramValidator::registerProcedure(std::string procName) {
+    bool success = procedures.emplace(procName).second;
+
+    if (!success) {
+        throw Exception::DUPLICATE_PROCEDURE_NAME;
+    }
+
+    return true;
+}
+
 void ProgramValidator::discardNewlines() {
     while (isMatch(st.peekNextToken(), "\n")) {
         st.popNextToken();
@@ -104,7 +114,9 @@ bool ProgramValidator::isProgram(std::string str) {
         if (st.hasMoreTokens() && !isMatch(st.nextToken(), "\n")) {
             return false;
         }
+
         discardNewlines();
+
         if (st.hasMoreTokens()) {
             str = st.nextToken();
         }
@@ -115,7 +127,7 @@ bool ProgramValidator::isProgram(std::string str) {
 
 bool ProgramValidator::isProcedure(std::string str) {
 	return isMatch(str, "procedure")
-		&& isName(currentProcedure = st.nextToken()) // Update currentProcedure
+		&& isName(currentProcedure = st.nextToken()) && registerProcedure(currentProcedure)
 		&& isMatch(st.nextToken(), "{")
 		&& isMatch(st.nextToken(), "\n")
 		&& isStmtLst(st.nextToken())

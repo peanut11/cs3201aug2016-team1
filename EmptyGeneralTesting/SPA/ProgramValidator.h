@@ -15,6 +15,9 @@ private:
 	StringTokenizer st;
     std::string currentProcedure;
     std::map<std::string, std::vector<std::string>> procAdjList;
+    std::set<std::string> procedures;
+
+    bool registerProcedure(std::string procName); // Checks if duplicate procedure
 
     void discardNewlines();
 	bool isMatch(std::string actual, std::string expected);
