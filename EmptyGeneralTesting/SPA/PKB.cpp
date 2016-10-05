@@ -165,7 +165,8 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 
 StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
-        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
+        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR
+		&& followsOrParent != NEXT) {
 		throw Exception::INCORRECT_PKB_API;
 	}
 
@@ -321,7 +322,7 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	if (rel == MODIFIES || rel == USES) {
+	if (rel == MODIFIES || rel == USES || rel == CALLS) {
 		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
 
@@ -331,11 +332,11 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
 
-	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF || rel == NEXT || rel == PREVIOUS) {
 		const int OFFSET = 1;
 		int supplementaryRel;
 
-		if (rel == FOLLOWS || rel == PARENT) {
+		if (rel == FOLLOWS || rel == PARENT || rel == NEXT) {
 			supplementaryRel = rel + OFFSET;
 		} else {
 			supplementaryRel = rel - OFFSET;

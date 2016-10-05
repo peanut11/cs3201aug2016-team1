@@ -62,6 +62,7 @@ int ProgramConverter::convert(std::string source) {
 		if (FIRST_TOKEN == "procedure") {
 			currentLeader = 0; 
 			currentParent = 0;
+			previous = 0;
 			procName = currentLine[1];
 			continue;
 		}
@@ -71,43 +72,52 @@ int ProgramConverter::convert(std::string source) {
 			continue;
 		}
 
-		if (isEnterParent(FIRST_TOKEN) && isElse) {
-			currentLeader = 0;
-			std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(lineCount, PARENT);
-
-			if (parentSet.empty()) {
-				currentParent = 0;
-			} else {
-				currentParent = *parentSet.begin();
-			}
-			 
-			isElse = false;
-			continue;
-		}
-
 		if (isEnterParent(FIRST_TOKEN)) {
-			currentLeader = 0;
-			currentParent = lineCount;
+			if (isElse) {
+				currentLeader = 0;
+				std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(lineCount, PARENT);
+
+				if (parentSet.empty()) {
+					currentParent = 0;
+					previous = 0;
+				}
+				else {
+					currentParent = *parentSet.begin();
+					previous = *parentSet.begin();
+				}
+
+				isElse = false;
+			} else {
+				currentLeader = 0;
+				currentParent = lineCount;
+			}
 			continue;
 		}
 
 		if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
 			std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
-
+			if (pkb->getStmtTypeForStmt(currentParent) == WHILE) {
+				pkb->putStmtForStmt(currentParent, PREVIOUS, previous);
+				previous = currentParent;
+			}
 			if (parentSet.empty()) {
 				currentParent = 0;
 			} else {
 				StmtSetIterator it = parentSet.begin();
 				currentParent = *it;
+				
 			}
-
+			
+			
 			continue;
 		}
 
 		const ProgLineNumber lineNum = lineCount;
 		pkb->putStmtProc(lineNum, procName);
 		updateStmtInStmtTable(currentLine, lineNum);
+		currentLeader = lineNum;
+		previous = currentLeader;
 	}
 
 	return lineCount;
@@ -274,7 +284,9 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 		success = pkb->putStmtForStmt(lineNum, FOLLOWS, currentLeader) && success;
 	}
 
-	currentLeader = lineNum;
+	if (previous != 0) {
+		success = pkb->putStmtForStmt(lineNum, PREVIOUS, previous) && success;
+	}
 
 	return success;
 }

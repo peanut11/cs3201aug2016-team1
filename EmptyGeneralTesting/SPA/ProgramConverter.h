@@ -11,8 +11,9 @@ class ProgramConverter {
 private:
 	PKB* pkb;
 	StringTokenizer st;
+	ProgLineNumber previous;
 	ProgLineNumber currentParent;
-	ProgLineNumber currentLeader; 
+	ProgLineNumber currentLeader;
 	ProgLineNumber lineCount;
 	ProgLine nextLine();
 public:
@@ -32,5 +33,4 @@ public:
 	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
 	bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
 	bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
-	
 };

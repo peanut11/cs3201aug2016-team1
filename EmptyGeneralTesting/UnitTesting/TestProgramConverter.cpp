@@ -61,6 +61,8 @@ public:
 		expected.push_back(ASSIGN);
 		expected.push_back(WHILE);
 		expected.push_back(ASSIGN);
+		expected.push_back(WHILE);
+		expected.push_back(ASSIGN);
 		expected.push_back(ASSIGN);
 		expected.push_back(IF);
 		expected.push_back(ASSIGN);
@@ -138,15 +140,18 @@ public:
 		std::string str = Tools::readFile("prototype_procedure_ConverterTest3.txt");
 
 		ProgramConverter pc = ProgramConverter();
-		Assert::AreEqual(9 , pc.convert(str));
-		StmtNumber stmt6 = 6;
+		Assert::AreEqual(11 , pc.convert(str));
+		StmtNumber stmt2 = 2;
+		StmtNumber stmt3 = 3;
 		StmtNumber stmt7 = 7;
 		StmtNumber stmt8 = 8;
 		StmtNumber stmt9 = 9;
+		StmtNumber stmt10 = 10;
+		StmtNumber stmt11 = 11;
 
 		// check parent of line in else
-		std::set<StmtNumber> expected({ stmt6 });
-		std::set<StmtNumber> actual = pkb->getStmtsByStmt(stmt8, PARENT);
+		std::set<StmtNumber> expected({ stmt8 });
+		std::set<StmtNumber> actual = pkb->getStmtsByStmt(stmt10, PARENT);
 		std::set<StmtNumber>::const_iterator expectedIt = expected.begin();
 		std::set<StmtNumber>::const_iterator actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -158,8 +163,8 @@ public:
 		}
 
 		// check children of if stmts
-		expected = std::set<StmtNumber>({ stmt7, stmt8 });
-		actual = pkb->getStmtsByStmt(PARENT, stmt6);
+		expected = std::set<StmtNumber>({ stmt9, stmt10 });
+		actual = pkb->getStmtsByStmt(PARENT, stmt8);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -171,8 +176,47 @@ public:
 		}
 
 		// check followers of if stmts
-		expected = std::set<StmtNumber>({ stmt9 });
-		actual = pkb->getStmtsByStmt(FOLLOWS, stmt6);
+		expected = std::set<StmtNumber>({ stmt11 });
+		actual = pkb->getStmtsByStmt(FOLLOWS, stmt8);
+		expectedIt = expected.begin();
+		actualIt = actual.begin();
+		Assert::AreEqual(expected.size(), actual.size());
+		while (expectedIt != expected.end()) {
+			Assert::AreEqual(*expectedIt, *actualIt);
+
+			expectedIt++;
+			actualIt++;
+		}
+
+		// check next of if stmts
+		expected = std::set<StmtNumber>({ stmt9, stmt10 });
+		actual = pkb->getStmtsByStmt(stmt8, NEXT);
+		expectedIt = expected.begin();
+		actualIt = actual.begin();
+		Assert::AreEqual(expected.size(), actual.size());
+		while (expectedIt != expected.end()) {
+			Assert::AreEqual(*expectedIt, *actualIt);
+
+			expectedIt++;
+			actualIt++;
+		}
+
+		// check previous of else stmts
+		expected = std::set<StmtNumber>({ stmt8 });
+		actual = pkb->getStmtsByStmt(NEXT, stmt10);
+		expectedIt = expected.begin();
+		actualIt = actual.begin();
+		Assert::AreEqual(expected.size(), actual.size());
+		while (expectedIt != expected.end()) {
+			Assert::AreEqual(*expectedIt, *actualIt);
+
+			expectedIt++;
+			actualIt++;
+		}
+
+		// check previous of while stmts
+		expected = std::set<StmtNumber>({ stmt2, stmt7 });
+		actual = pkb->getStmtsByStmt(NEXT, stmt3);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());

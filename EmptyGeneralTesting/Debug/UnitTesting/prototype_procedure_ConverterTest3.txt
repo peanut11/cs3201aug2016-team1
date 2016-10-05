@@ -3,6 +3,9 @@ procedure Second {
   i = 5;
   while i {
     z = z + x + i;
+    while z {
+      control = 5;
+    }
     y = z + 2; }
   if control then {
     a = perfect;
