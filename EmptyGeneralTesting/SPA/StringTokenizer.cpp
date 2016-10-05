@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <cctype>
 #include "StringTokenizer.h"
 
 const std::string StringTokenizer::EMPTY_TOKEN = "";
@@ -56,7 +55,7 @@ StringTokenizer::StringTokenizer(std::string str, DelimiterMode mode) {
 			if (std::isalnum(ch)) {
 				buffer.append(charString);
 			} else {
-				throw std::runtime_error("Invalid character: " + charString);
+				throw Exceptions::invalid_character(charString);
 			}
 		}
 	}

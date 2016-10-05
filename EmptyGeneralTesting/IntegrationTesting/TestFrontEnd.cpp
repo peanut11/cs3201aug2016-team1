@@ -14,7 +14,7 @@ namespace IntegrationTesting {
 			pkb->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("Source1_Basic.txt"));
+			frontend.parse(std::string("procedure_Second.txt"));
 
 			pkb = PKB::getInstance();
 
@@ -143,7 +143,7 @@ namespace IntegrationTesting {
 			pkb->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("Source2.txt"));
+			frontend.parse(std::string("procedure_Panda.txt"));
 
 			pkb = PKB::getInstance();
 

@@ -256,7 +256,8 @@ paket-files/
 **/Debug/*
 !*/Debug/UnitTesting/
 
-# AutoTester
+# Frontend
+!*/Debug/*.txt
 !Release
 **/Release/*
 !*/Release/*.txt

@@ -307,10 +307,10 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	}
 	
 	// Update stmtTable, varTable, procTable
-	stmtTable[stmt][rel].emplace(varIndex);
-	bool success = stmtTable[stmt][rel].find(varIndex) != stmtTable[stmt][rel].end();
+	stmtTable[stmt][rel].insert(varIndex);
+	bool success = (stmtTable[stmt][rel].find(varIndex) != stmtTable[stmt][rel].end());
 
-	varTable[varIndex][rel].emplace(stmt);
+	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
 	varTable[varIndex][rel + 2].emplace(procIndex); //adds Modified/UsedByProc
 	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
