@@ -138,7 +138,7 @@ bool ProgramValidator::isStmtLst(std::string str) {
 }
 
 bool ProgramValidator::isStmt(std::string str) {
-	return isAssign(str) || isWhile(str) || isCall(str);
+	return isAssign(str) || isCall(str) || isIf(str) || isWhile(str);
 }
 
 bool ProgramValidator::isCall(std::string str) {
