@@ -2,9 +2,9 @@
 
 #include <array>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 #include "RelationshipType.h"
 
@@ -15,10 +15,10 @@ typedef StringToken ExprString;
 
 typedef unsigned int ProcStmtVarIndex;
 typedef ProcStmtVarIndex SynonymValue; 
-typedef ProcStmtVarIndex StmtVarIndex; //Entry in StmtTable
+typedef ProcStmtVarIndex StmtVarIndex; // Entry in StmtTable
 typedef StmtVarIndex StmtNumber;
-typedef StmtVarIndex VarIndex;   // Index of variable in VarTable
-typedef ProcStmtVarIndex ProcVarIndex; //Entry in ProcTable
+typedef StmtVarIndex VarIndex;         // Index of variable in VarTable
+typedef ProcStmtVarIndex ProcVarIndex; // Entry in ProcTable
 typedef ProcVarIndex ProcIndex;
 typedef ProcVarIndex VarIndex;  
 
@@ -31,18 +31,18 @@ typedef VarName SynonymString;
 typedef std::map<VarName, VarIndex> VarRefMap;
 typedef std::set<VarIndex>::const_iterator VarIndexSetIterator;
 
-//VarTable
+// VarTable
 typedef std::set<StmtNumber> VarEntry;
-typedef std::array<VarEntry, 2> VarRow; 
+typedef std::array<VarEntry, 2> VarRow; // Modifies, Uses
 
-//StmtTable
+// StmtTable
 typedef std::set<StmtVarIndex> StmtEntry;
 typedef std::array<StmtEntry, RelationshipType::TOTAL_COUNT> StmtRow; 
 
-//ProcRefTable
+// ProcRefTable
 typedef StringToken ProcName;
 typedef std::map<ProcName, ProcIndex> ProcRefMap; 
 
-//ProcTable
+// ProcTable
 typedef std::set<ProcStmtVarIndex> ProcEntry;
-typedef std::array<ProcEntry, 6> ProcRow; //Modifies, Uses, Calls, Called_by, CallsStar, called_bystar
+typedef std::array<ProcEntry, 6> ProcRow; // Modifies, Uses, Calls, Called_By, Calls_Star, Called_By_Star
