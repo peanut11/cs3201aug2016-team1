@@ -24,6 +24,8 @@ public:
 	bool isAssignment(ProgLine line);
 	bool isWhile(ProgLine line);
 	bool isIf(ProgLine line);
+	bool isElse(ProgLine line);
+	bool isCall(ProgLine line);
 	bool isEnterParent(std::string str);
 	bool isExitParent(std::string str);
 	bool isLineEnding(std::string str);
