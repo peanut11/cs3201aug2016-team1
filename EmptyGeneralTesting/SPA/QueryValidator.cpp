@@ -1647,7 +1647,7 @@ RelationshipType QueryValidator::getSyntaxRelationshipType(std::string syntax) {
 		return RelationshipType::CALLS;
 	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_CALLS_STAR)) {
-		return RelationshipType::CALLSSTAR;
+		return RelationshipType::CALLS_STAR;
 	}
 	else if (isMatch(syntax, SYNTAX_RELATIONSHIP_NEXT)) {
 		return RelationshipType::NEXT;
@@ -1793,7 +1793,7 @@ std::string QueryValidator::getRelationshipSyntax(RelationshipType type) {
 		return "uses";
 	case CALLS:
 		return "calls";
-	case CALLSSTAR:
+	case CALLS_STAR:
 		return "calls*";
 	case FOLLOWS:
 		return "follows";

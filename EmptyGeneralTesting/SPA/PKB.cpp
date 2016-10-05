@@ -247,7 +247,7 @@ std::set<VarIndex> PKB::getVarsByProc(ProcName procName, RelationshipType modifi
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType calls) {
-	if (calls != CALLS && calls != CALLSSTAR) {
+	if (calls != CALLS && calls != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 	return procTable[getProcIndex(procName)][calls];
@@ -405,7 +405,7 @@ bool PKB::putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt) {
 }
 
 bool PKB::putProcForProc(ProcName procA, RelationshipType calls, ProcName procB) {
-	if (calls != CALLS && calls != CALLSSTAR) {
+	if (calls != CALLS && calls != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 

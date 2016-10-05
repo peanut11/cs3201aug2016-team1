@@ -1,9 +1,10 @@
 
 #pragma once
+#include "ClauseObject.h"
 #include "EntityType.h"
 #include <string>
 
-class ClausePatternObject {
+class ClausePatternObject : public ClauseObject {
 
 	EntityType patternType;
 	EntityType firstArgType;

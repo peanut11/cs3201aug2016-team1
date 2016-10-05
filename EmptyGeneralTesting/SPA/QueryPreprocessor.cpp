@@ -51,7 +51,7 @@ void QueryPreProcessor::populateRelationshipTable() {
 		2);
 	this->mRelTable->insert(object);
 
-	object = this->createRelationshipObject(RelationshipType::CALLSSTAR,
+	object = this->createRelationshipObject(RelationshipType::CALLS_STAR,
 	{ EntityType::PROCEDURE, EntityType::WILDCARD },
 	{ EntityType::PROCEDURE, EntityType::WILDCARD },
 		2);
