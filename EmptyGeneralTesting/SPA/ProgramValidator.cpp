@@ -17,6 +17,38 @@ bool ProgramValidator::isValidSyntax(std::string str) {
     return true;
 }
 
+void ProgramValidator::registerCalled(std::string procName) {
+    procAdjList[currentProcedure].push_back(procName);
+
+    if (procedures.find(procName) == procedures.end()) {
+        unknownCalls.push(procName);
+    }
+}
+
+bool ProgramValidator::registerProcedure(std::string procName) {
+    bool success = procedures.emplace(procName).second;
+
+    if (!success) {
+        throw Exception::DUPLICATE_PROCEDURE_NAME;
+    }
+
+    return true;
+}
+
+bool ProgramValidator::hasNoInvalidCalls() {
+    while (!unknownCalls.empty()) {
+        std::string procName = unknownCalls.front();
+        unknownCalls.pop();
+
+        if (procedures.find(procName) == procedures.end()) {
+            throw Exception::INVALID_CALL_MADE;
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void ProgramValidator::discardNewlines() {
     while (isMatch(st.peekNextToken(), "\n")) {
         st.popNextToken();
@@ -104,18 +136,20 @@ bool ProgramValidator::isProgram(std::string str) {
         if (st.hasMoreTokens() && !isMatch(st.nextToken(), "\n")) {
             return false;
         }
+
         discardNewlines();
+
         if (st.hasMoreTokens()) {
             str = st.nextToken();
         }
     }
 
-    return !st.hasMoreTokens();
+    return !st.hasMoreTokens() && hasNoInvalidCalls();
 }
 
 bool ProgramValidator::isProcedure(std::string str) {
 	return isMatch(str, "procedure")
-		&& isName(currentProcedure = st.nextToken()) // Update currentProcedure
+		&& isName(currentProcedure = st.nextToken()) && registerProcedure(currentProcedure)
 		&& isMatch(st.nextToken(), "{")
 		&& isMatch(st.nextToken(), "\n")
 		&& isStmtLst(st.nextToken())
@@ -138,18 +172,18 @@ bool ProgramValidator::isStmtLst(std::string str) {
 }
 
 bool ProgramValidator::isStmt(std::string str) {
-	return isAssign(str) || isWhile(str) || isCall(str);
+	return isAssign(str) || isCall(str) || isIf(str) || isWhile(str);
 }
 
 bool ProgramValidator::isCall(std::string str) {
     // Note: 'call' is a valid varName if followed by '=' instead of another varName
     if (isMatch(str, "call") && isProcName(st.peekNextToken())) {
         std::string calledProcedure = st.nextToken();
-        procAdjList[currentProcedure].push_back(calledProcedure);
+        registerCalled(calledProcedure);
 
         return isMatch(st.nextToken(), ";") && isNotRecursiveCall(calledProcedure);
     }
-
+    
     return false;
 }
 

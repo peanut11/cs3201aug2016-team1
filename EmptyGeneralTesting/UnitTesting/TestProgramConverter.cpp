@@ -307,17 +307,25 @@ public:
 	}
 
 	TEST_METHOD(TestUpdateAssignmentInTable_Constants) {
-		PKB* pkb = PKB::getInstance();
 		Constant const1 = 0;
 		Constant const2 = 5;
 		Constant const3 = 2;
 		Constant const4 = 7;
-		std::array<Constant, 4> expected = { const1, const2, const3, const4 };
-		std::set<Constant> output = pkb->getAllConstantValues();
-		std::set<Constant> expectedOutput (expected.begin(), expected.end());
-		
 
-		Assert::IsTrue(output == expectedOutput);
+        std::set<Constant> expected({ const1, const2, const3, const4 });
+        std::set<Constant> actual = PKB::getInstance()->getAllConstantValues();
+
+        Assert::AreEqual(expected.size(), actual.size());
+
+        std::set<Constant>::const_iterator expectedIt = expected.begin();
+        std::set<Constant>::const_iterator actualIt = actual.begin();
+
+        while (expectedIt != expected.end()) {
+            Assert::AreEqual(*expectedIt, *actualIt);
+
+            expectedIt++;
+            actualIt++;
+        }
 	}
 	};
 }

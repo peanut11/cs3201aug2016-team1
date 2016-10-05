@@ -15,6 +15,12 @@ private:
 	StringTokenizer st;
     std::string currentProcedure;
     std::map<std::string, std::vector<std::string>> procAdjList;
+    std::set<std::string> procedures;
+    std::queue<std::string> unknownCalls;
+
+    void registerCalled(std::string procName); // Only queues if unknown procedure
+    bool registerProcedure(std::string procName); // Checks if duplicate procedure
+    bool hasNoInvalidCalls(); // Checks if any of the unknownCalls are invalid
 
     void discardNewlines();
 	bool isMatch(std::string actual, std::string expected);

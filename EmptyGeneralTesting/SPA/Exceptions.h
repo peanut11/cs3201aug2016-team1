@@ -32,8 +32,10 @@ namespace Exception {
 	const std::out_of_range INVALID_PROC_INDEX("ProcIndex does not exist");
 
     // ProgramValidator
+    const std::domain_error INVALID_CALL_MADE("Call to procedure that does not exist"); 
     const std::domain_error INVALID_SIMPLE_SYNTAX("Invalid SIMPLE source code");
     const std::invalid_argument RECURSIVE_CALL_ERROR("Procedure is called recursively");
+    const std::invalid_argument DUPLICATE_PROCEDURE_NAME("Procedure was registered");
 
     // ResultGrid
     const std::invalid_argument INCORRECT_GRID_API("mergeGrid(other) for no result");

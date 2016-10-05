@@ -21,16 +21,16 @@ public:
         }
     }
     
-    TEST_METHOD(TestIsValidProgram_Stmt_Call) {
+    TEST_METHOD(TestIsValidProgram_Stmt_Call_Nonexisting) {
 		try {
 			std::string str = Tools::readFile("prototype_procedure_First.txt");
 
 			ProgramValidator pv = ProgramValidator();
             Assert::IsTrue(pv.isValidSyntax(str));
+            Assert::Fail();
 
 		} catch (std::domain_error e) {
-            Assert::AreEqual(Exception::INVALID_SIMPLE_SYNTAX.what(), e.what());
-            Assert::Fail();
+            Assert::AreEqual(Exception::INVALID_CALL_MADE.what(), e.what());
 		}
 	}
 
