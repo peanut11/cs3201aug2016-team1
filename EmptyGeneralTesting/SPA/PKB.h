@@ -100,5 +100,6 @@ public:
 	virtual std::set<VarIndex>		getVarsByProc(ProcName procName, RelationshipType modifiesOrUses);
 	// Get procedures
 	virtual std::set<ProcIndex>		getProcsByProc(ProcName procName, RelationshipType calls);
+	virtual std::set<ProcIndex>		getProcsByProc(RelationshipType calls, ProcName procName); // check for inverse
 	virtual std::set<ProcIndex>		getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
 };

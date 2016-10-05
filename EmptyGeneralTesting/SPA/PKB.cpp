@@ -127,6 +127,10 @@ std::set<VarName> PKB::getAllVarNames() {
 	return std::set<VarName>(varRefTable.begin(),varRefTable.end());
 }
 
+std::set<ProcName> PKB::getAllProcNames() {
+	return std::set<ProcName>(procRefTable.begin(), procRefTable.end());
+}
+
 AssignTree PKB::getAssign(StmtNumber stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
 		throw Exception::NOT_ASSIGN_ERROR;
@@ -262,22 +266,20 @@ std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType call
 	return procTable[getProcIndex(procName)][calls];
 }
 
+std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procName ) {
+	if (calls != CALLS && calls != CALLS_STAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	return procTable[getProcIndex(procName)][calls + 1];
+}
+
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
-    std::set<ProcIndex> procedures;
-
-	// Get the stmts that modifiesOrUses varName
-	std::set<StmtNumber> stmts = getStmtsByVar(modifiesOrUses, varName);
-
-	// Iterate through the stmts to get procedures
-	for each (StmtNumber stmt in stmts) {
-		procedures.insert(stmtToProcTable[stmt]);
-	}
-
-	return procedures;
+	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
 }
 
 std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
@@ -310,6 +312,8 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 
 	varTable[varIndex][rel].emplace(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
+	varTable[varIndex][rel + 2].emplace(procIndex); //adds Modified/UsedByProc
+	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
 	procTable[procIndex][rel].emplace(varIndex);
 	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 
