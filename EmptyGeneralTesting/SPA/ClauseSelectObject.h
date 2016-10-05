@@ -4,7 +4,7 @@
 #include "AttrType.h"
 #include <string>
 
-class ClauseSelectObject: public ClauseObject {
+class ClauseSelectObject {
 	
 	EntityType entityType;	// to represent what entity it is (procedure, while, assignment...)
 	std::string synonymString;	// represent the synonym 
