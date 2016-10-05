@@ -96,7 +96,7 @@ class QueryValidator {
 	void throwsInvalidAttributeValue(std::string value);
 	void throwsExceedCommonSynonymCount();
 
-	SelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
+	ClauseSelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
 	
 	// Clause Such that object
 	ClauseSuchThatObject createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject firstArg, ClauseSuchThatArgObject secondArg);

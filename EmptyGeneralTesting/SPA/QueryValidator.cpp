@@ -6,7 +6,7 @@
 #include "RelObject.h"
 #include "ClauseType.h"
 #include "AttrType.h"
-#include "SelectObject.h"
+#include "ClauseSelectObject.h"
 #include "ClauseSuchThatArgObject.h"
 
 
@@ -190,8 +190,8 @@ QueryTable& QueryValidator::getQueryTable() {
 	return this->mQueryTable;
 }
 
-SelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean) {
-	return SelectObject(entityType, synonymString, attrType, isBoolean);
+ClauseSelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean) {
+	return ClauseSelectObject(entityType, synonymString, attrType, isBoolean);
 }
 
 // Clause Such that object
@@ -409,12 +409,12 @@ bool QueryValidator::isSelect(std::string str) {
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable().replaceSelectObject(SelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
+						this->getQueryTable().replaceSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						this->getQueryTable().replaceSelectObject(SelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
+						this->getQueryTable().replaceSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table
@@ -1827,6 +1827,8 @@ std::string QueryValidator::getAttrSyntax(AttrType::AttrType type) {
 
 	case AttrType::VALUE:
 		return SYNTAX_ATTRIBUTE_VALUE;
+	default:
+		return "";
 	}
 }
 

@@ -19,7 +19,7 @@ void QueryTable::clearAll() {
 	this->withs.clear();
 }
 
-SelectObject QueryTable::getSelect()
+ClauseSelectObject QueryTable::getSelect()
 {
 	return this->select;
 }
@@ -188,7 +188,7 @@ std::string QueryTable::getAttrString(AttrType::AttrType type) {
 	
 }
 
-bool QueryTable::replaceSelectObject(SelectObject object) {
+bool QueryTable::replaceSelectObject(ClauseSelectObject object) {
 	try {
 		this->select = object;
 		/*

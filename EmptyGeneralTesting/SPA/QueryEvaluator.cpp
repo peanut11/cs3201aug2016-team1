@@ -6,7 +6,7 @@
 // Uses:
 // QueryTable
 // ClauseObject
-// SelectObject
+// ClauseSelectObject
 
 #include "QueryEvaluator.h"
 
@@ -52,7 +52,7 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 
     try {
         // Get select object and all clause objects
-        SelectObject select = queryTable.getSelect();
+        ClauseSelectObject select = queryTable.getSelect();
         std::vector<ClausePatternObject> patterns = queryTable.getPatterns();
         std::vector<ClauseSuchThatObject> suchThats = queryTable.getSuchThats();
         std::vector<ClauseWithObject> withs = queryTable.getWiths();
@@ -565,26 +565,26 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
     return patternObject;
 }
 
-std::vector<std::string> QueryEvaluator::evaluateSelect(SelectObject selectObject, bool relationshipHolds) {
+std::vector<std::string> QueryEvaluator::evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds) {
     // Constraint results by SelectObj
     std::vector<std::string> results;
 
     if (relationshipHolds) {
         // If its Select BOOLEAN
-        if (selectObject.getBoolean()) {
+        if (ClauseSelectObject.getBoolean()) {
             // Output: TRUE
             results.push_back("true");
         }
         // Else then it must be a synonym
         else {
             // Iteration 1: only if the entity is VARIABLE, then return string (variable names)
-            if (selectObject.getEntityType() == VARIABLE) {
-                std::set<VarIndex> setResults1 = resultManager->getValuesForSynonym(selectObject.getSynonymString());
+            if (ClauseSelectObject.getEntityType() == VARIABLE) {
+                std::set<VarIndex> setResults1 = resultManager->getValuesForSynonym(ClauseSelectObject.getSynonymString());
                 std::vector<std::string> vectorResults1;
                 std::transform(setResults1.begin(), setResults1.end(), std::back_inserter(vectorResults1), to_var_name);
                 return vectorResults1;
             } else {
-                std::set<StmtNumber> setResults2 = resultManager->getValuesForSynonym(selectObject.getSynonymString());
+                std::set<StmtNumber> setResults2 = resultManager->getValuesForSynonym(ClauseSelectObject.getSynonymString());
                 std::vector<StmtNumber> vectorStmtNumbers(setResults2.begin(), setResults2.end());
                 std::vector<std::string> vectorResults2;
                 for (std::vector<StmtNumber>::iterator it = vectorStmtNumbers.begin(); it != vectorStmtNumbers.end(); it++) {
@@ -594,7 +594,7 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(SelectObject selectObjec
             }
         }
     } else {
-        if (selectObject.getBoolean()) {
+        if (ClauseSelectObject.getBoolean()) {
             // Output: FALSE
             results.push_back("false");
         }

@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 #include "../SPA/QueryEvaluator.h"
 #include "../SPA/AttrType.h"
-#include "../SPA/SelectObject.h"
+#include "../SPA/ClauseSelectObject.h"
 #include <iostream>
 #include <string>
 
@@ -15,9 +15,9 @@ public:
     TEST_METHOD(TestQueryEvaluator_SelectObject) {
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
         // 'Select BOOLEAN'
-        SelectObject selTrue = SelectObject(CONSTANT, "", AttrType::VAR_NAME, true);
+		ClauseSelectObject selTrue = ClauseSelectObject(CONSTANT, "", AttrType::VAR_NAME, true);
         // 'Select s'
-        SelectObject selFalse = SelectObject(CONSTANT, "s", AttrType::VAR_NAME, false);
+        ClauseSelectObject selFalse = ClauseSelectObject(CONSTANT, "s", AttrType::VAR_NAME, false);
         // Relationships holds
         Assert::AreEqual(std::string("true"), evaluator->evaluateSelect(selTrue, true)[0]);
         // Relationships don't holds
@@ -110,7 +110,7 @@ public:
         Assert::IsFalse(re1.getResultsBoolean());
 
         // SELECT BOOLEAN such that Follows(3,4)
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -118,7 +118,7 @@ public:
         Assert::AreEqual("true", results.begin()->c_str());
 
         // SELECT s such that Follows(3,4)
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -157,7 +157,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(s,3)
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -166,7 +166,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(s,3)
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -206,7 +206,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(a,3)
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -215,7 +215,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Follows(a,3)
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -256,7 +256,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(3,s)
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -265,7 +265,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(3,s)
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -306,7 +306,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(3,a)
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -315,7 +315,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Follows(3,a)
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -350,7 +350,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(_,10);
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -359,7 +359,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(_,10);
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -400,7 +400,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(_,s);
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -409,7 +409,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(_,s);
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -442,7 +442,7 @@ public:
         Assert::IsTrue(resultObj.getResultsBoolean());
 
         // SELECT BOOLEAN such that Follows(3,_);
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -451,7 +451,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(3,_);
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -491,7 +491,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(s,_);
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -500,7 +500,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(s,_);
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -556,7 +556,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(s1,s2)
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -566,7 +566,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s1 such that Follows(s1,s2)
-        SelectObject selObject1 = SelectObject(STMT, "s1", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -576,7 +576,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s2 such that Follows(s1,s2)
-        SelectObject selObject2 = SelectObject(STMT, "s2", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
         std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -586,7 +586,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(s1,s2)
-        SelectObject selObject3 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -624,7 +624,7 @@ public:
         Assert::IsFalse(re1.getResultsBoolean());
 
         // SELECT BOOLEAN such that (Modifies(3,"x"))
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -633,7 +633,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that (Modifies(3,"x"))
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -671,7 +671,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that (Modifies(3,v))
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -680,7 +680,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that (Modifies(3,v))
-        SelectObject selObject1 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -715,7 +715,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that (Modifies(3,_)
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -724,7 +724,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that (Modifies(3,_)
-        SelectObject selObject1 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -765,7 +765,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that (Modifies(s,"x")
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -774,7 +774,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that (Modifies(s,"x")
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -815,7 +815,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that (Modifies(s,_);
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -824,7 +824,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that (Modifies(s,_);
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -878,7 +878,7 @@ public:
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated1.size()).c_str());
 
         // SELECT BOOLEAN such that Modifies(s,v);
-        SelectObject selObject = SelectObject(CONSTANT, "", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -887,7 +887,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Modifies(s,v);
-        SelectObject selObject1 = SelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -897,7 +897,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that Modifies(s,v);
-        SelectObject selObject2 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -954,7 +954,7 @@ public:
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated1.size()).c_str());
 
         // SELECT BOOLEAN such that Pattern a(v,_)
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -963,7 +963,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(v,_)
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -972,7 +972,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that Pattern a(v,_)
-        SelectObject selObject2 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1007,7 +1007,7 @@ public:
         Assert::IsTrue(resultObj.getResultsBoolean());
 
         // SELECT BOOLEAN such that Pattern a(_,_)
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1016,7 +1016,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(_,_)
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1059,7 +1059,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
         // SELECT BOOLEAN such that Pattern a("x",_)
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1068,7 +1068,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a("x",_)
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1126,7 +1126,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated1.size()).c_str());
 
         // SELECT BOOLEAN such that Pattern a(v,"_<constant/variable>_")
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1135,7 +1135,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(v,"_<constant/variable>_")
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1144,7 +1144,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(v,"_<constant/variable>_")
-        SelectObject selObject2 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1186,7 +1186,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
         // SELECT BOOLEAN such that a(_, "_<constant/variable>_")
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1195,7 +1195,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(_, "_<constant/variable>_")
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1238,7 +1238,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
         // SELECT BOOLEAN such that Pattern a("x","_<constant/variable>_")
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1247,7 +1247,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a("x","_<constant/variable>_")
-        SelectObject selObject1 = SelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1313,7 +1313,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
         // SELECT BOOLEAN such that  Follow (a,8) and Pattern a(v,_)
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean() && resultObj1.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1322,7 +1322,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that  Follow (a,8) and Pattern a(v,_)
-        SelectObject selObject1 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1386,7 +1386,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated1.size()).c_str());
 
         // SELECT BOOLEAN such that  Modifies(8,v)  and Pattern a(v,_)
-        SelectObject selObject = SelectObject(ASSIGN, "a", AttrType::INVALID, true);
+        ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
         std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean() && resultObj1.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -1395,7 +1395,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that  Modifies(8,v)  and Pattern a(v,_)
-        SelectObject selObject1 = SelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
         std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());

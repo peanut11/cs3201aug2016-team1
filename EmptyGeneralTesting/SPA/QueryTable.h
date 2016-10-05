@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <set>
-#include "SelectObject.h"
+#include "ClauseSelectObject.h"
 #include "ClauseSuchThatObject.h"
 #include "ClauseWithObject.h"
 #include "ClausePatternObject.h"
@@ -10,7 +10,7 @@ class QueryTable {
 
 	
 
-	SelectObject select;
+	ClauseSelectObject select;
 	std::vector<ClauseSuchThatObject> suchThats;
 	std::vector<ClauseWithObject> withs;
 	std::vector<ClausePatternObject> patterns;
@@ -26,14 +26,14 @@ public:
 
 	void clearAll();
 
-	SelectObject getSelect();
+	ClauseSelectObject getSelect();
 	std::vector<ClauseSuchThatObject>& getSuchThats();
 	std::vector<ClauseWithObject> getWiths();
 	std::vector<ClausePatternObject> getPatterns();
 
 	std::string toString();
 	
-	bool replaceSelectObject(SelectObject object);
+	bool replaceSelectObject(ClauseSelectObject object);
 	bool insertSuchThatObject(ClauseSuchThatObject object);
 	bool insertWithObject(ClauseWithObject object);
 	bool insertPatternObject(ClausePatternObject object);

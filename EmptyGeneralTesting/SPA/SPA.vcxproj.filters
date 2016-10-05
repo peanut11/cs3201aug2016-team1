@@ -52,9 +52,6 @@
     <ClCompile Include="ExprTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SelectObject.cpp">
-      <Filter>Source Files\QP</Filter>
-    </ClCompile>
     <ClCompile Include="SynonymObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
@@ -89,6 +86,9 @@
       <Filter>Source Files\QP</Filter>
     </ClCompile>
     <ClCompile Include="ResultGridManager.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="ClauseSelectObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
   </ItemGroup>
@@ -150,9 +150,6 @@
     <ClInclude Include="ExprTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SelectObject.h">
-      <Filter>Header Files\QP</Filter>
-    </ClInclude>
     <ClInclude Include="AttrType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="ClauseObject.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="ClauseSelectObject.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>

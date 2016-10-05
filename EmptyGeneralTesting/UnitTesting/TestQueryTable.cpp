@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 #include "../SPA/QueryTable.h"
 #include "../SPA/AttrType.h"
-#include "../SPA/SelectObject.h"
+#include "../SPA/ClauseSelectObject.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

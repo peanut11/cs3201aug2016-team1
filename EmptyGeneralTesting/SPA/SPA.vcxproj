@@ -30,7 +30,7 @@
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="ResultGrid.cpp" />
     <ClCompile Include="ResultGridManager.cpp" />
-    <ClCompile Include="SelectObject.cpp" />
+    <ClCompile Include="ClauseSelectObject.cpp" />
     <ClCompile Include="DummyPKB.cpp" />
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="ClauseSuchThatArgObject.cpp" />
@@ -71,7 +71,7 @@
     <ClInclude Include="ResultGrid.h" />
     <ClInclude Include="ResultGridManager.h" />
     <ClInclude Include="StringTokenizer.h" />
-    <ClInclude Include="SelectObject.h" />
+    <ClInclude Include="ClauseSelectObject.h" />
     <ClInclude Include="ClauseSuchThatArgObject.h" />
     <ClInclude Include="ClauseSuchThatObject.h" />
     <ClInclude Include="SynonymObject.h" />

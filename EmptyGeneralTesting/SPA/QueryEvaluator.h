@@ -8,7 +8,7 @@
 #include "QueryResultProjector.h"
 #include "QueryTable.h"
 #include "ResultGridManager.h"
-#include "SelectObject.h"
+#include "ClauseSelectObject.h"
 #include "SynonymTable.h"
 
 class QueryEvaluator {
@@ -29,7 +29,7 @@ public:
     ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
 	ClauseWithObject evaluateWith(ClauseWithObject withObject);
     std::vector<std::string> evaluate(QueryTable queryTable);
-	std::vector<std::string> evaluateSelect(SelectObject selectObject, bool relationshipHolds);
+	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
 
     // For unit tests
