@@ -20,7 +20,7 @@ namespace UnitTesting
 
 		TEST_METHOD(TestSystem_Full) {
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("Source1_Basic.txt"));
+			frontend.parse(std::string("procedure_Second.txt"));
 
 			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
 			PKB* pkb = PKB::getInstance();
@@ -33,7 +33,7 @@ namespace UnitTesting
 			Logger::WriteMessage(strTitle.c_str());
 			std::set<StmtNumber> haha2 = pkb->getStmtsByType(STMT);
 			for (std::set<StmtNumber>::iterator it = haha2.begin(); it != haha2.end(); ++it) {
-							Logger::WriteMessage(std::to_string(*it).c_str());
+                Logger::WriteMessage(std::to_string(*it).c_str());
 			}
 
 			strTitle = "TEST ENTITY TYPE from PKB (varNames)";
@@ -42,6 +42,7 @@ namespace UnitTesting
 			for (std::set<VarName>::iterator it = haha3.begin(); it != haha3.end(); ++it) {
 				Logger::WriteMessage((*it).c_str());
 			}
+
 			/*
 			std::set<StmtNumber> b = queryProcessor->getQueryEvaluator()->getPKB()->getStmtsByStmt(2, FOLLOWS);
 			for (std::set<StmtNumber>::iterator it = b.begin(); it != b.end(); ++it) {
@@ -50,11 +51,11 @@ namespace UnitTesting
 			*/
 
 			std::string declaration = "stmt s;\n";
-
 			Assert::IsTrue(queryProcessor->getQueryPreProcessor()->isValidQuery(declaration + "Select s such that Follows(s,2)"));
+
 //			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
-			
 //			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getSynonymTable()->toString().c_str());
+
 /*			strTitle = "GET STATEMENT BY STATEMENT from PKB";
 			Logger::WriteMessage(strTitle.c_str());
 			std::set<StmtNumber> c = queryProcessor->getQueryEvaluator()->getPKB()->getStmtsByStmt(2, FOLLOWS);
@@ -66,7 +67,7 @@ namespace UnitTesting
 			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("1", std::to_string(results.size()).c_str());
+			Assert::AreEqual(size_t(1), results.size());
 
 			std::string declaration1 = "stmt s;\n";
 			std::vector<std::string> results1 = queryProcessor->evaluate(declaration + "Select s such that Parent(3,s)");
@@ -74,7 +75,7 @@ namespace UnitTesting
 			for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("2", std::to_string(results1.size()).c_str());
+			Assert::AreEqual(size_t(2), results1.size());
 */
 			strTitle = "GET STATEMENT BY ASSIGN from PKB";
 			Logger::WriteMessage(strTitle.c_str());
@@ -90,7 +91,7 @@ namespace UnitTesting
 			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("2", std::to_string(results2.size()).c_str()); */
+			Assert::AreEqual(size_t(2), results2.size()); */
 
 			std::string declaration2 = "stmt s;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s such that Follows*(2, s)");
@@ -99,9 +100,7 @@ namespace UnitTesting
 			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("2", std::to_string(results2.size()).c_str());
-
-
+			Assert::AreEqual(size_t(1), results2.size()); // Follows*(2, 3) only
 		}
 	};
 }
