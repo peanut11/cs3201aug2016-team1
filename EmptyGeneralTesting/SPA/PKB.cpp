@@ -305,9 +305,13 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	}
 	
 	// Update stmtTable, varTable, procTable
-	bool success = stmtTable[stmt][rel].insert(varIndex).second;
-    success = varTable[varIndex][rel].insert(stmt).second && success;
-	success = procTable[procIndex][rel].insert(varIndex).second && success;
+	stmtTable[stmt][rel].emplace(varIndex);
+	bool success = stmtTable[stmt][rel].find(varIndex) != stmtTable[stmt][rel].end();
+
+	varTable[varIndex][rel].emplace(stmt);
+    success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
+	procTable[procIndex][rel].emplace(varIndex);
+	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 
 	return success;
 }
