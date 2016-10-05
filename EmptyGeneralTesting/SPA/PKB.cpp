@@ -313,9 +313,9 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 
 	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
-	varTable[varIndex][rel + 2].emplace(procIndex); //adds Modified/UsedByProc
+	varTable[varIndex][rel + 2].insert(procIndex); //adds Modified/UsedByProc
 	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
-	procTable[procIndex][rel].emplace(varIndex);
+	procTable[procIndex][rel].insert(varIndex);
 	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 
 	return success;
