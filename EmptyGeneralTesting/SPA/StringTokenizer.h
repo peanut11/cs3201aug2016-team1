@@ -6,8 +6,11 @@
 
 #pragma once
 
-#include <string>
+#include <cctype>
 #include <deque>
+#include <string>
+
+#include "Exceptions.h"
 
 enum DelimiterMode {
 	PARSER,

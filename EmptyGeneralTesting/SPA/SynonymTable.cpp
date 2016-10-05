@@ -56,15 +56,14 @@ std::set<SynonymValue> SynonymTable::getSetInt(SynonymString synonym) {
 Insert a new object into RelObjects vector
 Return the index of the new object*/
 bool SynonymTable::insert(SynonymObject object) {
-
 	if (contains(object)) {
-		throw std::runtime_error("SynonymTable insert duplicate object synonym = " + object.getSynonym());
+        throw Exceptions::duplicate_object_synonym(object.getSynonym());
 		return false;
 	}
 
 	synonymObjects.push_back(object); 
-	return true; // insert successfully;
-	//return synonymObjects.size() - 1; // last index of the object
+	return true; // Insert successfully
+	// return synonymObjects.size() - 1; // Last index of the object
 }
 
 bool SynonymTable::replaceSet(SynonymString synonym, std::set<SynonymString> newSet) {
