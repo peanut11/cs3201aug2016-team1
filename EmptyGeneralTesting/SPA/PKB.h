@@ -17,6 +17,7 @@ private:
 	static PKB* theOne;
 	
 	std::vector<AssignTree>				assignTrees;
+	std::vector<PostfixExpr>			postfixExprs;
 	std::vector<VarIndex>				controlVars;
 	std::set<Constant>					constants;
 	VarRefMap							varRefMap;
@@ -44,6 +45,7 @@ public:
 
 	// API used by Parser and DE
 	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
+	bool PKB::putExprForStmt(StmtNumber, PostfixExpr);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
 	bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName); // Updates MODIFIES and USES relationships in vartable and stmtTable

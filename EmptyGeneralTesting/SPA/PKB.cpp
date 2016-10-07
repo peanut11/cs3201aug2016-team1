@@ -429,6 +429,15 @@ bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 	return (stmt + 1 == assignTrees.size());
 }
 
+bool PKB::putExprForStmt(StmtNumber stmt, PostfixExpr expr) {
+	while (stmt > postfixExprs.size()) {
+		postfixExprs.push_back(PostfixExpr());
+	}
+
+	postfixExprs.push_back(expr);
+	return true;
+}
+
 bool PKB::putConstant(Constant constant) {
     return constants.insert(constant).second;
 }
