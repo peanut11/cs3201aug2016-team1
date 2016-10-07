@@ -54,40 +54,70 @@ int ProgramConverter::convert(std::string source) {
 	lineCount = 0;
 	ProgLine currentLine;
 	ProcName procName;
+	bool isElse = false;
 
 	while (!(currentLine = nextLine()).empty()) {
 		const std::string FIRST_TOKEN = currentLine[0];
 
 		if (FIRST_TOKEN == "procedure") {
-			currentLeader = 0;
+			currentLeader = 0; 
 			currentParent = 0;
+			previous = 0;
 			procName = currentLine[1];
 			continue;
 		}
 
+		if (FIRST_TOKEN == "else") {
+			isElse = true;
+			continue;
+		}
+
 		if (isEnterParent(FIRST_TOKEN)) {
-			currentLeader = 0;
-			currentParent = lineCount;
+			if (isElse) {
+				currentLeader = 0;
+				std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(lineCount, PARENT);
+
+				if (parentSet.empty()) {
+					currentParent = 0;
+					previous = 0;
+				}
+				else {
+					currentParent = *parentSet.begin();
+					previous = *parentSet.begin();
+				}
+
+				isElse = false;
+			} else {
+				currentLeader = 0;
+				currentParent = lineCount;
+			}
 			continue;
 		}
 
 		if (isExitParent(FIRST_TOKEN)) {
 			currentLeader = currentParent;
 			std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
-
+			if (pkb->getStmtTypeForStmt(currentParent) == WHILE) {
+				pkb->putStmtForStmt(currentParent, PREVIOUS, previous);
+				previous = currentParent;
+			}
 			if (parentSet.empty()) {
 				currentParent = 0;
 			} else {
 				StmtSetIterator it = parentSet.begin();
 				currentParent = *it;
+				
 			}
-
+			
+			
 			continue;
 		}
 
 		const ProgLineNumber lineNum = lineCount;
 		pkb->putStmtProc(lineNum, procName);
 		updateStmtInStmtTable(currentLine, lineNum);
+		currentLeader = lineNum;
+		previous = currentLeader;
 	}
 
 	return lineCount;
@@ -134,7 +164,7 @@ ProgLine ProgramConverter::nextLine() {
 		return nextLine();
 	}
 	
-	if (line[0] != "procedure") {
+	if (line[0] != "procedure" && line[0] != "else") {
 		lineCount++;
 	}
 
@@ -142,8 +172,13 @@ ProgLine ProgramConverter::nextLine() {
 }
 
 bool ProgramConverter::isAssignment(ProgLine line) {
-	const std::string SECOND_TOKEN = line[1];
-	return SECOND_TOKEN == "=";
+	if (line.size() >= 3) {
+		const std::string SECOND_TOKEN = line[1];
+		return SECOND_TOKEN == "=";
+	} else {
+		return false;
+	}
+	
 }
 
 bool ProgramConverter::isWhile(ProgLine line) {
@@ -154,6 +189,16 @@ bool ProgramConverter::isWhile(ProgLine line) {
 bool ProgramConverter::isIf(ProgLine line) {
 	const std::string FIRST_TOKEN = line[0];
 	return FIRST_TOKEN == "if";
+}
+
+bool ProgramConverter::isElse(ProgLine line) {
+	const std::string FIRST_TOKEN = line[0];
+	return FIRST_TOKEN == "else";
+}
+
+bool ProgramConverter::isCall(ProgLine line) {
+	const std::string FIRST_TOKEN = line[0];
+	return FIRST_TOKEN == "call";
 }
 
 bool ProgramConverter::isEnterParent(std::string str) {
@@ -225,7 +270,11 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
-	} 
+	} else if (isCall(line)) {
+		ProcName procCalled = line[1];
+		success = pkb->putStmtTypeForStmt(lineNum, CALL) && success;
+		success = pkb->putProcForProc(pkb->getProcByStmt(lineNum), CALLS, procCalled) && success;
+	}
 
 	if (currentParent != 0) {
 		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent) && success;
@@ -235,7 +284,9 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 		success = pkb->putStmtForStmt(lineNum, FOLLOWS, currentLeader) && success;
 	}
 
-	currentLeader = lineNum;
+	if (previous != 0) {
+		success = pkb->putStmtForStmt(lineNum, PREVIOUS, previous) && success;
+	}
 
 	return success;
 }

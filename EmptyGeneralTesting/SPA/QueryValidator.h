@@ -1,19 +1,26 @@
 #pragma once
+
 #include <string>
 #include <vector>
-#include "StringTokenizer.h"
-#include "EntityType.h"
-#include "RelationshipType.h"
-#include "ClauseType.h"
+
 #include "AttrType.h"
-#include "SynonymTable.h"
-#include "SynonymObject.h"
-#include "SynonymOccurence.h"
-#include "RelTable.h"
+#include "ClauseType.h"
 #include "ClauseSuchThatArgObject.h"
 #include "ClauseWithObject.h"
 #include "ClauseWithRefObject.h"
+#include "EntityType.h"
 #include "QueryTable.h"
+#include "RelationshipType.h"
+#include "RelTable.h"
+#include "StringTokenizer.h"
+#include "SynonymTable.h"
+#include "SynonymObject.h"
+#include "SynonymOccurence.h"
+
+// #include <cctype>
+// #include <algorithm>
+// #include "RelObject.h"
+// #include "ClauseSelectObject.h"
 
 class QueryValidator {
 
@@ -76,25 +83,6 @@ class QueryValidator {
 	QueryTable mQueryTable;
 
 	StringTokenizer st = StringTokenizer("", DelimiterMode::QUERY_PREPROCESSOR);
-
-	void throwsInvalidExpression(std::string expression);
-	void throwsInvalidRelationship(RelationshipType type);
-	void throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment);
-	void throwsInvalidRelationshipSameSynonymArguments(RelationshipType type, std::string argument1, std::string argument2);
-	void throwsIncorrectSyntax(std::string syntax);
-	void throwsInvalidPattern(std::string syntax);
-	void throwsInvalidPatternMissingSyntax();
-	void throwsInvalidPatternTypeSyntax();
-	void throwsInvalidPatternArgument();
-	void throwsInvalidPatternArgument(std::string arugment);
-	void throwsInvalidPatternExpression(std::string expression);
-	void throwsInvalidAttributeFormat();
-	void throwsInvalidAttributeMissingSynonym();
-	void throwsInvalidAttributeSyntax(std::string syntax);
-	void throwsInvalidAttributeName(std::string syntax);
-	void throwsInvalidAttributeSingleSynonym(std::string syntax);
-	void throwsInvalidAttributeValue(std::string value);
-	void throwsExceedCommonSynonymCount();
 
 	ClauseSelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
 	

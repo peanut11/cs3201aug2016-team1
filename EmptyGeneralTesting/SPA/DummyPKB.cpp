@@ -44,7 +44,7 @@ VarName DummyPKB::getVarName(VarIndex varIndex) {
     }
 }
 
-bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item)
+bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item)
 {
 	// Follows (3,4),(6,7)
 	// Modifies (3,"x"), (8,"x"), (4,"w"), (5,"w")

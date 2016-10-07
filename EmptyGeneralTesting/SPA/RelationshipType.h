@@ -16,8 +16,8 @@ enum RelationshipType {
 	PARENT_OF,        // PARENT + 1
 	PARENT_STAR,
 	PARENT_OF_STAR,   // PARENT_STAR + 1
-    PREVIOUS,
-    NEXT,             // PREVIOUS + 1
+    NEXT,
+    PREVIOUS,             // NEXT + 1
 
 	TOTAL_COUNT,
     PREVIOUS_STAR, 

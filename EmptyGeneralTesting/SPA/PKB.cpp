@@ -50,7 +50,7 @@ void PKB::clear() {
 	theOne = new PKB();
 }
 
-bool PKB::is(RelationshipType rel, StmtNumber stmt, StmtVarIndex item) {
+bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
     if (stmt >= stmtTable.size()) {
         return false;
     }
@@ -127,6 +127,10 @@ std::set<VarName> PKB::getAllVarNames() {
 	return std::set<VarName>(varRefTable.begin(),varRefTable.end());
 }
 
+std::set<ProcName> PKB::getAllProcNames() {
+	return std::set<ProcName>(procRefTable.begin(), procRefTable.end());
+}
+
 AssignTree PKB::getAssign(StmtNumber stmt) {
 	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
 		throw Exception::NOT_ASSIGN_ERROR;
@@ -161,7 +165,8 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 
 StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
-        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR) {
+        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR
+		&& followsOrParent != NEXT) {
 		throw Exception::INCORRECT_PKB_API;
 	}
 
@@ -262,22 +267,20 @@ std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType call
 	return procTable[getProcIndex(procName)][calls];
 }
 
+std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procName ) {
+	if (calls != CALLS && calls != CALLS_STAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	return procTable[getProcIndex(procName)][calls + 1];
+}
+
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
-    std::set<ProcIndex> procedures;
-
-	// Get the stmts that modifiesOrUses varName
-	std::set<StmtNumber> stmts = getStmtsByVar(modifiesOrUses, varName);
-
-	// Iterate through the stmts to get procedures
-	for each (StmtNumber stmt in stmts) {
-		procedures.insert(stmtToProcTable[stmt]);
-	}
-
-	return procedures;
+	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
 }
 
 std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
@@ -305,19 +308,21 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	}
 	
 	// Update stmtTable, varTable, procTable
-	stmtTable[stmt][rel].emplace(varIndex);
-	bool success = stmtTable[stmt][rel].find(varIndex) != stmtTable[stmt][rel].end();
+	stmtTable[stmt][rel].insert(varIndex);
+	bool success = (stmtTable[stmt][rel].find(varIndex) != stmtTable[stmt][rel].end());
 
-	varTable[varIndex][rel].emplace(stmt);
+	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
-	procTable[procIndex][rel].emplace(varIndex);
+	varTable[varIndex][rel + 2].insert(procIndex); //adds Modified/UsedByProc
+	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
+	procTable[procIndex][rel].insert(varIndex);
 	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 
 	return success;
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	if (rel == MODIFIES || rel == USES) {
+	if (rel == MODIFIES || rel == USES || rel == CALLS) {
 		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
 
@@ -327,11 +332,11 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
 
-	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF) {
+	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF || rel == NEXT || rel == PREVIOUS) {
 		const int OFFSET = 1;
 		int supplementaryRel;
 
-		if (rel == FOLLOWS || rel == PARENT) {
+		if (rel == FOLLOWS || rel == PARENT || rel == NEXT) {
 			supplementaryRel = rel + OFFSET;
 		} else {
 			supplementaryRel = rel - OFFSET;
@@ -383,12 +388,12 @@ bool PKB::putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt) {
 	return success;
 }
 
-bool PKB::putProcForProc(ProcName procA, RelationshipType callsOrStar, ProcName procB) {
+bool PKB::putProcForProc(ProcIndex procA, RelationshipType callsOrStar, ProcName procB) {
 	if (callsOrStar != CALLS && callsOrStar != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 
-	ProcIndex procIndexA = getProcIndex(procA);
+	ProcIndex procIndexA = procA;
 	ProcIndex procIndexB = getProcIndex(procB);
 
 	// Updates A CALLS B

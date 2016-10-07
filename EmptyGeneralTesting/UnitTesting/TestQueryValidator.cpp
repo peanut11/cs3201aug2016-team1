@@ -215,69 +215,69 @@ public:
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
 		};
-		Assert::ExpectException<std::runtime_error>(error1);
+		Assert::ExpectException<Exceptions>(error1);
 		
 		auto error2 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(_,s2)");
 		};
-		Assert::ExpectException<std::runtime_error>(error2);
+		Assert::ExpectException<Exceptions>(error2);
 
 		auto error3 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
 		};
-		Assert::ExpectException<std::runtime_error>(error3);
+		Assert::ExpectException<Exceptions>(error3);
 		*/
 		auto error4 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,_)");
 		};
-		Assert::ExpectException<std::runtime_error>(error4);
+		Assert::ExpectException<Exceptions>(error4);
 
 		auto error5 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(_,s2)");
 		};
-		Assert::ExpectException<std::runtime_error>(error5);
+		Assert::ExpectException<Exceptions>(error5);
 
 		auto error6 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,p)");
 		};
-		Assert::ExpectException<std::runtime_error>(error6);
+		Assert::ExpectException<Exceptions>(error6);
 
 		// Failure, same synonym in relationships
 		auto error7 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
 		};
-		Assert::ExpectException<std::runtime_error>(error7);
+		Assert::ExpectException<Exceptions>(error7);
 
 		auto error8 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects(a1, a1)");
 		};
-		Assert::ExpectException<std::runtime_error>(error8);
+		Assert::ExpectException<Exceptions>(error8);
 
 		auto error9 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
 		};
-		Assert::ExpectException<std::runtime_error>(error9);
+		Assert::ExpectException<Exceptions>(error9);
 
 		// Failure, incorrect number of arguments
 		auto error100 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a2, _)");
 		};
-		Assert::ExpectException<std::runtime_error>(error100);
+		Assert::ExpectException<Exceptions>(error100);
 
 		auto error101 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1)");
 		};
-		Assert::ExpectException<std::runtime_error>(error101);
+		Assert::ExpectException<Exceptions>(error101);
 
 
 
@@ -363,43 +363,43 @@ public:
 
 
 		auto funcPtrExprError1 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\"_)"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError1);
+		Assert::ExpectException<Exceptions>(funcPtrExprError1);
 
 		auto funcPtrExprError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",_\"+1\")"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError2);
+		Assert::ExpectException<Exceptions>(funcPtrExprError2);
 
 		auto funcPtrExprError3 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",\"+1\"_)"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError3);
+		Assert::ExpectException<Exceptions>(funcPtrExprError3);
 
 		auto funcPtrExprError4 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",\"_\")"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError4);
+		Assert::ExpectException<Exceptions>(funcPtrExprError4);
 
 		auto funcPtrExprError5 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) pattern a1(\"x\",y)"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError5);
+		Assert::ExpectException<Exceptions>(funcPtrExprError5);
 
 		auto funcPtrExprError6 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(0,s1)"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError6);
+		Assert::ExpectException<Exceptions>(funcPtrExprError6);
 
 		auto funcPtrExprError7 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1,0)"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrExprError7);
+		Assert::ExpectException<Exceptions>(funcPtrExprError7);
 
 
 		/*
 		// more than 1 common synonym between clauses
 		auto funcPtrError1 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Follows(s1, s2) Parent(s1, s2) pattern a1(\"x\",\"y\")"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+		Assert::ExpectException<Exceptions>(funcPtrError1);
 		
 		auto funcPtrError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;variable v\nSelect a such that Uses (a1, v) pattern a1(v, _)"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError2);
+		Assert::ExpectException<Exceptions>(funcPtrError2);
 		*/
 
 
 		// USES and MODIFIES cannot have wildcard as first argument
 		auto funcPtrWildcardError1 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) Modifies(_, \"x\") pattern a1(\"x\",\"y\")"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrWildcardError1);
+		Assert::ExpectException<Exceptions>(funcPtrWildcardError1);
 
 		auto funcPtrWildcardError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) Uses(_, \"x\") pattern a1(\"x\",\"y\")"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrWildcardError2);
+		Assert::ExpectException<Exceptions>(funcPtrWildcardError2);
 
 
 	}
@@ -444,7 +444,7 @@ public:
 		validator->clearSynonymTable();
 
 		auto funcPtr = [validator] { validator->isValidQuery("procedure p;procedure p;procedure r;\n"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr); // try insert two procedure p, return exception
+		Assert::ExpectException<Exceptions>(funcPtr); // try insert two procedure p, return exception
 		validator->clearSynonymTable();
 
 		Assert::IsFalse(validator->isValidQuery(str21));
@@ -609,23 +609,23 @@ public:
 		validator->initStringTokenizer("(1,)"); // no second arg, with comma
 		//Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)));
 		auto funcPtr = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
-		Assert::ExpectException<std::runtime_error>(funcPtr);
+		Assert::ExpectException<Exceptions>(funcPtr);
 
 		validator->initStringTokenizer("(1)"); // only 1 arg, no comma
 		auto funcPtr2 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
-		Assert::ExpectException<std::runtime_error>(funcPtr2);
+		Assert::ExpectException<Exceptions>(funcPtr2);
 
 		validator->initStringTokenizer("(,2)"); // no first arg, with comma
 		auto funcPtr3 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
-		Assert::ExpectException<std::runtime_error>(funcPtr3);
+		Assert::ExpectException<Exceptions>(funcPtr3);
 
 		validator->initStringTokenizer("p,p)"); // parent should have stmt args, but both args are procedure
 		auto funcPtr4 = [validator] { validator->isRelationshipArgument("p", validator->getRelationshipTable()->getObject(4)); };
-		Assert::ExpectException<std::runtime_error>(funcPtr4);
+		Assert::ExpectException<Exceptions>(funcPtr4);
 
 		validator->initStringTokenizer("p,1)"); // parent should have stmt args, but both args are procedure
 		auto funcPtr5 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
-		Assert::ExpectException<std::runtime_error>(funcPtr5);
+		Assert::ExpectException<Exceptions>(funcPtr5);
 
 	}
 
@@ -688,52 +688,52 @@ public:
 		validator->initStringTokenizer("Parents(bb,cc)");
 		validator->getNextToken();
 		auto funcPtr = [validator] { validator->isRelationship("Parents"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr);
+		Assert::ExpectException<Exceptions>(funcPtr);
 
 		validator->initStringTokenizer("Parent(p,q)"); // parent should have stmt args, but both args are procedure
 		validator->getNextToken();
 		auto funcPtr2 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr2);
+		Assert::ExpectException<Exceptions>(funcPtr2);
 
 		validator->initStringTokenizer("Parent(s1,q)"); // 2nd arugment is procedure
 		validator->getNextToken();
 		auto funcPtr3 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr3);
+		Assert::ExpectException<Exceptions>(funcPtr3);
 
 		validator->initStringTokenizer("Parent(p,s2)"); // parent
 		validator->getNextToken();
 		auto funcPtr4 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr4);
+		Assert::ExpectException<Exceptions>(funcPtr4);
 
 		validator->initStringTokenizer("Parent(s1)"); // missing 2nd argument
 		validator->getNextToken();
 		auto funcPtr5 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr5);
+		Assert::ExpectException<Exceptions>(funcPtr5);
 
 		validator->initStringTokenizer("Parent(s1,)"); // missing 2nd argument
 		validator->getNextToken();
 		auto funcPtr6 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr6);
+		Assert::ExpectException<Exceptions>(funcPtr6);
 
 		validator->initStringTokenizer("Parent(_,)"); // parent
 		validator->getNextToken();
 		auto funcPtr7 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr7);
+		Assert::ExpectException<Exceptions>(funcPtr7);
 
 		validator->initStringTokenizer("Parent(\"x\",\"y\")"); // 
 		validator->getNextToken();
 		auto funcPtr8 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr8);
+		Assert::ExpectException<Exceptions>(funcPtr8);
 
 		validator->initStringTokenizer("Parent(\"x\",_)"); // 
 		validator->getNextToken();
 		auto funcPtr9 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr9);
+		Assert::ExpectException<Exceptions>(funcPtr9);
 
 		validator->initStringTokenizer("Parent(s1,s1)"); // same synonyms in both arguments
 		validator->getNextToken();
 		auto funcPtr10 = [validator] { validator->isRelationship("Parent"); };
-		Assert::ExpectException<std::runtime_error>(funcPtr10);
+		Assert::ExpectException<Exceptions>(funcPtr10);
 
 	}
 
@@ -767,12 +767,12 @@ public:
 		validator->initStringTokenizer("Follows(p,q)"); // follows
 		validator->getNextToken();
 		auto funcPtrError1 = [validator] { validator->isRelationship("Follows"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+		Assert::ExpectException<Exceptions>(funcPtrError1);
 
 		validator->initStringTokenizer("Follows(s1,s1)"); // same synonym for both args
 		validator->getNextToken();
 		auto funcPtrError2 = [validator] { validator->isRelationship("Follows"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError2);
+		Assert::ExpectException<Exceptions>(funcPtrError2);
 
 	}
 
@@ -820,7 +820,7 @@ public:
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isRelationship("Modifies"));
 		auto funcPtrError1 = [validator] { validator->isRelationship("Modifies"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+		Assert::ExpectException<Exceptions>(funcPtrError1);
 
 	}
 
@@ -865,7 +865,7 @@ public:
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isRelationship("Uses"));
 		auto funcPtrError1 = [validator] { validator->isRelationship("Uses"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+		Assert::ExpectException<Exceptions>(funcPtrError1);
 
 
 		validator->clearSynonymOccurence();
@@ -873,7 +873,7 @@ public:
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isRelationship("Uses"));
 		auto funcPtrError2 = [validator] { validator->isRelationship("Uses"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError2);
+		Assert::ExpectException<Exceptions>(funcPtrError2);
 
 	}
 
@@ -985,72 +985,72 @@ public:
 		validator->initStringTokenizer("a1(a1,_)");			// left = a1 (synonym)
 		validator->getNextToken();
 		auto funcPtrError1 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+		Assert::ExpectException<Exceptions>(funcPtrError1);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(a2,_)");			// left = a2 (synonym)
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isClausePattern("a1"));
 		auto funcPtrError2 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError2);
+		Assert::ExpectException<Exceptions>(funcPtrError2);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(\"x + 1\",_)"); // first arg is expression
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isClausePattern("a1"));
 		auto funcPtrError3 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError3);
+		Assert::ExpectException<Exceptions>(funcPtrError3);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(x,_)");
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isClausePattern("a1"));
 		auto funcPtrError4 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError4);
+		Assert::ExpectException<Exceptions>(funcPtrError4);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,x)");
 		validator->getNextToken();
 		//Assert::IsFalse();
 		auto funcPtrError5 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError5);
+		Assert::ExpectException<Exceptions>(funcPtrError5);
 
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,_\"x+1\")");	// right wrong expressions
 		validator->getNextToken();
 		auto funcPtrError6 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError6);
+		Assert::ExpectException<Exceptions>(funcPtrError6);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(x,x)"); // left and right are not variables
 		validator->getNextToken();
 		auto funcPtrError7 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError7);
+		Assert::ExpectException<Exceptions>(funcPtrError7);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,a1)");			// right is not a variable
 		validator->getNextToken();
 		auto funcPtrError8 = [validator] { validator->isClausePattern("a1"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError8);
+		Assert::ExpectException<Exceptions>(funcPtrError8);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("w(\"x\",\"x+y\")"); // second arg is not _
 		validator->getNextToken();
 		auto funcPtrError9 = [validator] { validator->isClausePattern("w"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError9);
+		Assert::ExpectException<Exceptions>(funcPtrError9);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("w(w,_)");		// no control variable, use synonym while
 		validator->getNextToken();
 		auto funcPtrError10 = [validator] { validator->isClausePattern("w"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError10);
+		Assert::ExpectException<Exceptions>(funcPtrError10);
 
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("ifstmt(a,_,_)");	// no control variable, use synonym assign
 		validator->getNextToken();
 		auto funcPtrError11 = [validator] { validator->isClausePattern("ifstmt"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError11);
+		Assert::ExpectException<Exceptions>(funcPtrError11);
 		
 	}
 
@@ -1087,13 +1087,13 @@ public:
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isPatternExprArgument("_"));
 		auto funcPtrError1 = [validator] { validator->isPatternExprArgument("_"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError1);
+		Assert::ExpectException<Exceptions>(funcPtrError1);
 
 		validator->initStringTokenizer("\"x+1)");
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isPatternExprArgument("\""));
 		auto funcPtrError2 = [validator] { validator->isPatternExprArgument("\""); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError2);
+		Assert::ExpectException<Exceptions>(funcPtrError2);
 
 
 
@@ -1101,21 +1101,21 @@ public:
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isPatternExprArgument("_"));
 		auto funcPtrError3 = [validator] { validator->isPatternExprArgument("_"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError3);
+		Assert::ExpectException<Exceptions>(funcPtrError3);
 
 
 		validator->initStringTokenizer("_\"x+1\")");
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isPatternExprArgument("_"));
 		auto funcPtrError4 = [validator] { validator->isPatternExprArgument("_"); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError4);
+		Assert::ExpectException<Exceptions>(funcPtrError4);
 
 
 		validator->initStringTokenizer("\"x+1\"_)");
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isPatternExprArgument("\""));
 		auto funcPtrError5 = [validator] { validator->isPatternExprArgument("\""); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError5);
+		Assert::ExpectException<Exceptions>(funcPtrError5);
 
 
 
@@ -1123,7 +1123,7 @@ public:
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isPatternExprArgument("\""));
 		auto funcPtrError6 = [validator] { validator->isPatternExprArgument("\""); };
-		Assert::ExpectException<std::runtime_error>(funcPtrError6);
+		Assert::ExpectException<Exceptions>(funcPtrError6);
 
 
 	}
@@ -1183,42 +1183,42 @@ public:
 		validator->initStringTokenizer("2 = pl1");
 		validator->getNextToken();
 		auto error1 = [validator] { validator->isClauseWith("2"); }; // invalid format
-		Assert::ExpectException<std::runtime_error>(error1);
+		Assert::ExpectException<Exceptions>(error1);
 
 		validator->initStringTokenizer("c.stmt# = \"hello\"");
 		validator->getNextToken();
 		auto error2 = [validator] { validator->isClauseWith("c"); }; // incorrect value type
-		Assert::ExpectException<std::runtime_error>(error2);
+		Assert::ExpectException<Exceptions>(error2);
 
 		validator->initStringTokenizer("p.procName = 1");
 		validator->getNextToken();
 		auto error3 = [validator] { validator->isClauseWith("p"); }; // incorrect value type
-		Assert::ExpectException<std::runtime_error>(error3);
+		Assert::ExpectException<Exceptions>(error3);
 
 		validator->initStringTokenizer("p.varName = \"hello\"");
 		validator->getNextToken();
 		auto error4 = [validator] { validator->isClauseWith("p"); }; // incorrect attribute name
-		Assert::ExpectException<std::runtime_error>(error4);
+		Assert::ExpectException<Exceptions>(error4);
 
 		validator->initStringTokenizer("const.procName = \"hello\"");
 		validator->getNextToken();
 		auto error5 = [validator] { validator->isClauseWith("const"); }; // incorrect attribute name
-		Assert::ExpectException<std::runtime_error>(error5);
+		Assert::ExpectException<Exceptions>(error5);
 
 		validator->initStringTokenizer("c.stmt# = def.value");
 		validator->getNextToken();
 		auto error100 = [validator] { validator->isClauseWith("c"); }; // not declared synonym
-		Assert::ExpectException<std::runtime_error>(error100);
+		Assert::ExpectException<Exceptions>(error100);
 
 		validator->initStringTokenizer("c.stmt# = p.procName");
 		validator->getNextToken();
 		auto error101 = [validator] { validator->isClauseWith("c"); }; // incorrect type
-		Assert::ExpectException<std::runtime_error>(error101);
+		Assert::ExpectException<Exceptions>(error101);
 
 		validator->initStringTokenizer("p.procName = const.value");
 		validator->getNextToken();
 		auto error102 = [validator] { validator->isClauseWith("p"); }; // incorrect type
-		Assert::ExpectException<std::runtime_error>(error102);
+		Assert::ExpectException<Exceptions>(error102);
 
 	}
 

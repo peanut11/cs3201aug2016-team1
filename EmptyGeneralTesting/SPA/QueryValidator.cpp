@@ -1,14 +1,4 @@
-#include <cctype>
-#include <algorithm>
-#include <string>
 #include "QueryValidator.h"
-#include "SynonymObject.h"
-#include "RelObject.h"
-#include "ClauseType.h"
-#include "AttrType.h"
-#include "ClauseSelectObject.h"
-#include "ClauseSuchThatArgObject.h"
-
 
 const std::string QueryValidator::SYNTAX_PROCEDURE = "procedure";
 const std::string QueryValidator::SYNTAX_ASSIGN = "assign";
@@ -112,78 +102,6 @@ void QueryValidator::clearQueryTable() {
 
 void QueryValidator::addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object) {
 	objects.push_back(object);
-}
-
-void QueryValidator::throwsInvalidExpression(std::string expression) {
-	throw std::runtime_error("Invalid expression found near " + expression);
-}
-
-void QueryValidator::throwsInvalidRelationship(RelationshipType type) {
-	throw std::runtime_error("Invalid query near relationship " + getRelationshipSyntax(type));
-}
-
-void QueryValidator::throwsInvalidRelationshipArgument(RelationshipType type, std::string arugment) {
-	throw std::runtime_error("Invalid argument for relationship " + getRelationshipSyntax(type) + " near " + arugment);
-}
-
-void QueryValidator::throwsInvalidRelationshipSameSynonymArguments(RelationshipType type, std::string argument1, std::string argument2) {
-	throw std::runtime_error("Invalid relationship " + getRelationshipSyntax(type) + " due to same synonym for both argument arg1 = " + argument1 + " and arg2 = " + argument2);
-}
-
-void QueryValidator::throwsIncorrectSyntax(std::string syntax) {
-	throw std::runtime_error("Invalid syntax near " + syntax);
-}
-
-void QueryValidator::throwsInvalidPattern(std::string syntax) {
-	throw std::runtime_error("Invalid pattern near " + syntax);
-}
-
-void QueryValidator::throwsInvalidPatternMissingSyntax() {
-	throw std::runtime_error("Invalid pattern, missing syntax");
-}
-
-void QueryValidator::throwsInvalidPatternTypeSyntax() {
-	throw std::runtime_error("Invalid pattern syntax type");
-}
-
-void QueryValidator::throwsInvalidPatternArgument() {
-	throw std::runtime_error("Invalid pattern argument(s)");
-}
-
-void QueryValidator::throwsInvalidPatternArgument(std::string arugment) {
-	throw std::runtime_error("Invalid pattern argument near " + arugment);
-}
-
-void QueryValidator::throwsInvalidPatternExpression(std::string expression) {
-	throw std::runtime_error("Invalid pattern expression near " + expression);
-}
-
-void QueryValidator::throwsInvalidAttributeFormat() {
-	throw std::runtime_error("Invalid attribute format");
-}
-
-void QueryValidator::throwsInvalidAttributeMissingSynonym() {
-	throw std::runtime_error("Invalid attribute missing synonym");
-}
-
-void QueryValidator::throwsInvalidAttributeSyntax(std::string syntax) {
-	throw std::runtime_error("Invalid attribute syntax near " + syntax);
-}
-
-void QueryValidator::throwsInvalidAttributeName(std::string syntax) {
-	throw std::runtime_error("Invalid attribute name near " + syntax);
-}
-
-void QueryValidator::throwsInvalidAttributeSingleSynonym(std::string syntax) {
-	throw std::runtime_error("Invalid attribute single synonym near " + syntax);
-}
-
-void QueryValidator::throwsInvalidAttributeValue(std::string value) {
-	throw std::runtime_error("Invalid attribute value near" + value);
-}
-
-void QueryValidator::throwsExceedCommonSynonymCount() {
-	throw std::runtime_error("Exceed number of common synonym between clauses");
 }
 
 QueryTable& QueryValidator::getQueryTable() {
@@ -523,7 +441,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 			selectedSynonymObj = this->mSynonymTable->getObject(str); // get synonym object which is found in synonymTable
 			if (selectedSynonymObj.getType() == EntityType::INVALID) { // check declared
-				this->throwsInvalidPattern(str);
+				throw Exceptions::invalid_pattern(str);
 				isUnderWith = false;
 			}
 
@@ -563,7 +481,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 					st.nextToken(); // points to "#"
 				}
 				else {
-					this->throwsInvalidAttributeName(currentToken);
+					throw Exceptions::invalid_attribute_name(currentToken);
 					isUnderWith = false;
 				}
 				break;
@@ -574,7 +492,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 					hasAttribute = true;
 				}
 				else {
-					this->throwsInvalidAttributeName(currentToken);
+					throw Exceptions::invalid_attribute_name(currentToken);
 					isUnderWith = false;
 				}
 				break;
@@ -590,7 +508,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 					hasAttribute = true;
 				}
 				else {
-					this->throwsInvalidAttributeName(currentToken);
+					throw Exceptions::invalid_attribute_name(currentToken);
 					isUnderWith = false;
 				}
 				break;
@@ -601,7 +519,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 					hasAttribute = true;
 				}
 				else {
-					this->throwsInvalidAttributeName(currentToken);
+					throw Exceptions::invalid_attribute_name(currentToken);
 					isUnderWith = false;
 				}
 				break;
@@ -612,7 +530,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 					hasAttribute = true;
 				}
 				else {
-					this->throwsInvalidAttributeName(currentToken);
+					throw Exceptions::invalid_attribute_name(currentToken);
 					isUnderWith = false;
 				}
 				break;
@@ -674,7 +592,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 					}
 					else {
-						this->throwsInvalidAttributeValue(currentToken);
+						throw Exceptions::invalid_attribute_value(currentToken);
 						isUnderWith = false;
 					}
 					break;
@@ -708,7 +626,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 					}
 					else {
-						this->throwsInvalidAttributeValue(currentToken);
+						throw Exceptions::invalid_attribute_value(currentToken);
 						isUnderWith = false;
 					}
 					break;
@@ -728,14 +646,14 @@ bool QueryValidator::isClauseWith(std::string str) {
 					rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, atoi(currentToken.c_str()));
 				}
 				else { // Programe Line must have integer value after "=" 
-					this->throwsInvalidAttributeSingleSynonym(selectedSynonymObj.getSynonym());
+					throw Exceptions::invalid_attribute_value_single_synonym(selectedSynonymObj.getSynonym());
 					isUnderWith = false;
 				}
 			}
 
 		}
 		else {
-			this->throwsInvalidAttributeFormat();
+			throw Exceptions::invalid_attribute_format();
 			isUnderWith = false;
 		}
 
@@ -758,13 +676,13 @@ bool QueryValidator::isClausePattern(std::string str) {
 	
 	// start is a synonym (assign, while, if) must be written next
 	if (!isSynonym(str)) { 
-		this->throwsInvalidPatternMissingSyntax();
+		throw Exceptions::invalid_pattern_missing_syntax();
 		//return false; 
 	}
 
 	selectedSynonymObj = this->mSynonymTable->getObject(str); // st.peekNextToken()
 	if (selectedSynonymObj.getType() == EntityType::INVALID) {
-		this->throwsInvalidPattern(str);
+		throw Exceptions::invalid_pattern(str);
 		//return false; // invalid synonym, did not declare in the first place
 	}
 
@@ -772,7 +690,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 		&& selectedSynonymObj.getType() != EntityType::WHILE
 		&& selectedSynonymObj.getType() != EntityType::IF) {
 
-		this->throwsInvalidPatternTypeSyntax();
+		throw Exceptions::invalid_pattern_type_syntax();
 		return false; // since the synonym is not within one of these, its wrong
 	}
 
@@ -792,7 +710,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 
 	// check if there's open bracket
 	if (st.peekNextToken().compare("(") != 0) {  
-		this->throwsInvalidPattern(st.peekNextToken());
+		throw Exceptions::invalid_pattern(st.peekNextToken());
 		//return false;  
 	}
 	st.nextToken(); // point to "("
@@ -810,7 +728,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 
 				// check the number of common synonyms in clauses
 				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {
-					this->throwsExceedCommonSynonymCount();
+					throw Exceptions::exceed_common_synonym_count();
 				}
 
 				if (numOfArgs == 2) {
@@ -825,7 +743,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 				return true;
 			}
 			else {
-				this->throwsInvalidPatternArgument();
+				throw Exceptions::invalid_pattern_argument();
 				//return false;
 			}
 		}
@@ -923,7 +841,7 @@ bool QueryValidator::isRelationship(std::string str) {
 
 	if (searchedType == RelationshipType::INVALID_RELATIONSHIP) {
 		// no such relationships
-		this->throwsInvalidRelationship(searchedType);
+		throw Exceptions::invalid_relationship(searchedType);
 		//return false;
 	}
 
@@ -932,7 +850,7 @@ bool QueryValidator::isRelationship(std::string str) {
 	RelObject searchedRelObject = this->mRelTable->find(searchedType);
 	if (searchedRelObject.getRelObjectType() == RelationshipType::INVALID_RELATIONSHIP) {
 		// no such relationship in table
-		this->throwsInvalidRelationship(searchedRelObject.getRelObjectType());
+		throw Exceptions::invalid_relationship(searchedRelObject.getRelObjectType());
 		//return false;
 	}
 
@@ -954,7 +872,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 	int numberOfArgs = 0;
 
 	if (str == "" || str.compare("(") != 0) {
-		this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), str);
+		throw Exceptions::invalid_relationship_argument(relationshipObject.getRelObjectType(), str);
 		//return false;
 	}
 
@@ -971,7 +889,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				
 				// check the number of common synonyms in clauses
 				//if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
-				//	this->throwsExceedCommonSynonymCount();
+				//	this->exceed_common_synonym_count();
 				//}
 
 				if (relationshipObject.getRelObjectType() != RelationshipType::NEXT 
@@ -979,7 +897,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 						&& firstArgObject.getIsSynonym() 
 						&& secondArgObject.getIsSynonym() 
 						&& isMatch(firstArgObject.getStringValue(), secondArgObject.getStringValue())) {
-					this->throwsInvalidRelationshipSameSynonymArguments(relationshipObject.getRelObjectType(), firstArgObject.getStringValue(), secondArgObject.getStringValue());
+					throw Exceptions::invalid_relationship_same_synonym_arguments(relationshipObject.getRelObjectType(), firstArgObject.getStringValue(), secondArgObject.getStringValue());
 					isUnderArg = false;
 				}
 
@@ -990,7 +908,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				return true;
 			}
 			else {
-				this->throwsInvalidRelationshipArgument(relationshipObject.getRelObjectType(), st.peekNextToken());
+				throw Exceptions::invalid_relationship_argument(relationshipObject.getRelObjectType(), st.peekNextToken());
 				isUnderArg = false;
 			}
 		}
@@ -1128,7 +1046,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 	int numOfWildcard = 0;
 
 	if (str.compare("") == 0) { // empty
-		this->throwsInvalidPatternArgument();
+		throw Exceptions::invalid_pattern_argument();
 		//return false;
 	}
 
@@ -1151,7 +1069,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 				return true;
 			}
 			else if (numofDoubleQuote == 1 || numOfWildcard == 1) {
-				this->throwsInvalidPatternArgument(st.peekNextToken());
+				throw Exceptions::invalid_pattern_argument(st.peekNextToken());
 				//return false; // did not end a second quote and jump to next comma or close bracket
 			}
 			else if (numofDoubleQuote == 2 && numOfWildcard == 0) {
@@ -1159,7 +1077,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 				return isValidExpression; // only have double quotes
 			}
 			else {
-				this->throwsInvalidPatternArgument(st.peekNextToken());
+				throw Exceptions::invalid_pattern_argument(st.peekNextToken());
 				//return false;
 			}
 		}
@@ -1182,7 +1100,7 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 
 				// check valid for second argument
 				if (!isValidExpression) {
-					this->throwsInvalidPatternExpression(nextToken);
+					throw Exceptions::invalid_pattern_expression(nextToken);
 					//return false;
 				}
 
@@ -1423,7 +1341,7 @@ bool QueryValidator::isAttributeReference(std::string str) {
 
 		selectedSynonymObj = this->mSynonymTable->getObject(str); // get synonym object which is found in synonymTable
 		if (selectedSynonymObj.getType() == EntityType::INVALID) { // check declared
-			//this->throwsInvalidPattern(str);
+			//throw Exceptions::invalid_pattern(str);
 			return false;
 		}
 
@@ -1783,35 +1701,6 @@ std::string QueryValidator::getEntityTypeString(EntityType type) {
 	}
 
 	return "";
-}
-
-std::string QueryValidator::getRelationshipSyntax(RelationshipType type) {
-	switch (type) {
-	case MODIFIES:
-		return "modifies";
-	case USES:
-		return "uses";
-	case CALLS:
-		return "calls";
-	case CALLS_STAR:
-		return "calls*";
-	case FOLLOWS:
-		return "follows";
-	case FOLLOWS_STAR:
-		return "follows*";
-	case PARENT_STAR:
-		return "parent*";
-	case NEXT:
-		return "next";
-	case NEXT_STAR:
-		return "next*";
-	case AFFECTS:
-		return "affects";
-	case AFFECTS_STAR:
-		return "affects*";
-	default:
-		return "";
-	}
 }
 
 std::string QueryValidator::getAttrSyntax(AttrType::AttrType type) {

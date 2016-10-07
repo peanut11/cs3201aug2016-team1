@@ -43,7 +43,7 @@ void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
     for (std::list<GridRow>::const_iterator row = oldList.begin(); row != oldList.end(); row++) {
         for (ValueSet::const_iterator val = vals.begin(); val != vals.end(); val++) {
             SynonymValue value = *val;
-            resultTable[column].emplace(value);
+            resultTable[column].insert(value);
 
             GridRow newRow = *row;
             newRow.push_back(value);
@@ -99,7 +99,7 @@ ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
 
     for (ValueSet::const_iterator val = vals.begin(); val != vals.end(); val++) {
         SynonymValue value = *val;
-        resultTable[column].emplace(value);
+        resultTable[column].insert(value);
 
         std::vector<SynonymValue> row;
         row.push_back(value);
@@ -232,7 +232,7 @@ ValueTupleSet ResultGrid::getValuesForSynonymTuple(SynonymTuple synTuple) {
         SynonymValue value1 = (*row)[column1];
         SynonymValue value2 = (*row)[column2];
         ValueTuple valueTuple = ValueTuple(value1, value2);
-        results.emplace_hint(results.end(), valueTuple);
+        results.insert(results.end(), valueTuple);
     }
     return results;
 }
