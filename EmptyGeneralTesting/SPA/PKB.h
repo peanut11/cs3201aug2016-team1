@@ -6,7 +6,6 @@
 #include <vector>
 #include <set>
 
-#include "AssignTree.h"
 #include "EntityType.h"
 #include "Exceptions.h"
 #include "RelationshipType.h"
@@ -15,8 +14,7 @@
 class PKB {
 private:
 	static PKB* theOne;
-	
-	std::vector<AssignTree>				assignTrees;
+
 	std::vector<PostfixExpr>			postfixExprs;
 	std::vector<VarIndex>				controlVars;
 	std::set<Constant>					constants;
@@ -44,7 +42,6 @@ public:
 	virtual ProcName getProcName(ProcIndex procIndex);
 
 	// API used by Parser and DE
-	bool putAssignForStmt(StmtNumber stmt, AssignTree tree);
 	bool PKB::putExprForStmt(StmtNumber, PostfixExpr);
 	bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
 	bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
@@ -75,13 +72,12 @@ public:
 					  }
 	*/
 	virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
-	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
-	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
+	virtual bool isAssignHasExpr(StmtNumber assign, StringToken);
+	virtual bool isAssignHasSubexpr(StmtNumber assign, StringToken);
 	virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
 	virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
 	bool isVarExist(VarName varName);
 
-	virtual AssignTree              getAssign(StmtNumber stmt);
     virtual ProcIndex				getProcByStmt(StmtNumber stmt);
 	virtual EntityType				getStmtTypeForStmt(StmtNumber stmt);
 	virtual StmtNumber              getStmtTableSize();

@@ -3,7 +3,6 @@
 #include <cctype>
 #include <string>
 
-#include "AssignTree.h"
 #include "PKB.h"
 #include "StringTokenizer.h"
 
@@ -31,6 +30,7 @@ public:
 	bool isExitParent(std::string str);
 	bool isLineEnding(std::string str);
 	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
+	bool updateAssignmentInPostfixExprs(ProgLine, ProgLineNumber);
 	bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
 	bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
 };

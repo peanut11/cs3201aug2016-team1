@@ -4,7 +4,6 @@
 #include <vector>
 #include <set>
 
-#include "AssignTree.h"
 #include "EntityType.h"	
 #include "RelationshipType.h"
 #include "Types.h"
@@ -72,20 +71,14 @@ bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item)
 	return false;
 }
 
-bool DummyPKB::isAssignHasExpr(StmtNumber assign, ExprString expr)
+bool DummyPKB::isAssignHasExpr(StmtNumber assign, StringToken expr)
 {
 	return false;
 }
 
-bool DummyPKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr)
+bool DummyPKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr)
 {
 	// pattern a(8,"_z_"), a(5,_3_)
-	if (assign == 8 && subexpr == "_z_") {
-		return true;
-	}
-	else if (assign == 5 && subexpr == "_3_") {
-		return true;
-	}
 	return false;
 }
 

@@ -11,10 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AssignTree.cpp" />
     <ClCompile Include="ClauseSelectResultObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
-    <ClCompile Include="ExprTree.cpp" />
     <ClCompile Include="Frontend.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ClausePatternObject.cpp" />
@@ -40,19 +38,16 @@
     <ClCompile Include="SynonymObject.cpp" />
     <ClCompile Include="SynonymOccurence.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
-    <ClCompile Include="Node.cpp" />
     <ClCompile Include="ClauseWithObject.cpp" />
     <ClCompile Include="ClauseWithRefObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssignTree.h" />
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseObject.h" />
     <ClInclude Include="ClauseSelectResultObject.h" />
     <ClInclude Include="ClauseType.h" />
     <ClInclude Include="DummyPKB.h" />
     <ClInclude Include="Exceptions.h" />
-    <ClInclude Include="ExprTree.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
     <ClInclude Include="Parser.h" />
@@ -80,7 +75,6 @@
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />
-    <ClInclude Include="Node.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="ClauseWithObject.h" />
     <ClInclude Include="ClauseWithRefObject.h" />

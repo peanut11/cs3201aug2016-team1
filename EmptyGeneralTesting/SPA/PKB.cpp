@@ -6,6 +6,7 @@
 // - VarTable
 
 #include "PKB.h"
+#include <stack>
 
 PKB* PKB::theOne = nullptr;
 
@@ -18,7 +19,6 @@ PKB* PKB::getInstance() {
 }
 
 PKB::PKB() {
-	assignTrees = std::vector<AssignTree>();
     constants = std::set<Constant>(); 
     controlVars = std::vector<VarIndex>();
     procRefMap = ProcRefMap();
@@ -63,16 +63,8 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
 	return entry.find(item) != entry.end();
 }
 
-bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
-    if (expr[0] == '_') {
-        return isAssignHasSubexpr(assign, expr.substr(1, expr.size() - 2));
-    }
-
-    AssignTree tree = assignTrees[assign];
-	ExprString treeStr = ExprTree::toString(tree.getExprTree());
-
-    expr.erase(std::remove_if(expr.begin(), expr.end(), isspace), expr.end());
-	return expr == treeStr;
+bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
+	return true;
 }
 
 int operatorRank(StringToken s) {
@@ -133,19 +125,8 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	return result;
 }
 
-bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
-    if (subexpr[0] == '_') {
-        return isAssignHasSubexpr(assign, subexpr.substr(1, subexpr.size() - 2));
-    }
-
-	AssignTree tree = assignTrees[assign];
-	ExprString treeStr = ExprTree::toString(tree.getExprTree());
-	treeStr = "+" + treeStr + "+";
-
-    subexpr.erase(std::remove_if(subexpr.begin(), subexpr.end(), isspace), subexpr.end());
-
-	return (treeStr.find(subexpr) == 1) ||
-		(subexpr.find("+") == std::string::npos && treeStr.find("+" + subexpr + "+") != std::string::npos);
+bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
+	return true;
 }
 
 bool PKB::isVarExist(VarName varName) {
@@ -187,14 +168,6 @@ std::set<VarName> PKB::getAllVarNames() {
 
 std::set<ProcName> PKB::getAllProcNames() {
 	return std::set<ProcName>(procRefTable.begin(), procRefTable.end());
-}
-
-AssignTree PKB::getAssign(StmtNumber stmt) {
-	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
-		throw Exception::NOT_ASSIGN_ERROR;
-	}
-
-	return assignTrees[stmt];
 }
 
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
@@ -420,14 +393,14 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	return success;
 }
 
-bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
+/*bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 	while (stmt > assignTrees.size()) {
 		assignTrees.push_back(AssignTree());
 	}
 
 	assignTrees.push_back(tree);
 	return (stmt + 1 == assignTrees.size());
-}
+} */
 
 bool PKB::putExprForStmt(StmtNumber stmt, PostfixExpr expr) {
 	while (stmt > postfixExprs.size()) {
