@@ -14,7 +14,7 @@ class QueryTable {
 	std::vector<ClauseSuchThatObject> suchThats;
 	std::vector<ClauseWithObject> withs;
 	std::vector<ClausePatternObject> patterns;
-
+	
 	std::string getEntityString(EntityType type);
 	std::string getRelationshipString(RelationshipType type);
 	std::string getAttrString(AttrType::AttrType type);

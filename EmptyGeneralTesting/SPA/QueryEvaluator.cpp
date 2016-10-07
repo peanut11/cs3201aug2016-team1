@@ -62,7 +62,24 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 
         // Boolean status on relationships holds
         bool relationshipHolds = true;
+/*
+		// group queries into optimized groups
+		std::vector<std::vector<ClauseObject>> groupQueries = QueryOptimizer.beginGroup(queryTable);
 
+		// evaluate the optimized groups
+		for (int i = 0; i < groupQueries.size(); i++) {
+			// check what group type
+
+			// check whether group need to optimized
+
+			// evaluate this group
+
+			// this group : check what clause is this
+
+			// this group : evaluate this clause
+
+		}
+*/
         for (int i = 0; i < 2; i++) {
             // Iterate the such that clauses vectors and evaluate them
             for (std::vector<ClauseSuchThatObject>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
