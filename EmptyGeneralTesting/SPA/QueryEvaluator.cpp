@@ -130,8 +130,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
     ClauseSuchThatArgObject argTwo = suchThatRelObject.getArgsTwo();
     bool relationshipHolds = true;
 
-    // FOLLOW / FOLLOWS_STAR / PARENT / PARENT_STAR relationship
-    if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR) {
+    // FOLLOW / FOLLOWS_STAR / PARENT / PARENT_STAR / NEXT / NEXT_STAR relationship
+    if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR || type == NEXT || type == NEXT_STAR) {
         // Both are statement numbers: Follows(3,4)
         if (argOne.getIntegerValue() > 0 && argTwo.getIntegerValue() > 0) {
             suchThatRelObject.setResultsBoolean(pkb->is(type, argOne.getIntegerValue(), argTwo.getIntegerValue()));
@@ -274,6 +274,25 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
             resultManager->updateSynonym(argOne.getStringValue(), updatedStatements1);
             resultManager->updateSynonym(argTwo.getStringValue(), updatedStatements2);
         }
+		// arg1 is underscore & arg2 is integer: Follows(_,_);
+		else if (argOne.getIsSynonym() == false && argOne.getStringValue() == "_" && argTwo.getIsSynonym() == false && argTwo.getStringValue() == "_") {
+			// Retrieve wild card statements
+			std::set<StmtNumber> statements1 = pkb->getAllStmts();
+			std::set<StmtNumber> statements2 = pkb->getAllStmts();
+
+			// Obtain evaluation results
+			for (StmtSetIterator s1s = statements1.begin(); s1s != statements1.end(); s1s++) {
+				for (StmtSetIterator s2s = statements2.begin(); s2s != statements2.end(); s2s++) {
+					if (pkb->is(type, *s1s, *s2s)) {
+						suchThatRelObject.setResultsBoolean(true);
+						break;
+					}
+				}
+				if (suchThatRelObject.getResultsBoolean() == true) {
+					break;
+				}
+			}
+		}
     }
 
     // Iteration 1: only allow 'statement' at left instead of 'procedure' too
