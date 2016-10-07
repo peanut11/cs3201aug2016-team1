@@ -102,4 +102,7 @@ public:
 	virtual std::set<ProcIndex>		getProcsByProc(ProcName procName, RelationshipType calls);
 	virtual std::set<ProcIndex>		getProcsByProc(RelationshipType calls, ProcName procName); // check for inverse
 	virtual std::set<ProcIndex>		getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
+
+	// warning: this one is public for testing purpose
+	PostfixExpr infixToPostfix(InfixExpr);
 };

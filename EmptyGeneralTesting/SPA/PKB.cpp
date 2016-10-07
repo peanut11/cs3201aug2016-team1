@@ -75,6 +75,64 @@ bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
 	return expr == treeStr;
 }
 
+int operatorRank(StringToken s) {
+	if (s == "+" || s == "-") {
+		return 1;
+	}
+
+	if (s == "*" || s == "/") {
+		return 2;
+	}
+
+	return 0; //not an operator
+}
+
+PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
+	PostfixExpr result;
+	std::stack<StringToken> tokenStack;
+
+	for (StringToken s : infix) {
+		if (s == "(") {
+			tokenStack.push(s);
+		}
+		else if (s == ")") {
+			while (!tokenStack.empty() && tokenStack.top() != "(") {
+				result.push_back(tokenStack.top());
+				tokenStack.pop();
+			}
+			if (tokenStack.empty()) {
+				// INVALID INFIX EXPR!!!!!!!!!!!!!!!!!
+				return result;
+			}
+			tokenStack.pop();
+		}
+		else {
+			int rank = operatorRank(s);
+			if (rank == 0) { // is operand
+				result.push_back(s);
+			}
+			else { // is operator
+				while (!tokenStack.empty() && operatorRank(tokenStack.top()) >= operatorRank(s)) {
+					result.push_back(tokenStack.top());
+					tokenStack.pop();
+				}
+				tokenStack.push(s);
+			}
+		}
+	}
+
+	while (!tokenStack.empty()) {
+		StringToken token = tokenStack.top();
+		if (operatorRank(token) == 0) {
+			// INVALID INFIX EXPR!!!!!!!!!
+		}
+		tokenStack.pop();
+		result.push_back(token);
+	}
+
+	return result;
+}
+
 bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
     if (subexpr[0] == '_') {
         return isAssignHasSubexpr(assign, subexpr.substr(1, subexpr.size() - 2));
