@@ -761,6 +761,85 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
             }
         }
     }
+	// WHILE pattern:
+	else if (patternType == WHILE) {
+		// Pattern w(<first arg>,_)
+		if (secondArg == "_") {
+			// Pattern w(v,_)
+			if (isFirstArgSynonym) {
+				// Retrieve existing pattern synonym statements & first arg synonym variable
+				std::set<StmtNumber> patternSynonymStatements = resultManager->getValuesForSynonym(patternSynonymArg);
+				std::set<VarIndex> firstArgSynonymVariables = resultManager->getValuesForSynonym(firstArg);
+
+				// Evaluated true statements
+				std::set<StmtNumber> evaluatedPatternSynonymStatements;
+				std::set<VarIndex> evaluatedfirstArgSynonymVariables;
+
+				// Check all existing pattern synonym statements if while statement uses the 'variable' as control variable
+				for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
+					for (VarIndexSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
+						if (pkb->isWhilePattern(*cs, *s)) {
+							evaluatedPatternSynonymStatements.insert(*cs);
+							evaluatedfirstArgSynonymVariables.insert(*s);
+							break;
+						}
+					}
+				}
+
+				// Intersect two sets x2
+				std::set<StmtNumber> updatedStatements;
+				set_intersection(evaluatedPatternSynonymStatements.begin(), evaluatedPatternSynonymStatements.end(), patternSynonymStatements.begin(), patternSynonymStatements.end(),
+					std::inserter(updatedStatements, updatedStatements.begin()));
+
+				std::set<VarIndex> updatedVariables;
+				set_intersection(evaluatedfirstArgSynonymVariables.begin(), evaluatedfirstArgSynonymVariables.end(), firstArgSynonymVariables.begin(), firstArgSynonymVariables.end(),
+					std::inserter(updatedVariables, updatedVariables.begin()));
+
+				// Check if relationship holds/have results
+				if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// Update the results table
+				resultManager->updateSynonym(patternSynonymArg, updatedStatements);
+				resultManager->updateSynonym(firstArg, updatedVariables);
+			} 
+			// Pattern w(_,_)
+			else if (firstArg == "_") {
+				// Check if theres any statements number inside
+				if (resultManager->getValuesForSynonym(patternSynonymArg).size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+			}
+			// Pattern w("i",_)
+			else if (firstArgType == VARIABLE) {
+				// Retrieve existing pattern synonym statements
+				std::set<StmtNumber> currentStatements = resultManager->getValuesForSynonym(patternSynonymArg);
+
+				// Evaluated true statements
+				std::set<StmtNumber> evaluatedS;
+
+				// Check all existing pattern synonym statements if it uses the 'variable' as control variable
+				for (StmtSetIterator i = currentStatements.begin(); i != currentStatements.end(); i++) {
+					// Check if the existing statement uses the 'variable' as control variable
+					if (pkb->isWhilePattern(*i, pkb->getVarIndex(firstArg))) {
+						evaluatedS.insert(*i);
+					}
+				}
+
+				// Check if relationship holds/have results
+				if (evaluatedS.size() > 0) {
+					patternObject.setResultsBoolean(true);
+				}
+
+				// Update the results table
+				resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+			}
+		}
+	}
+	else if (patternType == IF) {
+
+	}
     return patternObject;
 }
 
