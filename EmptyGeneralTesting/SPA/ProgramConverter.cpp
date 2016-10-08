@@ -233,8 +233,7 @@ bool ProgramConverter::updateAssignmentInPostfixExprs(ProgLine line, ProgLineNum
 	InfixExpr infix = InfixExpr (line.begin()+2, line.end());
 
 	const PostfixExpr postfix = pkb->infixToPostfix(infix);
-	pkb->putExprForStmt(lineNum, postfix);
-	return false;
+	return pkb->putExprForStmt(lineNum, postfix);
 }
 
 bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {

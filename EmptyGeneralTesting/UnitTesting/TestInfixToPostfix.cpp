@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <numeric>
+//#include <numeric>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
