@@ -72,8 +72,10 @@ public:
 					  }
 	*/
 	virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
-	virtual bool isAssignHasExpr(StmtNumber assign, StringToken);
-	virtual bool isAssignHasSubexpr(StmtNumber assign, StringToken);
+	virtual bool isAssignHasExpr(StmtNumber, StringToken);
+	virtual bool isAssignHasSubexpr(StmtNumber, StringToken);
+	virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
+	virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);
 	virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
 	virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
 	bool isVarExist(VarName varName);

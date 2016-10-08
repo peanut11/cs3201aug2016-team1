@@ -129,6 +129,51 @@ bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
 	return true;
 }
 
+bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
+	PostfixExpr expr = postfixExprs[stmt],
+		postfixPattern = infixToPostfix(infixPattern);
+
+	if (postfixPattern.size() != expr.size()) {
+		return false;
+	}
+
+	for (size_t i = 0; i < expr.size(); i++) {
+		if (expr[i] != postfixPattern[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool PKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr infixPattern) {
+	PostfixExpr expr = postfixExprs[stmt],
+		postfixPattern = infixToPostfix(infixPattern);
+
+	size_t patternSize = postfixPattern.size(),
+		exprSize = expr.size();
+
+	if (patternSize > exprSize) {
+		return false;
+	}
+
+	for (size_t i = 0; i + patternSize <= exprSize; i++) {
+		bool match = true;
+		for (size_t j = 0; j < patternSize; j++) {
+			if (postfixPattern[j] != expr[i+j]) {
+				match = false;
+				break;
+			}
+		}
+
+		if (match) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool PKB::isVarExist(VarName varName) {
 	return (varRefMap.find(varName) != varRefMap.end());
 }

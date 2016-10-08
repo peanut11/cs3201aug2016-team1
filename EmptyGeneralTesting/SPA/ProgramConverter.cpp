@@ -229,11 +229,11 @@ bool ProgramConverter::updateAssignmentInPostfixExprs(ProgLine line, ProgLineNum
 	assert(line[1] == "=");
 
 	if (line.back() == ";") line.pop_back();
-	line.erase(line.begin());
-	line.erase(line.begin());
 
-	const PostfixExpr expr = pkb->infixToPostfix(line);
-	pkb->putExprForStmt(lineNum, expr);
+	InfixExpr infix = InfixExpr (line.begin()+2, line.end());
+
+	const PostfixExpr postfix = pkb->infixToPostfix(infix);
+	pkb->putExprForStmt(lineNum, postfix);
 	return false;
 }
 
