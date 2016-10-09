@@ -185,6 +185,14 @@ bool PKB::isWhilePattern(StmtNumber whileStmt, VarIndex varIndex) {
         && controlVars[whileStmt] == varIndex;
 }
 
+bool PKB::isProcExist(ProcName procName) {
+    return (procRefMap.find(procName) != procRefMap.end());
+}
+
+bool PKB::isStmtExist(StmtNumber stmt) {
+    return (stmt < stmtTable.size());
+}
+
 bool PKB::isIfPattern(StmtNumber ifStmt, VarIndex varIndex) {
 	return getStmtTypeForStmt(ifStmt) == IF
         && varIndex < varRefTable.size()
