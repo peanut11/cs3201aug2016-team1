@@ -6,7 +6,6 @@
 // - VarTable
 
 #include "PKB.h"
-#include <stack>
 
 PKB* PKB::theOne = nullptr;
 
