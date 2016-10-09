@@ -17,7 +17,9 @@ private:
     static PKB* theOne;
 
     std::map<ProcName, ProcIndex> procRefMap;
+    std::vector<ProcName>         procRefTable; 
     std::map<VarName, VarIndex>   varRefMap;
+    std::vector<VarName>          varRefTable;
 
     std::map<StmtNumber, ProcIndex> callToProcMap;   // Not populated yet
     std::vector<StmtSet>            procToCallTable; // Not populated yet
@@ -25,14 +27,12 @@ private:
     std::set<Constant>            constants;
     std::vector<VarIndex>         controlVars;
     std::vector<PostfixExpr>      postfixExprs;
-    std::vector<ProcName>         procRefTable;
     std::vector<ProcRow>          procTable;
     std::vector<StmtSet>          procToStmtTable;
     std::vector<StmtSet>          stmtByTypeTable;
     std::vector<StmtRow>          stmtTable;
     std::vector<EntityType>       stmtTypeTable;
     std::vector<ProcIndex>        stmtToProcTable;
-    std::vector<VarName>          varRefTable;
     std::vector<VarRow>           varTable;
 
 public:

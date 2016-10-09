@@ -315,7 +315,7 @@ ProcIndex PKB::getProcIndex(ProcName procName) {
 		procRefTable.push_back(procName);
 		procRefMap[procName] = procIndex;
         procToCallTable.push_back(StmtSet()); 
-        procToStmtTable.push_back(std::set<StmtNumber>());
+        procToStmtTable.push_back(StmtSet());
 	} else {
 		procIndex = it->second;
 	}
@@ -419,8 +419,10 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 
 	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
-	varTable[varIndex][rel + 2].insert(procIndex); //adds Modified/UsedByProc
+
+	varTable[varIndex][rel + 2].insert(procIndex); // Adds Modified/UsedByProc
 	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
+
 	procTable[procIndex][rel].insert(varIndex);
 	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 
