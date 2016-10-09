@@ -61,7 +61,8 @@ public:
     virtual bool isAssignHasExpr(StmtNumber, StringToken);    // Deprecated
     virtual bool isAssignHasSubexpr(StmtNumber, StringToken); // Deprecated
     virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
-    virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
+	virtual bool isCall(ProcIndex procA, ProcIndex procB);
+	virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
     virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);
     virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
     virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
@@ -81,9 +82,12 @@ public:
     virtual std::set<VarName>    getAllVarNames();
 
     // Get procedures
-    virtual std::set<ProcIndex>  getProcsByProc(ProcName procName, RelationshipType callsOrStar);
+    virtual std::set<ProcIndex>  getProcsByProc(ProcName procName, RelationshipType callsOrStar); //Deprecated
+	virtual std::set<ProcIndex>  getProcsByProc(ProcIndex procIndex, RelationshipType callsOrStar);
     virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcName procName); // Check for inverse
-    virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
+	virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcIndex procIndex);
+	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarName varName); //Deprecated
+	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 
     // Get statements
     virtual std::set<StmtNumber> getCallsByProc(ProcIndex procIndex);
@@ -96,7 +100,8 @@ public:
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 
     // Get variables
-    virtual std::set<VarIndex>   getVarsByProc(ProcName procName, RelationshipType modifiesOrUses);
+    virtual std::set<VarIndex>   getVarsByProc(ProcName procName, RelationshipType modifiesOrUses); // Deprecated
+	virtual std::set<VarIndex>   getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses);
     virtual std::set<VarIndex>   getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 
     // Warning: this one is public for testing purpose

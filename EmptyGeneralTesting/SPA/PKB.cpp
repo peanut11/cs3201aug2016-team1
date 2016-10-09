@@ -62,6 +62,10 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
 	return entry.find(item) != entry.end();
 }
 
+bool PKB::isCall(ProcIndex procA, ProcIndex procB) {
+	return procTable[procA][CALL].find(procB) != procTable[procA][CALL].end();
+}
+
 // Deprecated
 bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
 	return false;
@@ -362,12 +366,28 @@ std::set<VarIndex> PKB::getVarsByProc(ProcName procName, RelationshipType modifi
 	return procTable[getProcIndex(procName)][modifiesOrUses];
 }
 
+std::set<VarIndex> PKB::getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw Exception::INVALID_VAR_PROC_RELATION;
+	}
+
+	return procTable[procIndex][modifiesOrUses];
+}
+
 std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType calls) {
 	if (calls != CALLS && calls != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 
 	return procTable[getProcIndex(procName)][calls];
+}
+
+std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType calls) {
+	if (calls != CALLS && calls != CALLS_STAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	return procTable[procIndex][calls];
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procName ) {
@@ -378,12 +398,28 @@ std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procNam
 	return procTable[getProcIndex(procName)][calls + 1];
 }
 
+std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcIndex procIndex) {
+	if (calls != CALLS && calls != CALLS_STAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	return procTable[procIndex][calls + 1];
+}
+
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
 	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
+}
+
+std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw Exception::INVALID_VAR_PROC_RELATION;
+	}
+
+	return varTable[varIndex][modifiesOrUses + 2];
 }
 
 // Deprecated
