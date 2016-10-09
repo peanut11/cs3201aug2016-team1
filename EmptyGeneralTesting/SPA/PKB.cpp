@@ -49,21 +49,26 @@ void PKB::clear() {
 	theOne = new PKB();
 }
 
-bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
-    if (stmt >= stmtTable.size()) {
-        return false;
-    }
-
+bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
+    
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
+		if (stmtOrProcIndex >= stmtTable.size()) {
+			return false;
+		}
+
 		rel = RelationshipType(rel + 1);
+		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
+		return entry.find(item) != entry.end();
+	} else if (rel == CALLS || rel == CALLS_STAR) {
+		if (stmtOrProcIndex >= procTable.size()) {
+			return false;
+		}
+		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
+	} else {
+		throw Exception::INVALID_RELATION;
 	}
 
-	StmtEntry entry = stmtTable[stmt][rel];
-	return entry.find(item) != entry.end();
-}
-
-bool PKB::isCall(ProcIndex procA, ProcIndex procB) {
-	return procTable[procA][CALL].find(procB) != procTable[procA][CALL].end();
+	
 }
 
 // Deprecated
