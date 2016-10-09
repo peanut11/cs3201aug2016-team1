@@ -586,7 +586,6 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 				// right side is IDENTIFIER; p.procName = "First"
 				if (rightObj.getRefType() == IDENTIFIER) {
 					// Check & Get if procedure name exists
-					ProcIndex procIndex = pkb->getProcIndex(rightObj.getStringValue());
 
 					// Find all procedures that calls "First"
 
@@ -600,7 +599,16 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 					if (rightObj.getAttrType() == AttrType::PROC_NAME) {
 						// if right synonym = procedure -> p1.procName = p2.procName
 						if (rightObj.getEntityType() == PROCEDURE) {
+							// get all the results for p2
+							std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+							// Check relationships holds
+							if (procedures.size() > 0) {
+								withObject.setResultsBoolean(true);
+							}
+
+							// Update the result table
+							resultManager->updateSynonym(leftObj.getSynonym(), procedures);
 						}
 						// if right synonym = call -> p1.procName = call.procName
 						else if (rightObj.getEntityType() == CALL) {
