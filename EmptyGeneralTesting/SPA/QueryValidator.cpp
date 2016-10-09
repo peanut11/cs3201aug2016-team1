@@ -327,12 +327,12 @@ bool QueryValidator::isSelect(std::string str) {
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
 
 					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable().replaceSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
+						this->getQueryTable().insertSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
 					}
 					else if (isSynonym(currentToken)	// synonym
 						&& mSynonymEntityType != EntityType::INVALID) {
 
-						this->getQueryTable().replaceSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
+						this->getQueryTable().insertSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
 					}
 
 					// insert into synonym occurence table
@@ -982,17 +982,44 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 		else if (isVariable(nextToken)) {
 			
+			if (relationshipObject.getRelObjectType() == RelationshipType::CALLS
+				|| relationshipObject.getRelObjectType() == RelationshipType::CALLS_STAR ) { 
+
+				if (!hasValidFirstArg) {
+					firstArgObject = ClauseSuchThatArgObject(EntityType::VARIABLE, this->validatedVariableName,
+						0, false);
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
+				}
+				else { // second argument 
+					secondArgObject = ClauseSuchThatArgObject(EntityType::VARIABLE, this->validatedVariableName,
+						0, false);
+					numberOfArgs += 1;
+				}
+
+			}  
+
 			// variable only used for MODIFIES and USES
 			// and always a second argument
-			if ((relationshipObject.getRelObjectType() == RelationshipType::MODIFIES
-				|| relationshipObject.getRelObjectType() == RelationshipType::USES) 
-				&& hasComma && hasValidFirstArg) {
+			else if ((relationshipObject.getRelObjectType() == RelationshipType::MODIFIES
+				|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
 
-				secondArgObject = ClauseSuchThatArgObject(EntityType::VARIABLE, this->validatedVariableName,
-					0, false);
+				if (!hasValidFirstArg) {
+					// if first argument is a string "xxx", it must be the procedure name
+					// however, in QV, we can't validate procedure name
+					// so it assumed to be correct
+					firstArgObject = ClauseSuchThatArgObject(EntityType::VARIABLE, this->validatedVariableName,
+						0, false);
+					hasValidFirstArg = true; // first argument is correct
+					numberOfArgs += 1;
+				}
+				else if (hasComma && hasValidFirstArg){
 
-				hasValidFirstArg = true; // first argument is correct
-				numberOfArgs += 1;
+					secondArgObject = ClauseSuchThatArgObject(EntityType::VARIABLE, this->validatedVariableName,
+						0, false);
+					numberOfArgs += 1;
+				}
+
 			}
 
 		}

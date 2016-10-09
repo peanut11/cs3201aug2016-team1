@@ -65,10 +65,14 @@
     <ClCompile Include="TestResultGridManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestQueryOptimization.cpp">
+		<Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="TestInfixToPostfix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestAssignPattern.cpp">
+>>>>>>> e8723ea9bc09365fc6d3623f10b03404f4f527a8
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,10 +7,10 @@ class ClauseSelectResultObject : public ClauseObject {
 	std::vector<ClauseSelectObject> mClauseSelectObjList;
 	bool isBoolean;
 	
-	ClauseSelectResultObject();
+	
 
 public:
-	
+	ClauseSelectResultObject();
 	void insertClauseSelectObject(ClauseSelectObject object);
 	
 
@@ -18,6 +18,7 @@ public:
 	bool doesClauseSelectObjectExist(std::string synonym);
 	bool getBoolean();
 
+	int size();
 
 
 

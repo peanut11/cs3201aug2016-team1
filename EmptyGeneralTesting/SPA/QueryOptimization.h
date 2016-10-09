@@ -1,13 +1,13 @@
 #pragma once
 #include "ClauseObject.h"
 #include "QueryTable.h"
+#include "GroupType.h"
 #include <vector>
 
 class QueryOptimization {
 
 
-	std::vector<std::vector<ClauseObject>> groups;
-
+	//std::vector<std::vector<ClauseObject>> groups;
 public:
 	/*
 	Assign all ClauseObjects in QueryTable into specific group
@@ -17,7 +17,26 @@ public:
 	Group 4 - n	: Common synonym between Relationship Clauses, related to Result clause
 	Group n + 1	: Next*, Affects, Affects*
 	*/
-	void beginClausesGrouping(QueryTable mQueryTable);
 	void beginClauseOptimize(std::vector<ClauseObject> clauseObjList);
+	
+	std::vector<std::vector<ClauseObject>> beginGroup(QueryTable mQueryTable);
+	//std::vector<std::vector<ClauseObject>> getGroups();
+
+	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);
+	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClausePatternObject mClauseObject);
+	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseWithObject mClauseObject);
+
+
+
+	bool isClauseReturnBoolean(ClauseSuchThatObject mClauseObject);
+	bool isClauseReturnBoolean(ClausePatternObject mClauseObject);
+
+	bool isClauseAffectsResult(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);
+	bool isClauseAffectsResult(QueryTable mQueryTable, ClausePatternObject mClauseObject);
+	bool isClauseAffectsResult(QueryTable mQueryTable, ClauseWithObject mClauseObject);
+
+	bool isClauseOthers(ClauseSuchThatObject mClauseObject);
+
+	
 
 };
