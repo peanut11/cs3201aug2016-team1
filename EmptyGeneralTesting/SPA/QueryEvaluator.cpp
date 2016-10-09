@@ -297,8 +297,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
     }
 
     // Iteration 1: only allow 'statement' at left instead of 'procedure' too
-    // MODIFIES / USES relationship:
 
+	// MODIFIES / USES relationship:
     else if (type == MODIFIES || type == USES) {
         // If left arg is 'statement number', right arg is "x" (Modifies(3,"x"))
         if (argOne.getIntegerValue() > 0 && argTwo.getIsSynonym() == false && argTwo.getStringValue() != "_") {

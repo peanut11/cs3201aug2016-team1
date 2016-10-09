@@ -195,7 +195,7 @@ void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
     while (row != resultList.end()) {
         SynonymValue value = (*row)[column];
 
-        if (!contains(vals, value)) {
+        if (!contains(intersection, value)) {
             row = resultList.erase(row);
         } else {
             row++;
