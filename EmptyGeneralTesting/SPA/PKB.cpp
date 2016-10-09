@@ -473,6 +473,16 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	return success;
 }
 
+bool PKB::putStmtCallProc(StmtNumber stmt, ProcName procCalled) {
+	bool success = true;
+	ProcIndex procIndex = getProcIndex(procCalled);
+	callToProcMap.insert(stmt, procIndex);
+	success = (callToProcMap.find(stmt) != callToProcMap.end()) && success;
+	procToCallTable[procIndex].insert(stmt);
+	success = (procToCallTable[procIndex].find(stmt) != procToCallTable[procIndex].end()) && success;
+	return success;
+}
+
 /*bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 	while (stmt > assignTrees.size()) {
 		assignTrees.push_back(AssignTree());

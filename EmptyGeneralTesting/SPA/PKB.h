@@ -21,8 +21,8 @@ private:
     std::map<VarName, VarIndex>   varRefMap;
     std::vector<VarName>          varRefTable;
 
-    std::map<StmtNumber, ProcIndex> callToProcMap;   // Not populated yet
-    std::vector<StmtSet>            procToCallTable; // Not populated yet
+    std::map<StmtNumber, ProcIndex> callToProcMap;   
+    std::vector<StmtSet>            procToCallTable; 
 
     std::set<Constant>            constants;
     std::vector<VarIndex>         controlVars;
@@ -55,6 +55,7 @@ public:
     bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
     bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
     bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName);
+	bool putStmtCallProc(StmtNumber stmt, ProcName procCalled);
 
     // API used by QP and DE
     virtual bool isAssignHasExpr(StmtNumber, StringToken);    // Deprecated

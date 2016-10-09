@@ -286,6 +286,7 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	} else if (isCall(line)) {
 		ProcName procCalled = line[1];
 		success = pkb->putStmtTypeForStmt(lineNum, CALL) && success;
+		success = pkb->putStmtCallProc(line, procCalled) && success;
 		success = pkb->putProcForProc(pkb->getProcByStmt(lineNum), CALLS, procCalled) && success;
 	}
 
