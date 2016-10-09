@@ -585,13 +585,28 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 			if (leftObj.getEntityType() == PROCEDURE) {
 				// right side is IDENTIFIER; p.procName = "First"
 				if (rightObj.getRefType() == IDENTIFIER) {
-					// Check & Get if procedure name exists
+					// Check if procedure name exists
+					if (pkb->isProcExist(rightObj.getStringValue())) {
+						// Get Procedure Index
+						ProcIndex procIndex = pkb->getProcIndex(rightObj.getStringValue());
 
-					// Find all procedures that calls "First"
+						// Get current results for procedure synonym
+						std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(leftObj.getSynonym());
 
-					// Check if relationship holds/have results
+						// Check if contain procedure identifier
+						std::set<ProcIndex> evaluatedProcedures;
+						if (procedures.count(procIndex)) {
+							evaluatedProcedures.insert(procIndex);
+						}
 
-					// Update the results table
+						// Check relationship holds
+						if (evaluatedProcedures.size() > 0) {
+							withObject.setResultsBoolean(true);
+						}
+
+						// Update the result table
+						resultManager->updateSynonym(leftObj.getSynonym(), evaluatedProcedures);
+					}
 				}
 				// right side is ATTRREF; p.procName = synonym.attrName
 				else if (rightObj.getRefType() == ATTRREF) {
@@ -599,48 +614,306 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 					if (rightObj.getAttrType() == AttrType::PROC_NAME) {
 						// if right synonym = procedure -> p1.procName = p2.procName
 						if (rightObj.getEntityType() == PROCEDURE) {
-							// get all the results for p2
-							std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(rightObj.getSynonym());
+							// Get current results
+							std::set<ProcIndex> procedures1 = resultManager->getValuesForSynonym(leftObj.getSynonym());
+							std::set<ProcIndex> procedures2 = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+							// Intersect both sets
+							std::set<ProcIndex> evaluatedProcedures;
+							set_intersection(procedures1.begin(), procedures1.end(), procedures2.begin(), procedures2.end(),
+								std::inserter(evaluatedProcedures, evaluatedProcedures.begin()));
 
 							// Check relationships holds
-							if (procedures.size() > 0) {
+							if (evaluatedProcedures.size() > 0) {
 								withObject.setResultsBoolean(true);
 							}
 
 							// Update the result table
-							resultManager->updateSynonym(leftObj.getSynonym(), procedures);
+							resultManager->updateSynonym(leftObj.getSynonym(), evaluatedProcedures);
+
 						}
 						// if right synonym = call -> p1.procName = call.procName
 						else if (rightObj.getEntityType() == CALL) {
+							// Get current results
+							std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(leftObj.getSynonym());
+							std::set<StmtNumber> callStatements = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+							// get all the procedures each call statement calls
+							std::set<ProcIndex> callProcedureIndexs;
+							for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+								callProcedureIndexs.insert(pkb->getProcByCall(*s1));
+							}
+
+							// Intersect both sets
+							std::set<ProcIndex> evaluatedProcedures;
+							set_intersection(procedures.begin(), procedures.end(), callProcedureIndexs.begin(), callProcedureIndexs.end(),
+								std::inserter(evaluatedProcedures, evaluatedProcedures.begin()));
+
+							// Check relationships holds
+							if (evaluatedProcedures.size() > 0) {
+								withObject.setResultsBoolean(true);
+							}
+
+							// Update the result table
+							resultManager->updateSynonym(leftObj.getSynonym(), evaluatedProcedures);
 
 						}
 					}
 					// right side is varName; p1.procName = synonym.varName
 					else if (rightObj.getAttrType() == AttrType::VAR_NAME) {
+						if (rightObj.getEntityType() == VARIABLE) {
+							// get all the results for p synonym and v synonym
+							std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(leftObj.getSynonym());
+							std::set<VarIndex> variables = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+							// get all the procedure names for p synonym
+							std::set<ProcName> procedureNames;
+							for (StmtSetIterator p1 = procedures.begin(); p1 != procedures.end(); p1++) {
+								procedureNames.insert(pkb->getProcName(*p1));
+							}
+
+							// get all the variable names and check whether it exists inside p synonym
+							// if exist, add the procedure index of the name inside
+							std::set<ProcIndex> evaluatedProcedures;
+							for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
+								if (procedureNames.count(pkb->getVarName(*v1))) {
+									evaluatedProcedures.insert(pkb->getProcIndex(pkb->getVarName(*v1)));
+								}
+							}
+
+							// Check relationships holds
+							if (evaluatedProcedures.size() > 0) {
+								withObject.setResultsBoolean(true);
+							}
+
+							// Update the result table
+							resultManager->updateSynonym(leftObj.getSynonym(), evaluatedProcedures);
+
+						}
 					}
 				}
 			}
-			// if synonym = call -> constraint call statements to those that calls IDENTIFIER
+			// if synonym = call -> c.procName
 			else if (leftObj.getEntityType() == CALL) {
+				// right side is IDENTIFIER; c.procName = "First"
+				if (rightObj.getRefType() == IDENTIFIER) {
+					// Check if procedure name exists
+					if (pkb->isProcExist(rightObj.getStringValue())) {
+						// Get Procedure Index
+						ProcIndex procIndex = pkb->getProcIndex(rightObj.getStringValue());
 
+						// get the call statements for call synonym first
+						std::set<StmtNumber> callStatements = resultManager->getValuesForSynonym(leftObj.getSynonym());
+
+						// get all the procedures index each call statement calls
+						// compare with the identifier procedure index
+						std::set<StmtNumber> evaluatedCallStatements;
+						for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+							if (pkb->getProcByCall(*s1) == procIndex) {
+								evaluatedCallStatements.insert(*s1);
+							}
+						}
+
+						// Check if relationship holds
+						if (evaluatedCallStatements.size() > 0) {
+							withObject.setResultsBoolean(true);
+						}
+
+						// Update the result table
+						resultManager->updateSynonym(leftObj.getSynonym(), evaluatedCallStatements);
+					}
+				}
+				// right side is ATTRREF; c.procName = synonym.attrName
+				else if (rightObj.getRefType() == ATTRREF) {
+					// right side is procName; c.procName = synonym.procName;
+					if (rightObj.getAttrType() == AttrType::PROC_NAME) {
+						// if right synonym = procedure; c.procName = p.procName
+						if (rightObj.getEntityType() == PROCEDURE) {
+							// get all the results for call and procedure synonym
+							std::set<StmtNumber> callStatements = resultManager->getValuesForSynonym(leftObj.getSynonym());
+							std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+							// get all the procedures index each call statement calls
+							// compare with the identifier procedure index
+							std::set<ProcIndex> callProceduresIndex;
+							for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+								callProceduresIndex.insert(pkb->getProcByCall(*s1));
+							}
+
+							// Intersect two sets x2 and get the final procedure indexes
+							std::set<ProcIndex> evaluatedProceduresIndex;
+							set_intersection(procedures.begin(), procedures.end(), callProceduresIndex.begin(), callProceduresIndex.end(),
+								std::inserter(evaluatedProceduresIndex, evaluatedProceduresIndex.begin()));
+
+							// Check the current call statements which has the final procedure index
+							std::set<StmtNumber> evaluatedCallStatements;
+							for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+								if (evaluatedProceduresIndex.count(pkb->getProcByCall(*s1))) {
+									evaluatedCallStatements.insert(*s1);
+								}
+							}
+
+							// Check relationships holds
+							if (evaluatedCallStatements.size() > 0) {
+								withObject.setResultsBoolean(true);
+							}
+
+							// Update the result table
+							resultManager->updateSynonym(leftObj.getSynonym(), evaluatedCallStatements);
+						}
+						// if right synonym = call -> c1.procName = c2.procName
+						else if (rightObj.getEntityType() == CALL) {
+							// get the call statements all
+							std::set<StmtNumber> callStatements1 = resultManager->getValuesForSynonym(leftObj.getSynonym());
+							std::set<StmtNumber> callStatements2 = resultManager->getValuesForSynonym(rightObj.getSynonym());
+													
+							// get all the procedures each call statement calls
+							std::set<ProcIndex> procedures1;
+							for (StmtSetIterator s1 = callStatements1.begin(); s1 != callStatements1.end(); s1++) {
+								procedures1.insert(pkb->getProcByCall(*s1));
+							}
+
+							// get all the procedures each call statement calls
+							std::set<ProcIndex> procedures2;
+							for (StmtSetIterator s2 = callStatements2.begin(); s2 != callStatements2.end(); s2++) {
+								procedures2.insert(pkb->getProcByCall(*s2));
+							}
+
+							// Intersect two sets x2 and get the final procedure indexes
+							std::set<ProcIndex> evaluatedProceduresIndex;
+							set_intersection(procedures1.begin(), procedures1.end(), procedures2.begin(), procedures2.end(),
+								std::inserter(evaluatedProceduresIndex, evaluatedProceduresIndex.begin()));
+
+							// Check the current call statements which has the final procedure index
+							std::set<StmtNumber> evaluatedCallStatements;
+							for (StmtSetIterator s1 = callStatements1.begin(); s1 != callStatements1.end(); s1++) {
+								if (evaluatedProceduresIndex.count(pkb->getProcByCall(*s1))) {
+									evaluatedCallStatements.insert(*s1);
+								}
+							}
+							// Check relationships holds
+							if (evaluatedCallStatements.size() > 0) {
+								withObject.setResultsBoolean(true);
+							}
+
+							// Update the result table
+							resultManager->updateSynonym(leftObj.getSynonym(), evaluatedCallStatements);
+
+						}
+					}
+					// right side is varName; c.procName = synonym.varName
+					else if (rightObj.getAttrType() == AttrType::VAR_NAME) {
+						// right side is variable synonym; c.procName = v.varName;
+						if (rightObj.getEntityType() == VARIABLE) {
+							// get all the results for call synonym and variable synonym
+							std::set<StmtNumber> callStatements = resultManager->getValuesForSynonym(leftObj.getSynonym());
+							std::set<VarIndex> variables = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+							// get all the procedure names for call synonym
+							std::set<ProcName> procedureNames;
+							for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+								procedureNames.insert(pkb->getProcName(pkb->getProcByCall(*s1)));
+							}
+
+							// get all the variable names and check whether it exists inside p synonym
+							// if exist, add the procedure index of the name inside
+							std::set<ProcIndex> evaluatedProcedures;
+							for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
+								if (procedureNames.count(pkb->getVarName(*v1))) {
+									evaluatedProcedures.insert(pkb->getProcIndex(pkb->getVarName(*v1)));
+								}
+							}
+
+							// Check the current call statements which has the final procedure index
+							std::set<StmtNumber> evaluatedCallStatements;
+							for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+								if (evaluatedProcedures.count(pkb->getProcByCall(*s1))) {
+									evaluatedCallStatements.insert(*s1);
+								}
+							}
+
+							// Check relationships holds
+							if (evaluatedCallStatements.size() > 0) {
+								withObject.setResultsBoolean(true);
+							}
+
+							// Update the result table
+							resultManager->updateSynonym(leftObj.getSynonym(), evaluatedCallStatements);
+						}
+					}
+				}
 			}
 		}
 		// left side is = synonym.stmt#
 		else if (leftObj.getAttrType() == AttrType::STMT_NO) {
 			// right side is INTEGER; s.stmt# = 3
 			if (rightObj.getRefType() == INTEGER) {
+				// Check if statement line exists
+				if (pkb->isStmtExist(rightObj.getIntegerValue())) {
+					// Store statement
+					StmtNumber stmtNumber = rightObj.getIntegerValue();
 
+					// Get current results for left synonym
+					std::set<StmtNumber> statements = resultManager->getValuesForSynonym(leftObj.getSynonym());
+
+					// Check if statement line exist
+					std::set<StmtNumber> evaluatedStatement;
+					if (statements.count(stmtNumber)) {
+						evaluatedStatement.insert(stmtNumber);
+
+					}
+
+					// Check relationship if holds
+					if (evaluatedStatement.size() > 0) {
+						withObject.setResultsBoolean(true);
+					}
+
+					// Update the result table
+					resultManager->updateSynonym(leftObj.getSynonym(), evaluatedStatement);
+				}
 			}
 			// right side is ATTRREF; s.stmt# = synonym.attrName
 			else if (rightObj.getRefType() == ATTRREF) {
-				// right side is value; s.stmt# = c.value
+				// right side is value; s.stmt# = synonym.value
 				if (rightObj.getAttrType() == AttrType::VALUE) {
+					// right side is constant synonym; s.stmt# = c.value
+					if (rightObj.getEntityType() == CONSTANT) {
+						// Get current results
+						std::set<StmtNumber> statements = resultManager->getValuesForSynonym(leftObj.getSynonym());
+						std::set<Constant> constants = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+						// Intersect both sets
+						std::set<StmtNumber> evaluatedStatements;
+						set_intersection(statements.begin(), statements.end(), constants.begin(), constants.end(),
+							std::inserter(evaluatedStatements, evaluatedStatements.begin()));
+						
+						// Check relationship is true
+						if (evaluatedStatements.size() > 0) {
+							withObject.setResultsBoolean(true);
+						}
+
+						// Update the result table
+						resultManager->updateSynonym(leftObj.getSynonym(), evaluatedStatements);
+
+					}
 				}
 				// right side is stmt#; s.stmt# = a.stmt#
 				else if (rightObj.getAttrType() == AttrType::STMT_NO) {
+					std::set<StmtNumber> statements1 = resultManager->getValuesForSynonym(leftObj.getSynonym());
+					std::set<StmtNumber> statements2 = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+					// Intersect both sets
+					std::set<StmtNumber> evaluatedStatements;
+					set_intersection(statements1.begin(), statements1.end(), statements2.begin(), statements2.end(),
+						std::inserter(evaluatedStatements, evaluatedStatements.begin()));
+
+					// Check relationship is true
+					if (evaluatedStatements.size() > 0) {
+						withObject.setResultsBoolean(true);
+					}
+
+					// Update the result table
+					resultManager->updateSynonym(leftObj.getSynonym(), evaluatedStatements);
 				}
 			}
 		}
@@ -648,17 +921,90 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 		else if (leftObj.getAttrType() == AttrType::VAR_NAME) {
 			// right side is IDENTIFIER; v.varName = "x"
 			if (rightObj.getRefType() == IDENTIFIER) {
+				// Check variable exists
+				if (pkb->isVarExist(rightObj.getStringValue())) {
+					// Store variable name
+					VarName varName = rightObj.getStringValue();
 
+					// Get current variable synonym results
+					std::set<VarIndex> variables = resultManager->getValuesForSynonym(leftObj.getSynonym());
+
+					// Check if variable synonym results contain identifier
+					std::set<VarIndex> evaluatedVariables;
+					if (variables.count(pkb->getVarIndex(varName))) {
+						evaluatedVariables.insert(pkb->getVarIndex(varName));
+					}
+
+					// Check if relationship holds
+					if (evaluatedVariables.size() > 0) {
+						withObject.setResultsBoolean(true);
+					}
+
+					// Update the result table
+					resultManager->updateSynonym(leftObj.getSynonym(), evaluatedVariables);
+
+				}
 			}
 			// right side is ATTRREF; v.varName = synonym.attrName
 			else if (rightObj.getRefType() == ATTRREF) {
 				// right side is procName; v.varName = p.procName;
 				if (rightObj.getAttrType() == AttrType::PROC_NAME) {
+					// Get current results index
+					std::set<VarIndex> variables = resultManager->getValuesForSynonym(leftObj.getSynonym());
+					std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+					// Get current variables names
+					std::set<VarName> variablesNames;
+					for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
+						variablesNames.insert(pkb->getVarName(*v1));
+					}
+
+					// Get current procedures names
+					std::set<ProcName> proceduresNames;
+					for (StmtSetIterator p1 = procedures.begin(); p1 != procedures.end(); p1++) {
+						proceduresNames.insert(pkb->getProcName(*p1));
+					}
+
+					// Intersect two sets x2
+					std::set<VarName> evaluatedVariablesNames;
+					set_intersection(variablesNames.begin(), variablesNames.end(), proceduresNames.begin(), proceduresNames.end(),
+						std::inserter(evaluatedVariablesNames, evaluatedVariablesNames.begin()));
+
+
+					// Check the current variables index which has the final variable names
+					std::set<VarIndex> evaluatedVariables;
+					for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
+						if (evaluatedVariablesNames.count(pkb->getVarName(*v1))) {
+							evaluatedVariables.insert(*v1);
+						}
+					}
+
+					// Check relationships holds
+					if (evaluatedVariables.size() > 0) {
+						withObject.setResultsBoolean(true);
+					}
+
+					// Update the result table
+					resultManager->updateSynonym(leftObj.getSynonym(), evaluatedVariables);
 
 				}
 				// right side is varName; v1.varName = v2.varName;
 				else if (rightObj.getAttrType() == AttrType::VAR_NAME) {
+					std::set<VarIndex> variables1 = resultManager->getValuesForSynonym(leftObj.getSynonym());
+					std::set<VarIndex> variables2 = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+					// Intersect both sets
+					std::set<VarIndex> evaluatedVariables;
+					set_intersection(variables1.begin(), variables1.end(), variables2.begin(), variables2.end(),
+						std::inserter(evaluatedVariables, evaluatedVariables.begin()));
+
+					// Check relationship is true
+					if (evaluatedVariables.size() > 0) {
+						withObject.setResultsBoolean(true);
+					}
+
+					// Update the result table
+					resultManager->updateSynonym(leftObj.getSynonym(), evaluatedVariables);
 				}
 			}
 		}
@@ -666,16 +1012,70 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 		else if (leftObj.getAttrType() == AttrType::VALUE) {
 			// right side is INTEGER; c.value = 3
 			if (rightObj.getRefType() == INTEGER) {
+				// Store integer
+				Constant constant = rightObj.getIntegerValue();
+
+				// Get current results
+				std::set<Constant> constants = resultManager->getValuesForSynonym(leftObj.getSynonym());
+
+				// Check if integer exist in results
+				std::set<Constant> evaluatedConstants;
+				if (constants.count(constant)) {
+					evaluatedConstants.insert(constant);
+
+				}
+
+				// Check relationship if holds
+				if (evaluatedConstants.size() > 0) {
+					withObject.setResultsBoolean(true);
+				}
+
+				// Update the result table
+				resultManager->updateSynonym(leftObj.getSynonym(), evaluatedConstants);
 
 			}
+			// right side is ATTRREF; c.value = synonym.attrName
 			else if (rightObj.getRefType() == ATTRREF) {
-				// right side is value; c1.value = c2.value
+				// right side is value; c1.value = synonym.value
 				if (rightObj.getAttrType() == AttrType::VALUE) {
+					// right side is constant synonym; c1.value = c2.value
+					if (rightObj.getEntityType() == CONSTANT) {
+						// Get current results
+						std::set<Constant> constants1 = resultManager->getValuesForSynonym(leftObj.getSynonym());
+						std::set<Constant> constants2 = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+						// Intersect both sets
+						std::set<Constant> evaluatedConstants;
+						set_intersection(constants1.begin(), constants1.end(), constants2.begin(), constants2.end(),
+							std::inserter(evaluatedConstants, evaluatedConstants.begin()));
+
+						// Check relationship is true
+						if (evaluatedConstants.size() > 0) {
+							withObject.setResultsBoolean(true);
+						}
+
+						// Update the result table
+						resultManager->updateSynonym(leftObj.getSynonym(), evaluatedConstants);
+					}
 				}
 				// right side is stmt#; c.value = s.stmt#
 				else if (rightObj.getAttrType() == AttrType::STMT_NO) {
+					// Get current results
+					std::set<Constant> constants = resultManager->getValuesForSynonym(leftObj.getSynonym());
+					std::set<StmtNumber> statements = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
+					// Intersect both sets
+					std::set<Constant> evaluatedConstants;
+					set_intersection(constants.begin(), constants.end(), statements.begin(), statements.end(),
+						std::inserter(evaluatedConstants, evaluatedConstants.begin()));
+
+					// Check relationship is true
+					if (evaluatedConstants.size() > 0) {
+						withObject.setResultsBoolean(true);
+					}
+
+					// Update the result table
+					resultManager->updateSynonym(leftObj.getSynonym(), evaluatedConstants);
 				}
 			}
 		}
@@ -685,38 +1085,94 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 	else if (leftObj.getRefType() == SYNONYM) {
 		// right side is INTEGER; n = 10;
 		if (rightObj.getRefType() == INTEGER) {
+			// Check if statement line exists
+			if (pkb->isStmtExist(rightObj.getIntegerValue())) {
+				// Store integer
+				StmtNumber stmtNumber = rightObj.getIntegerValue();
 
+				// Get current results
+				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj.getStringValue());
+
+				// Check if current lines results contain integer
+				std::set<StmtNumber> evaluatedLines;
+				if (lines.count(stmtNumber)) {
+					evaluatedLines.insert(stmtNumber);
+				}
+
+				// Check relationship is true
+				if (evaluatedLines.size() > 0) {
+					withObject.setResultsBoolean(true);
+				}
+
+				// Update the result table
+				resultManager->updateSynonym(leftObj.getStringValue(), evaluatedLines);
+
+			}
 		} 
 		// right side is SYNONYM; n = n1;
 		else if (rightObj.getRefType() == SYNONYM) {
-			std::set<StmtNumber> statements = resultManager->getValuesForSynonym(rightObj.getStringValue());
+			// Get current results
+			std::set<StmtNumber> lines1 = resultManager->getValuesForSynonym(leftObj.getStringValue());
+			std::set<StmtNumber> lines2 = resultManager->getValuesForSynonym(rightObj.getStringValue());
 
-			if (statements.size() > 0) {
+			// Intersect both sets
+			std::set<Constant> evaluatedLines;
+			set_intersection(lines1.begin(), lines1.end(), lines2.begin(), lines2.end(),
+				std::inserter(evaluatedLines, evaluatedLines.begin()));
+
+			// Check relationship is true
+			if (evaluatedLines.size() > 0) {
 				withObject.setResultsBoolean(true);
 			}
 
 			// Update the results table
-			resultManager->updateSynonym(leftObj.getStringValue(), statements);
+			resultManager->updateSynonym(leftObj.getStringValue(), evaluatedLines);
 
 		}
 		// right side is ATTRREF; n = synonym.attrName
 		else if (rightObj.getRefType() == ATTRREF) {
-			// right side is stmt#; n = s.stmt# OR right side is value; n = c.value;
-			if (rightObj.getAttrType() == AttrType::STMT_NO || rightObj.getAttrType() == AttrType::VALUE) {
-				// Get existing statements/values
+			// right side is stmt#; n = s.stmt#
+			if (rightObj.getAttrType() == AttrType::STMT_NO) {
+				// Get current results
+				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj.getStringValue());
 				std::set<StmtNumber> statements = resultManager->getValuesForSynonym(rightObj.getSynonym());
 
-				if (statements.size() > 0) {
+				// Intersect both sets
+				std::set<Constant> evaluatedLines;
+				set_intersection(lines.begin(), lines.end(), statements.begin(), statements.end(),
+					std::inserter(evaluatedLines, evaluatedLines.begin()));
+
+				// Check relationship is true
+				if (evaluatedLines.size() > 0) {
 					withObject.setResultsBoolean(true);
 				}
 
 				// Update the results table
-				resultManager->updateSynonym(leftObj.getStringValue(), statements);
+				resultManager->updateSynonym(leftObj.getStringValue(), evaluatedLines);
 			} 
+			// right side is value; n = c.value;
+			else if (rightObj.getAttrType() == AttrType::VALUE) {
+				// Get current results
+				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj.getStringValue());
+				std::set<Constant> constants = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+				// Intersect both sets
+				std::set<Constant> evaluatedLines;
+				set_intersection(lines.begin(), lines.end(), constants.begin(), constants.end(),
+					std::inserter(evaluatedLines, evaluatedLines.begin()));
+
+				// Check relationship is true
+				if (evaluatedLines.size() > 0) {
+					withObject.setResultsBoolean(true);
+				}
+
+				// Update the results table
+				resultManager->updateSynonym(leftObj.getStringValue(), evaluatedLines);
+			}
 		}
 	}
 
-	return ClauseWithObject();
+	return withObject;
 }
 
 ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternObject) {
