@@ -19,6 +19,9 @@ private:
     std::map<ProcName, ProcIndex> procRefMap;
     std::map<VarName, VarIndex>   varRefMap;
 
+    std::map<StmtNumber, ProcIndex> callToProcMap;   // Not populated yet
+    std::vector<StmtSet>            procToCallTable; // Not populated yet
+
     std::set<Constant>            constants;
     std::vector<VarIndex>         controlVars;
     std::vector<PostfixExpr>      postfixExprs;
@@ -66,6 +69,7 @@ public:
     bool isVarExist(VarName varName);
 
     virtual StmtNumber           getStmtTableSize();
+    virtual ProcIndex            getProcByCall(StmtNumber callStmt);
     virtual ProcIndex            getProcByStmt(StmtNumber stmt);
     virtual EntityType           getStmtTypeForStmt(StmtNumber stmt);
     virtual std::set<ProcName>   getAllProcNames();
@@ -80,6 +84,7 @@ public:
     virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
 
     // Get statements
+    virtual std::set<StmtNumber> getCallsByProc(ProcIndex procIndex);
     virtual std::set<StmtNumber> getStmtsByType(EntityType stmtType);
     virtual std::set<StmtNumber> getStmtsByProc(ProcName procName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByProc(ProcIndex procIndex);

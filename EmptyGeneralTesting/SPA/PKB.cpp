@@ -269,6 +269,10 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	return stmtTable[stmt][supplementaryRel];
 }
 
+std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
+    return procToCallTable[procIndex];
+}
+
 StmtSet PKB::getStmtsByType(EntityType stmtType) {
     if (stmtType > STMT) {
         throw Exception::INVALID_STMT_TYPE;
@@ -279,6 +283,10 @@ StmtSet PKB::getStmtsByType(EntityType stmtType) {
 
 StmtNumber PKB::getStmtTableSize() {
 	return stmtTable.size() - 1; // StmtNumber starts from 1
+}
+
+ProcIndex PKB::getProcByCall(StmtNumber callStmt) {
+    return callToProcMap[callStmt];
 }
 
 VarIndex PKB::getVarIndex(VarName varName) {
@@ -306,6 +314,7 @@ ProcIndex PKB::getProcIndex(ProcName procName) {
 		procTable.push_back(ProcRow());
 		procRefTable.push_back(procName);
 		procRefMap[procName] = procIndex;
+        procToCallTable.push_back(StmtSet()); 
         procToStmtTable.push_back(std::set<StmtNumber>());
 	} else {
 		procIndex = it->second;
