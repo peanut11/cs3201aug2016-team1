@@ -62,8 +62,9 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
 	return entry.find(item) != entry.end();
 }
 
+// Deprecated
 bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
-	return true;
+	return false;
 }
 
 int operatorRank(StringToken s) {
@@ -124,8 +125,9 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	return result;
 }
 
+// Deprecated
 bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
-	return true;
+	return false;
 }
 
 bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
@@ -222,8 +224,14 @@ EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
 	return stmtTypeTable[stmt];
 }
 
+// Deprecated
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
-	return varTable[getVarIndex(varName)][rel];
+    return StmtSet();
+	// return varTable[getVarIndex(varName)][rel];
+}
+
+StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
+    return varTable[varIndex][rel];
 }
 
 StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
@@ -358,8 +366,14 @@ std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName 
 	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
 }
 
+// Deprecated
 std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
-	return procToStmtTable[getProcIndex(procName)];
+    return StmtSet();
+    // return procToStmtTable[getProcIndex(procName)];
+}
+
+std::set<StmtNumber> PKB::getStmtsByProc(ProcIndex procIndex) {
+    return procToStmtTable[procIndex];
 }
 
 ProcIndex PKB::getProcByStmt(StmtNumber stmt) {

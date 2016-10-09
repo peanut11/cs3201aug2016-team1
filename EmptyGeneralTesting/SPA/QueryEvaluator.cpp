@@ -329,7 +329,8 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
         // If left arg is synonym, right arg is "x" (Modifies(s,"x")); Modifies(a,"x")
         else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue() != "_") {
             // Get all statements that modifies variable
-            std::set<StmtNumber> statements = pkb->getStmtsByVar(type, argTwo.getStringValue());
+            VarIndex varIndex = pkb->getVarIndex(argTwo.getStringValue());
+            std::set<StmtNumber> statements = pkb->getStmtsByVar(type, varIndex);
 
             // Check if relationship holds/have results
             if (statements.size() > 0) {
