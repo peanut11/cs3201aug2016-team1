@@ -66,7 +66,7 @@ QueryValidator *QueryValidator::getInstance()
 	_instance->mSynonymTable = SynonymTable::getInstance();
 	_instance->mRelTable = RelTable::getInstance();
 	_instance->mQueryTable = QueryTable();
-
+	_instance->mSynonymGroup = SynonymGroup::getInstance();
 	return _instance;
 }
 
@@ -106,6 +106,10 @@ void QueryValidator::addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& 
 
 QueryTable& QueryValidator::getQueryTable() {
 	return this->mQueryTable;
+}
+
+SynonymGroup *QueryValidator::getSynonymGroup() {
+	return this->mSynonymGroup;
 }
 
 ClauseSelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean) {
@@ -904,6 +908,16 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(),
 					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
+
+				/*Insert synonym group*/
+				/*
+				if (firstArgObject.getIsSynonym()) {
+					if (this->mSynonymGroup->containSynonym(firstArgObject.getStringValue()) {
+
+					}
+				}
+				*/
+
 
 				return true;
 			}

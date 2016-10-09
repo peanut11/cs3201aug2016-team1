@@ -2,10 +2,12 @@
 #include "ClauseObject.h"
 #include "QueryTable.h"
 #include "GroupType.h"
+#include "SynonymGroup.h"
 #include <vector>
 
 class QueryOptimization {
 
+	SynonymGroup mSynonymGroup;
 
 	//std::vector<std::vector<ClauseObject>> groups;
 public:
@@ -17,9 +19,12 @@ public:
 	Group 4 - n	: Common synonym between Relationship Clauses, related to Result clause
 	Group n + 1	: Next*, Affects, Affects*
 	*/
+
+	QueryOptimization();
+
 	void beginClauseOptimize(std::vector<ClauseObject> clauseObjList);
 	
-	std::vector<std::vector<ClauseObject>> beginGroup(QueryTable mQueryTable);
+	std::vector<std::vector<ClauseObject>> beginGroup(SynonymGroup mSynonymGroup, QueryTable mQueryTable);
 	//std::vector<std::vector<ClauseObject>> getGroups();
 
 	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);

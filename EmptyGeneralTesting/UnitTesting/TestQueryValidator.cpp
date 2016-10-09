@@ -1398,5 +1398,27 @@ public:
 
 	}
 
+	TEST_METHOD(TestQueryValidator_Synonym_Group) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		SynonymGroup *mSynonymGroup = validator->getSynonymGroup();
+
+		mSynonymGroup->insertSynonym("s3", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+
+		mSynonymGroup->insertSynonym("s4", 2);
+		mSynonymGroup->insertSynonym("s5", 2);
+
+		mSynonymGroup->insertSynonym("s1");
+		mSynonymGroup->insertSynonym("s4", 1);
+
+		Logger::WriteMessage(mSynonymGroup->toString().c_str());
+
+	}
+
+
 	};
 }

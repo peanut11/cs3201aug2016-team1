@@ -1,6 +1,8 @@
 #include "QueryOptimization.h"
 
 
+QueryOptimization::QueryOptimization() {
+}
 
 /*
 Assign all ClauseObjects in QueryTable into specific group
@@ -10,7 +12,7 @@ Group 3		: With clause which contains a constant
 Group 4 - n	: Common synonym between Relationship Clauses, related to Result clause
 Group n + 1	: Next*, Affects, Affects*
 */
-std::vector<std::vector<ClauseObject>> QueryOptimization::beginGroup(QueryTable mQueryTable) {
+std::vector<std::vector<ClauseObject>> QueryOptimization::beginGroup(SynonymGroup mSynonymGroup, QueryTable mQueryTable) {
 	// First check such that clauses
 	// Second check with clauses
 	// Third check pattern clauses
@@ -25,12 +27,11 @@ std::vector<std::vector<ClauseObject>> QueryOptimization::beginGroup(QueryTable 
 	std::vector<ClauseObject> otherClausesList; // group n+1
 
 	for (auto value : mQueryTable.getSuchThats()) {
-		
-
+			
 	}
 
 	
-	mGroup.push_back(clausesNoSynonymList);
+	//mGroup.push_back(clausesNoSynonymList);
 	//mGroup.push_back(clausesNoSynonymList);
 
 	return mGroup;

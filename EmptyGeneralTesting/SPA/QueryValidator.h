@@ -16,6 +16,7 @@
 #include "SynonymTable.h"
 #include "SynonymObject.h"
 #include "SynonymOccurence.h"
+#include "SynonymGroup.h"
 
 // #include <cctype>
 // #include <algorithm>
@@ -79,6 +80,7 @@ class QueryValidator {
 	static QueryValidator *_instance;
 	SynonymOccurence *mSynonymOccurence;
 	SynonymTable *mSynonymTable;
+	SynonymGroup *mSynonymGroup;
 	RelTable *mRelTable;
 	QueryTable mQueryTable;
 
@@ -160,6 +162,7 @@ public:
 	// Return methods
 	SynonymOccurence *getSynonymOccurence();
 	SynonymTable *getSynonymTable();
+	SynonymGroup *getSynonymGroup();
 	RelTable *getRelationshipTable();
 	QueryTable& getQueryTable();
 
