@@ -61,7 +61,6 @@ public:
     virtual bool isAssignHasExpr(StmtNumber, StringToken);    // Deprecated
     virtual bool isAssignHasSubexpr(StmtNumber, StringToken); // Deprecated
     virtual bool is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item);
-	virtual bool isCall(RelationshipType callsOrStar, ProcIndex procA, ProcIndex procB);
 	virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
     virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);
     virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
