@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AssignTree.cpp" />
     <ClCompile Include="ClauseObject.cpp" />
     <ClCompile Include="ClauseSelectResultObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
