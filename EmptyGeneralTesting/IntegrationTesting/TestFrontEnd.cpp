@@ -63,17 +63,6 @@ namespace IntegrationTesting {
 			expected = false;
 			Assert::IsTrue(expected == actual);
 
-			Assert::IsTrue(pkb->isAssignHasExpr(2, "5"));
-			Assert::IsFalse(pkb->isAssignHasExpr(2, "x"));
-
-			Assert::IsTrue(pkb->isAssignHasExpr(4, "z   +  x  + i "));
-			Assert::IsFalse(pkb->isAssignHasExpr(4, "z+x"));
-
-			Assert::IsTrue(pkb->isAssignHasSubexpr(4, "  z  + x +i"));
-			Assert::IsTrue(pkb->isAssignHasSubexpr(4, " z + x   "));
-			Assert::IsTrue(pkb->isAssignHasSubexpr(4, " i "));
-			Assert::IsFalse(pkb->isAssignHasSubexpr(4, "x + i"));
-
 			Assert::IsTrue(pkb->isVarExist("z"));
 			Assert::IsFalse(pkb->isVarExist("t"));
 

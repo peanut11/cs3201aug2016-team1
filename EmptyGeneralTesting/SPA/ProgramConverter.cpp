@@ -6,6 +6,7 @@
 // Constructs:
 // - AssignTree
 
+#include <cassert>
 #include "ProgramConverter.h"
 
 bool ProgramConverter::isVarName(std::string str) {
@@ -217,10 +218,22 @@ bool ProgramConverter::isLineEnding(std::string str) {
 }
 
 bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
-	const AssignTree tree = AssignTree(line);
-	pkb->putAssignForStmt(lineNum, tree);
+//	const AssignTree tree = AssignTree(line);
+//	pkb->putAssignForStmt(lineNum, tree);
 
 	return false;
+}
+
+bool ProgramConverter::updateAssignmentInPostfixExprs(ProgLine line, ProgLineNumber lineNum) {
+	assert(line.size() > 2);
+	assert(line[1] == "=");
+
+	if (line.back() == ";") line.pop_back();
+
+	InfixExpr infix = InfixExpr (line.begin()+2, line.end());
+
+	const PostfixExpr postfix = pkb->infixToPostfix(infix);
+	return pkb->putExprForStmt(lineNum, postfix);
 }
 
 bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {
@@ -257,7 +270,7 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 		success = pkb->putStmtTypeForStmt(lineNum, ASSIGN) && success;
 		success = updateAssignmentInTable(line, lineNum) && success;
 		success = updateAssignmentInAssignmentTrees(line, lineNum) && success;
-
+		success = updateAssignmentInPostfixExprs(line, lineNum) && success;
 	} else if (isWhile(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, WHILE) && success;
 		

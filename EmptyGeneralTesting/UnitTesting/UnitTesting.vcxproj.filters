@@ -44,12 +44,6 @@
     <ClCompile Include="Tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestAssignTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestProgramConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -62,9 +56,6 @@
     <ClCompile Include="TestQueryEvaluator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestIsAssignHasExpr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,6 +66,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestQueryOptimization.cpp">
+		<Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestInfixToPostfix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAssignPattern.cpp">
+>>>>>>> e8723ea9bc09365fc6d3623f10b03404f4f527a8
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

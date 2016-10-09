@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <set>
-#include "AssignTree.h"
 #include "EntityType.h"
 #include "RelationshipType.h"
 #include "Types.h"
@@ -17,8 +16,8 @@ public:
 	virtual VarName getVarName(VarIndex varIndex);
 
 	virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
-	virtual bool isAssignHasExpr(StmtNumber assign, ExprString expr);
-	virtual bool isAssignHasSubexpr(StmtNumber assign, ExprString subexpr);
+	virtual bool isAssignHasExpr(StmtNumber assign, StringToken);
+	virtual bool isAssignHasSubexpr(StmtNumber assign, StringToken);
 	virtual std::set<StmtNumber>	getAllStmts();
     virtual std::set<VarIndex>      getAllVarIndex();
 	virtual std::set<VarName>       getAllVarNames();

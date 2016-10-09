@@ -40,17 +40,8 @@
     <ClCompile Include="ProgramConverter.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>Source Files\PKB</Filter>
-    </ClCompile>
     <ClCompile Include="PKB.cpp">
       <Filter>Source Files\PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="AssignTree.cpp">
-      <Filter>Source Files\PKB</Filter>
-    </ClCompile>
-    <ClCompile Include="ExprTree.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SynonymObject.cpp">
       <Filter>Source Files\QP</Filter>
@@ -149,15 +140,6 @@
     </ClInclude>
     <ClInclude Include="ProgramConverter.h">
       <Filter>Header Files\PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files\PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="AssignTree.h">
-      <Filter>Header Files\PKB</Filter>
-    </ClInclude>
-    <ClInclude Include="ExprTree.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AttrType.h">
       <Filter>Header Files</Filter>

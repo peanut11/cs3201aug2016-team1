@@ -18,7 +18,6 @@ PKB* PKB::getInstance() {
 }
 
 PKB::PKB() {
-	assignTrees = std::vector<AssignTree>();
     constants = std::set<Constant>(); 
     controlVars = std::vector<VarIndex>();
     procRefMap = ProcRefMap();
@@ -63,31 +62,117 @@ bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
 	return entry.find(item) != entry.end();
 }
 
-bool PKB::isAssignHasExpr(StmtNumber assign, ExprString expr) {
-    if (expr[0] == '_') {
-        return isAssignHasSubexpr(assign, expr.substr(1, expr.size() - 2));
-    }
-
-    AssignTree tree = assignTrees[assign];
-	ExprString treeStr = ExprTree::toString(tree.getExprTree());
-
-    expr.erase(std::remove_if(expr.begin(), expr.end(), isspace), expr.end());
-	return expr == treeStr;
+// Deprecated
+bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
+	return false;
 }
 
-bool PKB::isAssignHasSubexpr(StmtNumber assign, ExprString subexpr) {
-    if (subexpr[0] == '_') {
-        return isAssignHasSubexpr(assign, subexpr.substr(1, subexpr.size() - 2));
-    }
+int operatorRank(StringToken s) {
+	if (s == "+" || s == "-") {
+		return 1;
+	}
 
-	AssignTree tree = assignTrees[assign];
-	ExprString treeStr = ExprTree::toString(tree.getExprTree());
-	treeStr = "+" + treeStr + "+";
+	if (s == "*" || s == "/") {
+		return 2;
+	}
 
-    subexpr.erase(std::remove_if(subexpr.begin(), subexpr.end(), isspace), subexpr.end());
+	return 0; //not an operator
+}
 
-	return (treeStr.find(subexpr) == 1) ||
-		(subexpr.find("+") == std::string::npos && treeStr.find("+" + subexpr + "+") != std::string::npos);
+PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
+	PostfixExpr result;
+	std::stack<StringToken> tokenStack;
+
+	for (StringToken s : infix) {
+		if (s == "(") {
+			tokenStack.push(s);
+		}
+		else if (s == ")") {
+			while (!tokenStack.empty() && tokenStack.top() != "(") {
+				result.push_back(tokenStack.top());
+				tokenStack.pop();
+			}
+			if (tokenStack.empty()) {
+				// INVALID INFIX EXPR!!!!!!!!!!!!!!!!!
+				return result;
+			}
+			tokenStack.pop();
+		}
+		else {
+			int rank = operatorRank(s);
+			if (rank == 0) { // is operand
+				result.push_back(s);
+			}
+			else { // is operator
+				while (!tokenStack.empty() && operatorRank(tokenStack.top()) >= operatorRank(s)) {
+					result.push_back(tokenStack.top());
+					tokenStack.pop();
+				}
+				tokenStack.push(s);
+			}
+		}
+	}
+
+	while (!tokenStack.empty()) {
+		StringToken token = tokenStack.top();
+		if (operatorRank(token) == 0) {
+			// INVALID INFIX EXPR!!!!!!!!!
+		}
+		tokenStack.pop();
+		result.push_back(token);
+	}
+
+	return result;
+}
+
+// Deprecated
+bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
+	return false;
+}
+
+bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
+	PostfixExpr expr = postfixExprs[stmt],
+		postfixPattern = infixToPostfix(infixPattern);
+
+	if (postfixPattern.size() != expr.size()) {
+		return false;
+	}
+
+	for (size_t i = 0; i < expr.size(); i++) {
+		if (expr[i] != postfixPattern[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool PKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr infixPattern) {
+	PostfixExpr expr = postfixExprs[stmt],
+		postfixPattern = infixToPostfix(infixPattern);
+
+	size_t patternSize = postfixPattern.size(),
+		exprSize = expr.size();
+
+	if (patternSize > exprSize) {
+		return false;
+	}
+
+	for (size_t i = 0; i + patternSize <= exprSize; i++) {
+		bool match = true;
+		for (size_t j = 0; j < patternSize; j++) {
+			if (postfixPattern[j] != expr[i+j]) {
+				match = false;
+				break;
+			}
+		}
+
+		if (match) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool PKB::isVarExist(VarName varName) {
@@ -131,14 +216,6 @@ std::set<ProcName> PKB::getAllProcNames() {
 	return std::set<ProcName>(procRefTable.begin(), procRefTable.end());
 }
 
-AssignTree PKB::getAssign(StmtNumber stmt) {
-	if (stmtTypeTable[stmt] != EntityType::ASSIGN) {
-		throw Exception::NOT_ASSIGN_ERROR;
-	}
-
-	return assignTrees[stmt];
-}
-
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
     if (stmt >= stmtTypeTable.size()) {
         return INVALID;
@@ -147,8 +224,14 @@ EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
 	return stmtTypeTable[stmt];
 }
 
+// Deprecated
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
-	return varTable[getVarIndex(varName)][rel];
+    return StmtSet();
+	// return varTable[getVarIndex(varName)][rel];
+}
+
+StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
+    return varTable[varIndex][rel];
 }
 
 StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
@@ -283,8 +366,14 @@ std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName 
 	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
 }
 
+// Deprecated
 std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
-	return procToStmtTable[getProcIndex(procName)];
+    return StmtSet();
+    // return procToStmtTable[getProcIndex(procName)];
+}
+
+std::set<StmtNumber> PKB::getStmtsByProc(ProcIndex procIndex) {
+    return procToStmtTable[procIndex];
 }
 
 ProcIndex PKB::getProcByStmt(StmtNumber stmt) {
@@ -362,13 +451,22 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 	return success;
 }
 
-bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
+/*bool PKB::putAssignForStmt(StmtNumber stmt, AssignTree tree) {
 	while (stmt > assignTrees.size()) {
 		assignTrees.push_back(AssignTree());
 	}
 
 	assignTrees.push_back(tree);
 	return (stmt + 1 == assignTrees.size());
+} */
+
+bool PKB::putExprForStmt(StmtNumber stmt, PostfixExpr expr) {
+	while (stmt > postfixExprs.size()) {
+		postfixExprs.push_back(PostfixExpr());
+	}
+
+	postfixExprs.push_back(expr);
+	return true;
 }
 
 bool PKB::putConstant(Constant constant) {
