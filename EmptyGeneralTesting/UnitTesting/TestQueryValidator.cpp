@@ -789,33 +789,40 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 	
 		// success
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 		
-		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("Modifies(p,\"x\")"); // proc & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+
 		validator->initStringTokenizer("Modifies(s1,var1)"); // stmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(ifstmt1,var1)"); // ifstmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(w1,var1)"); // while & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(c1,var1)"); // call & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
+		validator->initStringTokenizer("Modifies(\"First\",var1)"); // procedure name
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+		
+		validator->initStringTokenizer("Modifies(\"First\",\"x\")"); 
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
 		// failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Modifies(_,var1)"); // _ & var
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isRelationship("Modifies"));
@@ -834,41 +841,41 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(s1,var1)"); // stmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(ifstmt1,var1)"); // ifstmt & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(w1,var1)"); // while & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(c1,var1)"); // call & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
+		validator->initStringTokenizer("Uses(\"First\",var1)"); // procedure name
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		validator->initStringTokenizer("Uses(\"First\",\"x\")"); 
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
 		// failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(_,var1)"); // _ & var
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isRelationship("Uses"));
 		auto funcPtrError1 = [validator] { validator->isRelationship("Uses"); };
 		Assert::ExpectException<Exceptions>(funcPtrError1);
 
-
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Uses(c1,3)"); // call & constant
 		validator->getNextToken();
 		//Assert::IsFalse(validator->isRelationship("Uses"));
@@ -876,6 +883,48 @@ public:
 		Assert::ExpectException<Exceptions>(funcPtrError2);
 
 	}
+
+	TEST_METHOD(TestQueryValidator_Relationship_Calls) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		// populate the synonym table first
+		validator->clearSynonymTable();
+		Assert::IsTrue(validator->isValidQuery("procedure p,q;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+
+		// success
+		validator->initStringTokenizer("Calls(p,q)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Calls"));
+
+		validator->initStringTokenizer("Calls(\"First\",q)");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Calls"));
+
+		validator->initStringTokenizer("Calls(p,\"First\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Calls"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// failure
+		validator->initStringTokenizer("Calls(1, q)"); // 
+		validator->getNextToken();
+		auto funcPtrError1 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError1);
+
+		validator->initStringTokenizer("Calls(p, 5)"); // 
+		validator->getNextToken();
+		auto funcPtrError2 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError2);
+
+		validator->initStringTokenizer("Calls(1, 5)"); // 
+		validator->getNextToken();
+		auto funcPtrError3 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError3);
+
+	}
+
 
 	TEST_METHOD(TestQueryValidator_Clause_Result) {
 		QueryValidator *validator = QueryValidator::getInstance();

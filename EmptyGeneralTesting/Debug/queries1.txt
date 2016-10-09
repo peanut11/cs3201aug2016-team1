@@ -1,0 +1,45 @@
+1 - comment
+stmt s;
+Select s such that Follows(s,2)
+1
+5000
+2 - comment
+assign a;
+Select a
+1, 2, 4, 5
+5000
+3 - comment
+assign a; variable v;
+Select a pattern a(_,_)
+1, 2, 4, 5
+5000
+4 - comment
+assign a;
+Select a
+1, 2, 4, 5
+5000
+5 - comment
+assign a;
+Select a pattern a(_,_"z  +  x"_)
+4
+5000
+6 - comment
+while w;
+Select w such that Modifies(w, "y")
+3
+5000
+7 - comment
+stmt s1, s2;
+Select s1 such that Follows*(s1, s2)
+1, 2, 4
+5000
+8 - comment
+assign a1;
+Select a1 pattern a1(_, _"z"_) such that Follows*(a1, 5)
+4
+5000
+9 - comment
+stmt s1, s2; variable v;
+Select v such that Modifies(s1, v) and Uses(s2, v)
+x, z, i
+5000
