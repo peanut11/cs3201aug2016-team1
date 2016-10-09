@@ -517,7 +517,7 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
 bool PKB::putStmtCallProc(StmtNumber stmt, ProcName procCalled) {
 	bool success = true;
 	ProcIndex procIndex = getProcIndex(procCalled);
-	callToProcMap.insert(stmt, procIndex);
+	callToProcMap[stmt] = procIndex;
 	success = (callToProcMap.find(stmt) != callToProcMap.end()) && success;
 	procToCallTable[procIndex].insert(stmt);
 	success = (procToCallTable[procIndex].find(stmt) != procToCallTable[procIndex].end()) && success;
