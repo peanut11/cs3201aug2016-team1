@@ -329,7 +329,7 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
         // If left arg is synonym, right arg is "x" (Modifies(s,"x")); Modifies(a,"x")
         else if (argOne.getIsSynonym() && argTwo.getIsSynonym() == false && argTwo.getStringValue() != "_") {
             // Get all statements that modifies variable
-            std::set<StmtNumber> statements = pkb->getStmtsByVar(type, argTwo.getStringValue());
+			std::set<StmtNumber> statements = pkb->getStmtsByVar(type, argTwo.getStringValue());
 
             // Check if relationship holds/have results
             if (statements.size() > 0) {
@@ -567,11 +567,146 @@ ClauseSuchThatObject QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject suchT
 	*/
 		}
 	}
-    return suchThatRelObject;
+    
+	return suchThatRelObject;
 }
 
 ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
-    return ClauseWithObject();
+	ClauseWithRefObject leftObj = withObject.getRefObject1();
+	ClauseWithRefObject rightObj = withObject.getRefObject2();
+	
+	// left side is = synonym.attrName (attrRef)
+	if (leftObj.getRefType() == ATTRREF) {
+		// left side is = synonynm.procName 
+		if (leftObj.getAttrType() == AttrType::PROC_NAME) {
+			// if synonym = procedure -> p.procName
+			if (leftObj.getEntityType() == PROCEDURE) {
+				// right side is IDENTIFIER; p.procName = "First"
+				if (rightObj.getRefType() == IDENTIFIER) {
+					// Check & Get if procedure name exists
+					ProcIndex procIndex = pkb->getProcIndex(rightObj.getStringValue());
+
+					// Find all procedures that calls "First"
+
+					// Check if relationship holds/have results
+
+					// Update the results table
+				}
+				// right side is ATTRREF; p.procName = synonym.attrName
+				else if (rightObj.getRefType() == ATTRREF) {
+					// right side is procName; p1.procName = synonym.procName;
+					if (rightObj.getAttrType() == AttrType::PROC_NAME) {
+						// if right synonym = procedure -> p1.procName = p2.procName
+						if (rightObj.getEntityType() == PROCEDURE) {
+
+						}
+						// if right synonym = call -> p1.procName = call.procName
+						else if (rightObj.getEntityType() == CALL) {
+
+						}
+					}
+					// right side is varName; p1.procName = synonym.varName
+					else if (rightObj.getAttrType() == AttrType::VAR_NAME) {
+
+					}
+				}
+			}
+			// if synonym = call -> constraint call statements to those that calls IDENTIFIER
+			else if (leftObj.getEntityType() == CALL) {
+
+			}
+		}
+		// left side is = synonym.stmt#
+		else if (leftObj.getAttrType() == AttrType::STMT_NO) {
+			// right side is INTEGER; s.stmt# = 3
+			if (rightObj.getRefType() == INTEGER) {
+
+			}
+			// right side is ATTRREF; s.stmt# = synonym.attrName
+			else if (rightObj.getRefType() == ATTRREF) {
+				// right side is value; s.stmt# = c.value
+				if (rightObj.getAttrType() == AttrType::VALUE) {
+
+				}
+				// right side is stmt#; s.stmt# = a.stmt#
+				else if (rightObj.getAttrType() == AttrType::STMT_NO) {
+
+				}
+			}
+		}
+		// left side is = synonym.varName
+		else if (leftObj.getAttrType() == AttrType::VAR_NAME) {
+			// right side is IDENTIFIER; v.varName = "x"
+			if (rightObj.getRefType() == IDENTIFIER) {
+
+			}
+			// right side is ATTRREF; v.varName = synonym.attrName
+			else if (rightObj.getRefType() == ATTRREF) {
+				// right side is procName; v.varName = p.procName;
+				if (rightObj.getAttrType() == AttrType::PROC_NAME) {
+
+				}
+				// right side is varName; v1.varName = v2.varName;
+				else if (rightObj.getAttrType() == AttrType::VAR_NAME) {
+
+				}
+			}
+		}
+		// left side is = synonym.value
+		else if (leftObj.getAttrType() == AttrType::VALUE) {
+			// right side is INTEGER; c.value = 3
+			if (rightObj.getRefType() == INTEGER) {
+
+			}
+			else if (rightObj.getRefType() == ATTRREF) {
+				// right side is value; c1.value = c2.value
+				if (rightObj.getAttrType() == AttrType::VALUE) {
+
+				}
+				// right side is stmt#; c.value = s.stmt#
+				else if (rightObj.getAttrType() == AttrType::STMT_NO) {
+
+				}
+			}
+		}
+	}
+
+	// left side is = synonym (prog_line)
+	else if (leftObj.getRefType() == SYNONYM) {
+		// right side is INTEGER; n = 10;
+		if (rightObj.getRefType() == INTEGER) {
+
+		} 
+		// right side is SYNONYM; n = n1;
+		else if (rightObj.getRefType() == SYNONYM) {
+			std::set<StmtNumber> statements = resultManager->getValuesForSynonym(rightObj.getStringValue());
+
+			if (statements.size() > 0) {
+				withObject.setResultsBoolean(true);
+			}
+
+			// Update the results table
+			resultManager->updateSynonym(leftObj.getStringValue(), statements);
+
+		}
+		// right side is ATTRREF; n = synonym.attrName
+		else if (rightObj.getRefType() == ATTRREF) {
+			// right side is stmt#; n = s.stmt# OR right side is value; n = c.value;
+			if (rightObj.getAttrType() == AttrType::STMT_NO || rightObj.getAttrType() == AttrType::VALUE) {
+				// Get existing statements/values
+				std::set<StmtNumber> statements = resultManager->getValuesForSynonym(rightObj.getSynonym());
+
+				if (statements.size() > 0) {
+					withObject.setResultsBoolean(true);
+				}
+
+				// Update the results table
+				resultManager->updateSynonym(leftObj.getStringValue(), statements);
+			} 
+		}
+	}
+
+	return ClauseWithObject();
 }
 
 ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternObject) {
