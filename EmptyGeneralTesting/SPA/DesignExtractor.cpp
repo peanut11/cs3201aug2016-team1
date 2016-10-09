@@ -105,7 +105,7 @@ void DesignExtractor::updateStmtTable() {
 	std::set<StmtNumber> mergeList;
 	std::set_union(whileList.begin(), whileList.end(),
 		ifList.begin(), ifList.end(),
-		std::back_inserter(mergeList));
+		std::inserter(mergeList, mergeList.end()));
 	
 	for (StmtSetIterator w = mergeList.begin(); w != mergeList.end(); w++) {
 		processLoopForUseAndModifies(*w);
