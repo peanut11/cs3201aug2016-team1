@@ -53,8 +53,8 @@ void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
 }
 
 void ResultGrid::clearGrid() {
-    resultList = std::list<GridRow>();
-    resultTable = std::vector<ValueSet>();
+    resultList.clear();
+    resultTable.clear();
 }
 
 SynonymString ResultGrid::extractSynonym(TuplePosition pos, SynonymTuple synTuple) {
@@ -107,17 +107,18 @@ ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
     }
 }
 
-void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples) {
+bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples) {
+    // If no valid tuples, then clear grid and return
+    if (validTuples.empty()) {
+        clearGrid();
+        other->clearGrid();
+        return false;
+    }
+
     // Transfer columns
     for (GridMapConstIter keyVal = other->refMap.begin(); keyVal != other->refMap.end(); ++keyVal) {
         SynonymString otherSyn = keyVal->first;
         addSynonym(otherSyn);
-    }
-
-    // If no valid tuples, then clear grid and return
-    if (validTuples.empty()) {
-        clearGrid();
-        return;
     }
 
     // Sort resultList in both grids by the synonyms of interest
@@ -181,15 +182,27 @@ void ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
             validTuple++;
         }
     }
+
+    return !resultList.empty();
 }
 
-void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
+bool ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
+    if (vals.empty()) {
+        clearGrid();
+        return false;
+    }
+
     GridColumn column = refMap[syn];
 
     ValueSet intersection;
     set_intersection(resultTable[column].begin(), resultTable[column].end(), vals.begin(), vals.end(),
                      std::inserter(intersection, intersection.begin()));
     resultTable[column] = intersection;
+
+    if (intersection.empty()) {
+        clearGrid();
+        return false;
+    }
 
     GridListIterator row = resultList.begin();
     while (row != resultList.end()) {
@@ -201,9 +214,16 @@ void ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
             row++;
         }
     }
+
+    return true;
 }
 
-void ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples) {
+bool ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples) {
+    if (validTuples.empty()) {
+        clearGrid();
+        return false;
+    }
+
     GridColumn column1 = getColumnForSynonym(extractSynonym(LEFT, synTuple));
     GridColumn column2 = getColumnForSynonym(extractSynonym(RIGHT, synTuple));
 
@@ -216,6 +236,8 @@ void ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTu
             row = resultList.erase(row);
         }
     }
+
+    return !resultList.empty();
 }
 
 ValueSet ResultGrid::getValuesForSynonym(SynonymString syn) {

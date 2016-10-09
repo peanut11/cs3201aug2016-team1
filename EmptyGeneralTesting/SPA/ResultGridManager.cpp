@@ -59,12 +59,12 @@ bool ResultGridManager::initialiseSynonym(SynonymString syn, ValueSet vals) {
     return createGridForSynonym(syn, vals);
 }
 
-void ResultGridManager::updateSynonym(SynonymString syn, ValueSet vals) {
+bool ResultGridManager::updateSynonym(SynonymString syn, ValueSet vals) {
     ResultGrid* grid = getGridForSynonym(syn);
-    grid->updateSynonym(syn, vals);
+    return grid->updateSynonym(syn, vals);
 }
 
-void ResultGridManager::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples) {
+bool ResultGridManager::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples) {
     SynonymString syn1 = std::get<0>(synTuple);
     SynonymString syn2 = std::get<1>(synTuple);
 
@@ -78,11 +78,11 @@ void ResultGridManager::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet 
         ResultGrid* grid1 = getGridByIndex(index1);
         ResultGrid* grid2 = getGridByIndex(index2);
 
-        grid1->mergeGrid(grid2, synTuple, valTuples);
-
         // Update refMap and gridTable
         refMap[syn2] = index1;
         std::copy(gridTable[index2].begin(), gridTable[index2].end(), std::back_inserter(gridTable[index1]));
+
+        return grid1->mergeGrid(grid2, synTuple, valTuples);
     }
 }
 
