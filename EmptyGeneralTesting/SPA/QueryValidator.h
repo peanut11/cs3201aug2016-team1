@@ -145,6 +145,10 @@ class QueryValidator {
 	bool isConstant(std::string str);	// constant
 	*/
 
+	void insertSynonymGroup(ClauseSuchThatObject object);
+	void insertSynonymGroup(ClauseWithObject object);
+	void insertSynonymGroup(ClausePatternObject object);
+
 
 public:
 	static QueryValidator *getInstance();
@@ -154,6 +158,7 @@ public:
 	void initStringTokenizer(std::string str);
 	void clearSynonymOccurence();
 	void clearSynonymTable();
+	void clearSynonymGroup();
 	void clearQueryTable();
 	
 

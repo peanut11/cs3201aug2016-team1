@@ -9,7 +9,7 @@ class SynonymGroup {
 	std::map<std::string, int> mapSynonymToGroupIndex;
 	std::map<int, std::vector<std::string>> mapGroupIndexToSynonyms;
 
-	void updateAllSynonyms(std::vector<std::string> synonyms, int newGroupIndex);
+	void updateAllSynonyms(std::vector<std::string> synonyms, int oldGroupIndex, int newGroupIndex);
 
 
 public:

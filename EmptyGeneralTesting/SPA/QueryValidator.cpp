@@ -96,6 +96,10 @@ void QueryValidator::clearSynonymTable() {
 	this->mSynonymTable->clearAll();
 }
 
+void QueryValidator::clearSynonymGroup() {
+	this->mSynonymGroup->clearAll();
+}
+
 void QueryValidator::clearQueryTable() {
 	this->mQueryTable.clearAll();
 }
@@ -174,6 +178,7 @@ bool QueryValidator::isValidQuery(std::string str) {
 	this->clearQueryTable();
 	this->clearSynonymOccurence();
 	this->clearSynonymTable();
+	this->clearSynonymGroup();
 
 	this->validatedVariableName = "";
 	this->validatedExpression = "";
@@ -422,7 +427,9 @@ bool QueryValidator::isClauseWith(std::string str) {
 		
 		
 		if (hasValidProgLine || (hasAttribute && hasValidAttrValue)) {
-			this->mQueryTable.insertWithObject(ClauseWithObject(leftRefObject, rightRefObject));
+			ClauseWithObject newWithObject = ClauseWithObject(leftRefObject, rightRefObject);
+			this->mQueryTable.insertWithObject(newWithObject);
+			this->insertSynonymGroup(newWithObject);
 			return true;
 		}
 		
@@ -735,14 +742,18 @@ bool QueryValidator::isClausePattern(std::string str) {
 					throw Exceptions::exceed_common_synonym_count();
 				}
 
+				ClausePatternObject newPatternObj;
+
 				if (numOfArgs == 2) {
-					this->mQueryTable.insertPatternObject(
-						this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg));
+					newPatternObj = this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg);
+					this->mQueryTable.insertPatternObject(newPatternObj);
 				}
 				else { // third argument 
-					this->mQueryTable.insertPatternObject(
-						this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg, thirdArg));
+					newPatternObj = this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg, thirdArg);
+					this->mQueryTable.insertPatternObject(newPatternObj);
 				}
+
+				this->insertSynonymGroup(newPatternObj);
 
 				return true;
 			}
@@ -905,18 +916,10 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 					isUnderArg = false;
 				}
 
+				ClauseSuchThatObject newSuchThatObj = this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject);
 
-				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(),
-					this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject));
-
-				/*Insert synonym group*/
-				/*
-				if (firstArgObject.getIsSynonym()) {
-					if (this->mSynonymGroup->containSynonym(firstArgObject.getStringValue()) {
-
-					}
-				}
-				*/
+				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(), newSuchThatObj);
+				this->insertSynonymGroup(newSuchThatObj);
 
 
 				return true;
@@ -1765,6 +1768,52 @@ std::string QueryValidator::getAttrSyntax(AttrType::AttrType type) {
 std::string QueryValidator::getNextToken() {
 	//return st.nextToken();
 	return st.hasMoreTokens() ? st.nextToken() : "";
+}
+
+
+void QueryValidator::insertSynonymGroup(ClauseSuchThatObject object) {
+	/*Insert synonym group*/
+	if (object.getArgsOne().getIsSynonym()) {
+		this->mSynonymGroup->insertSynonym(object.getArgsOne().getStringValue());
+	}
+
+	if (object.getArgsTwo().getIsSynonym()) {
+		if (object.getArgsOne().getIsSynonym()) {
+			this->mSynonymGroup->insertSynonym(object.getArgsTwo().getStringValue(),
+				this->mSynonymGroup->getGroupIndex(object.getArgsOne().getStringValue()));
+		}
+		else {
+			this->mSynonymGroup->insertSynonym(object.getArgsTwo().getStringValue());
+		}
+
+	}
+}
+
+void QueryValidator::insertSynonymGroup(ClauseWithObject object) {
+	if (object.getRefObject1().getRefType() == WithRefType::SYNONYM) {
+		this->mSynonymGroup->insertSynonym(object.getRefObject1().getSynonym());
+	}
+
+	if (object.getRefObject2().getRefType() == WithRefType::SYNONYM) {
+		if (object.getRefObject1().getRefType() == WithRefType::SYNONYM) {
+			this->mSynonymGroup->insertSynonym(object.getRefObject2().getSynonym(),
+				this->mSynonymGroup->getGroupIndex(object.getRefObject1().getSynonym()));
+		}
+		else {
+			this->mSynonymGroup->insertSynonym(object.getRefObject2().getSynonym());
+		}
+	}
+
+}
+
+void QueryValidator::insertSynonymGroup(ClausePatternObject object) {
+	/*Insert synonym group*/
+	this->mSynonymGroup->insertSynonym(object.getPatternSynonymArgument());
+
+	if (object.getIsFirstArgSynonym()) {
+		this->mSynonymGroup->insertSynonym(object.getFirstArgument(),
+			this->mSynonymGroup->getGroupIndex(object.getPatternSynonymArgument()));
+	}
 }
 
 

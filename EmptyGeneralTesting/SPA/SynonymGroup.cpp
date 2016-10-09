@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "SynonymGroup.h"
 
+SynonymGroup *SynonymGroup::_instance;
 
 SynonymGroup *SynonymGroup::getInstance() {
 	if (!_instance)
@@ -12,6 +13,7 @@ SynonymGroup *SynonymGroup::getInstance() {
 void SynonymGroup::clearAll() {
 	this->mapSynonymToGroupIndex.clear();
 	this->mapGroupIndexToSynonyms.clear();
+	this->NEW_GROUP_INDEX = 1;
 }
 
 void SynonymGroup::insertSynonym(std::string synonym) {
@@ -33,8 +35,10 @@ void SynonymGroup::insertSynonym(std::string synonym, int groupIndex) {
 			this->mapGroupIndexToSynonyms[groupIndex].push_back(synonym);
 		}
 		else {
+			int oldGroupIndex = this->mapSynonymToGroupIndex[synonym]; // get old index of the synonym first
+
 			this->mapSynonymToGroupIndex[synonym] = groupIndex;
-			this->updateAllSynonyms(this->mapGroupIndexToSynonyms[groupIndex], groupIndex);
+			this->updateAllSynonyms(this->mapGroupIndexToSynonyms[oldGroupIndex], oldGroupIndex, groupIndex);
 		}
 		
 
@@ -44,10 +48,8 @@ void SynonymGroup::insertSynonym(std::string synonym, int groupIndex) {
 	}
 }
 
-void SynonymGroup::updateAllSynonyms(std::vector<std::string> synonyms, int newGroupIndex) {
+void SynonymGroup::updateAllSynonyms(std::vector<std::string> synonyms, int oldGroupIndex, int newGroupIndex) {
 	for (auto value : synonyms) {
-
-		int oldGroupIndex = this->mapSynonymToGroupIndex[value]; // get old index of the synonym first
 
 		this->mapSynonymToGroupIndex[value] = newGroupIndex; // update the new index
 		this->mapGroupIndexToSynonyms[newGroupIndex].push_back(value); // insert synonym into specific group index
@@ -61,13 +63,22 @@ void SynonymGroup::updateAllSynonyms(std::vector<std::string> synonyms, int newG
 std::string SynonymGroup::toString() {
 	std::string output = "";
 	output.append("============ SYNONYM GROUP RESULT ===============\n");
-	output.append("\tS\tST\tP\tW\n");
 	for (std::map<std::string, int>::iterator ii = this->mapSynonymToGroupIndex.begin(); ii != this->mapSynonymToGroupIndex.end(); ii++) {
 
 		output.append(ii->first + ":");
 		output.append("\t" + std::to_string(ii->second));
 		output.append("\n");
 	}
+	output.append("+++++++++++++++\n");
+	for (std::map<int, std::vector<std::string>>::iterator ii = this->mapGroupIndexToSynonyms.begin(); ii != this->mapGroupIndexToSynonyms.end(); ii++) {
+
+		output.append(std::to_string(ii->first) + ":");
+		for (auto value : ii->second) {
+			output.append("\t" + value);
+		}
+		output.append("\n");
+	}
+
 	return output;
 }
 
