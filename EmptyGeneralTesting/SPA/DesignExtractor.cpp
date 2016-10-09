@@ -22,7 +22,16 @@ void DesignExtractor::process() {
 	processParentOfStar();
 	updateStmtTable();
 }
+/*
+void DesignExtractor::processCallsStar() {
+	PKB* pkb = PKB::getInstance();
+	StmtNumber size = pkb->getProcTableSize();
+	bool flag[size] = { false };
+	for (StmtNumber stmt = 1; stmt <= size; stmt++) {
+		std::set<ProcIndex> callList = pkb->getCallsByProc(stmt);
 
+	}
+}*/
 void DesignExtractor::processFollowedByStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();

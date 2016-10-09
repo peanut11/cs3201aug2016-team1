@@ -69,6 +69,7 @@ public:
     bool isVarExist(VarName varName);
 
     virtual StmtNumber           getStmtTableSize();
+	virtual StmtNumber			 getProcTableSize();
     virtual ProcIndex            getProcByCall(StmtNumber callStmt);
     virtual ProcIndex            getProcByStmt(StmtNumber stmt);
     virtual EntityType           getStmtTypeForStmt(StmtNumber stmt);

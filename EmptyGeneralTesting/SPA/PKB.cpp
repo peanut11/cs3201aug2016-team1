@@ -284,6 +284,9 @@ StmtSet PKB::getStmtsByType(EntityType stmtType) {
 StmtNumber PKB::getStmtTableSize() {
 	return stmtTable.size() - 1; // StmtNumber starts from 1
 }
+StmtNumber PKB::getProcTableSize() {
+	return procTable.size() - 1;
+}
 
 ProcIndex PKB::getProcByCall(StmtNumber callStmt) {
     return callToProcMap[callStmt];
