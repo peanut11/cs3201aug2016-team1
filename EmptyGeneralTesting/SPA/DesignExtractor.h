@@ -14,7 +14,7 @@ public:
 	void DesignExtractor::processFollowedByStar();
 	void DesignExtractor::processPARENT_STAR();
 	void DesignExtractor::updateStmtTable();
-	void DesignExtractor::processWhileLoop(StmtNumber w);
+	void DesignExtractor::processLoopForUseAndModifies(StmtNumber w);
 	void DesignExtractor::processParentOfStar();
 	void DesignExtractor::processFollowsStar();
 	StmtNumber DesignExtractor::getwhileList();

@@ -101,9 +101,14 @@ void DesignExtractor::updateStmtTable() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
 	std::set<StmtNumber> whileList = pkb->getStmtsByType(WHILE);
-
-	for (StmtSetIterator w = whileList.begin(); w != whileList.end(); w++) {
-		processWhileLoop(*w);
+	std::set<StmtNumber> ifList = pkb->getStmtsByType(IF);
+	std::set<StmtNumber> mergeList;
+	std::set_union(whileList.begin(), whileList.end(),
+		ifList.begin(), ifList.end(),
+		std::back_inserter(mergeList));
+	
+	for (StmtSetIterator w = mergeList.begin(); w != mergeList.end(); w++) {
+		processLoopForUseAndModifies(*w);
 	}
 }
 StmtNumber DesignExtractor::getwhileList() {
@@ -111,14 +116,14 @@ StmtNumber DesignExtractor::getwhileList() {
 	return pkb->getStmtsByType(WHILE).size();
 }
 
-void DesignExtractor::processWhileLoop(StmtNumber w) {
+void DesignExtractor::processLoopForUseAndModifies(StmtNumber w) {//for USES And Modifies
 	PKB* pkb = PKB::getInstance();
 	std::set<StmtNumber> followlist = pkb->getStmtsByStmt(w, FOLLOWED_BY);
 
 	//StmtNumber followLine = *followlist.begin();
 	std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
-	if (pkb->getStmtTypeForStmt((w+1)) == WHILE) {
-		processWhileLoop((w+1));
+	if ((pkb->getStmtTypeForStmt((w+1)) == WHILE) || (pkb->getStmtTypeForStmt((w + 1)) == IF)) {
+		processLoopForUseAndModifies((w+1));
 	}
 	std::set<StmtNumber> useList = pkb->getVarsByStmt((w+1), USES);
 
@@ -138,8 +143,8 @@ void DesignExtractor::processWhileLoop(StmtNumber w) {
 	//From Second Line in while Loop
 	for (StmtSetIterator f = followStar.begin(); f != followStar.end(); f++) {
 		StmtNumber s = *f;
-		if (pkb->getStmtTypeForStmt(s) == WHILE) {
-			processWhileLoop(s);
+		if ((pkb->getStmtTypeForStmt(s) == WHILE) || (pkb->getStmtTypeForStmt(s) == IF)) {
+			processLoopForUseAndModifies(s);
 		}
 
 		std::set<StmtNumber> useList = pkb->getVarsByStmt(s,USES);
