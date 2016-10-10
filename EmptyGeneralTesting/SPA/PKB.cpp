@@ -157,7 +157,7 @@ bool PKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr infixPattern) {
 		return false;
 	}
 
-	for (size_t i = 0; i + patternSize <= exprSize; i++) {
+/*	for (size_t i = 0; i + patternSize <= exprSize; i++) {
 		bool match = true;
 		for (size_t j = 0; j < patternSize; j++) {
 			if (postfixPattern[j] != expr[i+j]) {
@@ -167,6 +167,33 @@ bool PKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr infixPattern) {
 		}
 
 		if (match) {
+			return true;
+		}
+	} */
+
+	// KMP algorithm
+	std::vector<int> T(patternSize, 0);
+
+	T[0] = -1;
+
+	for (size_t i = 1; i < patternSize; i++) {
+		int k = T[i - 1];
+		while (k != -1 && postfixPattern[i] != postfixPattern[k+1]) {
+			k = T[k];
+		}
+		T[i] = (postfixPattern[i] == postfixPattern[k + 1]) ? k + 1 : -1;
+	}
+
+	int match = -1;
+
+	for (size_t i = 0; i < exprSize; i++) {
+		while (match != -1 && expr[i] != postfixPattern[match+1]) {
+			match = T[match];
+		}
+		if (expr[i] == postfixPattern[match + 1]) {
+			match++;
+		}
+		if (match == patternSize - 1) {
 			return true;
 		}
 	}
