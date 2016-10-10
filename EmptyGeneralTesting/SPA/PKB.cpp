@@ -6,7 +6,6 @@
 // - VarTable
 
 #include "PKB.h"
-#include <stack>
 
 PKB* PKB::theOne = nullptr;
 
@@ -50,21 +49,31 @@ void PKB::clear() {
 	theOne = new PKB();
 }
 
-bool PKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item) {
-    if (stmt >= stmtTable.size()) {
-        return false;
-    }
-
+bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
+    
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
+		if (stmtOrProcIndex >= stmtTable.size()) {
+			return false;
+		}
+
 		rel = RelationshipType(rel + 1);
+		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
+		return entry.find(item) != entry.end();
+	} else if (rel == CALLS || rel == CALLS_STAR) {
+		if (stmtOrProcIndex >= procTable.size()) {
+			return false;
+		}
+		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
+	} else {
+		throw Exception::INVALID_RELATION;
 	}
 
-	StmtEntry entry = stmtTable[stmt][rel];
-	return entry.find(item) != entry.end();
+	
 }
 
+// Deprecated
 bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
-	return true;
+	return false;
 }
 
 int operatorRank(StringToken s) {
@@ -125,8 +134,9 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	return result;
 }
 
+// Deprecated
 bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
-	return true;
+	return false;
 }
 
 bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
@@ -211,6 +221,14 @@ bool PKB::isWhilePattern(StmtNumber whileStmt, VarIndex varIndex) {
         && controlVars[whileStmt] == varIndex;
 }
 
+bool PKB::isProcExist(ProcName procName) {
+    return (procRefMap.find(procName) != procRefMap.end());
+}
+
+bool PKB::isStmtExist(StmtNumber stmt) {
+    return (stmt < stmtTable.size());
+}
+
 bool PKB::isIfPattern(StmtNumber ifStmt, VarIndex varIndex) {
 	return getStmtTypeForStmt(ifStmt) == IF
         && varIndex < varRefTable.size()
@@ -250,8 +268,14 @@ EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
 	return stmtTypeTable[stmt];
 }
 
+// Deprecated
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
-	return varTable[getVarIndex(varName)][rel];
+    return StmtSet();
+	// return varTable[getVarIndex(varName)][rel];
+}
+
+StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
+    return varTable[varIndex][rel];
 }
 
 StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
@@ -281,6 +305,10 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 	return stmtTable[stmt][supplementaryRel];
 }
 
+std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
+    return procToCallTable[procIndex];
+}
+
 StmtSet PKB::getStmtsByType(EntityType stmtType) {
     if (stmtType > STMT) {
         throw Exception::INVALID_STMT_TYPE;
@@ -291,6 +319,13 @@ StmtSet PKB::getStmtsByType(EntityType stmtType) {
 
 StmtNumber PKB::getStmtTableSize() {
 	return stmtTable.size() - 1; // StmtNumber starts from 1
+}
+StmtNumber PKB::getProcTableSize() {
+	return procTable.size() - 1;
+}
+
+ProcIndex PKB::getProcByCall(StmtNumber callStmt) {
+    return callToProcMap[callStmt];
 }
 
 VarIndex PKB::getVarIndex(VarName varName) {
@@ -318,7 +353,8 @@ ProcIndex PKB::getProcIndex(ProcName procName) {
 		procTable.push_back(ProcRow());
 		procRefTable.push_back(procName);
 		procRefMap[procName] = procIndex;
-        procToStmtTable.push_back(std::set<StmtNumber>());
+        procToCallTable.push_back(StmtSet()); 
+        procToStmtTable.push_back(StmtSet());
 	} else {
 		procIndex = it->second;
 	}
@@ -362,12 +398,28 @@ std::set<VarIndex> PKB::getVarsByProc(ProcName procName, RelationshipType modifi
 	return procTable[getProcIndex(procName)][modifiesOrUses];
 }
 
+std::set<VarIndex> PKB::getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw Exception::INVALID_VAR_PROC_RELATION;
+	}
+
+	return procTable[procIndex][modifiesOrUses];
+}
+
 std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType calls) {
 	if (calls != CALLS && calls != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 
 	return procTable[getProcIndex(procName)][calls];
+}
+
+std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType calls) {
+	if (calls != CALLS && calls != CALLS_STAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	return procTable[procIndex][calls];
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procName ) {
@@ -378,6 +430,14 @@ std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procNam
 	return procTable[getProcIndex(procName)][calls + 1];
 }
 
+std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcIndex procIndex) {
+	if (calls != CALLS && calls != CALLS_STAR) {
+		throw Exception::INVALID_PROC_PROC_RELATION;
+	}
+
+	return procTable[procIndex][calls + 1];
+}
+
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
@@ -386,8 +446,22 @@ std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName 
 	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
 }
 
+std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex) {
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw Exception::INVALID_VAR_PROC_RELATION;
+	}
+
+	return varTable[varIndex][modifiesOrUses + 2];
+}
+
+// Deprecated
 std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
-	return procToStmtTable[getProcIndex(procName)];
+    return StmtSet();
+    // return procToStmtTable[getProcIndex(procName)];
+}
+
+std::set<StmtNumber> PKB::getStmtsByProc(ProcIndex procIndex) {
+    return procToStmtTable[procIndex];
 }
 
 ProcIndex PKB::getProcByStmt(StmtNumber stmt) {
@@ -416,8 +490,10 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 
 	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
-	varTable[varIndex][rel + 2].insert(procIndex); //adds Modified/UsedByProc
+
+	varTable[varIndex][rel + 2].insert(procIndex); // Adds Modified/UsedByProc
 	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
+
 	procTable[procIndex][rel].insert(varIndex);
 	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
 
@@ -462,6 +538,16 @@ bool PKB::putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType) {
     stmtTypeTable.push_back(stmtType);
     success = (stmt + 1 == stmtTypeTable.size()) && success;
 
+	return success;
+}
+
+bool PKB::putStmtCallProc(StmtNumber stmt, ProcName procCalled) {
+	bool success = true;
+	ProcIndex procIndex = getProcIndex(procCalled);
+	callToProcMap[stmt] = procIndex;
+	success = (callToProcMap.find(stmt) != callToProcMap.end()) && success;
+	procToCallTable[procIndex].insert(stmt);
+	success = (procToCallTable[procIndex].find(stmt) != procToCallTable[procIndex].end()) && success;
 	return success;
 }
 

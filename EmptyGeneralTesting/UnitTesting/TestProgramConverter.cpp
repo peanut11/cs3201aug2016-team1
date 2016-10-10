@@ -45,7 +45,7 @@ public:
 		std::vector<StmtNumber> stmts({ stmt1, stmt2, stmt3, stmt4, stmt5, stmt6 });
 		std::vector<bool> expectedWhile({ false, false, true, false, false, false });
 		std::vector<bool> expectedIf({ false, false, false, false, false, false });
-		for (int i = 0; i < stmts.size(); i++) {
+		for (unsigned int i = 0; i < stmts.size(); i++) {
 			Assert::IsTrue(expectedWhile[i] == pkb->isWhilePattern(stmts[i], varIndex));
 			Assert::IsTrue(expectedIf[i] == pkb->isIfPattern(stmts[i], varIndex));
 		}

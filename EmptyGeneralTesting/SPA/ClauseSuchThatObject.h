@@ -12,6 +12,7 @@ private:
 	bool isResultsBoolean = false;
 
 public:
+
 	ClauseSuchThatObject();
 	ClauseSuchThatObject (RelationshipType type, ClauseSuchThatArgObject argsOne, ClauseSuchThatArgObject argsTwo);
 	

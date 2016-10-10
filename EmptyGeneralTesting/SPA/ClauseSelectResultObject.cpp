@@ -27,3 +27,6 @@ bool ClauseSelectResultObject::getBoolean() {
 	return this->isBoolean;
 }
 
+int ClauseSelectResultObject::size() {
+	return this->mClauseSelectObjList.size();
+}

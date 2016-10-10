@@ -18,10 +18,14 @@ void QueryTable::clearAll() {
 	this->patterns.clear();
 	this->withs.clear();
 }
-
+/*
 ClauseSelectObject QueryTable::getSelect()
 {
 	return this->select;
+}
+*/
+ClauseSelectResultObject QueryTable::getResult() {
+	return this->result;
 }
 
 std::vector<ClauseSuchThatObject>& QueryTable::getSuchThats()
@@ -42,9 +46,13 @@ std::vector<ClausePatternObject> QueryTable::getPatterns()
 std::string QueryTable::toString() {
 	std::string str = "========== QUERY TABLE ===============\n";
 
-	str.append("== Select object ==\n");
-	str.append(this->select.getSynonymString() + "\n");
-	
+	str.append("== Result object ==\n");
+	str.append("size = " + std::to_string(this->result.size()) + "\n");
+	//str.append(this->select.getSynonymString() + "\n");
+	for (auto value : this->result.getClauseSelectObjectList()) {
+		str.append(value.getSynonymString() + "\n");
+	}
+
 		
 	str.append("== Such That ==\n");
 	str.append("size = " + std::to_string(this->suchThats.size()) + "\n");
@@ -188,9 +196,10 @@ std::string QueryTable::getAttrString(AttrType::AttrType type) {
 	
 }
 
-bool QueryTable::replaceSelectObject(ClauseSelectObject object) {
+bool QueryTable::insertSelectObject(ClauseSelectObject object) {
 	try {
-		this->select = object;
+		this->result.insertClauseSelectObject(object);
+		//this->select = object;
 		/*
 		this->select.setAttrType(object.getAttrType());
 		this->select.setEntityType(object.getEntityType());

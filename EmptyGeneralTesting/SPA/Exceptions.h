@@ -163,6 +163,7 @@ namespace Exception {
     const std::invalid_argument INVALID_VAR_STMT_RELATION("Invalid var-stmt relation");
 	const std::invalid_argument INVALID_VAR_PROC_RELATION("Invalid var-proc relation");
 	const std::invalid_argument INVALID_PROC_PROC_RELATION("Invalid proc-proc relation");
+	const std::invalid_argument INVALID_RELATION("Invalid relation provided");
     const std::invalid_argument NOT_ASSIGN_ERROR("Statement is not an assignment");
 	const std::invalid_argument NOT_WHILE_OR_IF_ERROR("Statement is not a while or if statement");
     const std::length_error UNEXPECTED_STMT_ERROR("StmtType not recorded in order");
