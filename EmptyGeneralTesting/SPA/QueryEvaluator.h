@@ -29,7 +29,7 @@ public:
 
     ClausePatternObject evaluatePattern(ClausePatternObject patternObject); 
     ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject);
-	ClauseWithObject evaluateWith(ClauseWithObject withObject);
+	ClauseWithObject* evaluateWith(ClauseWithObject* withObject);
     std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
