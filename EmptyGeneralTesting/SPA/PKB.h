@@ -17,19 +17,22 @@ private:
     static PKB* theOne;
 
     std::map<ProcName, ProcIndex> procRefMap;
+    std::vector<ProcName>         procRefTable; 
     std::map<VarName, VarIndex>   varRefMap;
+    std::vector<VarName>          varRefTable;
+
+    std::map<StmtNumber, ProcIndex> callToProcMap;   
+    std::vector<StmtSet>            procToCallTable; 
 
     std::set<Constant>            constants;
     std::vector<VarIndex>         controlVars;
     std::vector<PostfixExpr>      postfixExprs;
-    std::vector<ProcName>         procRefTable;
     std::vector<ProcRow>          procTable;
     std::vector<StmtSet>          procToStmtTable;
     std::vector<StmtSet>          stmtByTypeTable;
     std::vector<StmtRow>          stmtTable;
     std::vector<EntityType>       stmtTypeTable;
     std::vector<ProcIndex>        stmtToProcTable;
-    std::vector<VarName>          varRefTable;
     std::vector<VarRow>           varTable;
 
 public:
@@ -52,12 +55,13 @@ public:
     bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
     bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
     bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName);
+	bool putStmtCallProc(StmtNumber stmt, ProcName procCalled);
 
     // API used by QP and DE
     virtual bool isAssignHasExpr(StmtNumber, StringToken);    // Deprecated
     virtual bool isAssignHasSubexpr(StmtNumber, StringToken); // Deprecated
-    virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
-    virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
+    virtual bool is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item);
+	virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
     virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);
     virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
     virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
@@ -66,6 +70,8 @@ public:
     bool isVarExist(VarName varName);
 
     virtual StmtNumber           getStmtTableSize();
+	virtual StmtNumber			 getProcTableSize();
+    virtual ProcIndex            getProcByCall(StmtNumber callStmt);
     virtual ProcIndex            getProcByStmt(StmtNumber stmt);
     virtual EntityType           getStmtTypeForStmt(StmtNumber stmt);
     virtual std::set<ProcName>   getAllProcNames();
@@ -75,11 +81,15 @@ public:
     virtual std::set<VarName>    getAllVarNames();
 
     // Get procedures
-    virtual std::set<ProcIndex>  getProcsByProc(ProcName procName, RelationshipType callsOrStar);
+    virtual std::set<ProcIndex>  getProcsByProc(ProcName procName, RelationshipType callsOrStar); //Deprecated
+	virtual std::set<ProcIndex>  getProcsByProc(ProcIndex procIndex, RelationshipType callsOrStar);
     virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcName procName); // Check for inverse
-    virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarName varName);
+	virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcIndex procIndex);
+	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarName varName); //Deprecated
+	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 
     // Get statements
+    virtual std::set<StmtNumber> getCallsByProc(ProcIndex procIndex);
     virtual std::set<StmtNumber> getStmtsByType(EntityType stmtType);
     virtual std::set<StmtNumber> getStmtsByProc(ProcName procName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByProc(ProcIndex procIndex);
@@ -89,7 +99,8 @@ public:
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 
     // Get variables
-    virtual std::set<VarIndex>   getVarsByProc(ProcName procName, RelationshipType modifiesOrUses);
+    virtual std::set<VarIndex>   getVarsByProc(ProcName procName, RelationshipType modifiesOrUses); // Deprecated
+	virtual std::set<VarIndex>   getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses);
     virtual std::set<VarIndex>   getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 
     // Warning: this one is public for testing purpose

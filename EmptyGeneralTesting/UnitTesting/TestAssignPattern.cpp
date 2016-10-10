@@ -22,9 +22,20 @@ public:
 		InfixExpr infix = InfixExpr(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		pkb->putExprForStmt(10, pkb->infixToPostfix(infix));
 
-		bool result = pkb->isAssignExactPattern(10, infix);
+		Assert::IsTrue(pkb->isAssignExactPattern(10, infix));
+		Assert::IsTrue(pkb->isAssignContainsPattern(10, infix));
 
-		Assert::IsTrue(result);
+		StringToken ar1[] = { "4", "+", "(", "3", "+", "5", ")" };
+		InfixExpr in2 = InfixExpr(ar1, ar1 + sizeof(ar1) / sizeof(ar1[0]));
+		pkb->putExprForStmt(20, pkb->infixToPostfix(in2));
+
+		Assert::IsTrue(pkb->isAssignExactPattern(20, in2));
+		Assert::IsTrue(pkb->isAssignContainsPattern(20, in2));
+
+		StringToken p1[] = { "4", "+", "5"};
+		InfixExpr pattern1{ p1, p1 + 3 };
+		Assert::IsFalse(pkb->isAssignExactPattern(20, pattern1));
+		Assert::IsFalse(pkb->isAssignContainsPattern(20, pattern1));
 	}
 
 	TEST_METHOD(TestPatternMedium) {
@@ -36,10 +47,11 @@ public:
 		InfixExpr infix = InfixExpr(arr, arr + sizeof(arr) / sizeof(arr[0]));
 		pkb->putExprForStmt(6, pkb->infixToPostfix(infix));
 
-		StringToken p0[] = { "3", "5", "4", "2", "3", "/", "+", "1", "-", "*", "+", "7", "+", "9", "8", "*", "+" };
-		PostfixExpr postfix = PostfixExpr(p0, p0 + sizeof(p0) / sizeof(p0[0]));
+/*		StringToken p0[] = { "3", "5", "4", "2", "3", "/", "+", "1", "-", "*", "+", "7", "+", "9", "8", "*", "+" };
+		PostfixExpr postfix = PostfixExpr(p0, p0 + sizeof(p0) / sizeof(p0[0])); */
 
 		Assert::IsTrue(pkb->isAssignExactPattern(6, infix));
+		Assert::IsTrue(pkb->isAssignContainsPattern(6, infix));
 
 		StringToken p1[] = { "(", "4", "+", "2", "/", "3", ")", "-", "1" };
 		InfixExpr pattern1(p1, p1 + 9);
@@ -113,6 +125,60 @@ public:
 		StringToken p2[] = { "3", "+", "3", "+", "3", "+", "3" };
 		InfixExpr pattern2(p2, p2 + sizeof(p2) / sizeof(p2[0]));
 		Assert::IsFalse(pkb->isAssignContainsPattern(6, pattern2));
+	}
+
+	TEST_METHOD(TestPatternTricky2) {
+		PKB * pkb = PKB::getInstance();
+		pkb->clear();
+		pkb = PKB::getInstance();
+
+		StringToken arr[] = { "3", "+", "3", "+", "4", "+", "(", "3", "+", "3", "+",
+					"4", "+", "5", ")", "+", "(", "3", "+", "3", "+", "4", "+", "6", ")" };
+
+		InfixExpr infix = InfixExpr(arr, arr + sizeof(arr) / sizeof(arr[0]));
+		pkb->putExprForStmt(6, pkb->infixToPostfix(infix));
+
+		Assert::IsTrue(pkb->isAssignExactPattern(6, infix));
+		Assert::IsTrue(pkb->isAssignContainsPattern(6, infix));
+
+		StringToken p[] = { "3", "+", "3", "+", "4" };
+		InfixExpr pattern(p, p + sizeof(p) / sizeof(p[0]));
+		Assert::IsTrue(pkb->isAssignContainsPattern(6, pattern));
+
+		StringToken p2[] = { "3", "+", "3", "+", "5" };
+		InfixExpr pattern2(p2, p2 + sizeof(p2) / sizeof(p2[0]));
+		Assert::IsFalse(pkb->isAssignContainsPattern(6, pattern2));
+
+		StringToken p3[] = { "3", "+", "3", "+", "4", "+", "6"};
+		InfixExpr pattern3(p3, p3 + sizeof(p3) / sizeof(p3[0]));
+		Assert::IsTrue(pkb->isAssignContainsPattern(6, pattern3));
+
+		StringToken p4[] = { "3", "+", "4", "+", "5" };
+		InfixExpr pattern4(p4, p4 + sizeof(p4) / sizeof(p4[0]));
+		Assert::IsFalse(pkb->isAssignContainsPattern(6, pattern4));
+	}
+
+	TEST_METHOD(TestPatternTricky3) {
+		PKB * pkb = PKB::getInstance();
+		pkb->clear();
+		pkb = PKB::getInstance();
+
+		StringToken arr[] = { "(", "3", "-", "4", ")", "+", "(", "(", "2", "-", "4", ")",
+				"+", "(", "2", "+", "4", ")", ")" };
+
+		InfixExpr infix = InfixExpr(arr, arr + sizeof(arr) / sizeof(arr[0]));
+		pkb->putExprForStmt(6, pkb->infixToPostfix(infix));
+
+		Assert::IsTrue(pkb->isAssignExactPattern(6, infix));
+		Assert::IsTrue(pkb->isAssignContainsPattern(6, infix));
+
+		StringToken p[] = { "(", "3", "-", "4", ")", "+", "(", "2", "+", "4", ")" };
+		InfixExpr pattern(p, p + sizeof(p) / sizeof(p[0]));
+		Assert::IsFalse(pkb->isAssignContainsPattern(6, pattern));
+
+		StringToken p2[] = { "(", "2", "-", "4", ")", "+", "(", "2", "+", "4", ")" };
+		InfixExpr pattern2(p2, p2 + sizeof(p2) / sizeof(p2[0]));
+		Assert::IsTrue(pkb->isAssignContainsPattern(6, pattern2));
 	}
 };
 }

@@ -8,18 +8,19 @@
 
 #include "RelationshipType.h"
 
-typedef int Constant;
+typedef unsigned int ConstantProcStmtVarIndex;
+typedef ConstantProcStmtVarIndex Constant;
 typedef std::string StringToken;
 typedef std::vector<StringToken> ProgLine;
 typedef std::vector<StringToken> InfixExpr;
 typedef std::vector<StringToken> PostfixExpr;
 
-typedef unsigned int ProcStmtVarIndex; // Entry in StmtTable
-typedef ProcStmtVarIndex SynonymValue;  
+typedef ConstantProcStmtVarIndex SynonymValue;
+typedef ConstantProcStmtVarIndex ProcStmtVarIndex;
 typedef ProcStmtVarIndex StmtNumber;
 typedef ProcStmtVarIndex VarIndex;
 typedef ProcStmtVarIndex ProcIndex;
-typedef ProcStmtVarIndex ProcVarIndex; // Entry in ProcTable
+typedef ProcStmtVarIndex ProcVarIndex;
 typedef ProcVarIndex ProcIndex;
 typedef ProcVarIndex VarIndex;  
 typedef ProcStmtVarIndex ProcStmtIndex; //Entry in VarTable
