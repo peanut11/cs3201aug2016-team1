@@ -10,6 +10,8 @@ class DesignExtractor {
 
 public:
 	DesignExtractor();
+	void DesignExtractor::dfs(StmtNumber index, bool *visited,StmtNumber caller);
+	void DesignExtractor::processCallsStar();
 	void DesignExtractor::process();
 	void DesignExtractor::processFollowedByStar();
 	void DesignExtractor::processPARENT_STAR();
