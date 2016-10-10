@@ -57,6 +57,65 @@ std::map<int, GroupObject> QueryOptimization::doGroup(SynonymGroup *mSynonymGrou
 
 	}
 
+	for (ClauseWithObject* value : mQueryTable.getWiths()) {
+		int index = 0;
+
+		if (value->getRefObject1()->getRefType() == WithRefType::SYNONYM || value->getRefObject1()->getRefType() == WithRefType::ATTRREF) {
+			index = mSynonymGroup->getGroupIndex(value->getRefObject1()->getSynonym());
+		}
+		else if (value->getRefObject2()->getRefType() == WithRefType::SYNONYM) {
+			index = mSynonymGroup->getGroupIndex(value->getRefObject2()->getSynonym());
+		}
+
+		std::map<int, GroupObject>::iterator iter = mapGroupObject.find(index);
+
+		if (iter != mapGroupObject.end()) {
+			mapGroupObject[index].insert(value->clone());
+		}
+		else {
+			GroupObject newObject = GroupObject();
+			newObject.insert(value->clone());
+			mapGroupObject[index] = newObject;
+
+			if (index == 0) {
+				mapGroupObject[index].setGroupType(GroupType::GroupType::BOOLEAN);
+			}
+
+		}
+
+	}
+
+	for (ClausePatternObject* value : mQueryTable.getPatterns()) {
+		int index = 0;
+
+		index = mSynonymGroup->getGroupIndex(value->getPatternSynonymArgument());
+
+		if (index == -1) {
+			// the synonym is not related 
+			// try check first argument synonym
+			if (value->getIsFirstArgSynonym()) {
+				index = mSynonymGroup->getGroupIndex(value->getFirstArgument());
+			}
+		}
+
+		std::map<int, GroupObject>::iterator iter = mapGroupObject.find(index);
+
+		if (iter != mapGroupObject.end()) {
+			mapGroupObject[index].insert(value->clone());
+		}
+		else {
+			GroupObject newObject = GroupObject();
+			newObject.insert(value->clone());
+			mapGroupObject[index] = newObject;
+
+			if (index == 0 || index == -1) {
+				mapGroupObject[index].setGroupType(GroupType::GroupType::BOOLEAN);
+			}
+
+		}
+
+	}
+
 
 
 
@@ -119,7 +178,7 @@ std::string QueryOptimization::printFinalResult(std::vector<GroupObject> groups)
 				break;
 
 			case ClauseType::ClauseType::WITH:
-				output.append("\twith");
+				output.append("\t with");
 				break;
 
 			}

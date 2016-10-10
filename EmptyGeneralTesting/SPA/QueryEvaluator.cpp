@@ -59,9 +59,9 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
         // Get select object and all clause objects
 		ClauseSelectObject select;
 		//ClauseSelectObject select = queryTable.getSelect();
-        std::vector<ClausePatternObject> patterns = queryTable.getPatterns();
+        std::vector<ClausePatternObject*> patterns = queryTable.getPatterns();
         std::vector<ClauseSuchThatObject*> suchThats = queryTable.getSuchThats();
-        std::vector<ClauseWithObject> withs = queryTable.getWiths();
+        std::vector<ClauseWithObject*> withs = queryTable.getWiths();
 
         // Populate result grids
         populateResultGrids();
@@ -94,13 +94,13 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
             }
 
             // Iterate the with clauses vectors and evaluate them
-            for (std::vector<ClauseWithObject>::iterator it = withs.begin(); it != withs.end(); it++) {
+            for (std::vector<ClauseWithObject*>::iterator it = withs.begin(); it != withs.end(); it++) {
                 //ClauseWithObject withObject = evaluateWith(*it);
                 //relationshipHolds = relationshipHolds && withObject.getResultsBoolean();
             }
 
             // Iterate the pattern clauses vectors and evaluate them
-            for (std::vector<ClausePatternObject>::iterator it = patterns.begin(); it != patterns.end(); it++) {
+            for (std::vector<ClausePatternObject*>::iterator it = patterns.begin(); it != patterns.end(); it++) {
                // ClausePatternObject patternObject = evaluatePattern(*it);
                // relationshipHolds = relationshipHolds && patternObject.getResultsBoolean();
             }
@@ -579,8 +579,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 }
 
 ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
-	ClauseWithRefObject leftObj = withObject.getRefObject1();
-	ClauseWithRefObject rightObj = withObject.getRefObject2();
+	/*
+	ClauseWithRefObject* leftObj = withObject.getRefObject1();
+	ClauseWithRefObject* rightObj = withObject.getRefObject2();
 	
 	// left side is = synonym.attrName (attrRef)
 	if (leftObj.getRefType() == ATTRREF) {
@@ -720,7 +721,7 @@ ClauseWithObject QueryEvaluator::evaluateWith(ClauseWithObject withObject) {
 			} 
 		}
 	}
-
+	*/
 	return ClauseWithObject();
 }
 

@@ -131,31 +131,31 @@ ClauseSuchThatArgObject QueryValidator::createClauseSuchThatArgObject(EntityType
 
 // Clause Pattern object
 
-ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg) {
-	return ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+ClausePatternObject* QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg) {
+	return new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
 }
 
-ClausePatternObject QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg, std::string thirdArg) {
-	return ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
+ClausePatternObject* QueryValidator::createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg, std::string thirdArg) {
+	return new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
 }
 
 
 
 // Clause With object
-ClauseWithObject QueryValidator::createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg) {
-	return ClauseWithObject(firstArg, secondArg);
+ClauseWithObject* QueryValidator::createClauseWithObject(ClauseWithRefObject* firstArg, ClauseWithRefObject* secondArg) {
+	return new ClauseWithObject(firstArg, secondArg);
 }
 
-ClauseWithRefObject QueryValidator::createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
-	return ClauseWithRefObject(refType, synonym, attributeName);
+ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
+	return new ClauseWithRefObject(refType, synonym, attributeName);
 }
 
-ClauseWithRefObject QueryValidator::createClauseWithRefObject(WithRefType refType, std::string stringValue) {
-	return ClauseWithRefObject(refType, stringValue);
+ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, std::string stringValue) {
+	return new ClauseWithRefObject(refType, stringValue);
 }
 
-ClauseWithRefObject QueryValidator::createClauseWithRefObject(WithRefType refType, int integerValue) {
-	return ClauseWithRefObject(refType, integerValue);
+ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, int integerValue) {
+	return new ClauseWithRefObject(refType, integerValue);
 }
 
 SynonymOccurence *QueryValidator::getSynonymOccurence() {
@@ -395,8 +395,8 @@ bool QueryValidator::isClauseWith(std::string str) {
 	
 	AttrType::AttrType mAttributeType = AttrType::AttrType::INVALID;
 	SynonymObject selectedSynonymObj;
-	ClauseWithRefObject leftRefObject;
-	ClauseWithRefObject rightRefObject;
+	ClauseWithRefObject* leftRefObject;
+	ClauseWithRefObject* rightRefObject;
 		
 
 	std::string currentToken;
@@ -427,7 +427,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 		
 		
 		if (hasValidProgLine || (hasAttribute && hasValidAttrValue)) {
-			ClauseWithObject newWithObject = ClauseWithObject(leftRefObject, rightRefObject);
+			ClauseWithObject* newWithObject = this->createClauseWithObject(leftRefObject, rightRefObject);
 			this->mQueryTable.insertWithObject(newWithObject);
 			this->insertSynonymGroup(newWithObject);
 			return true;
@@ -742,7 +742,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 					throw Exceptions::exceed_common_synonym_count();
 				}
 
-				ClausePatternObject newPatternObj;
+				ClausePatternObject* newPatternObj;
 
 				if (numOfArgs == 2) {
 					newPatternObj = this->createClausePatternObject(selectedSynonymObj.getType(), firstArgType, isFirstArgSynonym, str, firstArg, secondArg);
@@ -1789,30 +1789,30 @@ void QueryValidator::insertSynonymGroup(ClauseSuchThatObject* object) {
 	}
 }
 
-void QueryValidator::insertSynonymGroup(ClauseWithObject object) {
-	if (object.getRefObject1().getRefType() == WithRefType::SYNONYM) {
-		this->mSynonymGroup->insertSynonym(object.getRefObject1().getSynonym());
+void QueryValidator::insertSynonymGroup(ClauseWithObject* object) {
+	if (object->getRefObject1()->getRefType() == WithRefType::SYNONYM) {
+		this->mSynonymGroup->insertSynonym(object->getRefObject1()->getSynonym());
 	}
 
-	if (object.getRefObject2().getRefType() == WithRefType::SYNONYM) {
-		if (object.getRefObject1().getRefType() == WithRefType::SYNONYM) {
-			this->mSynonymGroup->insertSynonym(object.getRefObject2().getSynonym(),
-				this->mSynonymGroup->getGroupIndex(object.getRefObject1().getSynonym()));
+	if (object->getRefObject2()->getRefType() == WithRefType::SYNONYM) {
+		if (object->getRefObject1()->getRefType() == WithRefType::SYNONYM) {
+			this->mSynonymGroup->insertSynonym(object->getRefObject2()->getSynonym(),
+				this->mSynonymGroup->getGroupIndex(object->getRefObject1()->getSynonym()));
 		}
 		else {
-			this->mSynonymGroup->insertSynonym(object.getRefObject2().getSynonym());
+			this->mSynonymGroup->insertSynonym(object->getRefObject2()->getSynonym());
 		}
 	}
 
 }
 
-void QueryValidator::insertSynonymGroup(ClausePatternObject object) {
+void QueryValidator::insertSynonymGroup(ClausePatternObject* object) {
 	/*Insert synonym group*/
-	this->mSynonymGroup->insertSynonym(object.getPatternSynonymArgument());
+	this->mSynonymGroup->insertSynonym(object->getPatternSynonymArgument());
 
-	if (object.getIsFirstArgSynonym()) {
-		this->mSynonymGroup->insertSynonym(object.getFirstArgument(),
-			this->mSynonymGroup->getGroupIndex(object.getPatternSynonymArgument()));
+	if (object->getIsFirstArgSynonym()) {
+		this->mSynonymGroup->insertSynonym(object->getFirstArgument(),
+			this->mSynonymGroup->getGroupIndex(object->getPatternSynonymArgument()));
 	}
 }
 

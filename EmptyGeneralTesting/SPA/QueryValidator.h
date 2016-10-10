@@ -93,15 +93,15 @@ class QueryValidator {
 	ClauseSuchThatArgObject createClauseSuchThatArgObject(EntityType type, std::string stringValue, int integerValue, bool isSynonym);
 	
 	// Clause Pattern object
- 	ClausePatternObject createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg);
-	ClausePatternObject createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string patternSynonymArg, std::string secondArg, std::string thirdArg);
+ 	ClausePatternObject* createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg);
+	ClausePatternObject* createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string patternSynonymArg, std::string secondArg, std::string thirdArg);
 
 	
 	// Clause With object
-	ClauseWithObject createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg);
-	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
-	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, std::string stringValue);
-	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, int integerValue);
+	ClauseWithObject* createClauseWithObject(ClauseWithRefObject* firstArg, ClauseWithRefObject* secondArg);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, std::string stringValue);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, int integerValue);
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
@@ -146,8 +146,8 @@ class QueryValidator {
 	*/
 
 	void insertSynonymGroup(ClauseSuchThatObject* object);
-	void insertSynonymGroup(ClauseWithObject object);
-	void insertSynonymGroup(ClausePatternObject object);
+	void insertSynonymGroup(ClauseWithObject* object);
+	void insertSynonymGroup(ClausePatternObject* object);
 
 
 public:

@@ -33,12 +33,12 @@ std::vector<ClauseSuchThatObject*>& QueryTable::getSuchThats()
 	return this->suchThats;
 }
 
-std::vector<ClauseWithObject> QueryTable::getWiths()
+std::vector<ClauseWithObject*> QueryTable::getWiths()
 {
 	return this->withs;
 }
 
-std::vector<ClausePatternObject> QueryTable::getPatterns()
+std::vector<ClausePatternObject*> QueryTable::getPatterns()
 {
 	return this->patterns;
 }
@@ -83,22 +83,22 @@ std::string QueryTable::toString() {
 	str.append("\n== Pattern ==\n");
 	for (auto value : this->patterns) {
 
-		if (value.getIsFirstArgSynonym()) {
+		if (value->getIsFirstArgSynonym()) {
 			str.append("true");
 		}
 		else {
 			str.append("false");
 		}
 
-		str.append(", " + value.getPatternSynonymArgument() + ", " + value.getFirstArgument() + ", " + value.getSecondArgument() + "\n");
+		str.append(", " + value->getPatternSynonymArgument() + ", " + value->getFirstArgument() + ", " + value->getSecondArgument() + "\n");
 
 	}
 
 	str.append("\n== With ==\n");
 	str.append("refType, synonym, str, int\n");
 	for (auto value : this->withs) {
-		str.append(getWithRefString(value.getRefObject1().getRefType()) + ", " + value.getRefObject1().getSynonym() + ", " + value.getRefObject1().getStringValue() + ", " + std::to_string(value.getRefObject1().getIntegerValue()));
-		str.append(" | " + getWithRefString(value.getRefObject2().getRefType()) + ", " + value.getRefObject2().getSynonym() + ", " + value.getRefObject2().getStringValue() + ", " + std::to_string(value.getRefObject2().getIntegerValue()) + "\n");
+		str.append(getWithRefString(value->getRefObject1()->getRefType()) + ", " + value->getRefObject1()->getSynonym() + ", " + value->getRefObject1()->getStringValue() + ", " + std::to_string(value->getRefObject1()->getIntegerValue()));
+		str.append(" | " + getWithRefString(value->getRefObject2()->getRefType()) + ", " + value->getRefObject2()->getSynonym() + ", " + value->getRefObject2()->getStringValue() + ", " + std::to_string(value->getRefObject2()->getIntegerValue()) + "\n");
 	}
 
 	
@@ -226,7 +226,7 @@ bool QueryTable::insertSuchThatObject(ClauseSuchThatObject* object) {
 	}
 }
 
-bool QueryTable::insertWithObject(ClauseWithObject object) {
+bool QueryTable::insertWithObject(ClauseWithObject* object) {
 	try {
 		this->withs.push_back(object);
 		return true;
@@ -236,7 +236,7 @@ bool QueryTable::insertWithObject(ClauseWithObject object) {
 	}
 }
 
-bool QueryTable::insertPatternObject(ClausePatternObject object) {
+bool QueryTable::insertPatternObject(ClausePatternObject* object) {
 	try {
 		this->patterns.push_back(object);
 		return true;
