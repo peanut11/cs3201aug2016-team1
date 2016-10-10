@@ -21,8 +21,16 @@ void GroupObject::setGroupType(GroupType::GroupType type) {
 	this->type = type;
 }
 
+void GroupObject::setHasContainAffects(bool value) {
+	this->hasContainAffects = value;
+}
+
 GroupType::GroupType GroupObject::getGroupType() const {
 	return this->type;
+}
+
+bool GroupObject::getHasContainAffects() {
+	return this->hasContainAffects;
 }
 
 std::string GroupObject::getGroupTypeString() {
@@ -31,12 +39,14 @@ std::string GroupObject::getGroupTypeString() {
 		return "BOOLEAN";
 	case GroupType::GroupType::NOT_RELATED:
 		return "NOT_RELATED";
-	case GroupType::GroupType::WITH_NOT_RELATED:
-		return "WITH_NOT_RELATED";
+	//case GroupType::GroupType::WITH_NOT_RELATED:
+	//	return "WITH_NOT_RELATED";
 	case GroupType::GroupType::RELATED:
 		return "RELATED";
-	case GroupType::GroupType::OTHERS:
-		return "OTHERS";
+	case GroupType::GroupType::NOT_RELATED_CONTAIN_AFFECTS:
+		return "NOT_RELATED_CONTAIN_AFFECTS";
+	default:
+		return "";
 	}
 }
 

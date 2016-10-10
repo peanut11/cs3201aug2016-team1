@@ -3,8 +3,7 @@ namespace GroupType {
 	enum GroupType {
 		BOOLEAN,
 		NOT_RELATED,
-		WITH_NOT_RELATED,
 		RELATED,
-		OTHERS
+		NOT_RELATED_CONTAIN_AFFECTS,
 	};
 }

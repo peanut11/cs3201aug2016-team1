@@ -388,7 +388,6 @@ namespace UnitTesting {
 			
 			Logger::WriteMessage(optimize.printMapGroupObjectToString(output).c_str());
 			Logger::WriteMessage(optimize.printFinalResult(result).c_str());
-
 			//Logger::WriteMessage(validator->getSynonymGroup()->toString().c_str());
 			Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 			

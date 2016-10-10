@@ -55,6 +55,12 @@ std::map<int, GroupObject> QueryOptimization::doGroup(SynonymGroup *mSynonymGrou
 
 		}
 
+		if (value->getRelationshipType() == RelationshipType::AFFECTS
+			|| value->getRelationshipType() == RelationshipType::AFFECTS_STAR) {
+			mapGroupObject[index].setHasContainAffects(true);
+		}
+
+
 	}
 
 	for (ClauseWithObject* value : mQueryTable.getWiths()) {
@@ -130,7 +136,13 @@ std::map<int, GroupObject> QueryOptimization::doGroup(SynonymGroup *mSynonymGrou
 			mapGroupObject[index].setGroupType(GroupType::GroupType::RELATED);
 		}
 		else {
-			mapGroupObject[index].setGroupType(GroupType::GroupType::NOT_RELATED);
+			if (mapGroupObject[index].getHasContainAffects()) {
+				mapGroupObject[index].setGroupType(GroupType::GroupType::NOT_RELATED_CONTAIN_AFFECTS);
+			}
+			else {
+				mapGroupObject[index].setGroupType(GroupType::GroupType::NOT_RELATED);
+			}
+			
 		}
 
 	}
