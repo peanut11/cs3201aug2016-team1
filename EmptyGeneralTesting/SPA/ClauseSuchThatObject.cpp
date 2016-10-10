@@ -5,8 +5,9 @@ ClauseSuchThatObject::ClauseSuchThatObject()
 	this->mClauseType = ClauseType::ClauseType::SUCH_THAT;
 }
 
-ClauseSuchThatObject::ClauseSuchThatObject(RelationshipType type, ClauseSuchThatArgObject argsOne, ClauseSuchThatArgObject argsTwo)
+ClauseSuchThatObject::ClauseSuchThatObject(RelationshipType type, ClauseSuchThatArgObject* argsOne, ClauseSuchThatArgObject* argsTwo)
 {
+	this->mClauseType = ClauseType::ClauseType::SUCH_THAT;
 	this->type = type;
 	this->argsOne = argsOne;
 	this->argsTwo = argsTwo;
@@ -17,12 +18,12 @@ RelationshipType ClauseSuchThatObject::getRelationshipType()
 	return type;
 }
 
-ClauseSuchThatArgObject ClauseSuchThatObject::getArgsOne()
+ClauseSuchThatArgObject* ClauseSuchThatObject::getArgsOne()
 {
 	return argsOne;
 }
 
-ClauseSuchThatArgObject ClauseSuchThatObject::getArgsTwo()
+ClauseSuchThatArgObject* ClauseSuchThatObject::getArgsTwo()
 {
 	return argsTwo;
 }

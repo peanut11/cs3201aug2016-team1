@@ -91,6 +91,12 @@
     <ClCompile Include="ClauseObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="SynonymGroup.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupObject.cpp">
+      <Filter>Source Files\QP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -205,6 +211,12 @@
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="GroupType.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="SynonymGroup.h">
+      <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupObject.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
   </ItemGroup>

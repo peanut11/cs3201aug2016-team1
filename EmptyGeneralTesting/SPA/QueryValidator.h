@@ -16,6 +16,7 @@
 #include "SynonymTable.h"
 #include "SynonymObject.h"
 #include "SynonymOccurence.h"
+#include "SynonymGroup.h"
 
 // #include <cctype>
 // #include <algorithm>
@@ -79,6 +80,7 @@ class QueryValidator {
 	static QueryValidator *_instance;
 	SynonymOccurence *mSynonymOccurence;
 	SynonymTable *mSynonymTable;
+	SynonymGroup *mSynonymGroup;
 	RelTable *mRelTable;
 	QueryTable mQueryTable;
 
@@ -87,19 +89,19 @@ class QueryValidator {
 	ClauseSelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
 	
 	// Clause Such that object
-	ClauseSuchThatObject createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject firstArg, ClauseSuchThatArgObject secondArg);
+	ClauseSuchThatObject* createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject* firstArg, ClauseSuchThatArgObject* secondArg);
 	ClauseSuchThatArgObject createClauseSuchThatArgObject(EntityType type, std::string stringValue, int integerValue, bool isSynonym);
 	
 	// Clause Pattern object
- 	ClausePatternObject createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg);
-	ClausePatternObject createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string patternSynonymArg, std::string secondArg, std::string thirdArg);
+ 	ClausePatternObject* createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string patternSynonymArg, std::string firstArg, std::string secondArg);
+	ClausePatternObject* createClausePatternObject(EntityType patternType, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string patternSynonymArg, std::string secondArg, std::string thirdArg);
 
 	
 	// Clause With object
-	ClauseWithObject createClauseWithObject(ClauseWithRefObject firstArg, ClauseWithRefObject secondArg);
-	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
-	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, std::string stringValue);
-	ClauseWithRefObject createClauseWithRefObject(WithRefType refType, int integerValue);
+	ClauseWithObject* createClauseWithObject(ClauseWithRefObject* firstArg, ClauseWithRefObject* secondArg);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, std::string stringValue);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, int integerValue);
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
@@ -143,6 +145,10 @@ class QueryValidator {
 	bool isConstant(std::string str);	// constant
 	*/
 
+	void insertSynonymGroup(ClauseSuchThatObject* object);
+	void insertSynonymGroup(ClauseWithObject* object);
+	void insertSynonymGroup(ClausePatternObject* object);
+
 
 public:
 	static QueryValidator *getInstance();
@@ -152,14 +158,16 @@ public:
 	void initStringTokenizer(std::string str);
 	void clearSynonymOccurence();
 	void clearSynonymTable();
+	void clearSynonymGroup();
 	void clearQueryTable();
 	
 
-	void addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object);
+	void addClauseSuchThatObject(std::vector<ClauseSuchThatObject*>& objects, ClauseSuchThatObject* object);
 
 	// Return methods
 	SynonymOccurence *getSynonymOccurence();
 	SynonymTable *getSynonymTable();
+	SynonymGroup *getSynonymGroup();
 	RelTable *getRelationshipTable();
 	QueryTable& getQueryTable();
 

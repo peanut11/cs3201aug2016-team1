@@ -15,6 +15,7 @@
     <ClCompile Include="ClauseSelectResultObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
     <ClCompile Include="Frontend.cpp" />
+    <ClCompile Include="GroupObject.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ClausePatternObject.cpp" />
     <ClCompile Include="PKB.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="StringTokenizer.cpp" />
     <ClCompile Include="ClauseSuchThatArgObject.cpp" />
     <ClCompile Include="ClauseSuchThatObject.cpp" />
+    <ClCompile Include="SynonymGroup.cpp" />
     <ClCompile Include="SynonymObject.cpp" />
     <ClCompile Include="SynonymOccurence.cpp" />
     <ClCompile Include="SynonymTable.cpp" />
@@ -51,6 +53,7 @@
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="DesignExtractor.h" />
     <ClInclude Include="Frontend.h" />
+    <ClInclude Include="GroupObject.h" />
     <ClInclude Include="GroupType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="ClausePatternObject.h" />
@@ -74,6 +77,7 @@
     <ClInclude Include="ClauseSelectObject.h" />
     <ClInclude Include="ClauseSuchThatArgObject.h" />
     <ClInclude Include="ClauseSuchThatObject.h" />
+    <ClInclude Include="SynonymGroup.h" />
     <ClInclude Include="SynonymObject.h" />
     <ClInclude Include="SynonymOccurence.h" />
     <ClInclude Include="SynonymTable.h" />

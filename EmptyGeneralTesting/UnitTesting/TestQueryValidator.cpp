@@ -14,10 +14,12 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
+		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;prog_line n1, n2;call c;constant const;\n";
 
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) Next(s1, s2)"));
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 
@@ -752,6 +754,10 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
+		validator->initStringTokenizer("Follows(s1,s2)"); // follows
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
 		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(c1,c2)"); // calls
 		validator->getNextToken();
@@ -1397,6 +1403,65 @@ public:
 
 
 	}
+
+	TEST_METHOD(TestQueryValidator_Query_Synonym_Group) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		std::string declaration = "procedure p, q;variable v1, v2, v3;assign a1, a2, a3;if ifstmt;while w;stmt s1, s2, s3, s4, s5;prog_line n1, n2;call c;constant const;\n";
+
+	
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Follows(s3,s1) Parent(s4,s5) Follows(s1,s4)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Follows(s3,s1) Parent(s4,s5) Follows(s4,s1)"));
+
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select <s1, s2, v2> such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
+
+		Logger::WriteMessage(validator->getSynonymGroup()->toString().c_str());
+
+
+	}
+
+	TEST_METHOD(TestQueryValidator_Synonym_Group_Only) {
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		SynonymGroup *mSynonymGroup = validator->getSynonymGroup();
+		/*
+		mSynonymGroup->insertSynonym("s3", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+
+		mSynonymGroup->insertSynonym("s4", 2);
+		mSynonymGroup->insertSynonym("s5", 2);
+
+		mSynonymGroup->insertSynonym("s5");
+		mSynonymGroup->insertSynonym("s6", 2);
+
+		mSynonymGroup->insertSynonym("s1");
+		mSynonymGroup->insertSynonym("s4", 1);
+		*/
+		mSynonymGroup->insertSynonym("s3", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+
+		mSynonymGroup->insertSynonym("s4", 2);
+		mSynonymGroup->insertSynonym("s5", 2);
+
+		mSynonymGroup->insertSynonym("s6", 3);
+		mSynonymGroup->insertSynonym("s7", 4);
+		mSynonymGroup->insertSynonym("s8", 4);
+		mSynonymGroup->insertSynonym("s9", 4);
+
+		mSynonymGroup->insertSynonym("s10", 5);
+
+		mSynonymGroup->insertSynonym("s7", 1);
+		mSynonymGroup->insertSynonym("s3", 1);
+
+		mSynonymGroup->insertSynonym("s10", 2);
+
+		Logger::WriteMessage(mSynonymGroup->toString().c_str());
+
+	}
+
+
+
 
 	};
 }

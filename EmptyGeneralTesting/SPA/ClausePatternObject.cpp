@@ -6,6 +6,7 @@ ClausePatternObject::ClausePatternObject() {
 }
 
 ClausePatternObject::ClausePatternObject(EntityType patternType, std::string patternSynonymArg, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg) {
+	this->mClauseType = ClauseType::ClauseType::PATTERN;
 	this->patternType = patternType;
 	this->patternSynonymArg = patternSynonymArg;
 	this->firstArgType = firstArgType;

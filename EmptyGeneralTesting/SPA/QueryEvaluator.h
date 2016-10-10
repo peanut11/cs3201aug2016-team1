@@ -10,6 +10,7 @@
 #include "ResultGridManager.h"
 #include "ClauseSelectObject.h"
 #include "SynonymTable.h"
+#include "QueryOptimization.h"
 
 class QueryEvaluator {
 private:
@@ -18,7 +19,8 @@ private:
 
 	PKB* pkb; 
 	QueryTable* queryTable;
-    ResultGridManager* resultManager;
+	QueryOptimization queryOptimizer;
+	ResultGridManager* resultManager;
     SynonymTable* synonymTable;
 
 public:
@@ -26,11 +28,13 @@ public:
     static VarName to_var_name(VarIndex varIndex);
 
     ClausePatternObject evaluatePattern(ClausePatternObject patternObject); 
-    ClauseSuchThatObject evaluateSuchThat(ClauseSuchThatObject suchThatRelObject);
-	ClauseWithObject evaluateWith(ClauseWithObject withObject);
+    ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject);
+	ClauseWithObject* evaluateWith(ClauseWithObject* withObject);
     std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
+	QueryOptimization getQueryOptimizer();
+
 
     // For unit tests
     PKB* getPKB();
