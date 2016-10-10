@@ -478,13 +478,17 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
 
+	if (rel == FOLLOWED_BY || rel == PARENT_OF || rel == PREVIOUS) {
+		throw std::runtime_error(""); // INTERNAL_USE_ERROR
+	}
+
 	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
 		stmtTable.push_back(StmtRow());
 	}
 
 	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
 
-	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWED_BY || rel == PARENT_OF || rel == NEXT || rel == PREVIOUS) {
+	if (rel == FOLLOWS || rel == FOLLOWS_STAR || rel == PARENT || rel == PARENT_STAR || rel == NEXT) {
 		const int OFFSET = 1;
 		int supplementaryRel;
 

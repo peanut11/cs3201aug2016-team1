@@ -16,10 +16,10 @@
 DesignExtractor::DesignExtractor() {}
 
 void DesignExtractor::process() {
-	processFollowedByStar();
+	// processFollowedByStar();
 	processPARENT_STAR();
 	processFollowsStar();
-	processParentOfStar();
+	// processParentOfStar();
 	updateStmtTable();
 	processCallsStar();
 }

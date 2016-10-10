@@ -99,7 +99,7 @@ int ProgramConverter::convert(std::string source) {
 			currentLeader = currentParent;
 			std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
 			if (pkb->getStmtTypeForStmt(currentParent) == WHILE) {
-				pkb->putStmtForStmt(currentParent, PREVIOUS, previous);
+				pkb->putStmtForStmt(previous, NEXT, currentParent);
 				previous = currentParent;
 			}
 			if (parentSet.empty()) {
@@ -299,7 +299,7 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	}
 
 	if (previous != 0) {
-		success = pkb->putStmtForStmt(lineNum, PREVIOUS, previous) && success;
+		success = pkb->putStmtForStmt(previous, NEXT, lineNum) && success;
 	}
 
 	return success;
