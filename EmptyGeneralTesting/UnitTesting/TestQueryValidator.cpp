@@ -135,7 +135,7 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
 
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
 		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
@@ -206,6 +206,10 @@ public:
 
 		// Success With
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1")); // 1 with clause
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = const.value")); // 1 with clause
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = c.stmt#"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = s1.stmt#"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = n2"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_) with s1.stmt# = 1 s2.stmt# = 4")); // 2 with clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1 such that Follows(s1, _)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
@@ -268,6 +272,14 @@ public:
 		};
 		Assert::ExpectException<Exceptions>(error9);
 
+		// Failure, prog_line
+		auto error10 = [validator] {
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = p.procName");
+		};
+		Assert::ExpectException<Exceptions>(error10);
+
+
 		// Failure, incorrect number of arguments
 		auto error100 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
@@ -282,6 +294,7 @@ public:
 		Assert::ExpectException<Exceptions>(error101);
 
 
+		
 
 	}
 

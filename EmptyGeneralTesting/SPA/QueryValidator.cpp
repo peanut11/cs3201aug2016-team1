@@ -409,10 +409,10 @@ bool QueryValidator::isClauseWith(std::string str) {
 	bool hasEqualSign = false;
 
 	bool isUnderWith = true;
-	bool isValueInteger = false;	// true if integer, false if string
+	//bool isValueInteger = false;	// true if integer, false if string
 	bool flag = false;
-
-	bool hasFirstAttribute = false;
+	bool isLeftAttributeProgramLine = false;
+	//bool hasFirstAttribute = false;
 
 	/*
 	1. Any statement synonyms have attr = stmt# e.g. w.stmt# = 2
@@ -460,6 +460,8 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 			if (selectedSynonymObj.getType() == EntityType::PROGRAM_LINE && isMatch(st.peekNextToken(), this->SYNTAX_EQUAL)) {
 				leftRefObject = this->createClauseWithRefObject(WithRefType::SYNONYM, selectedSynonymObj.getSynonym(), AttrType::INVALID);
+				
+				isLeftAttributeProgramLine = true;
 			}
 
 
@@ -655,6 +657,80 @@ bool QueryValidator::isClauseWith(std::string str) {
 					hasValidProgLine = true;
 					// declare right attr reference object
 					rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, atoi(currentToken.c_str()));
+				}
+				else if (isSynonym(currentToken) && isDeclaredSynonym(currentToken)) {
+
+					if (isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
+
+						st.popNextToken(); // remove dot
+
+						std::string rightSynonym = currentToken;
+						EntityType rightEntityType = this->getSynonymTable()->getObject(currentToken).getType();
+						AttrType::AttrType rightAttrType;
+
+						if (isMatch(st.peekNextToken(), SYNTAX_STATEMENT)) {
+							currentToken = st.nextToken(); // point to stmt
+							if (isMatch(st.peekNextToken(), SYNTAX_ATTRIBUTE_HEX)) {
+								currentToken = st.nextToken(); // point to #
+
+								rightAttrType = AttrType::AttrType::STMT_NO;
+							}
+						}
+						else {
+							rightAttrType = this->getAttrType(st.peekNextToken());
+						}
+
+						switch (rightEntityType) {
+						case EntityType::CALL:
+						case EntityType::STMT:
+
+							if (rightAttrType == AttrType::AttrType::STMT_NO) {
+								st.nextToken(); // point to second attrName
+												// declare right attr reference object
+								
+								hasValidAttrValue = true;
+								hasValidProgLine = true;
+
+								rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF,
+									rightSynonym,
+									rightAttrType);
+
+							}
+							break;
+
+						case EntityType::CONSTANT:
+
+							if (rightAttrType == AttrType::AttrType::VALUE) {
+								st.nextToken(); // point to second attrName
+												// declare right attr reference object
+								
+								hasValidAttrValue = true;
+								hasValidProgLine = true;
+								
+								rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF,
+									rightSynonym,
+									rightAttrType);
+							}
+
+						}
+
+
+					} // end if is dot
+					else {
+
+						// after synonym is not a dot
+						if (this->getSynonymTable()->getObject(currentToken).getType() == EntityType::PROGRAM_LINE) {
+							hasValidAttrValue = true;
+							hasValidProgLine = true;
+
+							rightRefObject = this->createClauseWithRefObject(WithRefType::SYNONYM,
+								currentToken,
+								AttrType::AttrType::INVALID);
+
+						}
+
+					}
+					
 				}
 				else { // Programe Line must have integer value after "=" 
 					throw Exceptions::invalid_attribute_value_single_synonym(selectedSynonymObj.getSynonym());
