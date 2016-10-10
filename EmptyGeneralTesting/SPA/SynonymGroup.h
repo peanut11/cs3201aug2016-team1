@@ -22,7 +22,9 @@ public:
 
 	std::string toString();
 	bool containSynonym(std::string synonym);
+	std::map<int, std::vector<std::string>> getMapGroupIndexToSynonyms();
 	int getGroupIndex(std::string synonym);
+	std::vector<std::string> getSynonyms(int groupIndex);
 
 
 };

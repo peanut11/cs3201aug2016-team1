@@ -28,7 +28,7 @@ ClauseSelectResultObject QueryTable::getResult() {
 	return this->result;
 }
 
-std::vector<ClauseSuchThatObject>& QueryTable::getSuchThats()
+std::vector<ClauseSuchThatObject*>& QueryTable::getSuchThats()
 {
 	return this->suchThats;
 }
@@ -58,25 +58,25 @@ std::string QueryTable::toString() {
 	str.append("size = " + std::to_string(this->suchThats.size()) + "\n");
 	for (auto value : this->suchThats) {
 
-		str.append(getRelationshipString(value.getRelationshipType()) + ": ");
+		str.append(getRelationshipString(value->getRelationshipType()) + ": ");
 
-		if (value.getArgsOne().getIsSynonym()) {
+		if (value->getArgsOne()->getIsSynonym()) {
 			str.append("true");
 		}
 		else {
 			str.append("false");
 		}
 
-		str.append(", " + getEntityString(value.getArgsOne().getEntityType()) + ", " + value.getArgsOne().getStringValue() + ", " + std::to_string(value.getArgsOne().getIntegerValue()) + " | ");
+		str.append(", " + getEntityString(value->getArgsOne()->getEntityType()) + ", " + value->getArgsOne()->getStringValue() + ", " + std::to_string(value->getArgsOne()->getIntegerValue()) + " | ");
 
-		if (value.getArgsTwo().getIsSynonym()) {
+		if (value->getArgsTwo()->getIsSynonym()) {
 			str.append("true");
 		}
 		else {
 			str.append("false");
 		}
 
-		str.append(", " + getEntityString(value.getArgsTwo().getEntityType()) + ", " + value.getArgsTwo().getStringValue() + ", " + std::to_string(value.getArgsTwo().getIntegerValue()) + "\n");
+		str.append(", " + getEntityString(value->getArgsTwo()->getEntityType()) + ", " + value->getArgsTwo()->getStringValue() + ", " + std::to_string(value->getArgsTwo()->getIntegerValue()) + "\n");
 
 	}
 	
@@ -214,7 +214,7 @@ bool QueryTable::insertSelectObject(ClauseSelectObject object) {
 
 }
 
-bool QueryTable::insertSuchThatObject(ClauseSuchThatObject object) {
+bool QueryTable::insertSuchThatObject(ClauseSuchThatObject* object) {
 	// second returns the status of insertion
 
 	try {

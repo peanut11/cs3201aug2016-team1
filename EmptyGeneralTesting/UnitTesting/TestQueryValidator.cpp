@@ -19,7 +19,7 @@ public:
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) Next(s1, s2)"));
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 

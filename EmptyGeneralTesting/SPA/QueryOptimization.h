@@ -2,14 +2,18 @@
 #include "ClauseObject.h"
 #include "QueryTable.h"
 #include "GroupType.h"
+#include "GroupObject.h"
 #include "SynonymGroup.h"
 #include <vector>
 
 class QueryOptimization {
 
 	SynonymGroup mSynonymGroup;
-
+	std::string getRelationshipString(RelationshipType type);
 	//std::vector<std::vector<ClauseObject>> groups;
+
+	//std::map<int, GroupObject> mapGroupObject;
+
 public:
 	/*
 	Assign all ClauseObjects in QueryTable into specific group
@@ -22,25 +26,30 @@ public:
 
 	QueryOptimization();
 
-	void beginClauseOptimize(std::vector<ClauseObject> clauseObjList);
-	
-	std::vector<std::vector<ClauseObject>> beginGroup(SynonymGroup mSynonymGroup, QueryTable mQueryTable);
+	std::vector<GroupObject> beginOptimize(SynonymGroup *mSynonymGroup, QueryTable mQueryTable);
+	std::map<int, GroupObject> doGroup(SynonymGroup *mSynonymGroup, QueryTable mQueryTable);
+	std::vector<GroupObject> doOptimizeGroups(std::map<int, GroupObject> groups);
+
+
+	std::string printFinalResult(std::vector<GroupObject> groups);
+	std::string printMapGroupObjectToString(std::map<int, GroupObject> mapGroupObject); //std::map<int, GroupObject> mMap
 	//std::vector<std::vector<ClauseObject>> getGroups();
 
+	/*
 	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);
 	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClausePatternObject mClauseObject);
 	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseWithObject mClauseObject);
-
-
-
 	bool isClauseReturnBoolean(ClauseSuchThatObject mClauseObject);
 	bool isClauseReturnBoolean(ClausePatternObject mClauseObject);
-
 	bool isClauseAffectsResult(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);
 	bool isClauseAffectsResult(QueryTable mQueryTable, ClausePatternObject mClauseObject);
 	bool isClauseAffectsResult(QueryTable mQueryTable, ClauseWithObject mClauseObject);
-
 	bool isClauseOthers(ClauseSuchThatObject mClauseObject);
+	*/
+
+	bool isSynonymGroupAffectResult(QueryTable mQueryTable, std::vector<std::string> synonymList);
+
+	
 
 	
 

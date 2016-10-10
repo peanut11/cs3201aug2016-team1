@@ -10,6 +10,7 @@ namespace UnitTesting {
 
 	TEST_CLASS(TestQueryOptimization) {
 
+		/*
 		TEST_METHOD(TestQueryOptimization_Check_Boolean) {
 			//QueryValidator *validator = QueryValidator::getInstance();
 			ClauseSuchThatObject suchThatObj;
@@ -19,38 +20,38 @@ namespace UnitTesting {
 
 			// Follows(2, 4)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS, 
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 2, false), 
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 4, false));
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 2, false), 
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 4, false));
 			Assert::IsTrue(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// Follows(_, _)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
 			Assert::IsTrue(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// Follows(_, 4)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false),
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 4, false));
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false),
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 4, false));
 			Assert::IsTrue(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// Follows(2, _)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 2, false),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 2, false),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
 			Assert::IsTrue(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// Uses(5, "y")
 			suchThatObj = ClauseSuchThatObject(RelationshipType::USES,
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 5, false),
-				ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 5, false),
+				new ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
 			Assert::IsTrue(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// pattern a1(_, _)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::USES,
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 5, false),
-				ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 5, false),
+				new ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
 			Assert::IsTrue(optimize.isClauseReturnBoolean(suchThatObj));
 
 
@@ -58,20 +59,20 @@ namespace UnitTesting {
 			// Failure, contains synonym
 			// Follows(p, _)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::PROCEDURE, "p", 0, true),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
+				new ClauseSuchThatArgObject(EntityType::PROCEDURE, "p", 0, true),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
 			Assert::IsFalse(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// Uses(s1, "y")
 			suchThatObj = ClauseSuchThatObject(RelationshipType::USES,
-				ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
-				ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
+				new ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
 			Assert::IsFalse(optimize.isClauseReturnBoolean(suchThatObj));
 
 			// Uses(p, "y")
 			suchThatObj = ClauseSuchThatObject(RelationshipType::USES,
-				ClauseSuchThatArgObject(EntityType::PROCEDURE, "p", 0, true),
-				ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
+				new ClauseSuchThatArgObject(EntityType::PROCEDURE, "p", 0, true),
+				new ClauseSuchThatArgObject(EntityType::VARIABLE, "y", 0, false));
 			Assert::IsFalse(optimize.isClauseReturnBoolean(suchThatObj));
 
 
@@ -100,14 +101,14 @@ namespace UnitTesting {
 
 			// Follows(p, _)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::PROCEDURE, "p", 0, true),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
+				new ClauseSuchThatArgObject(EntityType::PROCEDURE, "p", 0, true),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "", 0, false));
 			Assert::IsTrue(optimize.isClauseAffectsResult(mQueryTable, suchThatObj));
 
 			// Uses(s1, var1)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::USES,
-				ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
-				ClauseSuchThatArgObject(EntityType::VARIABLE, "var1", 0, true));
+				new ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::VARIABLE, "var1", 0, true));
 			Assert::IsTrue(optimize.isClauseAffectsResult(mQueryTable, suchThatObj));
 
 			// Pattern a1(_,_)
@@ -147,8 +148,8 @@ namespace UnitTesting {
 			// Failure, such that clauses not related to result clauses
 			// Affects(a10, a12)
 			suchThatObj = ClauseSuchThatObject(RelationshipType::AFFECTS,
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a10", 0, true),
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a12", 0, true));
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a10", 0, true),
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a12", 0, true));
 			Assert::IsFalse(optimize.isClauseAffectsResult(mQueryTable, suchThatObj));
 
 			// Failure, pattern clauses not related to result clauses
@@ -205,75 +206,75 @@ namespace UnitTesting {
 
 			// Follows(3, 4) => expect type BOOLEAN
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 3, false),
-				ClauseSuchThatArgObject(EntityType::CONSTANT, "", 4, false));
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 3, false),
+				new ClauseSuchThatArgObject(EntityType::CONSTANT, "", 4, false));
 			Assert::IsTrue(GroupType::GroupType::BOOLEAN == optimize.getGroupType(mQueryTable, suchThatObj));
 		
 			// Follows(_, _) => expect type BOOLEAN
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false));
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false));
 			Assert::IsTrue(GroupType::GroupType::BOOLEAN == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Modifies(a3, v3) => expect type NOT_RELATED
 			suchThatObj = ClauseSuchThatObject(RelationshipType::MODIFIES,
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a3", 0, true),
-				ClauseSuchThatArgObject(EntityType::VARIABLE, "v3", 0, true));
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a3", 0, true),
+				new ClauseSuchThatArgObject(EntityType::VARIABLE, "v3", 0, true));
 			Assert::IsTrue(GroupType::GroupType::NOT_RELATED == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Follows(s1, _) => expect type RELATED
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false));
+				new ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false));
 			Assert::IsTrue(GroupType::GroupType::RELATED == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Follows(_, s1) => expect type RELATED
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false),
-				ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true));
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false),
+				new ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true));
 			Assert::IsTrue(GroupType::GroupType::RELATED == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Follows(s1, s2) => expect type RELATED
 			suchThatObj = ClauseSuchThatObject(RelationshipType::FOLLOWS,
-				ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
-				ClauseSuchThatArgObject(EntityType::STMT, "s2", 0, true));
+				new ClauseSuchThatArgObject(EntityType::STMT, "s1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::STMT, "s2", 0, true));
 			Assert::IsTrue(GroupType::GroupType::RELATED == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Next(n1, n2) => expect type OTHERS
 			suchThatObj = ClauseSuchThatObject(RelationshipType::NEXT,
-				ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n1", 0, true),
-				ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n2", 0, true));
+				new ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n2", 0, true));
 			Assert::IsTrue(GroupType::GroupType::OTHERS == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Next(_, _) => expect type BOOLEAN
 			suchThatObj = ClauseSuchThatObject(RelationshipType::NEXT,
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false),
-				ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false));
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false),
+				new ClauseSuchThatArgObject(EntityType::WILDCARD, "_", 0, false));
 			Assert::IsTrue(GroupType::GroupType::BOOLEAN == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Next(n10, n11) => expect type NOT_RELATED
 			suchThatObj = ClauseSuchThatObject(RelationshipType::NEXT,
-				ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n10", 0, true),
-				ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n11", 0, true));
+				new ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n10", 0, true),
+				new ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n11", 0, true));
 			Assert::IsTrue(GroupType::GroupType::NOT_RELATED == optimize.getGroupType(mQueryTable, suchThatObj));
 
 
 			// Next*(n1, n2) => expect type OTHERS
 			suchThatObj = ClauseSuchThatObject(RelationshipType::NEXT_STAR,
-				ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n1", 0, true),
-				ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n2", 0, true));
+				new ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::PROGRAM_LINE, "n2", 0, true));
 			Assert::IsTrue(GroupType::GroupType::OTHERS == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Affects(a1, a2) => expect type OTHERS
 			suchThatObj = ClauseSuchThatObject(RelationshipType::AFFECTS,
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a1", 0, true),
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a2", 0, true));
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a2", 0, true));
 			Assert::IsTrue(GroupType::GroupType::OTHERS == optimize.getGroupType(mQueryTable, suchThatObj));
 
 			// Affects*(a1, a2) => expect type OTHERS
 			suchThatObj = ClauseSuchThatObject(RelationshipType::AFFECTS_STAR,
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a1", 0, true),
-				ClauseSuchThatArgObject(EntityType::ASSIGN, "a2", 0, true));
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a1", 0, true),
+				new ClauseSuchThatArgObject(EntityType::ASSIGN, "a2", 0, true));
 			Assert::IsTrue(GroupType::GroupType::OTHERS == optimize.getGroupType(mQueryTable, suchThatObj));
 
 
@@ -366,6 +367,33 @@ namespace UnitTesting {
 
 
 		}
+
+		*/
+
+		TEST_METHOD(TestQueryOptimization_Query) {
+			QueryProcessor *processor = QueryProcessor::getInstance();
+			QueryValidator *validator = QueryValidator::getInstance();
+			QueryOptimization optimize = QueryOptimization();
+
+			std::string declaration = "procedure p, q;variable v1, v2, v3;assign a1, a2, a3;if ifstmt;while w;stmt s1, s2, s3, s4, s5;prog_line n1, n2;call c;constant const;\n";
+			
+			//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s3,s1) Parent(s4,s5) Follows(s1,s4)"));
+			Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
+			//Assert::IsTrue(validator->isValidQuery(declaration + "Select <s1, s2, v2> such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
+
+			std::map<int, GroupObject> output = optimize.doGroup(validator->getSynonymGroup(),
+				validator->getQueryTable());
+	
+			std::vector<GroupObject> result = optimize.doOptimizeGroups(output);
+			
+			Logger::WriteMessage(optimize.printMapGroupObjectToString(output).c_str());
+			Logger::WriteMessage(optimize.printFinalResult(result).c_str());
+
+			//Logger::WriteMessage(validator->getSynonymGroup()->toString().c_str());
+			//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+			
+		}
+
 	};
 
 	

@@ -5,6 +5,7 @@ ClauseWithObject::ClauseWithObject() {
 }
 
 ClauseWithObject::ClauseWithObject(ClauseWithRefObject obj1, ClauseWithRefObject obj2) {
+	this->mClauseType = ClauseType::ClauseType::WITH;
 	this->obj1 = obj1;
 	this->obj2 = obj2;
 }

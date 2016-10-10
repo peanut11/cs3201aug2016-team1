@@ -12,11 +12,11 @@ namespace UnitTesting {
 public:
 	TEST_METHOD(TestQueryTable_Getters) {
 		QueryTable queryTable;
-		std::vector<ClauseSuchThatObject> suchThats;
+		std::vector<ClauseSuchThatObject*> suchThats;
 		std::vector<ClauseWithObject> withs;
 		std::vector<ClausePatternObject> patterns;
-		ClauseSuchThatObject st1(MODIFIES, ClauseSuchThatArgObject(), ClauseSuchThatArgObject());
-		ClauseSuchThatObject st2(USES, ClauseSuchThatArgObject(), ClauseSuchThatArgObject());
+		ClauseSuchThatObject* st1 = new ClauseSuchThatObject(MODIFIES, new ClauseSuchThatArgObject(), new ClauseSuchThatArgObject());
+		ClauseSuchThatObject* st2 = new ClauseSuchThatObject(USES, new ClauseSuchThatArgObject(), new ClauseSuchThatArgObject());
 		ClauseWithRefObject wr1(ATTRREF, "", AttrType::PROC_NAME);
 		ClauseWithRefObject wr2(SYNONYM, "", AttrType::PROC_NAME);
 		ClauseWithRefObject wr3(IDENTIFIER, "", AttrType::PROC_NAME);
@@ -40,7 +40,7 @@ public:
 
 		bool statusSuchThat = true;
 		for (int i = 0; i < 2; i++) {
-			if (queryTable.getSuchThats()[i].getRelationshipType() != suchThats[i].getRelationshipType()) {
+			if (queryTable.getSuchThats()[i]->getRelationshipType() != suchThats[i]->getRelationshipType()) {
 				statusSuchThat = false;
 			}
 		}

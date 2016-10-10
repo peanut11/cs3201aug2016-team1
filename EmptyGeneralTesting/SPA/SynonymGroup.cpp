@@ -41,10 +41,6 @@ void SynonymGroup::insertSynonym(std::string synonym, int groupIndex) {
 			this->updateAllSynonyms(this->mapGroupIndexToSynonyms[oldGroupIndex], oldGroupIndex, groupIndex);
 		}
 		
-
-		
-
-		
 	}
 }
 
@@ -88,6 +84,14 @@ bool SynonymGroup::containSynonym(std::string synonym) {
 		return true;
 	}
 	return false;
+}
+
+std::map<int, std::vector<std::string>> SynonymGroup::getMapGroupIndexToSynonyms() {
+	return this->mapGroupIndexToSynonyms;
+}
+
+std::vector<std::string> SynonymGroup::getSynonyms(int groupIndex) {
+	return this->mapGroupIndexToSynonyms[groupIndex];
 }
 
 int SynonymGroup::getGroupIndex(std::string synonym) {

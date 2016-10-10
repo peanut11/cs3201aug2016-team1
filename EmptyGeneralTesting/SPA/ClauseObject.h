@@ -8,8 +8,8 @@ protected:
 	ClauseType::ClauseType mClauseType;
 
 public:
-	virtual ~ClauseObject();
+	//virtual ~ClauseObject();
 	ClauseType::ClauseType getClauseType();
-
+	virtual ClauseObject* const clone()  = 0;
 
 };

@@ -89,7 +89,7 @@ class QueryValidator {
 	ClauseSelectObject createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean);
 	
 	// Clause Such that object
-	ClauseSuchThatObject createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject firstArg, ClauseSuchThatArgObject secondArg);
+	ClauseSuchThatObject* createClauseSuchThatObject(RelationshipType mRelType, ClauseSuchThatArgObject* firstArg, ClauseSuchThatArgObject* secondArg);
 	ClauseSuchThatArgObject createClauseSuchThatArgObject(EntityType type, std::string stringValue, int integerValue, bool isSynonym);
 	
 	// Clause Pattern object
@@ -145,7 +145,7 @@ class QueryValidator {
 	bool isConstant(std::string str);	// constant
 	*/
 
-	void insertSynonymGroup(ClauseSuchThatObject object);
+	void insertSynonymGroup(ClauseSuchThatObject* object);
 	void insertSynonymGroup(ClauseWithObject object);
 	void insertSynonymGroup(ClausePatternObject object);
 
@@ -162,7 +162,7 @@ public:
 	void clearQueryTable();
 	
 
-	void addClauseSuchThatObject(std::vector<ClauseSuchThatObject>& objects, ClauseSuchThatObject object);
+	void addClauseSuchThatObject(std::vector<ClauseSuchThatObject*>& objects, ClauseSuchThatObject* object);
 
 	// Return methods
 	SynonymOccurence *getSynonymOccurence();
