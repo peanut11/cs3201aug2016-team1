@@ -67,6 +67,7 @@ void DesignExtractor::dfs(StmtNumber index, bool *visited,StmtNumber caller) {
 			}
 		}
 }
+/*
 void DesignExtractor::processFollowedByStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
@@ -85,6 +86,7 @@ void DesignExtractor::processFollowedByStar() {
 		}
 	}
 }
+
 void DesignExtractor::processParentOfStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
@@ -102,6 +104,7 @@ void DesignExtractor::processParentOfStar() {
 		}
 	}
 }
+*/
 void DesignExtractor::processFollowsStar() {
 	PKB* pkb = PKB::getInstance();
 	StmtNumber size = pkb->getStmtTableSize();
