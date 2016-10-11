@@ -14,8 +14,6 @@ public:
 
     size_t getWhileListSize();
     void process();
-	StmtNumber getwhileList();
-	void processPARENT_STAR();
     void processCallsStar();
     void processFollowsStar();
     void processLoopForUseAndModifies(StmtNumber w);

@@ -78,7 +78,7 @@ public:
     }
     */
 
-	/*
+
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Follow1) {
         // FOLLOWS(3,4) = TRUE
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -96,23 +96,23 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
-        Logger::WriteMessage(std::to_string(argOne.getIntegerValue()).c_str());
-        Logger::WriteMessage(std::to_string(argTwo.getIntegerValue()).c_str());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
+        Logger::WriteMessage(std::to_string(argOne->getIntegerValue()).c_str());
+        Logger::WriteMessage(std::to_string(argTwo->getIntegerValue()).c_str());
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
         ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
-        ClauseSuchThatArgObject arg3 = ClauseSuchThatArgObject(STMT, std::string(""), 1, false);
-        ClauseSuchThatArgObject arg4 = ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
+        ClauseSuchThatArgObject* arg3 = new ClauseSuchThatArgObject(STMT, std::string(""), 1, false);
+        ClauseSuchThatArgObject* arg4 = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
         ClauseSuchThatObject* st1 = new ClauseSuchThatObject(type, arg3, arg4);
         ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1);
         Assert::IsFalse(re1->getResultsBoolean());
 
         // SELECT BOOLEAN such that Follows(3,4)
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -120,7 +120,7 @@ public:
 
         // SELECT s such that Follows(3,4)
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -144,11 +144,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -159,7 +159,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(s,3)
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -168,7 +168,7 @@ public:
 
         // SELECT s such that Follows(s,3)
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -193,11 +193,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -208,7 +208,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(a,3)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -217,7 +217,7 @@ public:
 
         // SELECT a such that Follows(a,3)
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -242,11 +242,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -258,7 +258,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(3,s)
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -267,13 +267,13 @@ public:
 
         // SELECT s such that Follows(3,s)
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(3).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Follow5) {
         //  Follows(3,a)
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -292,11 +292,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -308,7 +308,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(3,a)
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -317,13 +317,13 @@ public:
 
         // SELECT a such that Follows(3,a)
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Follow6) {
         //  Follows(_,10);
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -342,17 +342,17 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string(""), 10, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 10, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that Follows(_,10);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -361,7 +361,7 @@ public:
 
         // SELECT s such that Follows(_,10);
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -386,11 +386,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -402,7 +402,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(_,s);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -411,7 +411,7 @@ public:
 
         // SELECT s such that Follows(_,s);
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -436,15 +436,15 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         // SELECT BOOLEAN such that Follows(3,_);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -453,13 +453,13 @@ public:
 
         // SELECT s such that Follows(3,_);
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(9).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Follow9) {
         //  Follows(s,_);
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -478,11 +478,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
@@ -493,7 +493,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(s,_);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -502,13 +502,13 @@ public:
 
         // SELECT s such that Follows(s,_);
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Follow10) {
         //  Follows(s1,s2); Follow(a,s1);
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -537,11 +537,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s1");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
@@ -558,7 +558,7 @@ public:
 
         // SELECT BOOLEAN such that Follows(s1,s2)
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -568,7 +568,7 @@ public:
 
         // SELECT s1 such that Follows(s1,s2)
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -578,7 +578,7 @@ public:
 
         // SELECT s2 such that Follows(s1,s2)
         ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
-        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
+        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -588,7 +588,7 @@ public:
 
         // SELECT s such that Follows(s1,s2)
         ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj.getResultsBoolean());
+        std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -613,20 +613,20 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
-        ClauseSuchThatArgObject arg3 = ClauseSuchThatArgObject(STMT, std::string("y"), 0, false);
-        ClauseSuchThatObject st1 = ClauseSuchThatObject(type, argOne, arg3);
-        ClauseSuchThatObject re1 = evaluator->evaluateSuchThat(st1);
-        Assert::IsFalse(re1.getResultsBoolean());
+        ClauseSuchThatArgObject* arg3 = new ClauseSuchThatArgObject(STMT, std::string("y"), 0, false);
+        ClauseSuchThatObject* st1 = new ClauseSuchThatObject(type, argOne, arg3);
+        ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1);
+        Assert::IsFalse(re1->getResultsBoolean());
 
         // SELECT BOOLEAN such that (Modifies(3,"x"))
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -635,7 +635,7 @@ public:
 
         // SELECT s such that (Modifies(3,"x"))
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -660,11 +660,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
         std::set<VarName> updated = evaluator->getValuesForSynonym("v");
         for (std::set<VarName>::iterator it = updated.begin(); it != updated.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
@@ -673,7 +673,7 @@ public:
 
         // SELECT BOOLEAN such that (Modifies(3,v))
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -682,13 +682,13 @@ public:
 
         // SELECT v such that (Modifies(3,v))
         ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Modifies3) {
         // (Modifies(3,_)
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -707,17 +707,17 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(VARIABLE, std::string("_"), 0, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("_"), 0, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         Logger::WriteMessage("=============");
 
         // SELECT BOOLEAN such that (Modifies(3,_)
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -726,13 +726,14 @@ public:
 
         // SELECT v such that (Modifies(3,_)
         ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
+	/*
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Modifies4) {
         // (Modifies(s,"x")
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -750,11 +751,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -767,7 +768,7 @@ public:
 
         // SELECT BOOLEAN such that (Modifies(s,"x")
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -776,13 +777,15 @@ public:
 
         // SELECT s such that (Modifies(s,"x")
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
     }
+	*/
 
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Modifies5) {
         // (Modifies(s,_);
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -800,11 +803,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -817,7 +820,7 @@ public:
 
         // SELECT BOOLEAN such that (Modifies(s,_);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -826,13 +829,13 @@ public:
 
         // SELECT s such that (Modifies(s,_);
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results1.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Modifies6) {
         // Modifies(s,v);
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -858,11 +861,11 @@ public:
         Logger::WriteMessage("=============");
 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -880,7 +883,7 @@ public:
 
         // SELECT BOOLEAN such that Modifies(s,v);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -889,7 +892,7 @@ public:
 
         // SELECT s such that Modifies(s,v);
         ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -899,13 +902,13 @@ public:
 
         // SELECT v such that Modifies(s,v);
         ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
+        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results2.size()).c_str());
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern1) {
         // Pattern a(v,_)
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -936,9 +939,9 @@ public:
         std::string firstArg = "v";
         std::string secondArg = "_";
         bool isFirstArgSynonym = true;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -956,7 +959,7 @@ public:
 
         // SELECT BOOLEAN such that Pattern a(v,_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -965,7 +968,7 @@ public:
 
         // SELECT a such that Pattern a(v,_)
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -974,7 +977,7 @@ public:
 
         // SELECT v such that Pattern a(v,_)
         ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
+        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1003,13 +1006,13 @@ public:
         std::string firstArg = "_";
         std::string secondArg = "_";
         bool isFirstArgSynonym = false;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         // SELECT BOOLEAN such that Pattern a(_,_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1018,14 +1021,14 @@ public:
 
         // SELECT a such that Pattern a(_,_)
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
-
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern3) {
         // Pattern a("x",_)
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1048,9 +1051,9 @@ public:
         std::string firstArg = "x";
         std::string secondArg = "_";
         bool isFirstArgSynonym = false;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -1061,7 +1064,7 @@ public:
 
         // SELECT BOOLEAN such that Pattern a("x",_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1070,14 +1073,15 @@ public:
 
         // SELECT a such that Pattern a("x",_)
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
-
+	
+	/*
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern4) {
         // Pattern a(v,"_<constant/variable>_")
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1108,9 +1112,9 @@ public:
         std::string firstArg = "v";
         std::string secondArg = "_z_";
         bool isFirstArgSynonym = true;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -1128,7 +1132,7 @@ public:
 
         // SELECT BOOLEAN such that Pattern a(v,"_<constant/variable>_")
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1137,7 +1141,7 @@ public:
 
         // SELECT a such that Pattern a(v,"_<constant/variable>_")
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1146,7 +1150,7 @@ public:
 
         // SELECT a such that Pattern a(v,"_<constant/variable>_")
         ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj.getResultsBoolean());
+        std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1175,9 +1179,9 @@ public:
         std::string firstArg = "_";
         std::string secondArg = "_z_";
         bool isFirstArgSynonym = false;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -1188,7 +1192,7 @@ public:
 
         // SELECT BOOLEAN such that a(_, "_<constant/variable>_")
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1197,7 +1201,7 @@ public:
 
         // SELECT a such that Pattern a(_, "_<constant/variable>_")
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1227,9 +1231,9 @@ public:
         std::string firstArg = "x";
         std::string secondArg = "_z_";
         bool isFirstArgSynonym = false;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
 
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
@@ -1240,7 +1244,7 @@ public:
 
         // SELECT BOOLEAN such that Pattern a("x","_<constant/variable>_")
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1249,14 +1253,14 @@ public:
 
         // SELECT a such that Pattern a("x","_<constant/variable>_")
         ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
-
+		
     TEST_METHOD(TestQueryEvaluator_TestEvaluateFollowPattern1) {
         // Follow (a,7) and Pattern a(v,_)
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1283,11 +1287,11 @@ public:
 
         // Follow (a,7)
         RelationshipType type = FOLLOWS;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(STMT, std::string(""), 7, false);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 7, false);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
@@ -1301,9 +1305,9 @@ public:
         std::string firstArg = "v";
         std::string secondArg = "_";
         bool isFirstArgSynonym = true;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj1 = evaluator->evaluatePattern(patternObj);
-        Assert::IsFalse(resultObj1.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj1 = evaluator->evaluatePattern(patternObj);
+        Assert::IsFalse(resultObj1->getResultsBoolean());
         Logger::WriteMessage("====asdasdsad======");
 
         std::set<StmtNumber> updated1 = resultManager->getValuesForSynonym("a");
@@ -1315,7 +1319,7 @@ public:
 
         // SELECT BOOLEAN such that  Follow (a,8) and Pattern a(v,_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean() && resultObj1.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1324,14 +1328,15 @@ public:
 
         // SELECT a such that  Follow (a,8) and Pattern a(v,_)
         ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
         Assert::AreEqual(std::to_string(0).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
-
+	*/
+	
     TEST_METHOD(TestQueryEvaluator_TestEvaluateModifiesPattern1) {
         // Modifies(8,v) and Pattern a(v,_)
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1358,11 +1363,11 @@ public:
 
         // Modifies(8,v) 
         RelationshipType type = MODIFIES;
-        ClauseSuchThatArgObject argOne = ClauseSuchThatArgObject(STMT, std::string(""), 8, false);
-        ClauseSuchThatArgObject argTwo = ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
-        ClauseSuchThatObject suchThatObj = ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj.getResultsBoolean());
+        ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 8, false);
+        ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
+        ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        Assert::IsTrue(resultObj->getResultsBoolean());
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("v");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
@@ -1376,9 +1381,9 @@ public:
         std::string firstArg = "v";
         std::string secondArg = "_";
         bool isFirstArgSynonym = true;
-        ClausePatternObject patternObj = ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject resultObj1 = evaluator->evaluatePattern(patternObj);
-        Assert::IsTrue(resultObj1.getResultsBoolean());
+        ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+        ClausePatternObject* resultObj1 = evaluator->evaluatePattern(patternObj);
+        Assert::IsTrue(resultObj1->getResultsBoolean());
         std::set<StmtNumber> updated1 = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
@@ -1388,7 +1393,7 @@ public:
 
         // SELECT BOOLEAN such that  Modifies(8,v)  and Pattern a(v,_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj.getResultsBoolean() && resultObj1.getResultsBoolean());
+        std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1397,7 +1402,7 @@ public:
 
         // SELECT v such that  Modifies(8,v)  and Pattern a(v,_)
         ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj.getResultsBoolean());
+        std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
@@ -1405,9 +1410,6 @@ public:
         Logger::WriteMessage("=============");
     }
     
-	*/
-
-
 };
 
 }
