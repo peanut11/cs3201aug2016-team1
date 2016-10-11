@@ -16,6 +16,8 @@ public:
 
 	RelObject(RelationshipType type, std::vector<EntityType> argsOneTypes, std::vector<EntityType> argsTwoTypes, int numOfArgs);
 
+	void setRelationshipType(RelationshipType type);
+
 	RelationshipType getRelObjectType();
 	std::vector<EntityType> getArgsOneTypes();
 	std::vector<EntityType> getArgsTwoTypes();
