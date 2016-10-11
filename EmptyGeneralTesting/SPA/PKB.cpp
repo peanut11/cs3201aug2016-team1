@@ -56,8 +56,8 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
 		}
 		int supplementaryRel = rel + 1;
 
-		supplementaryRel = RelationshipType(rel + 1);
-		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
+		
+		StmtEntry entry = stmtTable[stmtOrProcIndex][supplementaryRel];
 		return entry.find(item) != entry.end();
 
 	} else if (rel == CALLS || rel == CALLS_STAR) {
