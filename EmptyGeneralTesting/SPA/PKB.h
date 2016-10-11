@@ -58,8 +58,6 @@ public:
 	bool putStmtCallProc(StmtNumber stmt, ProcName procCalled);
 
     // API used by QP and DE
-    virtual bool isAssignHasExpr(StmtNumber, StringToken);    // Deprecated
-    virtual bool isAssignHasSubexpr(StmtNumber, StringToken); // Deprecated
     virtual bool is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item);
 	virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
     virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);

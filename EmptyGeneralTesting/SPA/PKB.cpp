@@ -50,30 +50,23 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
-    
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
-
-		rel = RelationshipType(rel + 1);
+		// rel = RelationshipType(rel + 1);
 		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
 		return entry.find(item) != entry.end();
+
 	} else if (rel == CALLS || rel == CALLS_STAR) {
 		if (stmtOrProcIndex >= procTable.size()) {
 			return false;
 		}
 		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
+
 	} else {
 		throw Exception::INVALID_RELATION;
 	}
-
-	
-}
-
-// Deprecated
-bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
-	return false;
 }
 
 int operatorRank(StringToken s) {
@@ -132,11 +125,6 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	}
 
 	return result;
-}
-
-// Deprecated
-bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
-	return false;
 }
 
 bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
@@ -276,11 +264,11 @@ StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
     if (rel != MODIFIES && rel != USES) {
-        throw std::invalid_argument("");
+        throw Exception::INVALID_VAR_STMT_RELATION;
     }
 
     if (varIndex >= varTable.size()) {
-        throw std::out_of_range("");
+        throw Exception::INVALID_VAR_INDEX;
     }
 
     return varTable[varIndex][rel];
