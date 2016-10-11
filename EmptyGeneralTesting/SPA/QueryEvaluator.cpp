@@ -1183,14 +1183,14 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 
 }
 
-ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternObject) {
-    EntityType patternType = patternObject.getPatternType();
-    EntityType firstArgType = patternObject.getFirstArgumentType();
-    std::string patternSynonymArg = patternObject.getPatternSynonymArgument();
-    std::string firstArg = patternObject.getFirstArgument();
-    std::string secondArg = patternObject.getSecondArgument();
-    std::string thirdArg = patternObject.getThirdArgument();
-    bool isFirstArgSynonym = patternObject.getIsFirstArgSynonym();
+ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patternObject) {
+    EntityType patternType = patternObject->getPatternType();
+    EntityType firstArgType = patternObject->getFirstArgumentType();
+    std::string patternSynonymArg = patternObject->getPatternSynonymArgument();
+    std::string firstArg = patternObject->getFirstArgument();
+    std::string secondArg = patternObject->getSecondArgument();
+    std::string thirdArg = patternObject->getThirdArgument();
+    bool isFirstArgSynonym = patternObject->getIsFirstArgSynonym();
     bool relationshipHolds = true;
 
     // ASSIGN pattern:
@@ -1229,7 +1229,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
                 // Check if relationship holds/have results
                 if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
-                    patternObject.setResultsBoolean(true);
+                    patternObject->setResultsBoolean(true);
                 }
 
                 // Update the results table
@@ -1240,7 +1240,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
             else if (firstArg == "_") {
                 // Check if theres any statements number inside
                 if (resultManager->getValuesForSynonym(patternSynonymArg).size() > 0) {
-                    patternObject.setResultsBoolean(true);
+                    patternObject->setResultsBoolean(true);
                 }
             }
             // pattern a("x",_)
@@ -1261,7 +1261,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
                 // Check if relationship holds/have results
                 if (evaluatedS.size() > 0) {
-                    patternObject.setResultsBoolean(true);
+                    patternObject->setResultsBoolean(true);
                 }
 
                 // Update the results table
@@ -1304,7 +1304,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
                 // Check if relationship holds/have results
                 if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
-                    patternObject.setResultsBoolean(true);
+                    patternObject->setResultsBoolean(true);
                 }
 
                 // Update the results table
@@ -1335,7 +1335,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
                 // Check if relationship holds/have results
                 if (evaluatedPatternSynonymStatements.size() > 0) {
-                    patternObject.setResultsBoolean(true);
+                    patternObject->setResultsBoolean(true);
                 }
 
                 // Update the results table
@@ -1362,7 +1362,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
                 // Check if relationship holds/have results
                 if (evaluatedS.size() > 0) {
-                    patternObject.setResultsBoolean(true);
+                    patternObject->setResultsBoolean(true);
                 }
 
                 // Update the results table
@@ -1406,7 +1406,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
 				// Check if relationship holds/have results
 				if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
-					patternObject.setResultsBoolean(true);
+					patternObject->setResultsBoolean(true);
 				}
 
 				// Update the results table
@@ -1417,7 +1417,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 			else if (firstArg == "_") {
 				// Check if theres any statements number inside
 				if (resultManager->getValuesForSynonym(patternSynonymArg).size() > 0) {
-					patternObject.setResultsBoolean(true);
+					patternObject->setResultsBoolean(true);
 				}
 			}
 			// Pattern w("i",_)
@@ -1438,7 +1438,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
 				// Check if relationship holds/have results
 				if (evaluatedS.size() > 0) {
-					patternObject.setResultsBoolean(true);
+					patternObject->setResultsBoolean(true);
 				}
 
 				// Update the results table
@@ -1482,7 +1482,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
 				// Check if relationship holds/have results
 				if (updatedStatements.size() > 0 || updatedVariables.size() > 0) {
-					patternObject.setResultsBoolean(true);
+					patternObject->setResultsBoolean(true);
 				}
 
 				// Update the results table
@@ -1493,7 +1493,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 			else if (firstArg == "_") {
 				// Check if theres if statements inside source program
 				if (resultManager->getValuesForSynonym(patternSynonymArg).size() > 0) {
-					patternObject.setResultsBoolean(true);
+					patternObject->setResultsBoolean(true);
 				}
 			}
 			// pattern if("x",_,_)
@@ -1514,7 +1514,7 @@ ClausePatternObject QueryEvaluator::evaluatePattern(ClausePatternObject patternO
 
 				// Check if relationship holds/have results
 				if (evaluatedS.size() > 0) {
-					patternObject.setResultsBoolean(true);
+					patternObject->setResultsBoolean(true);
 				}
 
 				// Update the results table

@@ -27,7 +27,7 @@ public:
 	static QueryEvaluator* getInstance();
     static VarName to_var_name(VarIndex varIndex);
 
-    ClausePatternObject evaluatePattern(ClausePatternObject patternObject); 
+    ClausePatternObject* evaluatePattern(ClausePatternObject* patternObject); 
     ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject);
 	ClauseWithObject* evaluateWith(ClauseWithObject* withObject);
     std::vector<std::string> evaluate(QueryTable queryTable);
