@@ -54,7 +54,9 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
-		// rel = RelationshipType(rel + 1);
+		int supplementaryRel = rel + 1;
+
+		supplementaryRel = RelationshipType(rel + 1);
 		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
 		return entry.find(item) != entry.end();
 
