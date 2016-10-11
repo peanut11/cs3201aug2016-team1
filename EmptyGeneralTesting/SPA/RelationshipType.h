@@ -24,5 +24,7 @@ enum RelationshipType {
     NEXT_STAR,
 	AFFECTS,
 	AFFECTS_STAR,
+	MODIFIES_P,
+	USES_P,
 	INVALID_RELATIONSHIP
 };
