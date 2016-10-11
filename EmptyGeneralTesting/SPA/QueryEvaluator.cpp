@@ -12,6 +12,18 @@
 
 QueryEvaluator* QueryEvaluator::_instance = nullptr;
 
+std::vector<StringToken> QueryEvaluator::to_tokens(std::string str) {
+    // Note: QueryPreProcessor should store std::vector<StringToken>
+    StringTokenizer st = StringTokenizer(str, DelimiterMode::QUERY_PREPROCESSOR);
+    std::vector<StringToken> tokens;
+
+    while (st.hasMoreTokens()) {
+        tokens.push_back(st.nextToken());
+    }
+
+    return tokens;
+}
+
 QueryEvaluator* QueryEvaluator::getInstance() {
     if (_instance == nullptr) {
         _instance = new QueryEvaluator();
@@ -1315,7 +1327,7 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                 for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
                     for (VarIndexSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
                         if (pkb->is(MODIFIES, *cs, *s)) {
-                            if (pkb->isAssignHasSubexpr(*cs, secondArg)) {
+                            if (pkb->isAssignContainsPattern(*cs, to_tokens(secondArg))) {
                                 evaluatedPatternSynonymStatements.insert(*cs);
                                 evaluatedfirstArgSynonymVariables.insert(*s);
                                 break;
@@ -1356,7 +1368,7 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                 for (StmtSetIterator cs = patternSynonymStatements.begin(); cs != patternSynonymStatements.end(); cs++) {
                     for (VarIndexSetIterator s = firstArgSynonymVariables.begin(); s != firstArgSynonymVariables.end(); s++) {
                         if (pkb->is(MODIFIES, *cs, *s)) {
-                            if (pkb->isAssignHasSubexpr(*cs, secondArg)) {
+                            if (pkb->isAssignContainsPattern(*cs, to_tokens(secondArg))) {
                                 evaluatedPatternSynonymStatements.insert(*cs);
                                 break;
                             }
@@ -1385,7 +1397,7 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                     // Check if the existing statement modifies the 'variable'
                     if (pkb->is(MODIFIES, *i, pkb->getVarIndex(firstArg))) {
                         // If yes, check if this statement uses the second argument subexpression
-                        if (pkb->isAssignHasSubexpr(*i, secondArg)) {
+                        if (pkb->isAssignContainsPattern(*i, to_tokens(secondArg))) {
                             evaluatedS.insert(*i);
                         }
                     }

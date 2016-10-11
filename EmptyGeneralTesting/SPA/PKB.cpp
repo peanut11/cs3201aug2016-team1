@@ -50,30 +50,23 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
-    
 	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
-
-		rel = RelationshipType(rel + 1);
+		// rel = RelationshipType(rel + 1);
 		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
 		return entry.find(item) != entry.end();
+
 	} else if (rel == CALLS || rel == CALLS_STAR) {
 		if (stmtOrProcIndex >= procTable.size()) {
 			return false;
 		}
 		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
+
 	} else {
 		throw Exception::INVALID_RELATION;
 	}
-
-	
-}
-
-// Deprecated
-bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
-	return false;
 }
 
 int operatorRank(StringToken s) {
@@ -132,11 +125,6 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	}
 
 	return result;
-}
-
-// Deprecated
-bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
-	return false;
 }
 
 bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
@@ -276,11 +264,11 @@ StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
     if (rel != MODIFIES && rel != USES) {
-        throw std::invalid_argument("");
+        throw Exception::INVALID_VAR_STMT_RELATION;
     }
 
     if (varIndex >= varTable.size()) {
-        throw std::out_of_range("");
+        throw Exception::INVALID_VAR_INDEX;
     }
 
     return varTable[varIndex][rel];
@@ -509,12 +497,12 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	if (rel == MODIFIES || rel == USES || rel == CALLS) {
-		throw Exception::INVALID_STMT_STMT_RELATION;
+    if (rel == FOLLOWED_BY || rel == FOLLOWED_BY_STAR || rel == PARENT_OF || rel == PARENT_OF_STAR || rel == PREVIOUS) {
+        throw Exception::INTERNAL_USE_ERROR;
 
-	} else if (rel == FOLLOWED_BY || rel == PARENT_OF || rel == PREVIOUS) {
-		throw Exception::INTERNAL_USE_ERROR;
-	}
+    } else if (rel != FOLLOWS && rel != FOLLOWS_STAR && rel != PARENT && rel != PARENT_STAR && rel != NEXT) {
+        throw Exception::INVALID_STMT_STMT_RELATION;
+    }
 
 	while (stmtA >= stmtTable.size() || stmtB >= stmtTable.size()) {
 		stmtTable.push_back(StmtRow());
@@ -522,10 +510,8 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
 
-	if (rel == FOLLOWS || rel == FOLLOWS_STAR || rel == PARENT || rel == PARENT_STAR || rel == NEXT) {
-		int supplementaryRel = rel + 1;
-		success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
-	}
+    int supplementaryRel = rel + 1;
+	success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
 
 	return success;
 }
