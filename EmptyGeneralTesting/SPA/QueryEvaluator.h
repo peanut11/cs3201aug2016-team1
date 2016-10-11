@@ -19,7 +19,7 @@ private:
 
 	PKB* pkb; 
 	QueryTable* queryTable;
-	QueryOptimization queryOptimizer;
+	QueryOptimization* queryOptimizer;
 	ResultGridManager* resultManager;
     SynonymTable* synonymTable;
 
@@ -33,7 +33,7 @@ public:
     std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
-	QueryOptimization getQueryOptimizer();
+	QueryOptimization* getQueryOptimizer();
 
 
     // For unit tests

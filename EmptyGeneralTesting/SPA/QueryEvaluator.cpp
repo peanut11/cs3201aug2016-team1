@@ -28,9 +28,10 @@ QueryEvaluator::QueryEvaluator() {
     pkb = PKB::getInstance();
     synonymTable = SynonymTable::getInstance();
     resultManager = new ResultGridManager();
+	queryOptimizer = new QueryOptimization();
 }
 
-QueryOptimization QueryEvaluator::getQueryOptimizer() {
+QueryOptimization* QueryEvaluator::getQueryOptimizer() {
 	return this->queryOptimizer;
 }
 
@@ -53,39 +54,68 @@ std::set<VarName> QueryEvaluator::getValuesForSynonym(SynonymString syn) {
 std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
     // Get new instance for new query
     delete resultManager;
+	delete queryOptimizer;
     resultManager = new ResultGridManager();
+	queryOptimizer = new QueryOptimization();
 
     try {
         // Get select object and all clause objects
 		ClauseSelectObject select;
 		//ClauseSelectObject select = queryTable.getSelect();
-        std::vector<ClausePatternObject*> patterns = queryTable.getPatterns();
-        std::vector<ClauseSuchThatObject*> suchThats = queryTable.getSuchThats();
-        std::vector<ClauseWithObject*> withs = queryTable.getWiths();
+        //std::vector<ClausePatternObject*> patterns = queryTable.getPatterns();
+        //std::vector<ClauseSuchThatObject*> suchThats = queryTable.getSuchThats();
+        //std::vector<ClauseWithObject*> withs = queryTable.getWiths();
 
         // Populate result grids
         populateResultGrids();
 
-        // Boolean status on relationships holds
-        bool relationshipHolds = true;
-/*
-		// group queries into optimized groups
-		std::vector<std::vector<ClauseObject>> groupQueries = QueryOptimizer.beginGroup(queryTable);
+		// Group queries into optimized groups
+		std::vector<GroupObject> groupQueries = queryOptimizer->beginOptimize(SynonymGroup::getInstance(), queryTable);
+		bool relationshipHolds = true;
 
-		// evaluate the optimized groups
-		for (int i = 0; i < groupQueries.size(); i++) {
-			// check what group type
+		// Evaluate the optimized groups
+		for (std::vector<GroupObject>::iterator it = groupQueries.begin(); it != groupQueries.end(); it++) {
+			// Get list of clauses in group
+			std::vector<ClauseObject*> clauses = it->getClauseObjectList();
 
-			// check whether group need to optimized
+			// Iterate the clauses in each group
+			int clauseIndex = 0;
+			for (ClauseObject* obj : clauses) {
+				ClauseType::ClauseType clauseType = obj->getClauseType();
+				bool isStopEvaluation = false;
 
-			// evaluate this group
-
-			// this group : check what clause is this
-
-			// this group : evaluate this clause
-
+				// Check if group need to stop evaluation when got results
+				if (it->getGroupType() == GroupType::NOT_RELATED || it->getGroupType() == GroupType::NOT_RELATED_CONTAIN_AFFECTS) {
+					isStopEvaluation = (clauseIndex == clauses.size() - 1);
+				}
+				// Evaluate such that clause
+				if (clauseType == ClauseType::SUCH_THAT) {
+					ClauseSuchThatObject* childObj = dynamic_cast<ClauseSuchThatObject*>(obj);
+					relationshipHolds = evaluateSuchThat(childObj)->getResultsBoolean();
+				}
+				// Evaluate with clause
+				else if (clauseType == ClauseType::WITH) {
+					ClauseWithObject* childObj = dynamic_cast<ClauseWithObject*>(obj);
+					relationshipHolds = evaluateWith(childObj)->getResultsBoolean();
+				}
+				// Evaluate pattern clause
+				else if (clauseType == ClauseType::PATTERN) {
+					ClausePatternObject* childObj = dynamic_cast<ClausePatternObject*>(obj);
+					relationshipHolds = evaluatePattern(childObj)->getResultsBoolean();
+				}
+				// Stop evaluation if relationship is false
+				if (relationshipHolds == false) {
+					break;
+				}
+				clauseIndex++;
+			}
+			// Stop evaluation if relationship is false
+			if (relationshipHolds == false) {
+				break;
+			}
 		}
-*/
+
+		/*
         for (int i = 0; i < 2; i++) {
             // Iterate the such that clauses vectors and evaluate them
             for (std::vector<ClauseSuchThatObject*>::iterator it = suchThats.begin(); it != suchThats.end(); it++) {
@@ -105,6 +135,7 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
                // relationshipHolds = relationshipHolds && patternObject.getResultsBoolean();
             }
         }
+		*/
 
         // Evaluate results by constraint of select object
         return evaluateSelect(select, relationshipHolds);
