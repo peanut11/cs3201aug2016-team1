@@ -275,6 +275,14 @@ StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 }
 
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
+    if (rel != MODIFIES && rel != USES) {
+        throw std::invalid_argument("");
+    }
+
+    if (varIndex >= varTable.size()) {
+        throw std::out_of_range("");
+    }
+
     return varTable[varIndex][rel];
 }
 
