@@ -682,6 +682,9 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						switch (rightEntityType) {
 						case EntityType::CALL:
+						case EntityType::IF:
+						case EntityType::WHILE:
+						case EntityType::ASSIGN:
 						case EntityType::STMT:
 
 							if (rightAttrType == AttrType::AttrType::STMT_NO) {
@@ -992,6 +995,15 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 					isUnderArg = false;
 				}
 
+				if (firstArgObject->getEntityType() == EntityType::VARIABLE) {
+					if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES) {
+						relationshipObject.setRelationshipType(MODIFIES_P);
+					} 
+					else if (relationshipObject.getRelObjectType() == RelationshipType::USES) {
+						relationshipObject.setRelationshipType(USES_P);
+					}
+				}
+
 				ClauseSuchThatObject* newSuchThatObj = this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject);
 
 				this->addClauseSuchThatObject(this->getQueryTable().getSuchThats(), newSuchThatObj);
@@ -1076,7 +1088,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 		else if (isVariable(nextToken)) {
 			
 			if (relationshipObject.getRelObjectType() == RelationshipType::CALLS
-				|| relationshipObject.getRelObjectType() == RelationshipType::CALLS_STAR ) { 
+				|| relationshipObject.getRelObjectType() == RelationshipType::CALLS_STAR) { 
 
 				if (!hasValidFirstArg) {
 					firstArgObject = new ClauseSuchThatArgObject(EntityType::VARIABLE, this->validatedVariableName,
@@ -1093,7 +1105,6 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 			}  
 
 			// variable only used for MODIFIES and USES
-			// and always a second argument
 			else if ((relationshipObject.getRelObjectType() == RelationshipType::MODIFIES
 				|| relationshipObject.getRelObjectType() == RelationshipType::USES)) {
 

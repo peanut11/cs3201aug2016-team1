@@ -136,8 +136,12 @@ std::string QueryTable::getRelationshipString(RelationshipType type) {
 	switch (type) {
 	case MODIFIES:
 		return "modifies";
+	case MODIFIES_P:
+		return "modifies_p";
 	case USES:
 		return "uses";
+	case USES_P:
+		return "uses_p";
 	case CALLS:
 		return "calls";
 	case CALLS_STAR:
