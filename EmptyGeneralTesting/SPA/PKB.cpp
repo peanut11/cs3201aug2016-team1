@@ -511,28 +511,19 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
 	if (rel == MODIFIES || rel == USES || rel == CALLS) {
 		throw Exception::INVALID_STMT_STMT_RELATION;
+
+	} else if (rel == FOLLOWED_BY || rel == PARENT_OF || rel == PREVIOUS) {
+		throw Exception::INTERNAL_USE_ERROR;
 	}
 
-	if (rel == FOLLOWED_BY || rel == PARENT_OF || rel == PREVIOUS) {
-		throw std::runtime_error(""); // INTERNAL_USE_ERROR
-	}
-
-	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
+	while (stmtA >= stmtTable.size() || stmtB >= stmtTable.size()) {
 		stmtTable.push_back(StmtRow());
 	}
 
 	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
 
 	if (rel == FOLLOWS || rel == FOLLOWS_STAR || rel == PARENT || rel == PARENT_STAR || rel == NEXT) {
-		const int OFFSET = 1;
-		int supplementaryRel;
-
-		if (rel == FOLLOWS || rel == PARENT || rel == NEXT) {
-			supplementaryRel = rel + OFFSET;
-		} else {
-			supplementaryRel = rel - OFFSET;
-		}
-
+		int supplementaryRel = rel + 1;
 		success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
 	}
 

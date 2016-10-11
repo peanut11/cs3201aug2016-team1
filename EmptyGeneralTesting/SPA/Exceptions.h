@@ -158,6 +158,7 @@ private:
 namespace Exception {
     // PKB
     const std::invalid_argument INCORRECT_PKB_API("API only for FOLLOWS & PARENT");
+    const std::invalid_argument INTERNAL_USE_ERROR("Supplementary relations for PKB only");
     const std::invalid_argument INVALID_STMT_TYPE("Only ASSIGN, CALL, IF, WHILE");
     const std::invalid_argument INVALID_STMT_STMT_RELATION("Invalid stmt-stmt relation");
     const std::invalid_argument INVALID_VAR_STMT_RELATION("Invalid var-stmt relation");
