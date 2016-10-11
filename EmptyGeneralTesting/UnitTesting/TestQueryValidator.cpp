@@ -142,6 +142,19 @@ public:
 		// output is "wrong". Select v such that Modifies (a1, "iter") pattern a("left", _)
 		// crash. assign a; Select a such that Parent*(38, a)
 		
+		// Success Modifies procedure
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
+		
+
+		// Success Uses procedure
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
+		
+
+
+
 		// Success Next
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,2)"));
@@ -209,6 +222,9 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = const.value")); // 1 with clause
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = c.stmt#"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = s1.stmt#"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = a1.stmt#"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = ifstmt.stmt#"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = w.stmt#"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = n2"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) pattern a1(\"x\",_\"y+1\"_) with s1.stmt# = 1 s2.stmt# = 4")); // 2 with clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1 such that Follows(s1, _)"));
@@ -349,6 +365,8 @@ public:
 
 		// success USES
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Uses(a1, \"x\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Uses(5, \"x\")"));
+		
 		// 1 common synonym between clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",_\"y+1\"_)"));
@@ -362,6 +380,8 @@ public:
 
 		// success MODIFIES
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Modifies(a1, \"x\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Modifies(10, \"x\")"));
+
 		// 1 common synonym between clauses
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",_\"y\"_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",_\"y+1\"_)"));

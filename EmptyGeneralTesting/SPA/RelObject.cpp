@@ -8,6 +8,10 @@ RelObject::RelObject(RelationshipType type, std::vector<EntityType> argsOneTypes
 	this->numOfArgs = numOfArgs;
 }
 
+void RelObject::setRelationshipType(RelationshipType type) {
+	this->type = type;
+}
+
 RelationshipType RelObject::getRelObjectType() {
 	return this->type;
 }
