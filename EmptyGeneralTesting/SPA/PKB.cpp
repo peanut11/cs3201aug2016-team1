@@ -509,12 +509,12 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	if (rel == MODIFIES || rel == USES || rel == CALLS) {
-		throw Exception::INVALID_STMT_STMT_RELATION;
+    if (rel == FOLLOWED_BY || rel == FOLLOWED_BY_STAR || rel == PARENT_OF || rel == PARENT_OF_STAR || rel == PREVIOUS) {
+        throw Exception::INTERNAL_USE_ERROR;
 
-	} else if (rel == FOLLOWED_BY || rel == PARENT_OF || rel == PREVIOUS) {
-		throw Exception::INTERNAL_USE_ERROR;
-	}
+    } else if (rel != FOLLOWS && rel != FOLLOWS_STAR && rel != PARENT && rel != PARENT_STAR && rel != NEXT) {
+        throw Exception::INVALID_STMT_STMT_RELATION;
+    }
 
 	while (stmtA >= stmtTable.size() || stmtB >= stmtTable.size()) {
 		stmtTable.push_back(StmtRow());
@@ -522,10 +522,8 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 
 	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
 
-	if (rel == FOLLOWS || rel == FOLLOWS_STAR || rel == PARENT || rel == PARENT_STAR || rel == NEXT) {
-		int supplementaryRel = rel + 1;
-		success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
-	}
+    int supplementaryRel = rel + 1;
+	success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
 
 	return success;
 }
