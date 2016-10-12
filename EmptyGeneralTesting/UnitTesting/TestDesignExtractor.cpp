@@ -25,7 +25,7 @@ public:
 	TEST_METHOD(TestDesign_FollowedByStar) {
 		PKB* pkb = PKB::getInstance();
 
-		std::set<StmtNumber> followedByStarList = pkb->getStmtsByStmt(1, FOLLOWED_BY_STAR);
+		std::set<StmtNumber> followedByStarList = pkb->getStmtsByStmt(FOLLOWS_STAR,1);
 		StmtSetIterator followedByStarIt = followedByStarList.begin();
 
 		int followedByStarSize = followedByStarList.size();
@@ -42,7 +42,7 @@ public:
 		test = *followedByStarIt;
 		Assert::AreEqual(test, 9);
 
-		followedByStarList = pkb->getStmtsByStmt(4, FOLLOWED_BY_STAR);
+		followedByStarList = pkb->getStmtsByStmt(FOLLOWS_STAR,4);
 		followedByStarIt = followedByStarList.begin();
 
 		followedByStarSize = followedByStarList.size();
@@ -59,19 +59,19 @@ public:
 	TEST_METHOD(TestDesign_FollowsStar) {
 		PKB* pkb = PKB::getInstance();
 
-		std::set<StmtNumber> followsStarList = pkb->getStmtsByStmt(12, FOLLOWS_STAR); // ERROR: No stmt 12
+		std::set<StmtNumber> followsStarList = pkb->getStmtsByStmt(FOLLOWS_STAR, 2); // ERROR: No stmt 12
 		StmtSetIterator followsStarIt = followsStarList.begin();
 
 		int followsStarSize = followsStarList.size();
-		Assert::AreEqual(6, followsStarSize);
-
+		Assert::AreEqual(2, followsStarSize);
+		
 		int test = *followsStarIt;
-		Assert::AreEqual(test, 1);
-
+		Assert::AreEqual(test, 3);
+		
 		followsStarIt++;
 		test = *followsStarIt;
-		Assert::AreEqual(test, 2);
-
+		Assert::AreEqual(test, 9);
+		/*
 		followsStarIt++;
 		test = *followsStarIt;
 		Assert::AreEqual(test, 3);
@@ -86,7 +86,7 @@ public:
 
 		followsStarIt++;
 		test = *followsStarIt;
-		Assert::AreEqual(test, 11);
+		Assert::AreEqual(test, 11);*/
 	}
 
 	TEST_METHOD(TestDesign_ParentStar) {
@@ -115,16 +115,18 @@ public:
 	TEST_METHOD(TestDesign_ParentOFStar) {
 		PKB* pkb = PKB::getInstance();
 
-		std::set<StmtNumber> parentOfStarList = pkb->getStmtsByStmt(1, PARENT_OF_STAR);
+		std::set<StmtNumber> parentOfStarList = pkb->getStmtsByStmt(PARENT_STAR,1);
 		StmtSetIterator parentStarIt = parentOfStarList.begin();
 
 		int parentStarSize = parentOfStarList.size();
 		Assert::AreEqual(parentStarSize, 0);
 
-		parentOfStarList = pkb->getStmtsByStmt(3, PARENT_OF_STAR);
+		parentOfStarList = pkb->getStmtsByStmt(PARENT_STAR,3);
 		parentStarIt = parentOfStarList.begin();
 		parentStarSize = parentOfStarList.size();
 		Assert::AreEqual(parentStarSize, 5);
+		int test = *parentStarIt;
+		Assert::AreEqual(test, 4);
 	}
 
 	TEST_METHOD(TestDesign_UpdateStmtTable) {
