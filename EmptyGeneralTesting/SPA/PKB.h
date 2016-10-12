@@ -55,6 +55,7 @@ public:
     bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
     bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
     bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName);
+	bool putVarForProc(ProcName procA, RelationshipType modifiesOrUses, VarName varName);
 	bool putStmtCallProc(StmtNumber stmt, ProcName procCalled);
 
     // API used by QP and DE

@@ -498,11 +498,22 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
 
-	varTable[varIndex][rel + 2].insert(procIndex); // Adds Modified/UsedByProc
-	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
+	return success;
+}
 
-	procTable[procIndex][rel].insert(varIndex);
-	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
+bool PKB::putVarForProc(ProcName procA, RelationshipType modifiesOrUses, VarName varName) {
+	VarIndex varIndex = getVarIndex(varName);
+	ProcIndex procIndex = getProcIndex(procA);
+
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw Exception::INVALID_VAR_STMT_RELATION;
+	}
+
+	procTable[procIndex][modifiesOrUses].insert(varIndex);
+	bool success = procTable[procIndex][modifiesOrUses].find(varIndex) != procTable[procIndex][modifiesOrUses].end();
+
+	varTable[varIndex][modifiesOrUses + 2].insert(procIndex); // Adds Modified/UsedByProc
+	success = (varTable[varIndex][modifiesOrUses + 2].find(procIndex) != varTable[varIndex][modifiesOrUses + 2].end()) && success;
 
 	return success;
 }

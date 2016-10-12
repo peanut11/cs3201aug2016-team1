@@ -239,7 +239,7 @@ bool ProgramConverter::updateAssignmentInPostfixExprs(ProgLine line, ProgLineNum
 bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum) {
 	bool isRHS = false;
 	bool res = true;
-
+	ProcName procName = pkb->getProcName(pkb->getProcByStmt(lineNum));
 	for each (std::string str in line) {
 		if (isConstant(str)) {
 			Constant constant = atoi(str.c_str());
@@ -249,8 +249,10 @@ bool ProgramConverter::updateAssignmentInTable(ProgLine line, ProgLineNumber lin
 
 			if (isRHS) {
 				res = pkb->putVarForStmt(lineNum, USES, varName);
+				res = pkb->putVarForProc(procName, USES, varName);
 			} else {
 				res = pkb->putVarForStmt(lineNum, MODIFIES, varName);
+				res = pkb->putVarForProc(procName, MODIFIES, varName);
 			}
 			
 			if (!res) return res; // Returns immediately if false
@@ -277,12 +279,14 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
+		success = pkb->putVarForProc(pkb->getProcName(pkb->getProcByStmt(lineNum)), USES, varName) && success;
 	} else if (isIf(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, IF) && success;
 
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
+		success = pkb->putVarForProc(pkb->getProcName(pkb->getProcByStmt(lineNum)), USES, varName) && success;
 	} else if (isCall(line)) {
 		ProcName procCalled = line[1];
 		success = pkb->putStmtTypeForStmt(lineNum, CALL) && success;
