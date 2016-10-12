@@ -50,7 +50,17 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
-	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
+	if (rel == NEXT || rel == MODIFIES || rel == USES) { // Gets from direct-rel column in StmtTable
+		if (stmtOrProcIndex >= stmtTable.size()) {
+			return false;
+		}
+
+		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
+
+		return entry.find(item) != entry.end();
+
+	} else if (rel == FOLLOWS || rel == PARENT || 
+		rel == FOLLOWS_STAR || rel == PARENT_STAR) { // Gets from supp-rel column in StmtTable
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
@@ -60,10 +70,12 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
 		StmtEntry entry = stmtTable[stmtOrProcIndex][supplementaryRel];
 		return entry.find(item) != entry.end();
 
-	} else if (rel == CALLS || rel == CALLS_STAR) {
+	} else if (rel == CALLS || rel == CALLS_STAR || 
+		rel == MODIFIES_P || rel == USES_P) { // Gets from ProcTable
 		if (stmtOrProcIndex >= procTable.size()) {
 			return false;
 		}
+
 		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
 
 	} else {
