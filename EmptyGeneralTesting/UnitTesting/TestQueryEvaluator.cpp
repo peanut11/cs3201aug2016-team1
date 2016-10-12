@@ -145,7 +145,7 @@ public:
 
         RelationshipType type = FOLLOWS;
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
-        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 3, false);
+        ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
         ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
         Assert::IsTrue(resultObj->getResultsBoolean());
