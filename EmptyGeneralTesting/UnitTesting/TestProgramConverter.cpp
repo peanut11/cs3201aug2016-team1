@@ -190,7 +190,7 @@ public:
 
 		// check next of if stmts
 		expected = std::set<StmtNumber>({ stmt9, stmt10 });
-		actual = pkb->getStmtsByStmt(stmt8, NEXT);
+		actual = pkb->getStmtsByStmt(NEXT, stmt8);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -203,7 +203,7 @@ public:
 
 		// check previous of else stmts
 		expected = std::set<StmtNumber>({ stmt8 });
-		actual = pkb->getStmtsByStmt(NEXT, stmt10);
+		actual = pkb->getStmtsByStmt(stmt10, NEXT);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -216,7 +216,7 @@ public:
 
 		// check previous of while stmts
 		expected = std::set<StmtNumber>({ stmt2, stmt7 });
-		actual = pkb->getStmtsByStmt(NEXT, stmt3);
+		actual = pkb->getStmtsByStmt(stmt3, NEXT);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
