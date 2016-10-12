@@ -97,6 +97,9 @@
     <ClCompile Include="GroupObject.cpp">
       <Filter>Source Files\QP</Filter>
     </ClCompile>
+    <ClCompile Include="RelationshipPopulator.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -218,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="GroupObject.h">
       <Filter>Header Files\QP</Filter>
+    </ClInclude>
+    <ClInclude Include="RelationshipPopulator.h">
+      <Filter>Header Files\PKB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

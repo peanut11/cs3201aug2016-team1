@@ -28,6 +28,7 @@
     <ClCompile Include="QueryResultProjector.cpp" />
     <ClCompile Include="QueryTable.cpp" />
     <ClCompile Include="QueryValidator.cpp" />
+    <ClCompile Include="RelationshipPopulator.cpp" />
     <ClCompile Include="RelObject.cpp" />
     <ClCompile Include="RelTable.cpp" />
     <ClCompile Include="ResultGrid.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="QueryResultProjector.h" />
     <ClInclude Include="QueryTable.h" />
     <ClInclude Include="QueryValidator.h" />
+    <ClInclude Include="RelationshipPopulator.h" />
     <ClInclude Include="RelObject.h" />
     <ClInclude Include="RelationshipType.h" />
     <ClInclude Include="RelTable.h" />

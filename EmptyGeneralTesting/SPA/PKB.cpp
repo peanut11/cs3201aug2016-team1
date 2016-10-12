@@ -6,6 +6,7 @@
 // - VarTable
 
 #include "PKB.h"
+#include "RelationshipPopulator.h"
 
 PKB* PKB::theOne = nullptr;
 
@@ -50,7 +51,13 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
-	if (rel == NEXT || rel == MODIFIES || rel == USES) { // Gets from direct-rel column in StmtTable
+	if (rel == NEXT_STAR) {
+		if (stmtOrProcIndex >= stmtTable.size() || item >= stmtTable.size()) { // Avoid running DFS
+			return false;
+		}
+
+		return !RelationshipPopulator::getNextStar(stmtOrProcIndex, item).empty();
+	} else if (rel == NEXT || rel == MODIFIES || rel == USES) { // Gets from direct-rel column in StmtTable
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
@@ -301,8 +308,10 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
 		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
-
-    if (stmt >= stmtTable.size()) {
+	
+	if (stmtRel == NEXT_STAR) return RelationshipPopulator::getNextStar(StmtNumber(0), stmt);
+    
+	if (stmt >= stmtTable.size()) {
         return StmtSet();
     }
 	if (stmtRel == NEXT) stmtRel = RelationshipType(stmtRel + 1);
@@ -315,6 +324,8 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 		&& followsOrParent != NEXT) {
 		throw Exception::INCORRECT_PKB_API;
 	}
+
+	if (followsOrParent == NEXT_STAR) return RelationshipPopulator::getNextStar(stmt, StmtNumber(0));
 
     if (stmt >= stmtTable.size()) {
         return StmtSet();
