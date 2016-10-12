@@ -93,8 +93,8 @@ public:
     virtual std::set<StmtNumber> getStmtsByType(EntityType stmtType);
     virtual std::set<StmtNumber> getStmtsByProc(ProcName procName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByProc(ProcIndex procIndex);
-    virtual std::set<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
-    virtual std::set<StmtNumber> getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
+    virtual std::set<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel); // Gets x in Follows(x, 2)
+    virtual std::set<StmtNumber> getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt); // Gets x in Follows(1, x)
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarName varName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 

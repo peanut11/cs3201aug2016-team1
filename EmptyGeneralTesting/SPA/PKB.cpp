@@ -305,7 +305,7 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
     if (stmt >= stmtTable.size()) {
         return StmtSet();
     }
-
+	if (stmtRel == NEXT) stmtRel = RelationshipType(stmtRel + 1);
 	return stmtTable[stmt][stmtRel];
 }
 
@@ -320,8 +320,9 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
         return StmtSet();
     }
 
-	int supplementaryRel = followsOrParent + 1;
-	return stmtTable[stmt][supplementaryRel];
+	if(followsOrParent != NEXT) followsOrParent = RelationshipType(followsOrParent + 1);
+
+	return stmtTable[stmt][followsOrParent];
 }
 
 std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
