@@ -295,11 +295,11 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	}
 
 	if (currentParent != 0) {
-		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent) && success;
+		success = pkb->putStmtForStmt(currentParent, PARENT, lineNum) && success;
 	}
 
 	if (currentLeader != 0) {
-		success = pkb->putStmtForStmt(lineNum, FOLLOWS, currentLeader) && success;
+		success = pkb->putStmtForStmt(currentLeader, FOLLOWS, lineNum) && success;
 	}
 
 	if (previous != 0) {

@@ -566,10 +566,17 @@ bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmt
 		stmtTable.push_back(StmtRow());
 	}
 
-	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
+	RelationshipType supplementaryRel = RelationshipType(rel + 1);
+	
+	if (rel == NEXT) {
+		supplementaryRel = rel;
+		rel = RelationshipType(rel + 1);
+	}
 
-    int supplementaryRel = rel + 1;
-	success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
+	bool success = stmtTable[stmtB][rel].insert(stmtA).second;
+
+    
+	success = stmtTable[stmtA][supplementaryRel].insert(stmtB).second && success;
 
 	return success;
 }

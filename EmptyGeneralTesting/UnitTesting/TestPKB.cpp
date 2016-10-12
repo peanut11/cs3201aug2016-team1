@@ -14,12 +14,14 @@ public:
 		PKB* pkb = PKB::getInstance();
 
 		// Follows(1, 2)
-		pkb->putStmtForStmt(StmtNumber(2), FOLLOWS, StmtNumber(1));
+		pkb->putStmtForStmt(StmtNumber(1), FOLLOWS, StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(FOLLOWS, StmtNumber(1)).begin(), StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(StmtNumber(2), FOLLOWS).begin(), StmtNumber(1));
-	
+		Assert::IsTrue(pkb->is(FOLLOWS, StmtNumber(1), StmtNumber(2)));
+		Assert::IsFalse(pkb->is(FOLLOWS, StmtNumber(2), StmtNumber(1)));
+
 		// Parent(1, 2)
-		pkb->putStmtForStmt(StmtNumber(2), PARENT, StmtNumber(1));
+		pkb->putStmtForStmt(StmtNumber(1), PARENT, StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(PARENT, StmtNumber(1)).begin(), StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(StmtNumber(2), PARENT).begin(), StmtNumber(1));
 
@@ -29,12 +31,12 @@ public:
 		Assert::AreEqual(*pkb->getStmtsByStmt(StmtNumber(2), NEXT).begin(), StmtNumber(1));
 
 		// Parent*(1, 2)
-		pkb->putStmtForStmt(StmtNumber(2), PARENT_STAR, StmtNumber(1));
+		pkb->putStmtForStmt(StmtNumber(1), PARENT_STAR, StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(PARENT_STAR, StmtNumber(1)).begin(), StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(StmtNumber(2), PARENT_STAR).begin(), StmtNumber(1));
 
 		// FOLLOWS*(1, 2)
-		pkb->putStmtForStmt(StmtNumber(2), FOLLOWS_STAR, StmtNumber(1));
+		pkb->putStmtForStmt(StmtNumber(1), FOLLOWS_STAR, StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(FOLLOWS_STAR, StmtNumber(1)).begin(), StmtNumber(2));
 		Assert::AreEqual(*pkb->getStmtsByStmt(StmtNumber(2), FOLLOWS_STAR).begin(), StmtNumber(1));
 
