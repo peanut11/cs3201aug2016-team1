@@ -309,6 +309,12 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
 	
+	if (stmtRel == FOLLOWED_BY || stmtRel == FOLLOWED_BY_STAR ||
+		stmtRel == PARENT_OF || stmtRel == PARENT_OF_STAR ||
+		stmtRel == PREVIOUS || stmtRel == PREVIOUS_STAR) {
+		throw Exception::INTERNAL_USE_ERROR;
+	}
+
 	if (stmtRel == NEXT_STAR) return RelationshipPopulator::getNextStar(StmtNumber(0), stmt);
     
 	if (stmt >= stmtTable.size()) {
@@ -319,10 +325,14 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 }
 
 StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
-	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
-        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR
-		&& followsOrParent != NEXT) {
-		throw Exception::INCORRECT_PKB_API;
+	if (followsOrParent == MODIFIES || followsOrParent == USES) {
+		throw Exception::INVALID_STMT_STMT_RELATION;
+	}
+
+	if (followsOrParent == FOLLOWED_BY || followsOrParent == FOLLOWED_BY_STAR ||
+		followsOrParent == PARENT_OF || followsOrParent == PARENT_OF_STAR ||
+		followsOrParent == PREVIOUS || followsOrParent == PREVIOUS_STAR) {
+		throw Exception::INTERNAL_USE_ERROR;
 	}
 
 	if (followsOrParent == NEXT_STAR) return RelationshipPopulator::getNextStar(stmt, StmtNumber(0));
@@ -543,10 +553,12 @@ bool PKB::putVarForProc(ProcName procA, RelationshipType modifiesOrUses, VarName
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-    if (rel == FOLLOWED_BY || rel == FOLLOWED_BY_STAR || rel == PARENT_OF || rel == PARENT_OF_STAR || rel == PREVIOUS) {
+    if (rel == FOLLOWED_BY || rel == FOLLOWED_BY_STAR || 
+		rel == PARENT_OF || rel == PARENT_OF_STAR || rel == PREVIOUS) {
         throw Exception::INTERNAL_USE_ERROR;
 
-    } else if (rel != FOLLOWS && rel != FOLLOWS_STAR && rel != PARENT && rel != PARENT_STAR && rel != NEXT) {
+    } else if (rel != FOLLOWS && rel != FOLLOWS_STAR && 
+		rel != PARENT && rel != PARENT_STAR && rel != NEXT) {
         throw Exception::INVALID_STMT_STMT_RELATION;
     }
 
