@@ -73,6 +73,7 @@ public:
     virtual ProcIndex            getProcByStmt(StmtNumber stmt);
     virtual EntityType           getStmtTypeForStmt(StmtNumber stmt);
     virtual std::set<ProcName>   getAllProcNames();
+	virtual std::set<ProcIndex>	 getAllProcIndex();
     virtual std::set<Constant>   getAllConstantValues();
     virtual std::set<StmtNumber> getAllStmts();
     virtual std::set<VarIndex>   getAllVarIndex();

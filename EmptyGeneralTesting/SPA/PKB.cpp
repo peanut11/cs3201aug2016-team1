@@ -250,6 +250,15 @@ std::set<ProcName> PKB::getAllProcNames() {
 	return std::set<ProcName>(procRefTable.begin(), procRefTable.end());
 }
 
+std::set<ProcIndex>	 PKB::getAllProcIndex() {
+	std::set<ProcIndex> allProcIndexes;
+	for (ProcIndex procIndex = 0; procIndex < procTable.size(); procIndex++) {
+		allProcIndexes.insert(ProcIndex(procIndex));
+	}
+
+	return allProcIndexes;
+}
+
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
     if (stmt >= stmtTypeTable.size()) {
         return INVALID;
