@@ -51,7 +51,7 @@ public:
     bool putControlVarForStmt(StmtNumber ifOrWhile, VarName varName);
     bool putExprForStmt(StmtNumber, PostfixExpr);
     bool putProcForProc(ProcIndex procA, RelationshipType callsOrStar, ProcName procB);
-    bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
+    bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB); // Follows(stmtA, stmtB)
     bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
     bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
     bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName);

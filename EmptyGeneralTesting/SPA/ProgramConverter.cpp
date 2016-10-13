@@ -56,6 +56,7 @@ int ProgramConverter::convert(std::string source) {
 	ProgLine currentLine;
 	ProcName procName;
 	bool isElse = false;
+	ProgLineNumber lastOfThenList = 0;
 
 	while (!(currentLine = nextLine()).empty()) {
 		const std::string FIRST_TOKEN = currentLine[0];
@@ -70,7 +71,13 @@ int ProgramConverter::convert(std::string source) {
 
 		if (FIRST_TOKEN == "else") {
 			isElse = true;
+			lastOfThenList = lineCount;
 			continue;
+		}
+
+		if (!isElse && lastOfThenList != 0) {
+			pkb->putStmtForStmt(lastOfThenList, NEXT, lineCount);
+			lastOfThenList = 0;
 		}
 
 		if (isEnterParent(FIRST_TOKEN)) {
@@ -86,8 +93,6 @@ int ProgramConverter::convert(std::string source) {
 					currentParent = *parentSet.begin();
 					previous = *parentSet.begin();
 				}
-
-				isElse = false;
 			} else {
 				currentLeader = 0;
 				currentParent = lineCount;
@@ -102,6 +107,7 @@ int ProgramConverter::convert(std::string source) {
 				pkb->putStmtForStmt(previous, NEXT, currentParent);
 				previous = currentParent;
 			}
+	
 			if (parentSet.empty()) {
 				currentParent = 0;
 			} else {
@@ -110,7 +116,7 @@ int ProgramConverter::convert(std::string source) {
 				
 			}
 			
-			
+			if (isElse) isElse = false;
 			continue;
 		}
 
@@ -295,11 +301,11 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	}
 
 	if (currentParent != 0) {
-		success = pkb->putStmtForStmt(lineNum, PARENT, currentParent) && success;
+		success = pkb->putStmtForStmt(currentParent, PARENT, lineNum) && success;
 	}
 
 	if (currentLeader != 0) {
-		success = pkb->putStmtForStmt(lineNum, FOLLOWS, currentLeader) && success;
+		success = pkb->putStmtForStmt(currentLeader, FOLLOWS, lineNum) && success;
 	}
 
 	if (previous != 0) {

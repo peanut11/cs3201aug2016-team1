@@ -16,7 +16,7 @@ DesignExtractor::DesignExtractor() {}
 void DesignExtractor::process() {
     processCallsStar();
     processFollowsStar();
-    processParentStar();
+    //processParentStar();
     updateStmtTable();
 }
 
@@ -86,13 +86,13 @@ void DesignExtractor::processFollowsStar() {
     PKB* pkb = PKB::getInstance();
     StmtNumber size = pkb->getStmtTableSize();
 
-    for (StmtNumber stmt = 1; stmt <= size; stmt++) {
-        std::set<StmtNumber> followsList = pkb->getStmtsByStmt(stmt, FOLLOWS);
+    for (StmtNumber stmt = size; stmt >= 1; stmt--) {
+        std::set<StmtNumber> followsList = pkb->getStmtsByStmt(FOLLOWS, stmt);
 
         if (!followsList.empty()) {
             StmtNumber add = *followsList.begin();
             pkb->putStmtForStmt(stmt, FOLLOWS_STAR, add);
-            std::set<StmtNumber> followsStarList = pkb->getStmtsByStmt(add, FOLLOWS_STAR);
+            std::set<StmtNumber> followsStarList = pkb->getStmtsByStmt(FOLLOWS_STAR, add);
 
             for (StmtSetIterator fs = followsStarList.begin(); fs != followsStarList.end(); fs++) {
                 StmtNumber add2 = *fs;
@@ -101,27 +101,46 @@ void DesignExtractor::processFollowsStar() {
         }
     }
 }
-
+/*
 void DesignExtractor::processParentStar() {
     PKB* pkb = PKB::getInstance();
     StmtNumber size = pkb->getStmtTableSize();
-
+	
     for (StmtNumber stmt = 1; stmt <= size; stmt++) {
-        std::set<StmtNumber> parentList = pkb->getStmtsByStmt(stmt, PARENT);
-
+        std::set<StmtNumber> parentList = pkb->getStmtsByStmt(stmt,PARENT);
+		
         if (!parentList.empty()) {
-            StmtNumber add = *parentList.begin();
-            pkb->putStmtForStmt(stmt, PARENT_STAR, add);
-            std::set<StmtNumber> PARENT_STARList = pkb->getStmtsByStmt(add, PARENT_STAR);
+			for (StmtSetIterator ind = parentList.begin(); ind != parentList.end(); ind++) {
+				StmtNumber add = *ind;
+				pkb->putStmtForStmt(stmt, PARENT_STAR, add);
+				std::set<StmtNumber> PARENT_STARList = pkb->getStmtsByStmt(add,PARENT_STAR);
 
-            for (StmtSetIterator ps = PARENT_STARList.begin(); ps != PARENT_STARList.end(); ps++) {
-                StmtNumber add2 = *ps;
-                pkb->putStmtForStmt(stmt, PARENT_STAR, add2);
-            }
+				for (StmtSetIterator ps = PARENT_STARList.begin(); ps != PARENT_STARList.end(); ps++) {
+					StmtNumber add2 = *ps;
+					pkb->putStmtForStmt(stmt, PARENT_STAR, add2);
+				}
+			}
         }
     }
-}
+}*/
+void DesignExtractor::processParentStar(StmtNumber index) {
+	PKB* pkb = PKB::getInstance();
+	std::set<StmtNumber> parentList = pkb->getStmtsByStmt(PARENT,index);
+	for (StmtSetIterator ind = parentList.begin(); ind != parentList.end(); ind++) {
+		StmtNumber add = *ind;
+		pkb->putStmtForStmt(index, PARENT_STAR, add);
+		std::set<StmtNumber> PARENT_List = pkb->getStmtsByStmt(PARENT, add);
+		if (!PARENT_List.empty()) {
+			processParentStar(add);
+		}
+		std::set<StmtNumber> PARENT_StarList = pkb->getStmtsByStmt(PARENT_STAR, add);
+		for (StmtSetIterator ind2 = PARENT_StarList.begin(); ind2 != PARENT_StarList.end(); ind2++) {
+			StmtNumber addStarInd = *ind2;
+			pkb->putStmtForStmt(index, PARENT_STAR, addStarInd);
+		}
+	}
 
+}
 void DesignExtractor::updateStmtTable() {
     PKB* pkb = PKB::getInstance();
     StmtNumber size = pkb->getStmtTableSize();
@@ -134,6 +153,7 @@ void DesignExtractor::updateStmtTable() {
 
     for (StmtSetIterator w = mergeList.begin(); w != mergeList.end(); w++) {
         processLoopForUseAndModifies(*w);
+		processParentStar(*w);
     }
 }
 
@@ -144,10 +164,10 @@ StmtNumber DesignExtractor::getWhileListSize() {
 
 void DesignExtractor::processLoopForUseAndModifies(StmtNumber w) { // For USES And Modifies
     PKB* pkb = PKB::getInstance();
-    std::set<StmtNumber> followlist = pkb->getStmtsByStmt(w, FOLLOWED_BY);
+    std::set<StmtNumber> followlist = pkb->getStmtsByStmt(FOLLOWS,w);
 
     // StmtNumber followLine = *followlist.begin();
-    std::set<StmtNumber> followStar = pkb->getStmtsByStmt(w + 1, FOLLOWED_BY_STAR);
+    std::set<StmtNumber> followStar = pkb->getStmtsByStmt(FOLLOWS_STAR,w + 1);
     if ((pkb->getStmtTypeForStmt((w + 1)) == WHILE) || (pkb->getStmtTypeForStmt((w + 1)) == IF)) {
         processLoopForUseAndModifies((w + 1));
     }
