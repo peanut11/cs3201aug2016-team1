@@ -408,7 +408,7 @@ bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item)
 			return true;
 	}
 
-	else if (rel == CALL) {
+	else if (rel == CALLS) {
 		if (stmt == 0 && item == 1)
 			return true;
 		if (stmt == 1 && item == 2)
@@ -493,21 +493,29 @@ std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 		std::set<StmtNumber> assigns = { 1,2,4,5,7,9,11,12,13,14,15,16,17 };
 		return assigns;
 	}
-	else if (stmtType = STMT) {
+	else if (stmtType == STMT) {
 		std::set<StmtNumber> stmts = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 };
 		return stmts;
 	}
-	else if (stmtType = WHILE) {
+	else if (stmtType == WHILE) {
 		std::set<StmtNumber> whiles = { 6 };
 		return whiles;
 	}
-	else if (stmtType = IF) {
+	else if (stmtType == IF) {
 		std::set<StmtNumber> ifs = { 10 };
 		return ifs;
 	}
-	else if (stmtType = CALL) {
+	else if (stmtType == CALLS) {
 		std::set<StmtNumber> calls = { 3,8 };
 		return calls;
+	}
+	else if (stmtType == PROCEDURE) {
+		std::set<ProcIndex> procedures = { 0,1,2 };
+		return procedures;
+	}
+	else if (stmtType == CONSTANT) {
+		std::set<Constant> constants = { 0,1,2,3,5 };
+		return constants;
 	}
 
 	return std::set<StmtNumber>();
@@ -623,7 +631,7 @@ std::set<ProcIndex> DummyPKB::getProcsByProc(ProcIndex procIndex, RelationshipTy
 
 std::set<VarIndex> DummyPKB::getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses)
 {
-	if (modifiesOrUses == MODIFIES) {
+	if (modifiesOrUses == MODIFIES_P) {
 		if (procIndex == 0) {
 			return std::set<VarIndex>({2,4});
 		}
@@ -635,7 +643,7 @@ std::set<VarIndex> DummyPKB::getVarsByProc(ProcIndex procIndex, RelationshipType
 		}
 	}
 
-	else if (modifiesOrUses == USES) {
+	else if (modifiesOrUses == USES_P) {
 		if (procIndex == 0) {
 			return std::set<VarIndex>({});
 		}
