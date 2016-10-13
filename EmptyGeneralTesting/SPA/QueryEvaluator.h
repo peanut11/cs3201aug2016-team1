@@ -1,16 +1,17 @@
 #pragma once
 
 #include "ClausePatternObject.h"
+#include "ClauseSelectObject.h"
 #include "ClauseSuchThatObject.h"
 #include "ClauseWithObject.h"
 #include "DummyPKB.h"
 #include "PKB.h"
+#include "QueryOptimization.h"
 #include "QueryResultProjector.h"
 #include "QueryTable.h"
 #include "ResultGridManager.h"
-#include "ClauseSelectObject.h"
+#include "StringTokenizer.h"
 #include "SynonymTable.h"
-#include "QueryOptimization.h"
 
 class QueryEvaluator {
 private:
@@ -19,9 +20,11 @@ private:
 
 	PKB* pkb; 
 	QueryTable* queryTable;
-	QueryOptimization queryOptimizer;
+	QueryOptimization* queryOptimizer;
 	ResultGridManager* resultManager;
     SynonymTable* synonymTable;
+
+    std::vector<StringToken> to_tokens(std::string str);
 
 public:
 	static QueryEvaluator* getInstance();
@@ -33,7 +36,7 @@ public:
     std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
-	QueryOptimization getQueryOptimizer();
+	QueryOptimization* getQueryOptimizer();
 
 
     // For unit tests

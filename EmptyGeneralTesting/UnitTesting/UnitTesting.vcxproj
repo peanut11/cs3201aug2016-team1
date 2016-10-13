@@ -172,6 +172,7 @@
     <ClCompile Include="TestAssignPattern.cpp" />
     <ClCompile Include="TestDesignExtractor.cpp" />
     <ClCompile Include="TestInfixToPostfix.cpp" />
+    <ClCompile Include="TestPKB.cpp" />
     <ClCompile Include="TestProgramConverter.cpp" />
     <ClCompile Include="TestProgramValidator.cpp" />
     <ClCompile Include="TestQueryEvaluator.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="TestQueryProcessor.cpp" />
     <ClCompile Include="TestQueryTable.cpp" />
     <ClCompile Include="TestQueryValidator.cpp" />
+    <ClCompile Include="TestRelationshipPopulator.cpp" />
     <ClCompile Include="TestResultGrid.cpp" />
     <ClCompile Include="TestResultGridManager.cpp" />
     <ClCompile Include="TestStringTokenizer.cpp" />

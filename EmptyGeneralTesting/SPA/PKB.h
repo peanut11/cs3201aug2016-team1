@@ -51,15 +51,14 @@ public:
     bool putControlVarForStmt(StmtNumber ifOrWhile, VarName varName);
     bool putExprForStmt(StmtNumber, PostfixExpr);
     bool putProcForProc(ProcIndex procA, RelationshipType callsOrStar, ProcName procB);
-    bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB);
+    bool putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB); // Follows(stmtA, stmtB)
     bool putStmtProc(StmtNumber stmt, ProcName procNameContainingStmt);
     bool putStmtTypeForStmt(StmtNumber stmt, EntityType stmtType);
     bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName);
+	bool putVarForProc(ProcName procA, RelationshipType modifiesOrUses, VarName varName);
 	bool putStmtCallProc(StmtNumber stmt, ProcName procCalled);
 
     // API used by QP and DE
-    virtual bool isAssignHasExpr(StmtNumber, StringToken);    // Deprecated
-    virtual bool isAssignHasSubexpr(StmtNumber, StringToken); // Deprecated
     virtual bool is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item);
 	virtual bool isAssignExactPattern(StmtNumber, InfixExpr);
     virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);
@@ -75,6 +74,7 @@ public:
     virtual ProcIndex            getProcByStmt(StmtNumber stmt);
     virtual EntityType           getStmtTypeForStmt(StmtNumber stmt);
     virtual std::set<ProcName>   getAllProcNames();
+	virtual std::set<ProcIndex>	 getAllProcIndex();
     virtual std::set<Constant>   getAllConstantValues();
     virtual std::set<StmtNumber> getAllStmts();
     virtual std::set<VarIndex>   getAllVarIndex();
@@ -93,8 +93,8 @@ public:
     virtual std::set<StmtNumber> getStmtsByType(EntityType stmtType);
     virtual std::set<StmtNumber> getStmtsByProc(ProcName procName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByProc(ProcIndex procIndex);
-    virtual std::set<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel);
-    virtual std::set<StmtNumber> getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
+    virtual std::set<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel); // Gets x in Follows(x, 2)
+    virtual std::set<StmtNumber> getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt); // Gets x in Follows(1, x)
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarName varName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 

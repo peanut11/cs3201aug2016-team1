@@ -6,6 +6,8 @@
 // - VarTable
 
 #include "PKB.h"
+#include "RelationshipPopulator.h"
+#include "Exceptions.h"
 
 PKB* PKB::theOne = nullptr;
 
@@ -50,30 +52,43 @@ void PKB::clear() {
 }
 
 bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
-    
-	if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
+	if (rel == NEXT_STAR) {
+		if (stmtOrProcIndex >= stmtTable.size() || item >= stmtTable.size()) { // Avoid running DFS
+			return false;
+		}
+
+		return !RelationshipPopulator::getNextStar(stmtOrProcIndex, item).empty();
+	} else if (rel == NEXT || rel == MODIFIES || rel == USES) { // Gets from direct-rel column in StmtTable
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
 
-		rel = RelationshipType(rel + 1);
 		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
+
 		return entry.find(item) != entry.end();
-	} else if (rel == CALLS || rel == CALLS_STAR) {
+
+	} else if (rel == FOLLOWS || rel == PARENT || 
+		rel == FOLLOWS_STAR || rel == PARENT_STAR) { // Gets from supp-rel column in StmtTable
+		if (stmtOrProcIndex >= stmtTable.size()) {
+			return false;
+		}
+		int supplementaryRel = rel + 1;
+
+		
+		StmtEntry entry = stmtTable[stmtOrProcIndex][supplementaryRel];
+		return entry.find(item) != entry.end();
+
+	} else if (rel == CALLS || rel == CALLS_STAR || 
+		rel == MODIFIES_P || rel == USES_P) { // Gets from ProcTable
 		if (stmtOrProcIndex >= procTable.size()) {
 			return false;
 		}
+
 		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
+
 	} else {
 		throw Exception::INVALID_RELATION;
 	}
-
-	
-}
-
-// Deprecated
-bool PKB::isAssignHasExpr(StmtNumber assign, StringToken expr) {
-	return false;
 }
 
 int operatorRank(StringToken s) {
@@ -102,8 +117,7 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 				tokenStack.pop();
 			}
 			if (tokenStack.empty()) {
-				// INVALID INFIX EXPR!!!!!!!!!!!!!!!!!
-				return result;
+				throw Exceptions::invalid_expression(s);
 			}
 			tokenStack.pop();
 		}
@@ -125,18 +139,13 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	while (!tokenStack.empty()) {
 		StringToken token = tokenStack.top();
 		if (operatorRank(token) == 0) {
-			// INVALID INFIX EXPR!!!!!!!!!
+			throw Exceptions::invalid_expression(token);
 		}
 		tokenStack.pop();
 		result.push_back(token);
 	}
 
 	return result;
-}
-
-// Deprecated
-bool PKB::isAssignHasSubexpr(StmtNumber assign, StringToken expr) {
-	return false;
 }
 
 bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
@@ -260,6 +269,15 @@ std::set<ProcName> PKB::getAllProcNames() {
 	return std::set<ProcName>(procRefTable.begin(), procRefTable.end());
 }
 
+std::set<ProcIndex>	 PKB::getAllProcIndex() {
+	std::set<ProcIndex> allProcIndexes;
+	for (ProcIndex procIndex = 0; procIndex < procTable.size(); procIndex++) {
+		allProcIndexes.insert(ProcIndex(procIndex));
+	}
+
+	return allProcIndexes;
+}
+
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
     if (stmt >= stmtTypeTable.size()) {
         return INVALID;
@@ -275,6 +293,14 @@ StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
 }
 
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
+    if (rel != MODIFIES && rel != USES) {
+        throw Exception::INVALID_VAR_STMT_RELATION;
+    }
+
+    if (varIndex >= varTable.size()) {
+        throw Exception::INVALID_VAR_INDEX;
+    }
+
     return varTable[varIndex][rel];
 }
 
@@ -282,27 +308,42 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 	if (stmtRel == MODIFIES || stmtRel == USES) {
 		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
+	
+	if (stmtRel == FOLLOWED_BY || stmtRel == FOLLOWED_BY_STAR ||
+		stmtRel == PARENT_OF || stmtRel == PARENT_OF_STAR ||
+		stmtRel == PREVIOUS || stmtRel == PREVIOUS_STAR) {
+		throw Exception::INTERNAL_USE_ERROR;
+	}
 
-    if (stmt >= stmtTable.size()) {
+	if (stmtRel == NEXT_STAR) return RelationshipPopulator::getNextStar(StmtNumber(0), stmt);
+    
+	if (stmt >= stmtTable.size()) {
         return StmtSet();
     }
-
+	if (stmtRel == NEXT) stmtRel = RelationshipType(stmtRel + 1);
 	return stmtTable[stmt][stmtRel];
 }
 
 StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
-	if (followsOrParent != FOLLOWS && followsOrParent != FOLLOWS_STAR
-        && followsOrParent != PARENT && followsOrParent!= PARENT_STAR
-		&& followsOrParent != NEXT) {
-		throw Exception::INCORRECT_PKB_API;
+	if (followsOrParent == MODIFIES || followsOrParent == USES) {
+		throw Exception::INVALID_STMT_STMT_RELATION;
 	}
+
+	if (followsOrParent == FOLLOWED_BY || followsOrParent == FOLLOWED_BY_STAR ||
+		followsOrParent == PARENT_OF || followsOrParent == PARENT_OF_STAR ||
+		followsOrParent == PREVIOUS || followsOrParent == PREVIOUS_STAR) {
+		throw Exception::INTERNAL_USE_ERROR;
+	}
+
+	if (followsOrParent == NEXT_STAR) return RelationshipPopulator::getNextStar(stmt, StmtNumber(0));
 
     if (stmt >= stmtTable.size()) {
         return StmtSet();
     }
 
-	int supplementaryRel = followsOrParent + 1;
-	return stmtTable[stmt][supplementaryRel];
+	if(followsOrParent != NEXT) followsOrParent = RelationshipType(followsOrParent + 1);
+
+	return stmtTable[stmt][followsOrParent];
 }
 
 std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
@@ -491,42 +532,51 @@ bool PKB::putVarForStmt(StmtNumber stmt, RelationshipType rel, VarName varName) 
 	varTable[varIndex][rel].insert(stmt);
     success = (varTable[varIndex][rel].find(stmt) != varTable[varIndex][rel].end()) && success;
 
-	varTable[varIndex][rel + 2].insert(procIndex); // Adds Modified/UsedByProc
-	success = (varTable[varIndex][rel + 2].find(procIndex) != varTable[varIndex][rel + 2].end()) && success;
+	return success;
+}
 
-	procTable[procIndex][rel].insert(varIndex);
-	success = (procTable[procIndex][rel].find(varIndex) != procTable[procIndex][rel].end()) && success;
+bool PKB::putVarForProc(ProcName procA, RelationshipType modifiesOrUses, VarName varName) {
+	VarIndex varIndex = getVarIndex(varName);
+	ProcIndex procIndex = getProcIndex(procA);
+
+	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+		throw Exception::INVALID_VAR_STMT_RELATION;
+	}
+
+	procTable[procIndex][modifiesOrUses].insert(varIndex);
+	bool success = procTable[procIndex][modifiesOrUses].find(varIndex) != procTable[procIndex][modifiesOrUses].end();
+
+	varTable[varIndex][modifiesOrUses + 2].insert(procIndex); // Adds Modified/UsedByProc
+	success = (varTable[varIndex][modifiesOrUses + 2].find(procIndex) != varTable[varIndex][modifiesOrUses + 2].end()) && success;
 
 	return success;
 }
 
 bool PKB::putStmtForStmt(StmtNumber stmtA, RelationshipType rel, StmtNumber stmtB) {
-	if (rel == MODIFIES || rel == USES || rel == CALLS) {
-		throw Exception::INVALID_STMT_STMT_RELATION;
-	}
+    if (rel == FOLLOWED_BY || rel == FOLLOWED_BY_STAR || 
+		rel == PARENT_OF || rel == PARENT_OF_STAR || rel == PREVIOUS) {
+        throw Exception::INTERNAL_USE_ERROR;
 
-	if (rel == FOLLOWED_BY || rel == PARENT_OF || rel == PREVIOUS) {
-		throw std::runtime_error(""); // INTERNAL_USE_ERROR
-	}
+    } else if (rel != FOLLOWS && rel != FOLLOWS_STAR && 
+		rel != PARENT && rel != PARENT_STAR && rel != NEXT) {
+        throw Exception::INVALID_STMT_STMT_RELATION;
+    }
 
-	while (stmtB >= stmtTable.size() || stmtA >= stmtTable.size()) {
+	while (stmtA >= stmtTable.size() || stmtB >= stmtTable.size()) {
 		stmtTable.push_back(StmtRow());
 	}
 
-	bool success = stmtTable[stmtA][rel].insert(stmtB).second;
-
-	if (rel == FOLLOWS || rel == FOLLOWS_STAR || rel == PARENT || rel == PARENT_STAR || rel == NEXT) {
-		const int OFFSET = 1;
-		int supplementaryRel;
-
-		if (rel == FOLLOWS || rel == PARENT || rel == NEXT) {
-			supplementaryRel = rel + OFFSET;
-		} else {
-			supplementaryRel = rel - OFFSET;
-		}
-
-		success = stmtTable[stmtB][supplementaryRel].insert(stmtA).second && success;
+	RelationshipType supplementaryRel = RelationshipType(rel + 1);
+	
+	if (rel == NEXT) {
+		supplementaryRel = rel;
+		rel = RelationshipType(rel + 1);
 	}
+
+	bool success = stmtTable[stmtB][rel].insert(stmtA).second;
+
+    
+	success = stmtTable[stmtA][supplementaryRel].insert(stmtB).second && success;
 
 	return success;
 }
@@ -570,7 +620,7 @@ bool PKB::putExprForStmt(StmtNumber stmt, PostfixExpr expr) {
 	}
 
 	postfixExprs.push_back(expr);
-	return true;
+	return stmt + 1 == postfixExprs.size();
 }
 
 bool PKB::putConstant(Constant constant) {
