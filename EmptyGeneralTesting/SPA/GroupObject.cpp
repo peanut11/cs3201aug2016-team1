@@ -50,6 +50,6 @@ std::string GroupObject::getGroupTypeString() {
 	}
 }
 
-std::vector<ClauseObject*> GroupObject::getClauseObjectList() {
+std::vector<ClauseObject*>& GroupObject::getClauseObjectList() {
 	return this->objectList;
 }

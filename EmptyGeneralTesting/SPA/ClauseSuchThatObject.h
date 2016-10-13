@@ -16,11 +16,11 @@ public:
 	ClauseSuchThatObject();
 	
 	ClauseSuchThatObject (RelationshipType type, ClauseSuchThatArgObject* argsOne, ClauseSuchThatArgObject* argsTwo);
-	ClauseSuchThatObject* const clone() { return new ClauseSuchThatObject(*this); }
+	ClauseSuchThatObject* clone() { return new ClauseSuchThatObject(*this); }
 
-	RelationshipType getRelationshipType();
-	ClauseSuchThatArgObject* getArgsOne();
-	ClauseSuchThatArgObject* getArgsTwo();
+	RelationshipType getRelationshipType() const;
+	ClauseSuchThatArgObject* getArgsOne() const;
+	ClauseSuchThatArgObject* getArgsTwo() const;
 	bool getResultsBoolean();
 	void setResultsBoolean(bool boolean);
 	

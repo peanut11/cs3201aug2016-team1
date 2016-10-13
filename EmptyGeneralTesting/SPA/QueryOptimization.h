@@ -9,6 +9,9 @@
 class QueryOptimization {
 
 	SynonymGroup mSynonymGroup;
+
+	GroupObject sortGroup(GroupObject mGroupObject);
+
 	std::string getRelationshipString(RelationshipType type);
 	//std::vector<std::vector<ClauseObject>> groups;
 
@@ -29,8 +32,7 @@ public:
 	std::vector<GroupObject> beginOptimize(SynonymGroup *mSynonymGroup, QueryTable mQueryTable);
 	std::map<int, GroupObject> doGroup(SynonymGroup *mSynonymGroup, QueryTable mQueryTable);
 	std::vector<GroupObject> doOptimizeGroups(std::map<int, GroupObject> groups);
-
-
+	
 	std::string printFinalResult(std::vector<GroupObject> groups);
 	std::string printMapGroupObjectToString(std::map<int, GroupObject> mapGroupObject); //std::map<int, GroupObject> mMap
 	//std::vector<std::vector<ClauseObject>> getGroups();
