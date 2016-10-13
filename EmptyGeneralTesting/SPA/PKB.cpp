@@ -7,6 +7,7 @@
 
 #include "PKB.h"
 #include "RelationshipPopulator.h"
+#include "Exceptions.h"
 
 PKB* PKB::theOne = nullptr;
 
@@ -116,8 +117,7 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 				tokenStack.pop();
 			}
 			if (tokenStack.empty()) {
-				// INVALID INFIX EXPR!!!!!!!!!!!!!!!!!
-				return result;
+				throw Exceptions::invalid_expression(s);
 			}
 			tokenStack.pop();
 		}
@@ -139,7 +139,7 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 	while (!tokenStack.empty()) {
 		StringToken token = tokenStack.top();
 		if (operatorRank(token) == 0) {
-			// INVALID INFIX EXPR!!!!!!!!!
+			throw Exceptions::invalid_expression(token);
 		}
 		tokenStack.pop();
 		result.push_back(token);
@@ -601,7 +601,7 @@ bool PKB::putExprForStmt(StmtNumber stmt, PostfixExpr expr) {
 	}
 
 	postfixExprs.push_back(expr);
-	return true;
+	return stmt + 1 == postfixExprs.size();
 }
 
 bool PKB::putConstant(Constant constant) {
