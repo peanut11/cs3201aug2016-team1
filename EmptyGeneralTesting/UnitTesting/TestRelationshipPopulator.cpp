@@ -55,17 +55,17 @@ public:
 		}
 
 		// Checks Next*(x, 2) for no if/while
-		/*actualSet = RelationshipPopulator::getNextStar(StmtNumber(0), StmtNumber(3));
+		actualSet = RelationshipPopulator::getNextStar(StmtNumber(0), StmtNumber(8));
 
 		actualSize = actualSet.size();
-		expectedSize = 2;
+		expectedSize = 8;
 		Assert::AreEqual(expectedSize, actualSize);
 
 		actualIt = actualSet.begin();
-		for (unsigned int i = 1; i <= 2; i++) {
+		for (unsigned int i = 1; i <= 8; i++) {
 			Assert::AreEqual(StmtNumber(i), *actualIt);
 			actualIt++;
-		}*/
+		}
 	}
 
 	};
