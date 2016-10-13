@@ -17,6 +17,6 @@ public:
     void processCallsStar();
     void processFollowsStar();
     void processLoopForUseAndModifies(StmtNumber w);
-    void processParentStar();
+    void processParentStar(StmtNumber index);
     void updateStmtTable();
 };
