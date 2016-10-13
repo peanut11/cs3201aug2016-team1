@@ -20,7 +20,7 @@ public:
 	void setGroupType(GroupType::GroupType type);
 	void setHasContainAffects(bool value);
 
-	std::vector<ClauseObject*> getClauseObjectList();
+	std::vector<ClauseObject*>& getClauseObjectList();
 	GroupType::GroupType getGroupType() const ;
 	std::string getGroupTypeString();
 	bool getHasContainAffects();

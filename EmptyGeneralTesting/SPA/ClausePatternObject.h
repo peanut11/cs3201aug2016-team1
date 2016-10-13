@@ -21,7 +21,7 @@ public:
 	ClausePatternObject(EntityType patternType, std::string patternSynonymArg, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg);
 	ClausePatternObject(EntityType patternType, std::string patternSynonymArg, EntityType firstArgType, bool isFirstArgSynonym, std::string firstArg, std::string secondArg, std::string thirdArg);
 
-	ClausePatternObject* const clone() { return new ClausePatternObject(*this); }
+	ClausePatternObject* clone() { return new ClausePatternObject(*this); }
 
 	EntityType getPatternType();
 	EntityType getFirstArgumentType();

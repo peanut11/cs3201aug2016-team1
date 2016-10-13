@@ -13,17 +13,17 @@ ClauseSuchThatObject::ClauseSuchThatObject(RelationshipType type, ClauseSuchThat
 	this->argsTwo = argsTwo;
 }
 
-RelationshipType ClauseSuchThatObject::getRelationshipType()
+RelationshipType ClauseSuchThatObject::getRelationshipType() const
 {
 	return type;
 }
 
-ClauseSuchThatArgObject* ClauseSuchThatObject::getArgsOne()
+ClauseSuchThatArgObject* ClauseSuchThatObject::getArgsOne() const
 {
 	return argsOne;
 }
 
-ClauseSuchThatArgObject* ClauseSuchThatObject::getArgsTwo()
+ClauseSuchThatArgObject* ClauseSuchThatObject::getArgsTwo() const
 {
 	return argsTwo;
 }

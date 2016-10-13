@@ -300,7 +300,7 @@ bool QueryValidator::isSelect(std::string str) {
 		std::string currentToken = st.nextToken();
 
 		if (isMatch(currentToken, QueryValidator::SYNTAX_SELECT)) {
-			previousClauseType = ClauseType::SELECT;
+			previousClauseType = ClauseType::ClauseType::SELECT;
 			if (hasSelectOnce) {
 				// next string is "Select" again & already had "Select" previously
 				// cannot have more than 1 "Select"
@@ -315,19 +315,19 @@ bool QueryValidator::isSelect(std::string str) {
 		}
 		 
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_PATTERN)) {
-			previousClauseType = ClauseType::PATTERN;
+			previousClauseType = ClauseType::ClauseType::PATTERN;
 		}
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_AND)) {
 			// remain the same previous clause type
 		}
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_WITH)) {
-			previousClauseType = ClauseType::WITH;
+			previousClauseType = ClauseType::ClauseType::WITH;
 		}
 		else {
 			// not clauses (such that, with, pattern, and)
 			switch (previousClauseType) {
 
-			case ClauseType::SELECT:
+			case ClauseType::ClauseType::SELECT:
 				isValid = isClauseResult(currentToken);
 
 				if (isValid) {

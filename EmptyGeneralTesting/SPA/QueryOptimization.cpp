@@ -6,6 +6,7 @@
 QueryOptimization::QueryOptimization() {
 }
 
+
 /*
 Assign all ClauseObjects in QueryTable into specific group
 Group 1		: Boolean clauses
@@ -156,18 +157,116 @@ std::map<int, GroupObject> QueryOptimization::doGroup(SynonymGroup *mSynonymGrou
 std::vector<GroupObject> QueryOptimization::doOptimizeGroups(std::map<int, GroupObject> groups) {
 	std::vector<GroupObject> result;
 
-	for (std::map<int, GroupObject>::iterator ii = groups.begin(); ii != groups.end(); ii++) {
-		result.push_back(ii->second);
+	for (std::map<int, GroupObject>::iterator ii = groups.begin(); ii != groups.end(); ii++) {		
+		result.push_back(this->sortGroup(ii->second)); // sort
+		//result.push_back(ii->second); // not sort
 	}
 	
 	sort(result.begin(), result.end(), [](const GroupObject& lhs, const GroupObject& rhs)
 	{
+		// if true, means lhs is before rhs
+		// if false, means lhs is after rhs
 		return lhs.getGroupType() < rhs.getGroupType();
 	});
 	
 	return result;
 
 }
+
+GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
+
+	/*
+	1. Prioritize clauses with one constant and one synonym
+	2. Prioritize clauses with less number of results: Follows, Modifies, etc.
+	3. Sort clauses such that at least one synonym has been computed in a previous clause
+	4. Prioritize with-clauses – more restrictive than such that clauses
+	5. Evaluating pattern-clauses – similar to any such that clause
+	6. Push Affects/* clauses on the last positions in a group
+	*/
+	
+
+	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), 
+		[](ClauseObject* lhs, ClauseObject* rhs) {
+		// if true, means lhs is before rhs
+		// if false, means lhs is after rhs
+
+	
+		
+		if (lhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT &&
+			rhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT) {
+
+			ClauseSuchThatObject* lhsObj = dynamic_cast<ClauseSuchThatObject*>(lhs); // const_cast< const ClauseSuchThatObject*>(lhs)
+			ClauseSuchThatObject* rhsObj = dynamic_cast<ClauseSuchThatObject*>(rhs);
+
+			if (lhsObj->getArgsOne()->getEntityType() == EntityType::VARIABLE ||
+				lhsObj->getArgsTwo()->getEntityType() == EntityType::VARIABLE ||
+				lhsObj->getArgsOne()->getEntityType() == EntityType::CONSTANT ||
+				lhsObj->getArgsTwo()->getEntityType() == EntityType::CONSTANT) {
+
+				return false;
+			}
+
+			if (lhsObj->getRelationshipType() == RelationshipType::MODIFIES ||
+				lhsObj->getRelationshipType() == RelationshipType::USES) {
+				return false;
+			}
+
+			if (rhsObj->getRelationshipType() != RelationshipType::MODIFIES &&
+				rhsObj->getRelationshipType() != RelationshipType::USES) {
+				return true;
+			}
+
+		}
+		else {
+			return lhs->getClauseType() < rhs->getClauseType();
+		}
+		
+
+
+		/*
+		if (lhs.getClauseType() == ClauseType::ClauseType::SUCH_THAT &&
+			rhs.getClauseType() == ClauseType::ClauseType::SUCH_THAT) {
+
+			const ClauseSuchThatObject& lhsObj = dynamic_cast<const ClauseSuchThatObject&>(lhs);
+			const ClauseSuchThatObject& rhsObj = dynamic_cast<const ClauseSuchThatObject&>(rhs);
+			
+			
+			if (lhsObj.getArgsOne()->getEntityType() == EntityType::VARIABLE ||
+				lhsObj.getArgsTwo()->getEntityType() == EntityType::VARIABLE ||
+				lhsObj.getArgsOne()->getEntityType() == EntityType::CONSTANT ||
+				lhsObj.getArgsTwo()->getEntityType() == EntityType::CONSTANT) {
+
+				return false;
+			}
+
+			if (lhsObj.getRelationshipType() == RelationshipType::MODIFIES ||
+				lhsObj.getRelationshipType() == RelationshipType::USES) {
+				return false;
+			}
+
+			if (rhsObj.getRelationshipType() != RelationshipType::MODIFIES &&
+				rhsObj.getRelationshipType() != RelationshipType::USES) {
+				return true;
+			}
+
+		
+
+		} else {
+
+			return lhs.getClauseType() < rhs.getClauseType();
+
+		}
+		*/
+		
+		
+
+
+	});
+	
+	return mGroupObject;
+
+}
+
 
 std::string QueryOptimization::printFinalResult(std::vector<GroupObject> groups) {
 	std::string output = "";

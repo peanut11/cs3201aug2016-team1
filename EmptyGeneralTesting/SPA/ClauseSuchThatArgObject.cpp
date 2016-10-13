@@ -17,7 +17,7 @@ bool ClauseSuchThatArgObject::getIsSynonym()
 	return isSynonym;
 }
 
-EntityType ClauseSuchThatArgObject::getEntityType()
+EntityType ClauseSuchThatArgObject::getEntityType() const
 {
 	return entityType;
 }

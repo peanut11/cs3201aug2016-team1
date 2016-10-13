@@ -8,29 +8,67 @@ std::set<StmtNumber> RelationshipPopulator::getNextStar(StmtNumber startStmt, St
 	if (startStmt == 0 && endStmt == 0) return results;
 	
 	PKB* pkb = PKB::getInstance();
-	std::set<StmtNumber> nextStmts;
+	std::vector<StmtNumber> nextStmts;
 	std::set<StmtNumber> potentialNextStmts;
+	std::set<StmtNumber> whileChildren;
+	std::set<StmtNumber> grandparents;
+	std::set<StmtNumber>::const_iterator grandparentsIt;
 	bool isTopDown = (startStmt!= 0);
+	StmtNumber currentStmt;
+	StmtNumber oldestWhile = 0;
 
 	if (isTopDown) { 
-		nextStmts = pkb->getStmtsByStmt(NEXT, startStmt);
+		potentialNextStmts = pkb->getStmtsByStmt(NEXT, startStmt);
 	} else { 
-		nextStmts = pkb->getStmtsByStmt(endStmt, NEXT);
+		potentialNextStmts = pkb->getStmtsByStmt(endStmt, NEXT);
 	}
+	nextStmts.insert(nextStmts.begin(), potentialNextStmts.begin(), potentialNextStmts.end());
+	
+	while (!nextStmts.empty()) {
+		currentStmt = nextStmts.back();
+		nextStmts.pop_back();
+		results.insert(currentStmt);
 
-	std::set<StmtNumber>::const_iterator nextIt = nextStmts.begin();
-	while (nextIt != nextStmts.end()) {
-		results.insert(*nextIt);
-		if (*nextIt == endStmt) break;
-		if (isTopDown) {
-			potentialNextStmts = pkb->getStmtsByStmt(NEXT, *nextIt);
+		// Search for oldest while
+		if (pkb->getStmtTypeForStmt(currentStmt) == WHILE) oldestWhile = currentStmt;
+		grandparents = pkb->getStmtsByStmt(currentStmt, PARENT_STAR);
+		grandparentsIt = grandparents.begin();
+		if (!grandparents.empty()) {
+			while (grandparentsIt != grandparents.end()) {
+				if (pkb->getStmtTypeForStmt(*grandparentsIt) == WHILE) {
+					oldestWhile = *grandparentsIt;
+				}
+				grandparentsIt++;
+			}
 		}
-		else {
-			potentialNextStmts = pkb->getStmtsByStmt(*nextIt, NEXT);
+
+		if (oldestWhile != 0) {
+			results.insert(oldestWhile);
+			// Adds all children of oldest while into results
+			whileChildren = pkb->getStmtsByStmt(PARENT_STAR, oldestWhile);
+			if (whileChildren.find(endStmt) != whileChildren.end()) {
+				// Children of while contains endStmt
+				results.insert(whileChildren.begin(), whileChildren.find(endStmt));
+				break;
+			} else {
+				results.insert(whileChildren.begin(), whileChildren.end());
+			}
+			
+			// Adds follower of while into next
+			potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
+			oldestWhile = 0;
+		} else {
+			if (currentStmt == endStmt) break;
+			if (isTopDown) {
+				potentialNextStmts = pkb->getStmtsByStmt(NEXT, currentStmt); // Gets next
+			}
+			else {
+				potentialNextStmts = pkb->getStmtsByStmt(currentStmt, NEXT); // Gets previous
+			}
 		}
 		
-		nextStmts.insert(potentialNextStmts.begin(), potentialNextStmts.end());
-		nextIt++;
+		nextStmts.insert(nextStmts.end(), potentialNextStmts.begin(), potentialNextStmts.end());
+		
 	}
 	return results;
 }

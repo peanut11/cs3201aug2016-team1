@@ -13,7 +13,7 @@ public:
 	ClauseSelectResultObject();
 	void insertClauseSelectObject(ClauseSelectObject object);
 	
-	ClauseSelectResultObject* const clone() { return new ClauseSelectResultObject(*this); }
+	ClauseSelectResultObject* clone() { return new ClauseSelectResultObject(*this); }
 
 	std::vector<ClauseSelectObject> getClauseSelectObjectList();
 	bool doesClauseSelectObjectExist(std::string synonym);

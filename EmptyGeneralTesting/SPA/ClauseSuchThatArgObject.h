@@ -21,7 +21,7 @@ public:
 	ClauseSuchThatArgObject();
 	ClauseSuchThatArgObject (EntityType entityType, StringToken stringValue, ProcStmtVarIndex integerValue, bool isSynonym);
 	
-	EntityType getEntityType();
+	EntityType getEntityType() const;
 	StringToken getStringValue();
 	ProcStmtVarIndex getIntegerValue();
 

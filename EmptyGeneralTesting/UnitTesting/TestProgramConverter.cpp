@@ -214,6 +214,19 @@ public:
 			actualIt++;
 		}
 
+		// check previous of after else stmts
+		expected = std::set<StmtNumber>({ stmt9, stmt10 });
+		actual = pkb->getStmtsByStmt(stmt11, NEXT);
+		expectedIt = expected.begin();
+		actualIt = actual.begin();
+		Assert::AreEqual(expected.size(), actual.size());
+		while (expectedIt != expected.end()) {
+			Assert::AreEqual(*expectedIt, *actualIt);
+
+			expectedIt++;
+			actualIt++;
+		}
+
 		// check previous of while stmts
 		expected = std::set<StmtNumber>({ stmt2, stmt7 });
 		actual = pkb->getStmtsByStmt(stmt3, NEXT);
