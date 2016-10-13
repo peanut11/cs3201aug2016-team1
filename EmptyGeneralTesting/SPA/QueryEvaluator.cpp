@@ -743,7 +743,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		// arg1 is underscore & arg2 is integer: Calls(_,"Giraffe")
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() != "_") {
 			// Store results
-			std::set<ProcIndex> procedures = pkb->getProcsByProc(argTwo->getStringValue(), type);
+			std::set<ProcIndex> procedures = pkb->getProcsByProc(pkb->getProcIndex(argTwo->getStringValue()), type);
 
 			if (procedures.size() > 0) {
 				suchThatRelObject->setResultsBoolean(true);
@@ -783,7 +783,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		// arg1 is proc name & arg2 is underscore: Calls("Giraffe",_)
 		else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
 			// Store results
-			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, argOne->getStringValue());    
+			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, pkb->getProcIndex(argOne->getStringValue()));    
 
 			if (procedures.size() > 0) {
 				suchThatRelObject->setResultsBoolean(true);
