@@ -2381,7 +2381,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
-    
+	
 
 	TEST_METHOD(TestQueryEvaluator_Populate_Synonym_Group) {
 
