@@ -25,8 +25,8 @@ private:
     const TuplePosition LEFT = 0;
     const TuplePosition RIGHT = 0;
 
-    GridColumn columnCount;
     GridColumnMap refMap;              // getColumnForSynonym
+    std::vector<SynonymString> refTable; // getSynonymForColumn
     std::list<GridRow> resultList;     // Possible combinations of SynonymValues
     std::vector<ValueSet> resultTable; // Unique SynonymValues for each SynonymString
 
@@ -41,11 +41,13 @@ private:
     SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
     GridColumn getColumnForSynonym(SynonymString syn);
+    SynonymString getSynonymForColumn(GridColumn col);
 
 public:
     ResultGrid(SynonymString syn, ValueSet vals);
 
     bool mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
+    bool mergeGridBruteForce(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
     bool updateSynonym(SynonymString syn, ValueSet vals);
     bool updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples);
     ValueSet getValuesForSynonym(SynonymString syn);
