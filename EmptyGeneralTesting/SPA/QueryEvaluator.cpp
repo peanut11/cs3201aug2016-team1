@@ -193,8 +193,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<StmtNumber> evaluatedS;
+            StmtNumber stmt = argTwo->getIntegerValue();
 			for (StmtSetIterator i = s.begin(); i != s.end(); i++) {
-				if (pkb->is(type, *i, argTwo->getIntegerValue())) {
+				if (pkb->is(type, *i, stmt)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedS.insert(*i);
 					if (isStopEvaluation) {
@@ -221,8 +222,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<StmtNumber> evaluatedS;
+            StmtNumber stmt = argOne->getIntegerValue();
 			for (StmtSetIterator i = s.begin(); i != s.end(); i++) {
-				if (pkb->is(type, argOne->getIntegerValue(), *i)) {
+				if (pkb->is(type, stmt, *i)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedS.insert(*i);
 					if (isStopEvaluation) {
@@ -409,8 +411,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<VarIndex> evaluatedV;
+            StmtNumber stmt = argOne->getIntegerValue();
 			for (StmtSetIterator i = v.begin(); i != v.end(); i++) {
-				if (pkb->is(type, argOne->getIntegerValue(), *i)) {
+				if (pkb->is(type, stmt, *i)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedV.insert(*i);
 					if (isStopEvaluation) {
@@ -451,8 +454,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<StmtNumber> evaluatedS;
+            VarIndex var = pkb->getVarIndex(argTwo->getStringValue());
 			for (StmtSetIterator i = s.begin(); i != s.end(); i++) {
-				if (pkb->is(type, *i, pkb->getVarIndex(argTwo->getStringValue()))) {
+				if (pkb->is(type, *i, var)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedS.insert(*i);
 					if (isStopEvaluation) {
@@ -579,8 +583,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<VarIndex> evaluatedV;
+            ProcIndex proc = pkb->getProcIndex(argOne->getStringValue());
 			for (StmtSetIterator i = v.begin(); i != v.end(); i++) {
-				if (pkb->is(type, pkb->getProcIndex(argOne->getStringValue()), *i)) {
+				if (pkb->is(type, proc, *i)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedV.insert(*i);
 					if (isStopEvaluation) {
@@ -609,8 +614,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<ProcIndex> evaluatedP;
+            VarIndex var = pkb->getVarIndex(argTwo->getStringValue());
 			for (StmtSetIterator i = p.begin(); i != p.end(); i++) {
-				if (pkb->is(type, *i, pkb->getVarIndex(argTwo->getStringValue()))) {
+				if (pkb->is(type, *i, var)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedP.insert(*i);
 					if (isStopEvaluation) {
@@ -683,8 +689,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<ProcIndex> evaluatedP;
+            ProcIndex proc = pkb->getProcIndex(argTwo->getStringValue());
 			for (StmtSetIterator i = p.begin(); i != p.end(); i++) {
-				if (pkb->is(type, *i, pkb->getProcIndex(argTwo->getStringValue()))) {
+				if (pkb->is(type, *i, proc)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedP.insert(*i);
 					if (isStopEvaluation) {
@@ -715,8 +722,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
 			// Get results
 			std::set<ProcIndex> evaluatedP;
+            ProcIndex proc = pkb->getProcIndex(argOne->getStringValue());
 			for (StmtSetIterator i = p.begin(); i != p.end(); i++) {
-				if (pkb->is(type, pkb->getProcIndex(argOne->getStringValue()), *i)) {
+				if (pkb->is(type, proc, *i)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedP.insert(*i);
 					if (isStopEvaluation) {
@@ -1594,9 +1602,10 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                 std::set<StmtNumber> evaluatedS;
 
                 // Check all existing pattern synonym statements if it modifies the 'variable'
+                VarIndex var = pkb->getVarIndex(firstArg);
                 for (StmtSetIterator i = currentStatements.begin(); i != currentStatements.end(); i++) {
                     // Check if the existing statement modifies the 'variable'
-                    if (pkb->is(MODIFIES, *i, pkb->getVarIndex(firstArg))) {
+                    if (pkb->is(MODIFIES, *i, var)) {
                         evaluatedS.insert(*i);
 						patternObject->setResultsBoolean(true);
 						if (isStopEvaluation) {
@@ -1723,9 +1732,10 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                 std::set<StmtNumber> evaluatedS;
 
                 // Check all existing pattern synonym statements if it modifies the 'variable'
+                VarIndex var = pkb->getVarIndex(firstArg);
                 for (StmtSetIterator i = currentStatements.begin(); i != currentStatements.end(); i++) {
                     // Check if the existing statement modifies the 'variable'
-                    if (pkb->is(MODIFIES, *i, pkb->getVarIndex(firstArg))) {
+                    if (pkb->is(MODIFIES, *i, var)) {
                         // If yes, check if this statement uses the second argument subexpression
                         if (pkb->isAssignContainsPattern(*i, to_tokens(secondArg))) {
                             evaluatedS.insert(*i);
