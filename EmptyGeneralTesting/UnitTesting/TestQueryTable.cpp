@@ -17,10 +17,10 @@ public:
 		std::vector<ClausePatternObject*> patterns;
 		ClauseSuchThatObject* st1 = new ClauseSuchThatObject(MODIFIES, new ClauseSuchThatArgObject(), new ClauseSuchThatArgObject());
 		ClauseSuchThatObject* st2 = new ClauseSuchThatObject(USES, new ClauseSuchThatArgObject(), new ClauseSuchThatArgObject());
-		ClauseWithRefObject* wr1 = new ClauseWithRefObject(ATTRREF, "", AttrType::PROC_NAME);
-		ClauseWithRefObject* wr2 = new ClauseWithRefObject(SYNONYM, "", AttrType::PROC_NAME);
-		ClauseWithRefObject* wr3 = new ClauseWithRefObject(IDENTIFIER, "", AttrType::PROC_NAME);
-		ClauseWithRefObject* wr4 = new ClauseWithRefObject(INTEGER, "", AttrType::PROC_NAME);
+		ClauseWithRefObject* wr1 = new ClauseWithRefObject(ATTRREF, EntityType::PROCEDURE, "", AttrType::PROC_NAME);
+		ClauseWithRefObject* wr2 = new ClauseWithRefObject(SYNONYM, EntityType::PROCEDURE, "", AttrType::PROC_NAME);
+		ClauseWithRefObject* wr3 = new ClauseWithRefObject(IDENTIFIER, EntityType::PROCEDURE, "", AttrType::PROC_NAME);
+		ClauseWithRefObject* wr4 = new ClauseWithRefObject(INTEGER, EntityType::PROCEDURE, "", AttrType::PROC_NAME);
 		ClauseWithObject* w1 = new ClauseWithObject(wr1, wr2);
 		ClauseWithObject* w2 = new ClauseWithObject(wr3, wr4);
 		ClausePatternObject* p1 = new ClausePatternObject(ASSIGN, "ab", EntityType::INVALID, false, "ab", "ab");

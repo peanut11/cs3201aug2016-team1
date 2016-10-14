@@ -146,16 +146,16 @@ ClauseWithObject* QueryValidator::createClauseWithObject(ClauseWithRefObject* fi
 	return new ClauseWithObject(firstArg, secondArg);
 }
 
-ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
-	return new ClauseWithRefObject(refType, synonym, attributeName);
+ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, EntityType entityType, std::string synonym, AttrType::AttrType attributeName) {
+	return new ClauseWithRefObject(refType, entityType, synonym, attributeName);
 }
 
-ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, std::string stringValue) {
-	return new ClauseWithRefObject(refType, stringValue);
+ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, EntityType entityType, std::string stringValue) {
+	return new ClauseWithRefObject(refType, entityType, stringValue);
 }
 
-ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, int integerValue) {
-	return new ClauseWithRefObject(refType, integerValue);
+ClauseWithRefObject* QueryValidator::createClauseWithRefObject(WithRefType refType, EntityType entityType, int integerValue) {
+	return new ClauseWithRefObject(refType, entityType, integerValue);
 }
 
 SynonymOccurence *QueryValidator::getSynonymOccurence() {
@@ -459,7 +459,9 @@ bool QueryValidator::isClauseWith(std::string str) {
 			hasValidSynonym = true;
 
 			if (selectedSynonymObj.getType() == EntityType::PROGRAM_LINE && isMatch(st.peekNextToken(), this->SYNTAX_EQUAL)) {
-				leftRefObject = this->createClauseWithRefObject(WithRefType::SYNONYM, selectedSynonymObj.getSynonym(), AttrType::INVALID);
+				leftRefObject = this->createClauseWithRefObject(WithRefType::SYNONYM, 
+					selectedSynonymObj.getType(),
+					selectedSynonymObj.getSynonym(), AttrType::INVALID);
 				
 				isLeftAttributeProgramLine = true;
 			}
@@ -552,6 +554,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 			if (hasAttribute) {
 				leftRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF, 
+					selectedSynonymObj.getType(),
 					selectedSynonymObj.getSynonym(), 
 					mAttributeType);
 			}
@@ -570,13 +573,14 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						hasValidAttrValue = true;
 						// declare right attr reference object
-						rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, atoi(currentToken.c_str()));
+						rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, EntityType::CONSTANT, atoi(currentToken.c_str()));
 
 					}
 					else if (isSynonym(currentToken) && isDeclaredSynonym(currentToken) && isMatch(st.peekNextToken(), this->SYNTAX_DOT)) { // another synonym attribute on the right
 
 						AttrType::AttrType type = AttrType::INVALID;
 						std::string secondSynonym = currentToken; // save the synonym value
+						EntityType secondSynonymType = this->getSynonymTable()->getType(secondSynonym);
 
 						currentToken = st.nextToken(); // point to "."
 
@@ -598,8 +602,9 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 							// declare right attr reference object
 							rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF, 
-																				secondSynonym, 
-																				type);
+								secondSynonymType,
+								secondSynonym, 
+								type);
 
 						}
 
@@ -617,7 +622,9 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						hasValidAttrValue = true;
 						// declare right attr reference object
-						rightRefObject = this->createClauseWithRefObject(WithRefType::IDENTIFIER, this->validatedVariableName);
+						rightRefObject = this->createClauseWithRefObject(WithRefType::IDENTIFIER, 
+							EntityType::VARIABLE,
+							this->validatedVariableName);
 
 					}
 					else if (isSynonym(currentToken) && isDeclaredSynonym(currentToken) && isMatch(st.peekNextToken(), this->SYNTAX_DOT)) { // another synonym attribute on the right
@@ -626,6 +633,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						AttrType::AttrType type = this->getAttrType(st.peekNextToken());
 						std::string secondSynonym = currentToken; // save the synonym value
+						EntityType secondSynonymType = this->getSynonymTable()->getType(secondSynonym);
 
 						if (type == AttrType::PROC_NAME || type == AttrType::VAR_NAME) {
 							st.nextToken(); // point to second attrName
@@ -633,6 +641,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 							// declare right attr reference object
 							rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF,
+								secondSynonymType,
 								secondSynonym,
 								type);
 						}
@@ -652,11 +661,15 @@ bool QueryValidator::isClauseWith(std::string str) {
 		else if (hasValidSynonym && !hasDot && !hasAttribute) { // there exists synonym but without dot and attribute 
 			
 			if (hasEqualSign && !isMatch(currentToken, this->SYNTAX_EQUAL)) { // has EQUAL but current token is not EQUAL
+
 				if (isNumber(currentToken)) {
 					hasValidAttrValue = true;
 					hasValidProgLine = true;
 					// declare right attr reference object
-					rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, atoi(currentToken.c_str()));
+					rightRefObject = this->createClauseWithRefObject(WithRefType::INTEGER, 
+						EntityType::CONSTANT, 
+						atoi(currentToken.c_str()));
+
 				}
 				else if (isSynonym(currentToken) && isDeclaredSynonym(currentToken)) {
 
@@ -695,6 +708,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 								hasValidProgLine = true;
 
 								rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF,
+									rightEntityType,
 									rightSynonym,
 									rightAttrType);
 
@@ -711,6 +725,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 								hasValidProgLine = true;
 								
 								rightRefObject = this->createClauseWithRefObject(WithRefType::ATTRREF,
+									rightEntityType,
 									rightSynonym,
 									rightAttrType);
 							}
@@ -727,6 +742,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 							hasValidProgLine = true;
 
 							rightRefObject = this->createClauseWithRefObject(WithRefType::SYNONYM,
+								EntityType::PROGRAM_LINE,
 								currentToken,
 								AttrType::AttrType::INVALID);
 

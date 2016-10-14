@@ -28,8 +28,8 @@ bool ResultGrid::contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymV
 }
 
 void ResultGrid::addSynonym(SynonymString syn) {
-    GridColumn column = columnCount++;
-    refMap[syn] = column;
+    refMap[syn] = refTable.size();
+    refTable.push_back(syn);
     resultTable.push_back(ValueSet());
 }
 
@@ -85,6 +85,10 @@ GridColumn ResultGrid::getColumnForSynonym(SynonymString syn) {
     return refMap[syn];
 }
 
+SynonymString ResultGrid::getSynonymForColumn(GridColumn col) {
+    return refTable[col];
+}
+
 void ResultGrid::sortResultListBySynonym(SynonymString syn) {
     GridColumn column = getColumnForSynonym(syn);
     std::stable_sort(resultList.begin(), resultList.end(), [column](GridRow row1, GridRow row2) {
@@ -92,8 +96,7 @@ void ResultGrid::sortResultListBySynonym(SynonymString syn) {
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
-    columnCount = 0;
-    GridColumn column = columnCount++;
+    GridColumn column = resultTable.size();
     refMap[syn] = column;
     resultTable.push_back(ValueSet());
 
@@ -108,6 +111,9 @@ ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
 }
 
 bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples) {
+    return mergeGridBruteForce(other, synTuple, validTuples);
+
+    /*
     // If no valid tuples, then clear grid and return
     if (validTuples.empty()) {
         clearGrid();
@@ -115,30 +121,33 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         return false;
     }
 
-    // Transfer columns
-    for (GridMapConstIter keyVal = other->refMap.begin(); keyVal != other->refMap.end(); ++keyVal) {
-        SynonymString otherSyn = keyVal->first;
+    // Transfer empty columns
+    for (size_t otherCol = 0; otherCol < other->refTable.size(); otherCol++) {
+        SynonymString otherSyn = other->refTable[otherCol];
         addSynonym(otherSyn);
     }
 
     // Sort resultList in both grids by the synonyms of interest
-    sortResultListBySynonym(extractSynonym(LEFT, synTuple));
-    other->sortResultListBySynonym(extractSynonym(RIGHT, synTuple));
-
-    GridListIterator row = resultList.begin();
-    ValueTupleSet::const_iterator validTuple = validTuples.begin();
     SynonymString syn = extractSynonym(LEFT, synTuple);
     SynonymString otherSyn = extractSynonym(RIGHT, synTuple);
+    sortResultListBySynonym(syn);
+    other->sortResultListBySynonym(otherSyn);
+
+    // Get ready to merge
     GridColumn column = getColumnForSynonym(syn);
-    GridColumn otherColumn = getColumnForSynonym(otherSyn);
+    GridColumn otherColumn = other->getColumnForSynonym(otherSyn);
+    ValueTupleSet::const_iterator validTuple = validTuples.begin();
+
+    // Prepare to store updated synonym values
+    ValueSet synSet;
+    ValueSet otherSynSet;
 
     // Loop through resultList
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
 
         // Go to a valid row in resultList
-        SynonymValue currentValue = (*row)[column];
         SynonymValue validValue = extractValue(LEFT, *validTuple);
-        while (row != resultList.end() && ((currentValue = (*row)[column]) != validValue)) {
+        while (row != resultList.end() && (((*row)[column]) != validValue)) {
             row = resultList.erase(row);
         }
 
@@ -148,13 +157,13 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         }
 
         // Continue down the validTuples while the left side is the same as currentValue
-        while (validTuple != validTuples.end() && extractValue(LEFT, *validTuple) == currentValue) {
+        while (validTuple != validTuples.end() && extractValue(LEFT, *validTuple) == validValue) {
 
             // Go to a valid otherRow in other->ResultList
             GridListIterator otherRow = other->resultList.begin();
             SynonymValue otherValidValue = extractValue(RIGHT, *validTuple);
             while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] != otherValidValue) {
-                otherRow = other->resultList.erase(otherRow);
+                otherRow++;
             }
 
             // If at end of other->resultList, stop looping
@@ -162,8 +171,14 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
                 break;
             }
             
+            throw std::runtime_error("");
+
             // Permutate
             while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] == otherValidValue) {
+                throw std::runtime_error("");
+                // Add synonym to updated synonym values
+                synSet.insert(validValue);
+                otherSynSet.insert(otherValidValue);
 
                 // Keep row as template
                 GridRow newRow = *row;
@@ -183,6 +198,96 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         }
     }
 
+    // Replace previous valid values with updated synonym values
+    resultTable[column] = synSet;
+    otherColumn = getColumnForSynonym(otherSyn);
+    resultTable[otherColumn] = otherSynSet;
+
+    return !resultList.empty();
+    */
+}
+
+bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, ValueTupleSet validTuples) {
+    // If no valid tuples, then clear grid and return
+    if (validTuples.empty()) {
+        clearGrid();
+        other->clearGrid();
+        return false;
+    }
+
+    // Permutate
+    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+        for (GridListIterator otherRow = other->resultList.begin(); otherRow != other->resultList.end(); otherRow++) {
+            // Keep row as template
+            size_t prevRowSize = (*row).size();
+            GridRow newRow = *row;
+
+            // Contatenate otherRow to newRow
+            std::copy((*otherRow).begin(), (*otherRow).end(), std::back_inserter(newRow));
+
+            // Check that row was not modified
+            if (prevRowSize != (*row).size()) {
+                throw std::runtime_error("");
+            }
+
+            // Insert newRow before row
+            size_t prevResultListSize = resultList.size();
+            resultList.insert(row, newRow);
+
+            // Check that newRow was inserted
+            if (prevResultListSize + 1 != resultList.size()) {
+                throw std::runtime_error("");
+            }
+        }
+    }
+
+    // Transfer empty columns
+    for (size_t otherColumn = 0; otherColumn < other->refTable.size(); otherColumn++) {
+        SynonymString otherSyn = other->refTable[otherColumn];
+        addSynonym(otherSyn);
+    }
+
+    // Prepare to store updated synonym values
+    SynonymString syn = extractSynonym(LEFT, synTuple);
+    SynonymString otherSyn = extractSynonym(RIGHT, synTuple);
+    GridColumn column = getColumnForSynonym(syn);
+    GridColumn otherColumn = getColumnForSynonym(otherSyn);
+    size_t columnCount = resultTable.size();
+    std::vector<ValueSet> newResultTable;
+    while (newResultTable.size() < columnCount) {
+        newResultTable.push_back(ValueSet());
+    }
+
+    for (GridListIterator row = resultList.begin(); row != resultList.end(); /* updated in loop */) {
+        bool isValidRow = false;
+
+        SynonymValue synVal = (*row)[column];
+        SynonymValue otherSynVal = (*row)[otherColumn];
+
+        for (ValueTupleSet::const_iterator validT = validTuples.begin(); validT != validTuples.end(); validT++) {
+            SynonymValue validSynVal = extractValue(LEFT, *validT);
+            SynonymValue otherValidSynVal = extractValue(RIGHT, *validT);
+
+            // If is valid row
+            if (synVal == validSynVal && otherSynVal == otherValidSynVal) {
+                isValidRow = true;
+                for (size_t column = 0; column < columnCount; column++) {
+                    newResultTable[column].insert((*row)[column]);
+                }
+                break;
+            }
+        }
+
+        if (isValidRow) {
+            // Go to next row
+            row++;
+        } else {
+            // Erase row
+            row = resultList.erase(row);
+        }
+    }
+
+    resultTable = newResultTable;
     return !resultList.empty();
 }
 

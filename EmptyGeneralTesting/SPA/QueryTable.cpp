@@ -97,8 +97,8 @@ std::string QueryTable::toString() {
 	str.append("\n== With ==\n");
 	str.append("refType, synonym, str, int\n");
 	for (auto value : this->withs) {
-		str.append(getWithRefString(value->getRefObject1()->getRefType()) + ", " + value->getRefObject1()->getSynonym() + ", " + value->getRefObject1()->getStringValue() + ", " + std::to_string(value->getRefObject1()->getIntegerValue()));
-		str.append(" | " + getWithRefString(value->getRefObject2()->getRefType()) + ", " + value->getRefObject2()->getSynonym() + ", " + value->getRefObject2()->getStringValue() + ", " + std::to_string(value->getRefObject2()->getIntegerValue()) + "\n");
+		str.append(getWithRefString(value->getRefObject1()->getRefType()) + ", " + getEntityString(value->getRefObject1()->getEntityType()) + ", " + value->getRefObject1()->getSynonym() + ", " + value->getRefObject1()->getStringValue() + ", " + std::to_string(value->getRefObject1()->getIntegerValue()));
+		str.append(" | " + getWithRefString(value->getRefObject2()->getRefType()) + ", " + getEntityString(value->getRefObject2()->getEntityType()) + ", " + value->getRefObject2()->getSynonym() + ", " + value->getRefObject2()->getStringValue() + ", " + std::to_string(value->getRefObject2()->getIntegerValue()) + "\n");
 	}
 
 	
