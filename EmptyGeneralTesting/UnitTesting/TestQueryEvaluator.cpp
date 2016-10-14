@@ -2561,6 +2561,182 @@ public:
 		Assert::AreEqual(std::to_string(17).c_str(), std::to_string(results2.size()).c_str());
 	}
 
+	// p1.procName = c1.procName
+	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_With3) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s(STMT, "s");
+		synonymTable->insert(s);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject c1(CALL, "c1");
+		synonymTable->insert(c1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Print procedures
+		std::set<ProcIndex> current = resultManager->getValuesForSynonym("p1");
+		for (std::set<ProcIndex>::iterator it = current.begin(); it != current.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		std::set<StmtNumber> currents = resultManager->getValuesForSynonym("c1");
+		for (std::set<ProcIndex>::iterator it = currents.begin(); it != currents.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// Print statements
+		std::set<StmtNumber> current1 = resultManager->getValuesForSynonym("s");
+		for (std::set<StmtNumber>::iterator it = current1.begin(); it != current1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// p1.procName = c1.procName
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CALL, "c1", AttrType::PROC_NAME);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// p1 = { 1, 2 }
+		std::set<ProcIndex> updated = resultManager->getValuesForSynonym("p1");
+		for (std::set<ProcIndex>::iterator it = updated.begin(); it != updated.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated.size()).c_str());
+
+		// c1 = { 3, 8 }
+		std::set<ProcIndex> updated1 = resultManager->getValuesForSynonym("c1");
+		for (std::set<ProcIndex>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated.size()).c_str());
+
+		// SELECT BOOLEAN with p1.procName = c1.procName
+		ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT p1 with p1.procName = c1.procName
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
+
+		Logger::WriteMessage("=============");
+
+		// SELECT s with p1.procName = p2.procName
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(17).c_str(), std::to_string(results2.size()).c_str());
+	}
+
+	// p1.procName = v.varName
+	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_With4) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s(STMT, "s");
+		synonymTable->insert(s);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject v(VARIABLE, "v");
+		synonymTable->insert(v);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Print procedures
+		std::set<ProcIndex> current = resultManager->getValuesForSynonym("p1");
+		for (std::set<ProcIndex>::iterator it = current.begin(); it != current.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		std::set<VarIndex> currents = resultManager->getValuesForSynonym("v");
+		for (std::set<VarIndex>::iterator it = currents.begin(); it != currents.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// Print statements
+		std::set<StmtNumber> current1 = resultManager->getValuesForSynonym("s");
+		for (std::set<StmtNumber>::iterator it = current1.begin(); it != current1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// p1.procName = v.varName
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v", AttrType::VAR_NAME);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		Assert::IsFalse(resultObj->getResultsBoolean());
+
+		// p1 = { 0, 1, 2 }
+		std::set<ProcIndex> updated = resultManager->getValuesForSynonym("p1");
+		for (std::set<ProcIndex>::iterator it = updated.begin(); it != updated.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(3).c_str(), std::to_string(updated.size()).c_str());
+
+		// v = { 0, 1, 2, 3, 4 }
+		std::set<VarIndex> updated1 = resultManager->getValuesForSynonym("v");
+		for (std::set<ProcIndex>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated1.size()).c_str());
+
+		// SELECT BOOLEAN with p1.procName = v.varName
+		ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("false", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT p1 with p1.procName = v.varName
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(0).c_str(), std::to_string(results1.size()).c_str());
+
+		Logger::WriteMessage("=============");
+
+		// SELECT s with p1.procName = v.varName
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(0).c_str(), std::to_string(results2.size()).c_str());
+	}
+	
 	// POPULATE SYNONYM GROUP
 	TEST_METHOD(TestQueryEvaluator_Populate_Synonym_Group) {
 

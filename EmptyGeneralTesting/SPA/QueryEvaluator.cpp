@@ -203,15 +203,13 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
- /*
+ 
 			// Check if relationship holds/have results
-            if (statements.size() > 0) {
-                suchThatRelObject->setResultsBoolean(true);
+            if (evaluatedS.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
             }
-*/
-
-            // Update the results table
-            resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
+            
         }
         // arg1 is integer, and arg1 is synonym: Follows(3,s);Follows(4,a)
         else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym()) {
@@ -232,14 +230,13 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-/*
+
 			// Check if relationship holds/have results
-            if (statements.size() > 0) {
-                suchThatRelObject->setResultsBoolean(true);
+            if (evaluatedS.size() > 0) {
+                // Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
             }
-*/
-            // Update the results table
-            resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
+        
         }
         // arg1 is underscore & arg2 is integer: Follows(_,10);
         else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIntegerValue() > 0) {
@@ -275,12 +272,10 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
             // Check if relationship holds/have results
             if (evaluatedS.size() > 0) {
-                suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
             }
-
-            // Update the results table
-            resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
-
+        
         }
         // arg1 is integer & arg2 is underscore: Follows(3,_);
         else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -316,11 +311,10 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 
             // Check if relationship holds/have results
             if (evaluatedS.size() > 0) {
-                suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
             }
 
-            // Update the results table
-            resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
         }
         // Both arguments are a synonym: Follows(s1,s2); Follow(a,s1);
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
@@ -340,8 +334,11 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				}
 			}
 
-			// Update tuple with evaluation results
-			resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}		
 /*
 			// Retrieve current statements
 			std::set<StmtNumber> s1s = resultManager->getValuesForSynonym(argOne->getStringValue());
@@ -421,17 +418,18 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
+
+			// Check if relationship holds/have results
+			if (evaluatedV.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedV);
+			}
 			
-			// Update the results table
-			resultManager->updateSynonym(argTwo->getStringValue(), evaluatedV);
 /*
 			// Get results
             std::set<VarIndex> variableIndexes = pkb->getVarsByStmt(argOne->getIntegerValue(), type);
 
-            // Check if relationship holds/have results
-            if (variableIndexes.size() > 0) {
-                suchThatRelObject->setResultsBoolean(true);
-            }
+
 
             // Update the results table
             resultManager->updateSynonym(argTwo->getStringValue(), variableIndexes);
@@ -465,8 +463,12 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				}
 			}
 			
-			// Update the results table
-			resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
+			// Check if relationship holds/have results
+			if (evaluatedS.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
+			}
+
 /*			
 			// Get all statements that modifies variable
 			VarIndex varIndex = pkb->getVarIndex(argTwo->getStringValue());
@@ -502,14 +504,13 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
                     }
                 }
             }
-/*
+
             // Check if relationship holds/have results
             if (evaluatedS.size() > 0) {
-                suchThatRelObject->setResultsBoolean(true);
+                // Update the results table
+				 resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
             }
-*/
-            // Update the results table
-            resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
+            
         }
         // Both args are synonym (Modifies(a,v));Modifies(s,v)
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
@@ -531,8 +532,11 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				}
 			}
 
-			// Update tuple with evaluation results
-			resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}
 /*            
 			// Retrieve current statements
             std::set<StmtNumber> s1s = resultManager->getValuesForSynonym(argOne->getStringValue());
@@ -596,8 +600,12 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				}
 			}
 
-			// Update the results table
-			resultManager->updateSynonym(argTwo->getStringValue(), evaluatedV);
+			// Check if relationship holds/have results
+			if (evaluatedV.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedV);
+			}
+			
 		}
 		// If left arg is 'procedure name', right arg is "_" (Modifies("Giraffe",_);
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() != "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -626,9 +634,11 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-
-			// Update the results table
-			resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			// Check if relationship holds/have results
+			if (evaluatedP.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			}			
 		}
 		// If left arg is synonym, right arg is "_" (Modifies(p,_);
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -652,8 +662,11 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				}
 			}
 
-			// Update the results table
-			resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			// Check if relationship holds/have results
+			if (evaluatedP.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			}
 		}
 		// Both args are synonym (Modifies(p,v));
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
@@ -673,8 +686,11 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				}
 			}
 
-			// Update tuple with evaluation results
-			resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}
 		}
 	}
 	
@@ -701,9 +717,11 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-			
-			// Update the results table
-			resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			// Check if relationship holds/have results
+			if (evaluatedP.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			}
 /*
 			// Store results
 			std::set<ProcIndex> procedures = pkb->getProcsByProc(argTwo->getStringValue(), type);
@@ -734,9 +752,12 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-
-			// Update the results table
-			resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
+			// Check if relationship holds/have results
+			if (evaluatedP.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
+			}
+			
 /*
 			// Store results
 			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, argTwo->getStringValue());
@@ -779,14 +800,12 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-/*
 			// Check if relationship holds/have results
 			if (evaluatedP.size() > 0) {
-				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
 			}
-*/
-			// Update the results table
-			resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
+			
 
 		}
 		// arg1 is proc name & arg2 is underscore: Calls("Giraffe",_)
@@ -820,14 +839,14 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-/*
+
 			// Check if relationship holds/have results
 			if (evaluatedP.size() > 0) {
-				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
 			}
-*/
-			// Update the results table
-			resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+
+			
 
 		}
 		// Both arguments are a synonym: Calls(p1,p2)
@@ -847,9 +866,12 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 					}
 				}
 			}
-
-			// Update tuple with evaluation results
-			resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleProcedures);
+			// Check if relationship holds/have results
+			if (evaluatedTupleProcedures.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleProcedures);
+			}
+			
 /*			
 			// Retrieve current statements
 			std::set<ProcIndex> p1s = resultManager->getValuesForSynonym(argOne->getStringValue());
@@ -941,10 +963,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 						// Check relationship holds
 						if (evaluatedProcedures.size() > 0) {
 							withObject->setResultsBoolean(true);
-						}
-
-						// Update the result table
-						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+							// Update the result table
+							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+						}					
 					}
 				}
 				// right side is ATTRREF; p.procName = synonym.attrName
@@ -965,11 +986,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 							// Check relationships holds
 							if (evaluatedProcedures.size() > 0) {
 								withObject->setResultsBoolean(true);
-							}
-
-							// Update the result table
-							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
-
+								// Update the result table
+								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+							}						
 						}
 						// if right synonym = call -> p1.procName = call.procName
 						else if (rightObj->getEntityType() == CALL) {
@@ -991,15 +1010,14 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 							// Check relationships holds
 							if (evaluatedProcedures.size() > 0) {
 								withObject->setResultsBoolean(true);
-							}
-
-							// Update the result table
-							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
-
+								// Update the result table
+								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+							}					
 						}
 					}
 					// right side is varName; p1.procName = synonym.varName
 					else if (rightObj->getAttrType() == AttrType::VAR_NAME) {
+						// if right synonym = variable -> p1.procName = v.varName
 						if (rightObj->getEntityType() == VARIABLE) {
 							// get all the results for p synonym and v synonym
 							std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(leftObj->getSynonym());
@@ -1013,7 +1031,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 
 							// get all the variable names and check whether it exists inside p synonym
 							// if exist, add the procedure index of the name inside
-							std::set<ProcIndex> evaluatedProcedures;
+							std::set<ProcIndex> evaluatedProcedures({});
 							for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
 								if (procedureNames.count(pkb->getVarName(*v1))) {
 									evaluatedProcedures.insert(pkb->getProcIndex(pkb->getVarName(*v1)));
@@ -1023,11 +1041,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 							// Check relationships holds
 							if (evaluatedProcedures.size() > 0) {
 								withObject->setResultsBoolean(true);
-							}
-
-							// Update the result table
-							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
-
+								// Update the result table
+								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+							}					
 						}
 					}
 				}
@@ -1056,10 +1072,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 						// Check if relationship holds
 						if (evaluatedCallStatements.size() > 0) {
 							withObject->setResultsBoolean(true);
-						}
-
-						// Update the result table
-						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+							// Update the result table
+							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+						}						
 					}
 				}
 				// right side is ATTRREF; c.procName = synonym.attrName
@@ -1095,10 +1110,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 							// Check relationships holds
 							if (evaluatedCallStatements.size() > 0) {
 								withObject->setResultsBoolean(true);
-							}
-
-							// Update the result table
-							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+								// Update the result table
+								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+							}							
 						}
 						// if right synonym = call -> c1.procName = c2.procName
 						else if (rightObj->getEntityType() == CALL) {
@@ -1133,11 +1147,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 							// Check relationships holds
 							if (evaluatedCallStatements.size() > 0) {
 								withObject->setResultsBoolean(true);
-							}
-
-							// Update the result table
-							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
-
+								// Update the result table
+								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+							}						
 						}
 					}
 					// right side is varName; c.procName = synonym.varName
@@ -1174,10 +1186,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 							// Check relationships holds
 							if (evaluatedCallStatements.size() > 0) {
 								withObject->setResultsBoolean(true);
-							}
-
-							// Update the result table
-							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+								// Update the result table
+								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+							}							
 						}
 					}
 				}
@@ -1205,10 +1216,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 					// Check relationship if holds
 					if (evaluatedStatement.size() > 0) {
 						withObject->setResultsBoolean(true);
-					}
-
-					// Update the result table
-					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatement);
+						// Update the result table
+						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatement);
+					}					
 				}
 			}
 			// right side is ATTRREF; s.stmt# = synonym.attrName
@@ -1229,11 +1239,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 						// Check relationship is true
 						if (evaluatedStatements.size() > 0) {
 							withObject->setResultsBoolean(true);
-						}
-
-						// Update the result table
-						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatements);
-
+							// Update the result table
+							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatements);
+						}					
 					}
 				}
 				// right side is stmt#; s.stmt# = a.stmt#
@@ -1249,10 +1257,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 					// Check relationship is true
 					if (evaluatedStatements.size() > 0) {
 						withObject->setResultsBoolean(true);
-					}
-
-					// Update the result table
-					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatements);
+						// Update the result table
+						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatements);
+					}					
 				}
 			}
 		}
@@ -1277,11 +1284,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 					// Check if relationship holds
 					if (evaluatedVariables.size() > 0) {
 						withObject->setResultsBoolean(true);
+						// Update the result table
+						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
 					}
-
-					// Update the result table
-					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
-
 				}
 			}
 			// right side is ATTRREF; v.varName = synonym.attrName
@@ -1321,11 +1326,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 					// Check relationships holds
 					if (evaluatedVariables.size() > 0) {
 						withObject->setResultsBoolean(true);
-					}
-
-					// Update the result table
-					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
-
+						// Update the result table
+						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
+					}					
 				}
 				// right side is varName; v1.varName = v2.varName;
 				else if (rightObj->getAttrType() == AttrType::VAR_NAME) {
@@ -1340,10 +1343,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 					// Check relationship is true
 					if (evaluatedVariables.size() > 0) {
 						withObject->setResultsBoolean(true);
-					}
-
-					// Update the result table
-					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
+						// Update the result table
+						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
+					}					
 				}
 			}
 		}
@@ -1367,11 +1369,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 				// Check relationship if holds
 				if (evaluatedConstants.size() > 0) {
 					withObject->setResultsBoolean(true);
-				}
-
-				// Update the result table
-				resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
-
+					// Update the result table
+					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+				}				
 			}
 			// right side is ATTRREF; c.value = synonym.attrName
 			else if (rightObj->getRefType() == ATTRREF) {
@@ -1391,10 +1391,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 						// Check relationship is true
 						if (evaluatedConstants.size() > 0) {
 							withObject->setResultsBoolean(true);
-						}
-
-						// Update the result table
-						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+							// Update the result table
+							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+						}					
 					}
 				}
 				// right side is stmt#; c.value = s.stmt#
@@ -1411,10 +1410,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 					// Check relationship is true
 					if (evaluatedConstants.size() > 0) {
 						withObject->setResultsBoolean(true);
-					}
-
-					// Update the result table
-					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+						// Update the result table
+						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+					}					
 				}
 			}
 		}
@@ -1441,11 +1439,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 				// Check relationship is true
 				if (evaluatedLines.size() > 0) {
 					withObject->setResultsBoolean(true);
-				}
-
-				// Update the result table
-				resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
-
+					// Update the result table
+					resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+				}			
 			}
 		}
 		// right side is SYNONYM; n = n1;
@@ -1462,11 +1458,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 			// Check relationship is true
 			if (evaluatedLines.size() > 0) {
 				withObject->setResultsBoolean(true);
-			}
-
-			// Update the results table
-			resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
-
+				// Update the results table
+				resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+			}		
 		}
 		// right side is ATTRREF; n = synonym.attrName
 		else if (rightObj->getRefType() == ATTRREF) {
@@ -1484,10 +1478,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 				// Check relationship is true
 				if (evaluatedLines.size() > 0) {
 					withObject->setResultsBoolean(true);
-				}
-
-				// Update the results table
-				resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+					// Update the results table
+					resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+				}				
 			}
 			// right side is value; n = c.value;
 			else if (rightObj->getAttrType() == AttrType::VALUE) {
@@ -1503,10 +1496,9 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 				// Check relationship is true
 				if (evaluatedLines.size() > 0) {
 					withObject->setResultsBoolean(true);
-				}
-
-				// Update the results table
-				resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+					// Update the results table
+					resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+				}				
 			}
 		}
 	}
@@ -1545,10 +1537,11 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 						}
 					}
 				}
-
-				// Update tuple with evaluation results
-				resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
-
+				// Check if relationship holds/have results
+				if (evaluatedTuplePatterns.size() > 0) {
+					// Update tuple with evaluation results
+					resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				}			
 				/*
 				// Retrieve existing pattern synonym statements & first arg synonym variables
                 std::set<StmtNumber> patternSynonymStatements = resultManager->getValuesForSynonym(patternSynonymArg);
@@ -1615,14 +1608,11 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 						}
                     }
                 }
-/*
-                // Check if relationship holds/have results
-                if (evaluatedS.size() > 0) {
-                    patternObject->setResultsBoolean(true);
-                }
-*/
-                // Update the results table
-                resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+				// Check if relationship holds/have results
+				if (evaluatedS.size() > 0) {
+					// Update the results table
+					resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+				}             
             }
         }
         // Means Pattern must be Pattern a(<firstArg>,"_<constant/variable>_")	
@@ -1647,9 +1637,12 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 
 					}
 				}
-
-				// Update tuple with evaluation results
-				resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				// Check if relationship holds/have results
+				if (evaluatedTuplePatterns.size() > 0) {
+					// Update tuple with evaluation results
+					resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				}
+				
  /*               
 				// Retrieve existing pattern synonym statements & first arg synonym variables
                 std::set<StmtNumber> patternSynonymStatements = resultManager->getValuesForSynonym(patternSynonymArg);
@@ -1716,14 +1709,11 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                         }
                     }
                 }
-/*
-                // Check if relationship holds/have results
-                if (evaluatedPatternSynonymStatements.size() > 0) {
-                    patternObject->setResultsBoolean(true);
-                }
-*/
-                // Update the results table
-                resultManager->updateSynonym(patternSynonymArg, evaluatedPatternSynonymStatements);
+				// Check if relationship holds/have results
+				if (evaluatedPatternSynonymStatements.size() > 0) {
+					// Update the results table
+					resultManager->updateSynonym(patternSynonymArg, evaluatedPatternSynonymStatements);
+				}               
             }
             // pattern a("x","_<constant/variable>_")
             else if (firstArgType == VARIABLE) {
@@ -1748,14 +1738,12 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
                         }
                     }
                 }
-/*
-                // Check if relationship holds/have results
-                if (evaluatedS.size() > 0) {
-                    patternObject->setResultsBoolean(true);
-                }
-*/
-                // Update the results table
-                resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+				// Check if relationship holds/have results
+				if (evaluatedS.size() > 0) {
+					// Update the results table
+					resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+				}
+                
             }
         }
     }
@@ -1780,9 +1768,11 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 						}
 					}
 				}
-
-				// Update tuple with evaluation results
-				resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				// Check if relationship holds/have results
+				if (evaluatedTuplePatterns.size() > 0) {
+					// Update tuple with evaluation results
+					resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				}				
 /*
 				// Retrieve existing pattern synonym statements & first arg synonym variable
 				std::set<StmtNumber> patternSynonymStatements = resultManager->getValuesForSynonym(patternSynonymArg);
@@ -1848,14 +1838,12 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 						}
 					}
 				}
-/*
+
 				// Check if relationship holds/have results
 				if (evaluatedS.size() > 0) {
-					patternObject->setResultsBoolean(true);
-				}
-*/
-				// Update the results table
-				resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+					// Update the results table
+					resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+				}				
 			}
 		}
 	}
@@ -1880,9 +1868,11 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 						}
 					}
 				}
-
-				// Update tuple with evaluation results
-				resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				// Check if relationship holds/have results
+				if (evaluatedTuplePatterns.size() > 0) {
+					// Update tuple with evaluation results
+					resultManager->updateSynonymTuple(synonymTuple, evaluatedTuplePatterns);
+				}				
 /*
 				// Retrieve existing pattern synonym statements & first arg synonym variable
 				std::set<StmtNumber> patternSynonymStatements = resultManager->getValuesForSynonym(patternSynonymArg);
@@ -1948,14 +1938,11 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
 						}
 					}
 				}
-/*
 				// Check if relationship holds/have results
 				if (evaluatedS.size() > 0) {
-					patternObject->setResultsBoolean(true);
-				}
-*/
-				// Update the results table
-				resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+					// Update the results table
+					resultManager->updateSynonym(patternSynonymArg, evaluatedS);
+				}				
 			}
 		}
 	}

@@ -505,7 +505,7 @@ std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 		std::set<StmtNumber> ifs = { 10 };
 		return ifs;
 	}
-	else if (stmtType == CALLS) {
+	else if (stmtType == CALL) {
 		std::set<StmtNumber> calls = { 3,8 };
 		return calls;
 	}
@@ -1149,5 +1149,6 @@ std::set<StmtNumber> DummyPKB::getStmtsByStmt(RelationshipType followsOrParent, 
 			return cases;
 		}
 	}
+	
 	return std::set<StmtNumber>();
 }
