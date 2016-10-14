@@ -493,7 +493,7 @@ std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 		std::set<StmtNumber> assigns = { 1,2,4,5,7,9,11,12,13,14,15,16,17 };
 		return assigns;
 	}
-	else if (stmtType == STMT) {
+	else if (stmtType == STMT || stmtType == PROGRAM_LINE) {
 		std::set<StmtNumber> stmts = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 };
 		return stmts;
 	}
