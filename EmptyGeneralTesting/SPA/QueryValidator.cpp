@@ -1301,7 +1301,9 @@ bool QueryValidator::isExpression(std::string str) {
 	this->validatedExpression.append(str);
 	
 	if (isFactor(str)) {
-		if (isMatch(st.peekNextToken(), "+")) {
+		if (isMatch(st.peekNextToken(), "+") 
+			|| isMatch(st.peekNextToken(), "-")
+			|| isMatch(st.peekNextToken(), "*")) {
 			this->validatedExpression.append(st.peekNextToken());
 			st.popNextToken();
 			return isExpression(st.nextToken());
