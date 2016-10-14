@@ -28,7 +28,7 @@ bool ResultGrid::contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymV
 }
 
 void ResultGrid::addSynonym(SynonymString syn) {
-    GridColumn column = columnCount++;
+    GridColumn column = resultTable.size();
     refMap[syn] = column;
     resultTable.push_back(ValueSet());
 }
@@ -92,8 +92,7 @@ void ResultGrid::sortResultListBySynonym(SynonymString syn) {
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
-    columnCount = 0;
-    GridColumn column = columnCount++;
+    GridColumn column = resultTable.size();
     refMap[syn] = column;
     resultTable.push_back(ValueSet());
 

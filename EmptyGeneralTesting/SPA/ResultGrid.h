@@ -25,7 +25,6 @@ private:
     const TuplePosition LEFT = 0;
     const TuplePosition RIGHT = 0;
 
-    GridColumn columnCount;
     GridColumnMap refMap;              // getColumnForSynonym
     std::list<GridRow> resultList;     // Possible combinations of SynonymValues
     std::vector<ValueSet> resultTable; // Unique SynonymValues for each SynonymString
