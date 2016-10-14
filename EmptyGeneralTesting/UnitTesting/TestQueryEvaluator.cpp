@@ -958,8 +958,8 @@ public:
         Logger::WriteMessage("=============");
         Assert::AreEqual(std::to_string(13).c_str(), std::to_string(updated.size()).c_str());
 
-		// v = { i, x, y, z }
-		std::vector<VarName> vValues = { "i", "x", "y", "z" };
+		// v = { i, v, x, y, z }
+		std::vector<VarName> vValues = { "i", "v", "x", "y", "z" };
 		int index = 0;
         std::set<VarName> updated1 = evaluator->getValuesForSynonym("v");
         for (std::set<VarName>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
@@ -968,7 +968,7 @@ public:
 			index++;
         }
         Logger::WriteMessage("=============");
-        Assert::AreEqual(std::to_string(4).c_str(), std::to_string(updated1.size()).c_str());
+        Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated1.size()).c_str());
 
         // SELECT BOOLEAN such that Modifies(s,v);
         ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
@@ -995,7 +995,7 @@ public:
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
-        Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results2.size()).c_str());
+        Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results2.size()).c_str());
     }
 	
 /*
