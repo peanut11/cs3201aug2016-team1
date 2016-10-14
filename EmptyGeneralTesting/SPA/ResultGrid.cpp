@@ -28,8 +28,8 @@ bool ResultGrid::contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymV
 }
 
 void ResultGrid::addSynonym(SynonymString syn) {
-    GridColumn column = resultTable.size();
-    refMap[syn] = column;
+    refMap[syn] = refTable.size();
+    refTable.push_back(syn);
     resultTable.push_back(ValueSet());
 }
 
@@ -83,6 +83,10 @@ GridColumn ResultGrid::extractValue(TuplePosition pos, ValueTuple valTuple) {
 
 GridColumn ResultGrid::getColumnForSynonym(SynonymString syn) {
     return refMap[syn];
+}
+
+SynonymString ResultGrid::getSynonymForColumn(GridColumn col) {
+    return refTable[col];
 }
 
 void ResultGrid::sortResultListBySynonym(SynonymString syn) {
