@@ -434,8 +434,18 @@ bool DummyPKB::isAssignExactPattern(StmtNumber, InfixExpr)
 	return false;
 }
 
-bool DummyPKB::isAssignContainsPattern(StmtNumber, InfixExpr)
+bool DummyPKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr expr)
 {
+	// "_x_"
+	std::vector<StringToken> stringComp = { "_","x","_" };
+	// "_z_"
+	std::vector<StringToken> stringComp1 = { "_","z","_" };
+	
+	if ((stmt == 7 || stmt == 11 | stmt == 13) && expr == stringComp)
+		return true;
+	if (stmt == 13 && expr == stringComp1)
+		return true;
+
 	return false;
 }
 

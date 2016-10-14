@@ -998,8 +998,7 @@ public:
         Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results2.size()).c_str());
     }
 	
-/*
-	// PATTERN a(v,_) - NOT YET INITIALIZED
+	// PATTERN a(v,_) - BUGGED
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern1) {
         // Initialization
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1081,7 +1080,7 @@ public:
         Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results2.size()).c_str());
     }
 
-	// PATTERN a(_,_) - NOT YET INITIALIZED
+	// PATTERN a(_,_) 
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern2) {
         // Initialization
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1130,7 +1129,7 @@ public:
         Logger::WriteMessage("=============");
     }
 	
-	// PATTERN a("x",_) - NOT YET INITIALIZED
+	// PATTERN a("x",_)
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern3) {
         // Initialization
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1166,7 +1165,7 @@ public:
             Logger::WriteMessage(std::to_string(*it).c_str());
         }
         Logger::WriteMessage("=============");
-        Assert::AreEqual(std::to_string(6).c_str(), std::to_string(updated.size()).c_str());
+        Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated.size()).c_str());
 
         // SELECT BOOLEAN such that Pattern a("x",_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
@@ -1183,11 +1182,11 @@ public:
         for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
-        Assert::AreEqual(std::to_string(6).c_str(), std::to_string(results1.size()).c_str());
+        Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
 	
-	// PATTERN a(v,"_x_") - NOT YET INITIALIZED
+	// PATTERN a(v,"_x_") - BUGGED
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern4) {
         // Initialization
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1269,7 +1268,7 @@ public:
         Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results2.size()).c_str());
     }
 
-	// PATTERN a(_, "_x_") - NOT YET INITIALIZED
+	// PATTERN a(_, "_x_")
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern5) {
         // Initialization
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1326,7 +1325,7 @@ public:
         Logger::WriteMessage("=============");
     }
 
-	// PATTERN a("z","_z_") - NOT YET INITIALIZED
+	// PATTERN a("z","_z_")
     TEST_METHOD(TestQueryEvaluator_TestEvaluatePattern6) {
         // Initialization
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1382,7 +1381,7 @@ public:
         Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
         Logger::WriteMessage("=============");
     }
-*/		
+		
 	// CALLS ("First", "Second")
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_Calls1) {
 		// Initialization
