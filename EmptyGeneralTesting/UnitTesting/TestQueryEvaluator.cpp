@@ -2382,6 +2382,32 @@ public:
         Logger::WriteMessage("=============");
     }
     
+
+	TEST_METHOD(TestQueryEvaluator_Populate_Synonym_Group) {
+
+		// follow the example in slide
+		/*
+		1:	s3	v1	s1	s2
+		2:	a1	v2	a2
+		3:	a3	v3
+		*/
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s3", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("s2", 1);
+
+		mSynonymGroup->insertSynonym("a1", 2);
+		mSynonymGroup->insertSynonym("v2", 2);
+		mSynonymGroup->insertSynonym("a2", 2);
+
+		mSynonymGroup->insertSynonym("a3", 3);
+		mSynonymGroup->insertSynonym("v3", 3);
+
+		Logger::WriteMessage(mSynonymGroup->toString().c_str());
+
+	}
+
 };
 
 }
