@@ -396,8 +396,6 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
     }
 
-    // Iteration 1: only allow 'statement' at left instead of 'procedure' too
-
 	// MODIFIES / USES relationship:
     else if (type == MODIFIES || type == USES) {
         // If left arg is 'statement number', right arg is "x" (Modifies(3,"x"))
@@ -454,7 +452,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 			// Get results
 			std::set<StmtNumber> evaluatedS;
 			for (StmtSetIterator i = s.begin(); i != s.end(); i++) {
-				if (pkb->is(type, *i, pkb->getVarIndex(argOne->getStringValue()))) {
+				if (pkb->is(type, *i, pkb->getVarIndex(argTwo->getStringValue()))) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedS.insert(*i);
 					if (isStopEvaluation) {
@@ -612,7 +610,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 			// Get results
 			std::set<ProcIndex> evaluatedP;
 			for (StmtSetIterator i = p.begin(); i != p.end(); i++) {
-				if (pkb->is(type, *i, pkb->getVarIndex(argOne->getStringValue()))) {
+				if (pkb->is(type, *i, pkb->getVarIndex(argTwo->getStringValue()))) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedP.insert(*i);
 					if (isStopEvaluation) {
@@ -672,6 +670,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 	}
 	
+	// CALLS / CALLS_STAR relationship:
 	else if (type == CALLS || type == CALLS_STAR) {
 		// Both are procedure names : Calls("Giraffe","Panda")
 		if (argOne->getIsSynonym() == false && argOne->getStringValue() != "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() != "_") {
@@ -717,7 +716,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 			// Get results
 			std::set<ProcIndex> evaluatedP;
 			for (StmtSetIterator i = p.begin(); i != p.end(); i++) {
-				if (pkb->is(type, pkb->getProcIndex(argTwo->getStringValue()), *i)) {
+				if (pkb->is(type, pkb->getProcIndex(argOne->getStringValue()), *i)) {
 					suchThatRelObject->setResultsBoolean(true);
 					evaluatedP.insert(*i);
 					if (isStopEvaluation) {
@@ -743,7 +742,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		// arg1 is underscore & arg2 is integer: Calls(_,"Giraffe")
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() != "_") {
 			// Store results
-			std::set<ProcIndex> procedures = pkb->getProcsByProc(argTwo->getStringValue(), type);
+			std::set<ProcIndex> procedures = pkb->getProcsByProc(pkb->getProcIndex(argTwo->getStringValue()), type);
 
 			if (procedures.size() > 0) {
 				suchThatRelObject->setResultsBoolean(true);
@@ -783,7 +782,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		// arg1 is proc name & arg2 is underscore: Calls("Giraffe",_)
 		else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
 			// Store results
-			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, argOne->getStringValue());    
+			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, pkb->getProcIndex(argOne->getStringValue()));    
 
 			if (procedures.size() > 0) {
 				suchThatRelObject->setResultsBoolean(true);

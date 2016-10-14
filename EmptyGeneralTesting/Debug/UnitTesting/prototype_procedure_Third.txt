@@ -3,4 +3,12 @@ procedure Third {
   i = 5;
   while i {
     z = z + x + i;
-    y = z + 2; while y{l=x+5; z=x+y;}} y=i+4;}
+    y = z + 2; 
+	while y{
+	l=x+5; 
+	z=x+y;}} 
+	call Fourth;}
+	procedure Fourth{
+	call Fifth;}
+	procedure Fifth{
+	x=0;}

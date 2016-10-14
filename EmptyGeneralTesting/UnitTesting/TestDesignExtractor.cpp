@@ -143,6 +143,18 @@ public:
         int usesSize = pkb->getVarsByStmt(3, USES).size();
 		Assert::AreEqual(4, usesSize);
 	}
+	TEST_METHOD(TestDesign_Call) {
+		PKB* pkb = PKB::getInstance();
+		 
+		std::set<ProcIndex> procList = pkb->getProcsByProc(0, CALLS_STAR);
+		StmtSetIterator procI = procList.begin();
+		int procIn = *procI;
+		Assert::AreEqual(procIn, 1);
+		procI++;
+		procIn = *procI;
+		Assert::AreEqual(procIn, 2);
+		
+	}
 	
 	};
 }

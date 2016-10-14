@@ -46,7 +46,7 @@ std::set<StmtNumber> RelationshipPopulator::getNextStar(StmtNumber startStmt, St
 			results.insert(oldestWhile);
 			// Adds all children of oldest while into results
 			whileChildren = pkb->getStmtsByStmt(PARENT_STAR, oldestWhile);
-			if (whileChildren.find(endStmt) != whileChildren.end()) {
+			if (isTopDown && whileChildren.find(endStmt) != whileChildren.end()) {
 				// Children of while contains endStmt
 				results.insert(whileChildren.begin(), whileChildren.find(endStmt));
 				break;
@@ -55,14 +55,22 @@ std::set<StmtNumber> RelationshipPopulator::getNextStar(StmtNumber startStmt, St
 			}
 			
 			// Adds follower of while into next
-			potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
+			if (isTopDown) {
+				potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
+			} else {
+				potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, FOLLOWS);
+				if (potentialNextStmts.empty()) {
+					potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, PARENT);
+				}
+			}
+
+			
 			oldestWhile = 0;
 		} else {
 			if (currentStmt == endStmt) break;
 			if (isTopDown) {
 				potentialNextStmts = pkb->getStmtsByStmt(NEXT, currentStmt); // Gets next
-			}
-			else {
+			} else {
 				potentialNextStmts = pkb->getStmtsByStmt(currentStmt, NEXT); // Gets previous
 			}
 		}
