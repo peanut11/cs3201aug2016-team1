@@ -111,6 +111,7 @@ ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
 }
 
 bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples) {
+    /*
     // If no valid tuples, then clear grid and return
     if (validTuples.empty()) {
         clearGrid();
@@ -118,30 +119,33 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         return false;
     }
 
-    // Transfer columns
-    for (GridMapConstIter keyVal = other->refMap.begin(); keyVal != other->refMap.end(); ++keyVal) {
-        SynonymString otherSyn = keyVal->first;
+    // Transfer empty columns
+    for (size_t otherCol = 0; otherCol < other->refTable.size(); otherCol++) {
+        SynonymString otherSyn = other->refTable[otherCol];
         addSynonym(otherSyn);
     }
 
     // Sort resultList in both grids by the synonyms of interest
-    sortResultListBySynonym(extractSynonym(LEFT, synTuple));
-    other->sortResultListBySynonym(extractSynonym(RIGHT, synTuple));
-
-    GridListIterator row = resultList.begin();
-    ValueTupleSet::const_iterator validTuple = validTuples.begin();
     SynonymString syn = extractSynonym(LEFT, synTuple);
     SynonymString otherSyn = extractSynonym(RIGHT, synTuple);
+    sortResultListBySynonym(syn);
+    other->sortResultListBySynonym(otherSyn);
+
+    // Get ready to merge
     GridColumn column = getColumnForSynonym(syn);
-    GridColumn otherColumn = getColumnForSynonym(otherSyn);
+    GridColumn otherColumn = other->getColumnForSynonym(otherSyn);
+    ValueTupleSet::const_iterator validTuple = validTuples.begin();
+
+    // Prepare to store updated synonym values
+    ValueSet synSet;
+    ValueSet otherSynSet;
 
     // Loop through resultList
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
 
         // Go to a valid row in resultList
-        SynonymValue currentValue = (*row)[column];
         SynonymValue validValue = extractValue(LEFT, *validTuple);
-        while (row != resultList.end() && ((currentValue = (*row)[column]) != validValue)) {
+        while (row != resultList.end() && (((*row)[column]) != validValue)) {
             row = resultList.erase(row);
         }
 
@@ -151,13 +155,13 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         }
 
         // Continue down the validTuples while the left side is the same as currentValue
-        while (validTuple != validTuples.end() && extractValue(LEFT, *validTuple) == currentValue) {
+        while (validTuple != validTuples.end() && extractValue(LEFT, *validTuple) == validValue) {
 
             // Go to a valid otherRow in other->ResultList
             GridListIterator otherRow = other->resultList.begin();
             SynonymValue otherValidValue = extractValue(RIGHT, *validTuple);
             while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] != otherValidValue) {
-                otherRow = other->resultList.erase(otherRow);
+                otherRow++;
             }
 
             // If at end of other->resultList, stop looping
@@ -165,8 +169,14 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
                 break;
             }
             
+            throw std::runtime_error("");
+
             // Permutate
             while (otherRow != other->resultList.end() && (*otherRow)[otherColumn] == otherValidValue) {
+                throw std::runtime_error("");
+                // Add synonym to updated synonym values
+                synSet.insert(validValue);
+                otherSynSet.insert(otherValidValue);
 
                 // Keep row as template
                 GridRow newRow = *row;
@@ -186,6 +196,11 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         }
     }
 
+    // Replace previous valid values with updated synonym values
+    resultTable[column] = synSet;
+    otherColumn = getColumnForSynonym(otherSyn);
+    resultTable[otherColumn] = otherSynSet;
+    */
     return !resultList.empty();
 }
 
