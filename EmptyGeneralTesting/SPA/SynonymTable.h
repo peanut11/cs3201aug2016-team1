@@ -15,6 +15,7 @@ public:
 
 	SynonymObject getObject(SynonymString synonym);
 	SynonymObject getObject(SynonymValue index);
+	EntityType getType(SynonymString synonym);
 	std::vector<SynonymObject> getObjects();
 
 	std::set<SynonymString> getSetString(SynonymString synonym);

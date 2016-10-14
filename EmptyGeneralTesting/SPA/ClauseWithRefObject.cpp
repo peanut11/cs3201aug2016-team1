@@ -4,23 +4,26 @@
 ClauseWithRefObject::ClauseWithRefObject() {
 }
 
-ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName) {
+ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, EntityType entityType, std::string synonym, AttrType::AttrType attributeName) {
 	this->refType = refType;
+	this->entityType = entityType;
 	this->synonym = synonym;
 	this->attributeName = attributeName;
 	this->stringValue = "";
 	this->integerValue = -1;
 }
 
-ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, std::string stringValue) {
+ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, EntityType entityType, std::string stringValue) {
 	this->refType = refType;
+	this->entityType = entityType;
 	this->synonym = "";
 	this->stringValue = stringValue;
 	this->integerValue = -1;
 }
 
-ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, int integerValue) {
+ClauseWithRefObject::ClauseWithRefObject(WithRefType refType, EntityType entityType, int integerValue) {
 	this->refType = refType;
+	this->entityType = entityType;
 	this->integerValue = integerValue;
 	this->synonym = "";
 	this->stringValue = "";

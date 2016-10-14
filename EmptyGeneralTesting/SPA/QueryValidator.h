@@ -99,9 +99,9 @@ class QueryValidator {
 	
 	// Clause With object
 	ClauseWithObject* createClauseWithObject(ClauseWithRefObject* firstArg, ClauseWithRefObject* secondArg);
-	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, std::string synonym, AttrType::AttrType attributeName);
-	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, std::string stringValue);
-	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, int integerValue);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, EntityType entityType, std::string synonym, AttrType::AttrType attributeName);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, EntityType entityType, std::string stringValue);
+	ClauseWithRefObject* createClauseWithRefObject(WithRefType refType, EntityType entityType, int integerValue);
 
 	RelationshipType getSyntaxRelationshipType(std::string syntax);
 	EntityType getSyntaxEntityType(std::string syntax);
