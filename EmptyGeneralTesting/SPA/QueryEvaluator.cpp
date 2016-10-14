@@ -514,7 +514,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         // Both args are synonym (Modifies(a,v));Modifies(s,v)
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
 			// Get current tuple synonyms 
-			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
+			SynonymString firstSynonym = argOne->getStringValue();
+			SynonymString secondSynonym = argTwo->getStringValue();
+			std::tuple<SynonymString, SynonymString> synonymTuple(firstSynonym, secondSynonym);
 			std::set<ValueTuple> tupleStatements = resultManager->getValuesForSynonymTuple(synonymTuple);
 
 			// Obtain evaluation results for tuple

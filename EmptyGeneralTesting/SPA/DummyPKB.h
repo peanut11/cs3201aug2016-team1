@@ -17,9 +17,9 @@ public:
 	virtual VarIndex getVarIndex(VarName varName); //gets index of variable and adds  to tables if variable not found
 	virtual VarName getVarName(VarIndex varIndex);
 
-	bool isProcExist(ProcName procName);
-	bool isStmtExist(StmtNumber stmt);
-	bool isVarExist(VarName varName);
+	virtual bool isProcExist(ProcName procName);
+	virtual bool isStmtExist(StmtNumber stmt);
+	virtual bool isVarExist(VarName varName);
 	virtual bool is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item);
 	virtual bool isAssignHasExpr(StmtNumber assign, StringToken);	// Not used
 	virtual bool isAssignHasSubexpr(StmtNumber assign, StringToken);	// Not used
