@@ -8,6 +8,7 @@ ClauseObject::~ClauseObject() {
 }
 */
 
-ClauseType::ClauseType ClauseObject::getClauseType() {
+ClauseType::ClauseType ClauseObject::getClauseType() const {
 	return this->mClauseType;
 }
+

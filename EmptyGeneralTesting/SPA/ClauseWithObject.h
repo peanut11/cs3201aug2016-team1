@@ -11,7 +11,7 @@ public:
 	ClauseWithObject();
 	ClauseWithObject(ClauseWithRefObject* obj1, ClauseWithRefObject* obj2);
 
-	ClauseWithObject* const clone() { return new ClauseWithObject(*this); }
+	ClauseWithObject* clone() { return new ClauseWithObject(*this); }
 
 	ClauseWithRefObject* getRefObject1();
 	ClauseWithRefObject* getRefObject2();
