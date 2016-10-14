@@ -47,6 +47,7 @@ public:
     ResultGrid(SynonymString syn, ValueSet vals);
 
     bool mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
+    bool mergeGridBruteForce(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
     bool updateSynonym(SynonymString syn, ValueSet vals);
     bool updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples);
     ValueSet getValuesForSynonym(SynonymString syn);
