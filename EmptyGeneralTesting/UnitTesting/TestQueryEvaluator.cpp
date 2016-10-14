@@ -2264,7 +2264,7 @@ public:
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 7, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
         ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
-        Assert::IsTrue(resultObj->getResultsBoolean());
+        Assert::IsTrue(resultObj->getResultsBoolean()); // ERROR: is(FOLLOWS, _, 7) is false in DummyPKB
         std::set<StmtNumber> updated = resultManager->getValuesForSynonym("a");
         for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
