@@ -11,6 +11,15 @@ ClauseSuchThatObject::ClauseSuchThatObject(RelationshipType type, ClauseSuchThat
 	this->type = type;
 	this->argsOne = argsOne;
 	this->argsTwo = argsTwo;
+
+	if (argsOne->getIsSynonym()) {
+		this->numOfSynonym += 1;
+	}
+
+	if (argsTwo->getIsSynonym()) {
+		this->numOfSynonym += 1;
+	}
+
 }
 
 RelationshipType ClauseSuchThatObject::getRelationshipType() const
@@ -36,4 +45,8 @@ void ClauseSuchThatObject::setResultsBoolean(bool boolean)
 bool ClauseSuchThatObject::getResultsBoolean()
 {
 	return this->isResultsBoolean;
+}
+
+int ClauseSuchThatObject::getNumberOfSynonym() {
+	return this->numOfSynonym;
 }
