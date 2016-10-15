@@ -246,10 +246,9 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
         addSynonym(otherSyn);
     }
 
-    // Prepare to store updated synonym values
-    std::vector<ValueSet> newResultTable;
-    while (newResultTable.size() < resultTable.size()) {
-        newResultTable.push_back(ValueSet());
+    // Clear previous synonym values
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
     }
 
     SynonymString syn = extractSynonym(LEFT, synTuple);
@@ -276,9 +275,9 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
         }
 
         if (isValidRow) {
-            // Update newResultTable
-            for (size_t column = 0; column < newResultTable.size(); column++) {
-                newResultTable[column].insert((*row)[column]);
+            // Insert valid synonym values
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((*row)[column]);
             }
 
             row++;
@@ -287,7 +286,6 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
         }
     }
 
-    resultTable = newResultTable;
     return !resultList.empty();
 }
 
@@ -309,6 +307,11 @@ bool ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
         return false;
     }
 
+    // Clear previous synonym values
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
+    }
+
     GridListIterator row = resultList.begin();
     while (row != resultList.end()) {
         SynonymValue value = (*row)[column];
@@ -316,6 +319,11 @@ bool ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
         if (!contains(intersection, value)) {
             row = resultList.erase(row);
         } else {
+            // Insert valid synonym values
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((*row)[column]);
+            }
+
             row++;
         }
     }
