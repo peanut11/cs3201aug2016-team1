@@ -1052,7 +1052,7 @@ public:
             Logger::WriteMessage((*it).c_str());
         }
         Logger::WriteMessage("=============");
-        Assert::AreEqual(std::to_string(4).c_str(), std::to_string(updated1.size()).c_str());
+        Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated1.size()).c_str());
 
         // SELECT BOOLEAN such that Pattern a(v,_)
         ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
@@ -1078,7 +1078,7 @@ public:
         for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
             Logger::WriteMessage((*it).c_str());
         }
-        Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results2.size()).c_str());
+        Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results2.size()).c_str());
     }
 
 	// PATTERN a(_,_) 
@@ -2233,7 +2233,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p such that MODIFIES (p,v);
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID, false);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
 		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
 			Logger::WriteMessage((*it).c_str());
