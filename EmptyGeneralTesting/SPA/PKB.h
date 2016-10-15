@@ -64,9 +64,9 @@ public:
     virtual bool isAssignContainsPattern(StmtNumber, InfixExpr);
     virtual bool isIfPattern(StmtNumber ifStmt, VarIndex varIndex);
     virtual bool isWhilePattern(StmtNumber whileStmt, VarIndex varIndex);
-    bool isProcExist(ProcName procName);
-    bool isStmtExist(StmtNumber stmt);
-    bool isVarExist(VarName varName);
+    virtual bool isProcExist(ProcName procName);
+    virtual bool isStmtExist(StmtNumber stmt);
+    virtual bool isVarExist(VarName varName);
 
     virtual StmtNumber           getStmtTableSize();
 	virtual StmtNumber			 getProcTableSize();

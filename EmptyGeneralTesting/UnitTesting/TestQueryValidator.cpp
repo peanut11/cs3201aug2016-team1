@@ -20,8 +20,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) Next(s1, s2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
+		
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select c.stmt# such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select var1.varName such that Parent(s1,_) and Next(s1, s2)"));
@@ -149,7 +148,7 @@ public:
 
 		// Success Uses procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
 		
 
@@ -213,10 +212,6 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,_)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
-
-
-
-
 		// Success With
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1")); // 1 with clause
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = const.value")); // 1 with clause
@@ -230,6 +225,12 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with s1.stmt# = 1 such that Follows(s1, _)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
+		// Success Pattern, allows minus and multiply
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"x-y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"x*y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"x+y-z\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"w*x+y-z\")"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Failure
 		/*
@@ -989,8 +990,6 @@ public:
 	TEST_METHOD(TestQueryValidator_Clause_Pattern) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		//Assert::IsTrue(validator->isWildcard("_"));
-
 		// populate the synonym table first
 		validator->clearSynonymOccurence();
 		validator->clearSynonymTable();
@@ -998,22 +997,35 @@ public:
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(v,\"x+y\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(\"x\",\"x+y\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
+		validator->initStringTokenizer("a1(\"x\",\"x-y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
+		
+		validator->initStringTokenizer("a1(\"x\",\"x*y\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
+
+		validator->initStringTokenizer("a1(\"x\",\"x+y-z\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
+
+		validator->initStringTokenizer("a1(\"x\",\"w*x+y-z\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("a1"));
+
+		
 		validator->initStringTokenizer("a1(\"x\", _\"y\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));

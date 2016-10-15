@@ -138,6 +138,15 @@ SynonymObject SynonymTable::getObject(SynonymValue index) {
 	return this->synonymObjects.at(index);
 }
 
+EntityType SynonymTable::getType(SynonymString synonym) {
+	for (SynonymObject obj : this->synonymObjects) {
+		if (obj.getSynonym().compare(synonym) == 0) {
+			return obj.getType();
+		}
+		EntityType::INVALID;
+	}
+}
+
 std::vector<SynonymObject> SynonymTable::getObjects()
 {
 	return this->synonymObjects;

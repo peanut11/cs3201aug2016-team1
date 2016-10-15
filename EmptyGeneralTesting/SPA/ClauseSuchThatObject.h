@@ -11,6 +11,8 @@ private:
 	ClauseSuchThatArgObject* argsTwo;
 	bool isResultsBoolean = false;
 
+	int numOfSynonym = 0;
+
 public:
 
 	ClauseSuchThatObject();
@@ -22,6 +24,7 @@ public:
 	ClauseSuchThatArgObject* getArgsOne() const;
 	ClauseSuchThatArgObject* getArgsTwo() const;
 	bool getResultsBoolean();
+	int getNumberOfSynonym();
 	void setResultsBoolean(bool boolean);
 	
 };

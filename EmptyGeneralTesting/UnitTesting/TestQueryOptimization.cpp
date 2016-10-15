@@ -378,8 +378,12 @@ namespace UnitTesting {
 			std::string declaration = "procedure p, q;variable v1, v2, v3;assign a1, a2, a3;if ifstmt;while w;stmt s1, s2, s3, s4, s5;prog_line n1, n2;call c;constant const;\n";
 			
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s3,s1) Parent(s4,s5) Follows(s1,s4)"));
-			Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select <s1, s2, v2> such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
+			
+			// Success, based on the lecture slide
+			//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
+			// Success, randomized based on lecture slides
+			Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Modifies (s3, \"x\") Uses (s3, v1) Parent (s3, s1) such that Uses(5, \"y\") Follows (s1, s2) Uses (s2, v1) and Follows(3, 4) pattern a1(v2, _\"x + y\"_) pattern a3(\"z\", _) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3)"));
 
 			std::map<int, GroupObject> output = optimize.doGroup(validator->getSynonymGroup(),
 				validator->getQueryTable());
@@ -388,7 +392,7 @@ namespace UnitTesting {
 			
 			Logger::WriteMessage(optimize.printMapGroupObjectToString(output).c_str());
 			Logger::WriteMessage(optimize.printFinalResult(result).c_str());
-			//Logger::WriteMessage(validator->getSynonymGroup()->toString().c_str());
+			Logger::WriteMessage(validator->getSynonymGroup()->toString().c_str());
 			Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 			
 		}

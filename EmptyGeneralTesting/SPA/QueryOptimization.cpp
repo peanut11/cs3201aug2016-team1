@@ -198,23 +198,8 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 			ClauseSuchThatObject* lhsObj = dynamic_cast<ClauseSuchThatObject*>(lhs); // const_cast< const ClauseSuchThatObject*>(lhs)
 			ClauseSuchThatObject* rhsObj = dynamic_cast<ClauseSuchThatObject*>(rhs);
 
-			if (lhsObj->getArgsOne()->getEntityType() == EntityType::VARIABLE ||
-				lhsObj->getArgsTwo()->getEntityType() == EntityType::VARIABLE ||
-				lhsObj->getArgsOne()->getEntityType() == EntityType::CONSTANT ||
-				lhsObj->getArgsTwo()->getEntityType() == EntityType::CONSTANT) {
 
-				return false;
-			}
-
-			if (lhsObj->getRelationshipType() == RelationshipType::MODIFIES ||
-				lhsObj->getRelationshipType() == RelationshipType::USES) {
-				return false;
-			}
-
-			if (rhsObj->getRelationshipType() != RelationshipType::MODIFIES &&
-				rhsObj->getRelationshipType() != RelationshipType::USES) {
-				return true;
-			}
+			return lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym();
 
 		}
 		else {
@@ -223,42 +208,6 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 		
 
 
-		/*
-		if (lhs.getClauseType() == ClauseType::ClauseType::SUCH_THAT &&
-			rhs.getClauseType() == ClauseType::ClauseType::SUCH_THAT) {
-
-			const ClauseSuchThatObject& lhsObj = dynamic_cast<const ClauseSuchThatObject&>(lhs);
-			const ClauseSuchThatObject& rhsObj = dynamic_cast<const ClauseSuchThatObject&>(rhs);
-			
-			
-			if (lhsObj.getArgsOne()->getEntityType() == EntityType::VARIABLE ||
-				lhsObj.getArgsTwo()->getEntityType() == EntityType::VARIABLE ||
-				lhsObj.getArgsOne()->getEntityType() == EntityType::CONSTANT ||
-				lhsObj.getArgsTwo()->getEntityType() == EntityType::CONSTANT) {
-
-				return false;
-			}
-
-			if (lhsObj.getRelationshipType() == RelationshipType::MODIFIES ||
-				lhsObj.getRelationshipType() == RelationshipType::USES) {
-				return false;
-			}
-
-			if (rhsObj.getRelationshipType() != RelationshipType::MODIFIES &&
-				rhsObj.getRelationshipType() != RelationshipType::USES) {
-				return true;
-			}
-
-		
-
-		} else {
-
-			return lhs.getClauseType() < rhs.getClauseType();
-
-		}
-		*/
-		
-		
 
 
 	});
