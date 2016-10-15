@@ -79,8 +79,11 @@ bool ResultGridManager::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet 
         ResultGrid* grid2 = getGridByIndex(index2);
 
         // Update refMap and gridTable
-        refMap[syn2] = index1;
-        std::copy(gridTable[index2].begin(), gridTable[index2].end(), std::back_inserter(gridTable[index1]));
+        for (std::vector<SynonymString>::const_iterator syn = gridTable[index2].begin();
+             syn != gridTable[index2].end(); syn++) {
+            refMap[*syn] = index1;
+            gridTable[index1].push_back(*syn);
+        }
 
         return grid1->mergeGrid(grid2, synTuple, valTuples);
     }

@@ -96,9 +96,8 @@ void ResultGrid::sortResultListBySynonym(SynonymString syn) {
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
-    GridColumn column = resultTable.size();
-    refMap[syn] = column;
-    resultTable.push_back(ValueSet());
+    addSynonym(syn);
+    GridColumn column = getColumnForSynonym(syn);
 
     for (ValueSet::const_iterator val = vals.begin(); val != vals.end(); val++) {
         SynonymValue value = *val;
@@ -216,7 +215,7 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
     }
 
     // Permutate
-    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+    for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
         for (GridListIterator otherRow = other->resultList.begin(); otherRow != other->resultList.end(); otherRow++) {
             // Keep row as template
             size_t prevRowSize = (*row).size();
@@ -247,47 +246,46 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
         addSynonym(otherSyn);
     }
 
-    // Prepare to store updated synonym values
+    // Clear previous synonym values
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
+    }
+
     SynonymString syn = extractSynonym(LEFT, synTuple);
     SynonymString otherSyn = extractSynonym(RIGHT, synTuple);
     GridColumn column = getColumnForSynonym(syn);
     GridColumn otherColumn = getColumnForSynonym(otherSyn);
-    size_t columnCount = resultTable.size();
-    std::vector<ValueSet> newResultTable;
-    while (newResultTable.size() < columnCount) {
-        newResultTable.push_back(ValueSet());
-    }
 
     for (GridListIterator row = resultList.begin(); row != resultList.end(); /* updated in loop */) {
         bool isValidRow = false;
 
         SynonymValue synVal = (*row)[column];
         SynonymValue otherSynVal = (*row)[otherColumn];
+        ValueTupleSet::const_iterator validT = validTuples.begin();
 
-        for (ValueTupleSet::const_iterator validT = validTuples.begin(); validT != validTuples.end(); validT++) {
+        while (!isValidRow && validT != validTuples.end()) {
             SynonymValue validSynVal = extractValue(LEFT, *validT);
             SynonymValue otherValidSynVal = extractValue(RIGHT, *validT);
 
-            // If is valid row
-            if (synVal == validSynVal && otherSynVal == otherValidSynVal) {
+            if ((synVal == validSynVal) && (otherSynVal == otherValidSynVal)) {
                 isValidRow = true;
-                for (size_t column = 0; column < columnCount; column++) {
-                    newResultTable[column].insert((*row)[column]);
-                }
-                break;
+            } else {
+                validT++;
             }
         }
 
         if (isValidRow) {
-            // Go to next row
+            // Insert valid synonym values
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((*row)[column]);
+            }
+
             row++;
         } else {
-            // Erase row
             row = resultList.erase(row);
         }
     }
 
-    resultTable = newResultTable;
     return !resultList.empty();
 }
 
@@ -309,6 +307,11 @@ bool ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
         return false;
     }
 
+    // Clear previous synonym values
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
+    }
+
     GridListIterator row = resultList.begin();
     while (row != resultList.end()) {
         SynonymValue value = (*row)[column];
@@ -316,6 +319,11 @@ bool ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
         if (!contains(intersection, value)) {
             row = resultList.erase(row);
         } else {
+            // Insert valid synonym values
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((*row)[column]);
+            }
+
             row++;
         }
     }

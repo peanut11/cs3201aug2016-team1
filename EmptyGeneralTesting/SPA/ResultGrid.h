@@ -23,7 +23,7 @@ typedef GridColumnMap::const_iterator GridMapConstIter;
 class ResultGrid {
 private:
     const TuplePosition LEFT = 0;
-    const TuplePosition RIGHT = 0;
+    const TuplePosition RIGHT = 1;
 
     GridColumnMap refMap;              // getColumnForSynonym
     std::vector<SynonymString> refTable; // getSynonymForColumn
