@@ -96,9 +96,8 @@ void ResultGrid::sortResultListBySynonym(SynonymString syn) {
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
-    GridColumn column = resultTable.size();
-    refMap[syn] = column;
-    resultTable.push_back(ValueSet());
+    addSynonym(syn);
+    GridColumn column = getColumnForSynonym(syn);
 
     for (ValueSet::const_iterator val = vals.begin(); val != vals.end(); val++) {
         SynonymValue value = *val;
