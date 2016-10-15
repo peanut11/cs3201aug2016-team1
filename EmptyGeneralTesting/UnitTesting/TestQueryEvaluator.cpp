@@ -607,6 +607,7 @@ public:
         for (std::set<StmtNumber>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
             Logger::WriteMessage(std::to_string(*it).c_str());
 			Assert::AreEqual(s2Values[index], *it);
+            index++;
         }
         Assert::AreEqual(std::to_string(11).c_str(), std::to_string(updated1.size()).c_str());
 

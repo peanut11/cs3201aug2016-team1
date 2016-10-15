@@ -215,7 +215,7 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
     }
 
     // Permutate
-    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+    for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
         for (GridListIterator otherRow = other->resultList.begin(); otherRow != other->resultList.end(); otherRow++) {
             // Keep row as template
             size_t prevRowSize = (*row).size();
