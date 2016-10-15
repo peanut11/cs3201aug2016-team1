@@ -9,6 +9,9 @@ procedure Third {
 	z=x+y;}} 
 	call Fourth;}
 	procedure Fourth{
-	call Fifth;}
+	call Sixth;}
 	procedure Fifth{
-	x=0;}
+	n=0;}
+	procedure Sixth{
+	p=3;
+	call Fifth;}

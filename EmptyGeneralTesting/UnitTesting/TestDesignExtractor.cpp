@@ -153,7 +153,9 @@ public:
 		procI++;
 		procIn = *procI;
 		Assert::AreEqual(procIn, 2);
-		
+		ProcName test = pkb->getProcName(procIn);
+		const std::string expected = "Sixth";
+		Assert::AreEqual(test, expected);
 	}
 	
 	};
