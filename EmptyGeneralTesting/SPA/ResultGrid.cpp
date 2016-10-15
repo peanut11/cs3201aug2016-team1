@@ -247,41 +247,42 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
     }
 
     // Prepare to store updated synonym values
+    std::vector<ValueSet> newResultTable;
+    while (newResultTable.size() < resultTable.size()) {
+        newResultTable.push_back(ValueSet());
+    }
+
     SynonymString syn = extractSynonym(LEFT, synTuple);
     SynonymString otherSyn = extractSynonym(RIGHT, synTuple);
     GridColumn column = getColumnForSynonym(syn);
     GridColumn otherColumn = getColumnForSynonym(otherSyn);
-    size_t columnCount = resultTable.size();
-    std::vector<ValueSet> newResultTable;
-    while (newResultTable.size() < columnCount) {
-        newResultTable.push_back(ValueSet());
-    }
 
     for (GridListIterator row = resultList.begin(); row != resultList.end(); /* updated in loop */) {
         bool isValidRow = false;
 
         SynonymValue synVal = (*row)[column];
         SynonymValue otherSynVal = (*row)[otherColumn];
+        ValueTupleSet::const_iterator validT = validTuples.begin();
 
-        for (ValueTupleSet::const_iterator validT = validTuples.begin(); validT != validTuples.end(); validT++) {
+        while (!isValidRow && validT != validTuples.end()) {
             SynonymValue validSynVal = extractValue(LEFT, *validT);
             SynonymValue otherValidSynVal = extractValue(RIGHT, *validT);
 
-            // If is valid row
-            if (synVal == validSynVal && otherSynVal == otherValidSynVal) {
+            if ((synVal == validSynVal) && (otherSynVal == otherValidSynVal)) {
                 isValidRow = true;
-                for (size_t column = 0; column < columnCount; column++) {
-                    newResultTable[column].insert((*row)[column]);
-                }
-                break;
+            } else {
+                validT++;
             }
         }
 
         if (isValidRow) {
-            // Go to next row
+            // Update newResultTable
+            for (size_t column = 0; column < newResultTable.size(); column++) {
+                newResultTable[column].insert((*row)[column]);
+            }
+
             row++;
         } else {
-            // Erase row
             row = resultList.erase(row);
         }
     }
