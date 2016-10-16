@@ -57,9 +57,16 @@ std::set<StmtNumber> RelationshipPopulator::getNextStar(StmtNumber startStmt, St
 			// Adds follower of while into next
 			if (isTopDown) {
 				potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
+				if (potentialNextStmts.empty()) { 
+					// While is the end of a stmtLst
+					// Might be inside an if-else stmtLst
+					potentialNextStmts = pkb->getStmtsByStmt(NEXT, oldestWhile);
+				}
 			} else {
 				potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, FOLLOWS);
-				if (potentialNextStmts.empty()) {
+				if (potentialNextStmts.empty()) { 
+					// While is the start of a stmtLst 
+					// Might be inside an if-else stmtLst
 					potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, PARENT);
 				}
 			}
