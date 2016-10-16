@@ -5586,6 +5586,766 @@ public:
 		}
 	}
 	
+	// Select s1 such that Next(n1,n2) and Follows(4,5) and Modifies(s1,"x") with s1.stmt = c.value and Follows(s1,s2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize7) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject n1(PROGRAM_LINE, "n1");
+		synonymTable->insert(n1);
+		SynonymObject n2(PROGRAM_LINE, "n2");
+		synonymTable->insert(n2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("c", 1);
+		mSynonymGroup->insertSynonym("n1", 2);
+		mSynonymGroup->insertSynonym("n2", 2);
+
+		// Select s1
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+
+		// Next(n1,n2) 
+		RelationshipType type = NEXT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Follows(4,5)
+		RelationshipType type1 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,"x") 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+	
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> s1Values = { "1" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s1Values[index], (*it));
+			index++;
+		}
+	}
+
+	// Select s2 such that Next(n1,n2) and Follows(4,5) and Modifies(s1,"x") with s1.stmt = c.value and Follows(s1,s2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize8) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject n1(PROGRAM_LINE, "n1");
+		synonymTable->insert(n1);
+		SynonymObject n2(PROGRAM_LINE, "n2");
+		synonymTable->insert(n2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("c", 1);
+		mSynonymGroup->insertSynonym("n1", 2);
+		mSynonymGroup->insertSynonym("n2", 2);
+
+		// Select s2
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+
+		// Next(n1,n2) 
+		RelationshipType type = NEXT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Follows(4,5)
+		RelationshipType type1 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,"x") 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> s2Values = { "2" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s2Values[index], (*it));
+			index++;
+		}
+	}
+
+	// Select BOOLEAN such that Next(n1,n2) and Follows(4,5) and Modifies(s1,"x") with s1.stmt = c.value and Follows(s1,s2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize9) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject n1(PROGRAM_LINE, "n1");
+		synonymTable->insert(n1);
+		SynonymObject n2(PROGRAM_LINE, "n2");
+		synonymTable->insert(n2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("c", 1);
+		mSynonymGroup->insertSynonym("n1", 2);
+		mSynonymGroup->insertSynonym("n2", 2);
+
+		// Select BOOLEAN
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, true);
+
+		// Next(n1,n2) 
+		RelationshipType type = NEXT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Follows(4,5)
+		RelationshipType type1 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,"x") 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::IsTrue("true"==(*it));
+		}
+	}
+
+	// Select BOOLEAN such that Next(n1,n2) and Follows(4,7) <- FALSE and Modifies(s1,"x") with s1.stmt = c.value and Follows(s1,s2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize10) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject n1(PROGRAM_LINE, "n1");
+		synonymTable->insert(n1);
+		SynonymObject n2(PROGRAM_LINE, "n2");
+		synonymTable->insert(n2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("c", 1);
+		mSynonymGroup->insertSynonym("n1", 2);
+		mSynonymGroup->insertSynonym("n2", 2);
+
+		// Select BOOLEAN
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, true);
+
+		// Next(n1,n2) 
+		RelationshipType type = NEXT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROGRAM_LINE, std::string("n2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Follows(4,7)
+		RelationshipType type1 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(STMT, std::string(""), 7, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,"x") 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::IsTrue("false" == (*it));
+		}
+	}
+
+	// Select p1 such that Modifies_P (p1,v1) with p1.procName = "Second" and Follows(s1,s2) and s1.stmt# = c.value and Calls(p1,p2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize11) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("p1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("p2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("s2", 2);
+		mSynonymGroup->insertSynonym("c", 2);
+
+		// Select p1
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+
+		// Modifies_P (p1,v1)
+		RelationshipType type1 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// with p1.procName = "Second"
+		ClauseWithRefObject leftObj1 = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj1 = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj1 = new ClauseWithObject(&leftObj1, &rightObj1);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Calls(p1,p2)
+		RelationshipType type = CALLS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj4);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertWithObject(withThatObj1);
+	
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> p1Values = { "Second" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(p1Values[index], (*it));
+			index++;
+		}
+	}
+	
+	// Select p2 such that Modifies_P (p1,v1) with p1.procName = "Second" and Follows(s1,s2) and s1.stmt# = c.value and Calls(p1,p2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize12) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("p1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("p2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("s2", 2);
+		mSynonymGroup->insertSynonym("c", 2);
+
+		// Select p2
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+
+		// Modifies_P (p1,v1)
+		RelationshipType type1 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// with p1.procName = "Second"
+		ClauseWithRefObject leftObj1 = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj1 = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj1 = new ClauseWithObject(&leftObj1, &rightObj1);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Calls(p1,p2)
+		RelationshipType type = CALLS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj4);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertWithObject(withThatObj1);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> p2Values = { "Third" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(p2Values[index], (*it));
+			index++;
+		}
+	}
+	
+	// Select BOOLEAN such that Modifies_P (p1,v1) with p1.procName = "Second" and Follows(s1,s2) and s1.stmt# = c.value and Calls(p1,p2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize13) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("p1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("p2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("s2", 2);
+		mSynonymGroup->insertSynonym("c", 2);
+
+		// Select BOOLEAN
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, true);
+
+		// Modifies_P (p1,v1)
+		RelationshipType type1 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// with p1.procName = "Second"
+		ClauseWithRefObject leftObj1 = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj1 = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj1 = new ClauseWithObject(&leftObj1, &rightObj1);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Calls(p1,p2)
+		RelationshipType type = CALLS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj4);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertWithObject(withThatObj1);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> boolean = { "true" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(boolean[index], (*it));
+			index++;
+		}
+	}
+
+	// Select s1 such that Modifies_P (p1,v1) with p1.procName = "Second" and Follows(s1,s2) and s1.stmt# = c.value and Calls(p1,p2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize14) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("p1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("p2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("s2", 2);
+		mSynonymGroup->insertSynonym("c", 2);
+
+		// Select s1
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+
+		// Modifies_P (p1,v1)
+		RelationshipType type1 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// with p1.procName = "Second"
+		ClauseWithRefObject leftObj1 = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj1 = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj1 = new ClauseWithObject(&leftObj1, &rightObj1);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Calls(p1,p2)
+		RelationshipType type = CALLS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj4);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertWithObject(withThatObj1);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> s1Values = { "1", "2", "5" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s1Values[index], (*it));
+			index++;
+		}
+	}
+
+	// Select s2 such that Modifies_P (p1,v1) with p1.procName = "Second" and Follows(s1,s2) and s1.stmt# = c.value and Calls(p1,p2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize15) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("p1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("p2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("s2", 2);
+		mSynonymGroup->insertSynonym("c", 2);
+
+		// Select s2
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+
+		// Modifies_P (p1,v1)
+		RelationshipType type1 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// with p1.procName = "Second"
+		ClauseWithRefObject leftObj1 = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj1 = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj1 = new ClauseWithObject(&leftObj1, &rightObj1);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Calls(p1,p2)
+		RelationshipType type = CALLS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj4);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertWithObject(withThatObj1);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> s2Values = { "2", "3", "6" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s2Values[index], (*it));
+			index++;
+		}
+	}
+
+	// Select p1 such that Modifies_P (p1,v1) with p1.procName = "Fourth" <-- FALSE and Follows(s1,s2) and s1.stmt# = c.value and Calls(p1,p2)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize16) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject c(CONSTANT, "c");
+		synonymTable->insert(c);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("p1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("p2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("s2", 2);
+		mSynonymGroup->insertSynonym("c", 2);
+
+		// Select p1
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+
+		// Modifies_P (p1,v1)
+		RelationshipType type1 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// with p1.procName = "Second"
+		ClauseWithRefObject leftObj1 = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj1 = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Fourth");
+		ClauseWithObject* withThatObj1 = new ClauseWithObject(&leftObj1, &rightObj1);
+
+		// Follows(s1,s2)
+		RelationshipType type4 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		// with s1.stmt = c.value
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s1", AttrType::STMT_NO);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+
+		// Calls(p1,p2)
+		RelationshipType type = CALLS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj4);
+		queryTable.insertWithObject(withThatObj);
+		queryTable.insertWithObject(withThatObj1);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		Assert::IsTrue(0==results.size());
+	}
+
 	// POPULATE SYNONYM GROUP
 	TEST_METHOD(TestQueryEvaluator_Populate_Synonym_Group) {
 
