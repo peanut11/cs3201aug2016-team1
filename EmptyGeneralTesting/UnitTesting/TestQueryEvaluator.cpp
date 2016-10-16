@@ -5166,8 +5166,6 @@ public:
 		ClauseWithObject* resultObj1 = evaluator->evaluateWith(withThatObj);
 		Assert::IsTrue(resultObj1->getResultsBoolean());
 
-
-
 		// SELECT BOOLEAN such that Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x"
 		ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
 		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
