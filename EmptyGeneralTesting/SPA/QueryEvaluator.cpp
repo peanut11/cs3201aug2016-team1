@@ -514,6 +514,30 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // Both args are synonym (Modifies(a,v));Modifies(s,v)
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
+			std::set<StmtNumber> test = resultManager->getValuesForSynonym(argOne->getStringValue());
+			std::set<VarIndex> test1 = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			std::tuple<SynonymString, SynonymString> testTuple (argOne->getStringValue(), argTwo->getStringValue());
+			ValueTupleSet testTupleStatements;
+			for (StmtSetIterator s1s = test.begin(); s1s != test.end(); s1s++) {
+				for (StmtSetIterator s2s = test1.begin(); s2s != test1.end(); s2s++) {
+					if (pkb->is(type, *s1s, *s2s)) {
+						std::tuple<StmtNumber, VarIndex> validTuple = { *s1s, *s2s };
+						testTupleStatements.insert(validTuple);
+						suchThatRelObject->setResultsBoolean(true);
+						if (isStopEvaluation) {
+							return suchThatRelObject;
+						}
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (testTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(testTuple, testTupleStatements);
+			}
+
+			/*
 			// Get current tuple synonyms 
 			SynonymString firstSynonym = argOne->getStringValue();
 			SynonymString secondSynonym = argTwo->getStringValue();
@@ -537,6 +561,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
 			}
+			*/
 /*            
 			// Retrieve current statements
             std::set<StmtNumber> s1s = resultManager->getValuesForSynonym(argOne->getStringValue());

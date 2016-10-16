@@ -344,11 +344,19 @@ bool DummyPKB::is(RelationshipType rel, StmtNumber stmt, ProcStmtVarIndex item)
 	}
 
 	else if (rel == MODIFIES_P) {
+		if (stmt == 0 && item == 0)
+			return true;
+		if (stmt == 0 && item == 1)
+			return true;
 		if (stmt == 0 && item == 2)
+			return true;
+		if (stmt == 0 && item == 3)
 			return true;
 		if (stmt == 0 && item == 4)
 			return true;
 		if (stmt == 1 && item == 0)
+			return true;
+		if (stmt == 1 && item == 1)
 			return true;
 		if (stmt == 1 && item == 2)
 			return true;
@@ -643,10 +651,10 @@ std::set<VarIndex> DummyPKB::getVarsByProc(ProcIndex procIndex, RelationshipType
 {
 	if (modifiesOrUses == MODIFIES_P) {
 		if (procIndex == 0) {
-			return std::set<VarIndex>({2,4});
+			return std::set<VarIndex>({0,1,2,3,4});
 		}
 		if (procIndex == 1) {
-			return std::set<VarIndex>({0,2,3,4});
+			return std::set<VarIndex>({0,1,2,3,4});
 		}
 		if (procIndex == 0) {
 			return std::set<VarIndex>({1,4});
@@ -791,11 +799,11 @@ std::set<ProcStmtVarIndex> DummyPKB::getStmtsByStmt(StmtNumber stmt, Relationshi
 
 	else if (followsOrParent == MODIFIES_P) {
 		if (stmt == 0) {
-			std::set<StmtNumber> cases = { 1 };
+			std::set<StmtNumber> cases = { 0, 1 };
 			return cases;
 		}
 		if (stmt == 1) {
-			std::set<StmtNumber> cases = { 2 };
+			std::set<StmtNumber> cases = { 0, 1, 2 };
 			return cases;
 		}
 		if (stmt == 2) {
@@ -803,7 +811,7 @@ std::set<ProcStmtVarIndex> DummyPKB::getStmtsByStmt(StmtNumber stmt, Relationshi
 			return cases;
 		}
 		if (stmt == 3) {
-			std::set<StmtNumber> cases = { 1 };
+			std::set<StmtNumber> cases = { 0, 1 };
 			return cases;
 		}
 		if (stmt == 4) {
@@ -1066,11 +1074,11 @@ std::set<StmtNumber> DummyPKB::getStmtsByStmt(RelationshipType followsOrParent, 
 
 	else if (followsOrParent == MODIFIES_P) {
 		if (stmt == 0) {
-			std::set<StmtNumber> cases = { 2,4 };
+			std::set<StmtNumber> cases = { 0, 1, 2, 3, 4 };
 			return cases;
 		}
 		if (stmt == 1) {
-			std::set<StmtNumber> cases = { 0,2,3,4 };
+			std::set<StmtNumber> cases = { 0, 1, 2, 3, 4 };
 			return cases;
 		}
 		if (stmt == 2) {
