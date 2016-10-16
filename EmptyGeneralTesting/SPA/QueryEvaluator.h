@@ -30,9 +30,9 @@ public:
 	static QueryEvaluator* getInstance();
     static VarName to_var_name(VarIndex varIndex);
 
-    ClausePatternObject* evaluatePattern(ClausePatternObject* patternObject); 
-    ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject);
-	ClauseWithObject* evaluateWith(ClauseWithObject* withObject);
+    ClausePatternObject* evaluatePattern(ClausePatternObject* patternObject, bool isStopEvaluation);
+    ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject, bool isStopEvaluation);
+	ClauseWithObject* evaluateWith(ClauseWithObject* withObject, bool isStopEvaluation);
     std::vector<std::string> evaluate(QueryTable queryTable);
 	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();

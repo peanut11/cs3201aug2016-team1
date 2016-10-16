@@ -104,7 +104,7 @@ public:
         Logger::WriteMessage(std::to_string(argOne->getIntegerValue()).c_str());
         Logger::WriteMessage(std::to_string(argTwo->getIntegerValue()).c_str());
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj , false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 		Logger::WriteMessage("=============");
 
@@ -112,7 +112,7 @@ public:
         ClauseSuchThatArgObject* arg3 = new ClauseSuchThatArgObject(STMT, std::string(""), 1, false);
         ClauseSuchThatArgObject* arg4 = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
         ClauseSuchThatObject* st1 = new ClauseSuchThatObject(type, arg3, arg4);
-        ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1);
+        ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1, false);
         Assert::IsFalse(re1->getResultsBoolean());
 
         // SELECT BOOLEAN such that Follows(4,5)
@@ -156,7 +156,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 10, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "s"
@@ -210,7 +210,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 8, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated statements
@@ -264,7 +264,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 10, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "s"
@@ -319,7 +319,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 16, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "a"
@@ -374,7 +374,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 10, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
         Logger::WriteMessage("=============");
@@ -422,7 +422,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = {2, 3, 5, 6, 8, 9, 10, 13, 14, 15, 17}
@@ -477,7 +477,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 8, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
         // SELECT BOOLEAN such that Follows(8,_);
@@ -523,7 +523,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = { 1,2,4,5,6,7,8,10,13,14,16 }
@@ -589,7 +589,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s1 = {1,2,4,5,6,7,8,10,13,14,16}
@@ -677,13 +677,13 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 4, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// MODIFIES (3, "y") --> FALSE
         ClauseSuchThatArgObject* arg3 = new ClauseSuchThatArgObject(STMT, std::string("y"), 0, false);
         ClauseSuchThatObject* st1 = new ClauseSuchThatObject(type, argOne, arg3);
-        ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1);
+        ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1, false);
         Assert::IsFalse(re1->getResultsBoolean());
 
         // SELECT BOOLEAN such that (Modifies(4,"x"))
@@ -729,7 +729,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 9, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "v"
@@ -782,7 +782,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 13, false);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("_"), 0, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
         Logger::WriteMessage("=============");
@@ -829,7 +829,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = {1,4,7,11,15}
@@ -884,7 +884,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = {1,2,4,5,7,9,11,12,13,14,15,16,17}
@@ -948,7 +948,7 @@ public:
         ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
         ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
         ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+        ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = {1,2,4,5,7,9,11,12,13,14,15,16,17}
@@ -1035,7 +1035,7 @@ public:
         std::string secondArg = "_";
         bool isFirstArgSynonym = true;
         ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// a = {1,2,4,5,7,9,11,12,13,14,15,16,17}
@@ -1108,7 +1108,7 @@ public:
         std::string secondArg = "_";
         bool isFirstArgSynonym = false;
         ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
         // SELECT BOOLEAN such that Pattern a(_,_)
@@ -1157,7 +1157,7 @@ public:
         std::string secondArg = "_";
         bool isFirstArgSynonym = false;
         ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// a = {1,4,7,11,15}
@@ -1223,7 +1223,7 @@ public:
         std::string secondArg = "_x_";
         bool isFirstArgSynonym = true;
         ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// a = { 7,11,13 }
@@ -1296,7 +1296,7 @@ public:
         std::string secondArg = "_x_";
         bool isFirstArgSynonym = false;
         ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// a = { 7,11,13 }
@@ -1353,7 +1353,7 @@ public:
         std::string secondArg = "_z_";
         bool isFirstArgSynonym = false;
         ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+        ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
         Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// a = { 13 }
@@ -1409,7 +1409,7 @@ public:
 		Logger::WriteMessage((argOne->getStringValue()).c_str());
 		Logger::WriteMessage((argTwo->getStringValue()).c_str());
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 		Logger::WriteMessage("=============");
 
@@ -1417,7 +1417,7 @@ public:
 		ClauseSuchThatArgObject* arg3 = new ClauseSuchThatArgObject(PROCEDURE, std::string("First"), 0, false);
 		ClauseSuchThatArgObject* arg4 = new ClauseSuchThatArgObject(PROCEDURE, std::string("Third"), 0, false);
 		ClauseSuchThatObject* st1 = new ClauseSuchThatObject(type, arg3, arg4);
-		ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1);
+		ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1, false);
 		Assert::IsFalse(re1->getResultsBoolean());
 
 		// SELECT BOOLEAN such that CALLS ("First", "Second")
@@ -1470,7 +1470,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(PROCEDURE, std::string("Third"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "p"
@@ -1533,7 +1533,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("First"), 0, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "p"
@@ -1588,7 +1588,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("Second"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		Logger::WriteMessage("=============");
@@ -1645,7 +1645,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("_"), 0, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p = { 1, 2 }
@@ -1700,7 +1700,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("First"), 8, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(PROCEDURE, std::string("_"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// SELECT BOOLEAN such that CALLS ("First",_)
@@ -1755,7 +1755,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(PROCEDURE, std::string("_"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p = { 0, 1 }
@@ -1821,7 +1821,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p1 = { 0, 1 }
@@ -1884,7 +1884,7 @@ public:
 		Assert::AreEqual(std::to_string(17).c_str(), std::to_string(results3.size()).c_str());
 	}
 	
-	// MODIFIES ("First", "x")
+	// MODIFIES_P ("First", "x")
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_ModifiesProcedure1) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1909,14 +1909,14 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("First"), 0, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
-		// MODIFIES ("First", "y") --> FALSE
+		// MODIFIES ("First", "y") --> TRUE
 		ClauseSuchThatArgObject* arg3 = new ClauseSuchThatArgObject(STMT, std::string("y"), 0, false);
 		ClauseSuchThatObject* st1 = new ClauseSuchThatObject(type, argOne, arg3);
-		ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1);
-		Assert::IsFalse(re1->getResultsBoolean());
+		ClauseSuchThatObject* re1 = evaluator->evaluateSuchThat(st1, false);
+		Assert::IsTrue(re1->getResultsBoolean());
 
 		// SELECT BOOLEAN such that MODIFIES ("First", "x")
 		ClauseSelectObject selObject = ClauseSelectObject(CONSTANT, "", AttrType::INVALID, true);
@@ -1936,7 +1936,7 @@ public:
 		Assert::AreEqual(std::to_string(17).c_str(), std::to_string(results1.size()).c_str());
 	}
 
-	// MODIFIES ("First",v)
+	// MODIFIES_P ("First",v)
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_ModifiesProcedure2) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -1961,7 +1961,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("First"), 0, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// Get updated "v"
@@ -1986,10 +1986,10 @@ public:
 		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
 			Logger::WriteMessage((*it).c_str());
 		}
-		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results1.size()).c_str());
 	}
 	
-	// MODIFIES ("Second",_)
+	// MODIFIES_P ("Second",_)
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_ModifiesProcedure3) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -2014,7 +2014,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("Second"), 0, false);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("_"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		Logger::WriteMessage("=============");
@@ -2037,7 +2037,7 @@ public:
 		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results1.size()).c_str());
 	}
 	
-	// MODIFIES (p,"x")
+	// MODIFIES_P (p,"x")
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_ModifiesProcedure4) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -2070,7 +2070,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = { 0, 1 }
@@ -2101,7 +2101,7 @@ public:
 		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
 	}
 	
-	// MODIFIES (p,_)
+	// MODIFIES_P (p,_)
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_ModifiesProcedure5) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -2134,7 +2134,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p = { 0, 1, 2}
@@ -2165,7 +2165,7 @@ public:
 		Assert::AreEqual(std::to_string(3).c_str(), std::to_string(results1.size()).c_str());
 	}
 
-	// MODIFIES (p,v) ~
+	// MODIFIES_P (p,v) ~
 	TEST_METHOD(TestQueryEvaluator_TestEvaluateSuchThat_ModifiesProcedure6) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
@@ -2200,7 +2200,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p = { 0, 1, 2 }
@@ -2284,7 +2284,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "First");
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p = { 0 }
@@ -2364,7 +2364,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p2", AttrType::PROC_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p1 = { 0, 1, 2 }
@@ -2452,7 +2452,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CALL, "c1", AttrType::PROC_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// p1 = { 1, 2 }
@@ -2540,7 +2540,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v", AttrType::VAR_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsFalse(resultObj->getResultsBoolean());
 
 		// p1 = { 0, 1, 2 }
@@ -2620,7 +2620,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CALL, "c", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// c = { 3 }
@@ -2700,7 +2700,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CALL, "c", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p", AttrType::PROC_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// c = { 3, 8 }
@@ -2788,7 +2788,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CALL, "c1", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CALL, "c2", AttrType::PROC_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// c1 = { 3, 8 }
@@ -2876,7 +2876,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CALL, "c", AttrType::PROC_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v", AttrType::VAR_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsFalse(resultObj->getResultsBoolean());
 
 		// c = { 3, 8 }
@@ -2947,7 +2947,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s", AttrType::STMT_NO);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(INTEGER, STMT, 3);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = { 3 }
@@ -3012,7 +3012,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s", AttrType::STMT_NO);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = { 1, 2, 3, 5 }
@@ -3077,7 +3077,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, STMT, "s", AttrType::STMT_NO);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, ASSIGN, "a", AttrType::STMT_NO);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// s = { 1, 2, 4, 5, 7, 9, 11, 12, 13, 14, 15, 16, 17 }
@@ -3142,7 +3142,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v", AttrType::VAR_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, VARIABLE, "x");
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// v = { 2 }
@@ -3222,7 +3222,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v", AttrType::VAR_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p", AttrType::PROC_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsFalse(resultObj->getResultsBoolean());
 
 		// v = { 0, 1, 2, 3, 4 }
@@ -3310,7 +3310,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v1", AttrType::VAR_NAME);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v2", AttrType::VAR_NAME);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// v1 = { 0, 1, 2, 3, 4 }
@@ -3390,7 +3390,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(INTEGER, CONSTANT, 3);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// c = { 3 }
@@ -3464,7 +3464,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c1", AttrType::VALUE);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c2", AttrType::VALUE);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// c1 = { 0, 1, 2, 3, 5 }
@@ -3529,7 +3529,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, STMT, "s", AttrType::STMT_NO);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// c = { 1, 2, 3, 5 }
@@ -3594,7 +3594,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(SYNONYM, PROGRAM_LINE, "n");
 		ClauseWithRefObject rightObj = ClauseWithRefObject(INTEGER, CONSTANT, 10);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// n = { 10 }
@@ -3667,7 +3667,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(SYNONYM, PROGRAM_LINE, "n");
 		ClauseWithRefObject rightObj = ClauseWithRefObject(SYNONYM, PROGRAM_LINE, "n1");
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// n = { 1-17 }
@@ -3742,7 +3742,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(SYNONYM, PROGRAM_LINE, "n");
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, PROGRAM_LINE, "s", AttrType::STMT_NO);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// n = { 1-17 }
@@ -3825,7 +3825,7 @@ public:
 		ClauseWithRefObject leftObj = ClauseWithRefObject(SYNONYM, PROGRAM_LINE, "n");
 		ClauseWithRefObject rightObj = ClauseWithRefObject(ATTRREF, CONSTANT, "c", AttrType::VALUE);
 		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
-		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj);
+		ClauseWithObject* resultObj = evaluator->evaluateWith(withThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// n = { 1, 2, 3, 5 }
@@ -3903,7 +3903,7 @@ public:
 		std::string secondArg = "_";
 		bool isFirstArgSynonym = true;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// w = { 6 }
@@ -3986,7 +3986,7 @@ public:
 		std::string secondArg = "_";
 		bool isFirstArgSynonym = false;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// w = { 6 }
@@ -4060,7 +4060,7 @@ public:
 		std::string secondArg = "_";
 		bool isFirstArgSynonym = false;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// w = { 6 }
@@ -4135,7 +4135,7 @@ public:
 		std::string thirdArg = "_";
 		bool isFirstArgSynonym = true;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
-		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// ifstat = { 10 }
@@ -4219,7 +4219,7 @@ public:
 		std::string thirdArg = "_";
 		bool isFirstArgSynonym = false;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
-		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// ifstat = { 10 }
@@ -4294,7 +4294,7 @@ public:
 		std::string thirdArg = "_";
 		bool isFirstArgSynonym = false;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg, thirdArg);
-		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// ifstat = { 10 }
@@ -4332,8 +4332,8 @@ public:
 		Assert::AreEqual(std::to_string(17).c_str(), std::to_string(results2.size()).c_str());
 	}
 	
-	// PATTERN a(v,_) and FOLLOWS (a,8) - BUGGED
-	TEST_METHOD(TestQueryEvaluator_TestEvaluateFollowPattern1) {
+	// PATTERN a(v,_) and FOLLOWS (a,8) ~
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi1) {
 		// Initialization
 		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
 		SynonymTable *synonymTable = SynonymTable::getInstance();
@@ -4368,7 +4368,7 @@ public:
 		std::string secondArg = "_";
 		bool isFirstArgSynonym = true;
 		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-		ClausePatternObject* resultObj1 = evaluator->evaluatePattern(patternObj);
+		ClausePatternObject* resultObj1 = evaluator->evaluatePattern(patternObj, false);
 		Assert::IsTrue(resultObj1->getResultsBoolean());
 
 		// a = { 1, 2, 4, 5, 7, 9, 11, 12, 13, 14, 15, 16, 17 }
@@ -4392,7 +4392,7 @@ public:
 		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(ASSIGN, std::string("a"), 0, true);
 		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string(""), 8, false);
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
 		Assert::IsTrue(resultObj->getResultsBoolean());
 
 		// a = { 7 }
@@ -4439,81 +4439,1153 @@ public:
 		Logger::WriteMessage("=============");
 	}
 
-	/*
-	TEST_METHOD(TestQueryEvaluator_TestEvaluateModifiesPattern1) {
-	// Modifies(8,v) and Pattern a(v,_)
-	QueryEvaluator *evaluator = QueryEvaluator::getInstance();
-	SynonymTable *synonymTable = SynonymTable::getInstance();
-	synonymTable->clearAll();
-	DummyPKB dummyPKB;
-	evaluator->setPKB(&dummyPKB);
-	SynonymObject a(ASSIGN, "a");
-	synonymTable->insert(a);
-	SynonymObject v(VARIABLE, "v");
-	synonymTable->insert(v);
-	ResultGridManager* resultManager = evaluator->populateResultGrids();
-	std::set<StmtNumber> current = resultManager->getValuesForSynonym("a");
-	for (std::set<StmtNumber>::iterator it = current.begin(); it != current.end(); ++it) {
-	Logger::WriteMessage(std::to_string(*it).c_str());
-	}
-	Logger::WriteMessage("=============");
+	// MODIFIES (9, v) and PATTERN a(v, _)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi2) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject a(ASSIGN, "a");
+		synonymTable->insert(a);
+		SynonymObject v(VARIABLE, "v");
+		synonymTable->insert(v);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
 
-	std::set<VarName> current1 = evaluator->getValuesForSynonym("v");
-	for (std::set<VarName>::iterator it = current1.begin(); it != current1.end(); ++it) {
-	Logger::WriteMessage((*it).c_str());
-	}
-	Logger::WriteMessage("=============");
+		// Print assignment-statements
+		std::set<StmtNumber> current = resultManager->getValuesForSynonym("a");
+		for (std::set<StmtNumber>::iterator it = current.begin(); it != current.end(); ++it) {
+		Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
 
-	// Modifies(8,v)
-	RelationshipType type = MODIFIES;
-	ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 8, false);
-	ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
-	ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
-	ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj);
-	Assert::IsTrue(resultObj->getResultsBoolean());
-	std::set<StmtNumber> updated = resultManager->getValuesForSynonym("v");
-	for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
-	Logger::WriteMessage(std::to_string(*it).c_str());
-	}
-	Logger::WriteMessage("=============");
+		// Print variable names
+		std::set<VarName> current1 = evaluator->getValuesForSynonym("v");
+		for (std::set<VarName>::iterator it = current1.begin(); it != current1.end(); ++it) {
+		Logger::WriteMessage((*it).c_str());
+		}
+		Logger::WriteMessage("=============");
 
-	// Pattern a(v,_)
-	EntityType patternType = ASSIGN;
-	EntityType firstArgType = VARIABLE;
-	std::string patternSynonymArg = "a";
-	std::string firstArg = "v";
-	std::string secondArg = "_";
-	bool isFirstArgSynonym = true;
-	ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
-	ClausePatternObject* resultObj1 = evaluator->evaluatePattern(patternObj);
-	Assert::IsTrue(resultObj1->getResultsBoolean());
-	std::set<StmtNumber> updated1 = resultManager->getValuesForSynonym("a");
-	for (std::set<StmtNumber>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
-	Logger::WriteMessage(std::to_string(*it).c_str());
-	}
-	Logger::WriteMessage("=============");
-	Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated1.size()).c_str());
+		// Modifies(9,v)
+		RelationshipType type = MODIFIES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string(""), 9, false);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
 
-	// SELECT BOOLEAN such that  Modifies(8,v)  and Pattern a(v,_)
-	ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
-	std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
-	for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
-	Logger::WriteMessage((*it).c_str());
-	}
-	Assert::AreEqual("true", results.begin()->c_str());
-	Logger::WriteMessage("=============");
+		// v = { 0 } 
+		std::set<VarIndex> updated = resultManager->getValuesForSynonym("v");
+		for (std::set<VarIndex>::iterator it = updated.begin(); it != updated.end(); ++it) {
+		Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated.size()).c_str());
 
-	// SELECT v such that  Modifies(8,v)  and Pattern a(v,_)
-	ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
-	std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
-	for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
-	Logger::WriteMessage((*it).c_str());
-	}
-	Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
-	Logger::WriteMessage("=============");
-	}
-	*/
+		// Pattern a(v,_)
+		EntityType patternType = ASSIGN;
+		EntityType firstArgType = VARIABLE;
+		std::string patternSynonymArg = "a";
+		std::string firstArg = "v";
+		std::string secondArg = "_";
+		bool isFirstArgSynonym = true;
+		ClausePatternObject* patternObj = new ClausePatternObject(patternType, patternSynonymArg, firstArgType, isFirstArgSynonym, firstArg, secondArg);
+		ClausePatternObject* resultObj1 = evaluator->evaluatePattern(patternObj, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
 
+		// a = { 5, 9 }
+		std::set<StmtNumber> updated1 = resultManager->getValuesForSynonym("a");
+		for (std::set<StmtNumber>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
+		Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated1.size()).c_str());
+
+		// v = { 0 }
+		std::set<VarIndex> updated2 = resultManager->getValuesForSynonym("v");
+		for (std::set<VarIndex>::iterator it = updated2.begin(); it != updated2.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated2.size()).c_str());
+
+		// SELECT BOOLEAN such that MODIFIES (9, v) and PATTERN a(v, _)
+		ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+		Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT a such that MODIFIES (9, v) and PATTERN a(v, _)
+		ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+		Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+	}
+	
+	// PARENT (s1,s2) and FOLLOWS (s2,s3)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi3) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject s3(STMT, "s3");
+		synonymTable->insert(s3);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Print statements
+		std::set<StmtNumber> current = resultManager->getValuesForSynonym("s1");
+		for (std::set<StmtNumber>::iterator it = current.begin(); it != current.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// PARENT (s1,s2)
+		RelationshipType type = PARENT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// s1 = { 6, 10 }
+		std::set<StmtNumber> updated1 = resultManager->getValuesForSynonym("s1");
+		for (std::set<StmtNumber>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated1.size()).c_str());
+
+		// s2 = { 7, 8, 9, 11, 12 }
+		std::set<StmtNumber> updated2 = resultManager->getValuesForSynonym("s2");
+		for (std::set<StmtNumber>::iterator it = updated2.begin(); it != updated2.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated2.size()).c_str());
+
+		// FOLLOWS (s2,s3)
+		RelationshipType type1 = FOLLOWS;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+		ClauseSuchThatObject* resultObj1 = evaluator->evaluateSuchThat(suchThatObj1, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
+
+		// s2 = { 7, 8 }
+		std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s2");
+		for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated.size()).c_str());
+
+		// s3 = { 8, 9 }
+		std::set<StmtNumber> updated3 = resultManager->getValuesForSynonym("s3");
+		for (std::set<StmtNumber>::iterator it = updated3.begin(); it != updated3.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated3.size()).c_str());
+
+		// SELECT BOOLEAN such that PARENT (s1,s2) and FOLLOWS (s2,s3)
+		ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT s1 such that PARENT (s1,s2) and FOLLOWS (s2,s3)
+		// s1 = { 6 }
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT s2 such that PARENT (s1,s2) and FOLLOWS (s2,s3)
+		// s2 = { 7, 8 }
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT s3 such that PARENT (s1,s2) and FOLLOWS (s2,s3)
+		// s3 = { 8, 9 }
+		ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s3", AttrType::INVALID, false);
+		std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results3.size()).c_str());
+		Logger::WriteMessage("=============");
+	}
+	
+	// MODIFIES (s, v) with v.varName = "x"
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi4) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s(STMT, "s");
+		synonymTable->insert(s);
+		SynonymObject v(VARIABLE, "v");
+		synonymTable->insert(v);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Print statements
+		std::set<StmtNumber> current = resultManager->getValuesForSynonym("s");
+		for (std::set<StmtNumber>::iterator it = current.begin(); it != current.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// Print variable names
+		std::set<VarName> current1 = evaluator->getValuesForSynonym("v");
+		for (std::set<VarName>::iterator it = current1.begin(); it != current1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+
+		// MODIFIES (s, v)
+		RelationshipType type = MODIFIES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// s = { 1,2,4,5,7,9,11,12,13,14,15,16,17 } 
+		std::set<StmtNumber> updated = resultManager->getValuesForSynonym("s");
+		for (std::set<StmtNumber>::iterator it = updated.begin(); it != updated.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(13).c_str(), std::to_string(updated.size()).c_str());
+
+		// v = { 0, 1, 2, 3, 4 } 
+		std::set<VarIndex> updated1 = resultManager->getValuesForSynonym("v");
+		for (std::set<VarIndex>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated1.size()).c_str());
+
+		// v.varName = "x"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v", AttrType::VAR_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, VARIABLE, "x");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj1 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
+
+		// v = { 2 }
+		std::set<VarIndex> updated2 = resultManager->getValuesForSynonym("v");
+		for (std::set<VarIndex>::iterator it = updated2.begin(); it != updated2.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated2.size()).c_str());
+
+		// s = { 1, 4, 7, 11, 15 }
+		std::set<StmtNumber> updated3 = resultManager->getValuesForSynonym("s");
+		for (std::set<StmtNumber>::iterator it = updated3.begin(); it != updated3.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated3.size()).c_str());
+
+		// SELECT BOOLEAN such that MODIFIES (s, v) with v.varName = "x"
+		ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT s such that MODIFIES (s, v) with v.varName = "x"
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v such that MODIFIES (s, v) with v.varName = "x"
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+	}
+	
+	// Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi5) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// MODIFIES_P (p1, v1)
+		RelationshipType type = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Uses_P (p1, v1)
+		RelationshipType type1 = USES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+		ClauseSuchThatObject* resultObj1 = evaluator->evaluateSuchThat(suchThatObj1, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
+
+		// p1.procName = "Third"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Third");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj2 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj2->getResultsBoolean());
+
+		// SELECT p1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
+		// p1 = { 2 }
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
+		// v1 = { z }
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results3.size()).c_str());
+		Logger::WriteMessage("=============");
+
+	}
+
+	// Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Second"
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi6) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// MODIFIES_P (p1, v1)
+		RelationshipType type = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Uses_P (p1, v1)
+		RelationshipType type1 = USES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+		ClauseSuchThatObject* resultObj1 = evaluator->evaluateSuchThat(suchThatObj1, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
+
+		// p1.procName = "Second"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj2 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj2->getResultsBoolean());
+
+		// SELECT p1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
+		// p1 = { 1 }
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
+		// v1 = { i, x, y, z }
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results3.size()).c_str());
+		Logger::WriteMessage("=============");
+
+	}
+	
+	// Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi7) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// MODIFIES_P (p1, v1)
+		RelationshipType type = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Uses_P (p1, v1)
+		RelationshipType type1 = USES_P;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+		ClauseSuchThatObject* resultObj1 = evaluator->evaluateSuchThat(suchThatObj1, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
+
+		// Calls (p1, p2)
+		RelationshipType type2 = CALLS;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+		ClauseSuchThatObject* resultObj3 = evaluator->evaluateSuchThat(suchThatObj2, false);
+		Assert::IsTrue(resultObj3->getResultsBoolean());
+
+		// p1.procName = "Second"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj2 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj2->getResultsBoolean());
+
+		// SELECT p1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+		// p1 = { 1 }
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+		// v1 = { i, x, y, z }
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results3.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT p2 such that Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+		// p2 = { 2 }
+		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		std::vector<std::string> results4 = evaluator->evaluateSelect(selObject4, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results4.begin(); it != results4.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results4.size()).c_str());
+		Logger::WriteMessage("=============");
+
+	}
+
+	// Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi8) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// MODIFIES_P (p1, v1)
+		RelationshipType type = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Calls (p1, p2)
+		RelationshipType type2 = CALLS;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+		ClauseSuchThatObject* resultObj3 = evaluator->evaluateSuchThat(suchThatObj2, false);
+		Assert::IsTrue(resultObj3->getResultsBoolean());
+
+		// p1.procName = "Second"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj2 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj2->getResultsBoolean());
+
+		// SELECT p1 such that Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+		// p1 = { 1 }
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v1 such that Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+		// v1 = { i, v, x, y, z }
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(results3.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT p2 such that Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
+		// p2 = { 2 }
+		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		std::vector<std::string> results4 = evaluator->evaluateSelect(selObject4, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results4.begin(); it != results4.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results4.size()).c_str());
+		Logger::WriteMessage("=============");
+
+	}
+
+	// Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second" - BUGGED
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi9) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject p1(PROCEDURE, "p1");
+		synonymTable->insert(p1);
+		SynonymObject p2(PROCEDURE, "p2");
+		synonymTable->insert(p2);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// MODIFIES_P (p1, v1)
+		RelationshipType type = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Calls (p1, p2)
+		RelationshipType type2 = CALLS;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+		ClauseSuchThatObject* resultObj3 = evaluator->evaluateSuchThat(suchThatObj2, false);
+		Assert::IsTrue(resultObj3->getResultsBoolean());
+
+		// Modifies_P (p2, v1)
+		RelationshipType type3 = MODIFIES_P;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(PROCEDURE, std::string("p2"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+		ClauseSuchThatObject* resultObj4 = evaluator->evaluateSuchThat(suchThatObj3, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// p1.procName = "Second"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, PROCEDURE, "p1", AttrType::PROC_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, PROCEDURE, "Second");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj2 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj2->getResultsBoolean());
+
+		// p2 = { 2 } 
+		std::set<ProcIndex> updated1 = resultManager->getValuesForSynonym("p2");
+		for (std::set<ProcIndex>::iterator it = updated1.begin(); it != updated1.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(updated1.size()).c_str());
+
+		// v1 = { 1, 4 } 
+		std::set<VarIndex> updated = resultManager->getValuesForSynonym("v1");
+		for (std::set<VarIndex>::iterator it = updated.begin(); it != updated.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(updated.size()).c_str());
+
+		// SELECT p1 such that Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second"
+		// p1 = { 1 }
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT p2 such that Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second"
+		// p2 = { 2 }
+		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		std::vector<std::string> results4 = evaluator->evaluateSelect(selObject4, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results4.begin(); it != results4.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results4.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v1 such that Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second"
+		// v1 = { v, z }
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		std::vector<std::string> results3 = evaluator->evaluateSelect(selObject3, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results3.begin(); it != results3.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results3.size()).c_str());
+		Logger::WriteMessage("=============");
+
+	}
+
+	// Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x" - BUGGED
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Multi10) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Modifies (s1,v1) 
+		RelationshipType type = MODIFIES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Uses(s1, v1)
+		RelationshipType type1 = USES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+		ClauseSuchThatObject* resultObj2 = evaluator->evaluateSuchThat(suchThatObj1, false);
+		Assert::IsTrue(resultObj2->getResultsBoolean());
+
+		// v1 = { 0, 2, 4 }
+		std::set<VarIndex> updated2 = resultManager->getValuesForSynonym("v1");
+		for (std::set<VarIndex>::iterator it = updated2.begin(); it != updated2.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(3).c_str(), std::to_string(updated2.size()).c_str());
+
+		// s1 = { 7,11,13,15 }
+		std::set<StmtNumber> updated3 = resultManager->getValuesForSynonym("s1");
+		for (std::set<StmtNumber>::iterator it = updated3.begin(); it != updated3.end(); ++it) {
+			Logger::WriteMessage(std::to_string(*it).c_str());
+		}
+		Logger::WriteMessage("=============");
+		Assert::AreEqual(std::to_string(5).c_str(), std::to_string(updated3.size()).c_str());
+
+		// v1.varName = "x"
+		// the ref-object contains a synonym and attribute (e.g s.stmt#, p.procName)
+		ClauseWithRefObject leftObj = ClauseWithRefObject(ATTRREF, VARIABLE, "v1", AttrType::VAR_NAME);
+		ClauseWithRefObject rightObj = ClauseWithRefObject(IDENTIFIER, VARIABLE, "x");
+		ClauseWithObject* withThatObj = new ClauseWithObject(&leftObj, &rightObj);
+		ClauseWithObject* resultObj1 = evaluator->evaluateWith(withThatObj, false);
+		Assert::IsTrue(resultObj1->getResultsBoolean());
+
+		// SELECT BOOLEAN such that Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x"
+		ClauseSelectObject selObject = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, true);
+		std::vector<std::string> results = evaluator->evaluateSelect(selObject, resultObj->getResultsBoolean() && resultObj1->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual("true", results.begin()->c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT s1 such that Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x"
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(selObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(4).c_str(), std::to_string(results1.size()).c_str());
+		Logger::WriteMessage("=============");
+
+		// SELECT v1 such that Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x"
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		std::vector<std::string> results2 = evaluator->evaluateSelect(selObject2, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(1).c_str(), std::to_string(results2.size()).c_str());
+		Logger::WriteMessage("=============");
+	}
+	
+	// Select s1 such that Modifies(s2,"x") and Modifies(5,"i") and Modifies(s1,v1)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize1) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("v1", 2);
+		
+		// Select s1
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+
+		// Modifies(s2,"x") 
+		RelationshipType type = MODIFIES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Modifies(5,"i") 
+		RelationshipType type1 = MODIFIES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("i"), 0, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,v1) 
+		RelationshipType type2 = MODIFIES;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj2);
+
+		std::vector<std::string> s1Values = { "1", "2", "4", "5", "7", "9", "11", "12", "13", "14", "15", "16", "17" };
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s1Values[index], *it);
+			index++;
+		}
+
+	}
+	
+	// Select s1 such that Modifies(s2,"x") and Modifies(5,"y") and Modifies(s1,v1)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize2) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("v1", 2);
+
+		// Select s1
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+
+		// Modifies(s2,"x") 
+		RelationshipType type = MODIFIES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Modifies(5,"i") 
+		RelationshipType type1 = MODIFIES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("y"), 0, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,v1) 
+		RelationshipType type2 = MODIFIES;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj2);
+
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		Assert::IsTrue(0==results.size());
+	}
+
+	// Select BOOLEAN such that Modifies(s2,"x") and Modifies(5,"y") and Modifies(s1,v1)
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize3) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("s1", 2);
+		mSynonymGroup->insertSynonym("v1", 2);
+
+		// Select BOOLEAN
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, true);
+
+		// Modifies(s2,"x") 
+		RelationshipType type = MODIFIES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Modifies(5,"i") 
+		RelationshipType type1 = MODIFIES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("y"), 0, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Modifies(s1,v1) 
+		RelationshipType type2 = MODIFIES;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj2);
+
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual("false", (*it).c_str());
+		}
+		
+	}
+
+	// Select s1 such that Parent(s1,s2) and Modifies(5,"i") and Uses(s1,v1) and Modifies(s3,v2) and Uses(s3,"x")
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize4) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject s3(STMT, "s3");
+		synonymTable->insert(s3);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject v2(VARIABLE, "v2");
+		synonymTable->insert(v2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("s3", 2);
+		mSynonymGroup->insertSynonym("v2", 2);
+
+		// Select s1
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+
+		// Parent(s1,s2) 
+		RelationshipType type = PARENT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Modifies(5,"i") 
+		RelationshipType type1 = MODIFIES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("i"), 0, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Uses(s1,v1)
+		RelationshipType type2 = USES;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+
+		// Modifies(s3,v2) 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v2"), 0, true);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// Uses(s3,"x")
+		RelationshipType type4 = USES;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj2);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> s1Values = { "6" , "10" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s1Values[index], (*it));
+			index++;
+		}
+	}
+
+	// Select s2 such that Parent(s1,s2) and Modifies(5,"i") and Uses(s1,v1) and Modifies(s3,v2) and Uses(s3,"x")
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize5) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject s3(STMT, "s3");
+		synonymTable->insert(s3);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject v2(VARIABLE, "v2");
+		synonymTable->insert(v2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("s3", 2);
+		mSynonymGroup->insertSynonym("v2", 2);
+
+		// Select s2
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+
+		// Parent(s1,s2) 
+		RelationshipType type = PARENT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Modifies(5,"i") 
+		RelationshipType type1 = MODIFIES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("i"), 0, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Uses(s1,v1)
+		RelationshipType type2 = USES;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+
+		// Modifies(s3,v2) 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v2"), 0, true);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// Uses(s3,"x")
+		RelationshipType type4 = USES;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj2);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		std::vector<std::string> s2Values = { "7", "8", "9", "11", "12" };
+		int index = 0;
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::AreEqual(s2Values[index], (*it));
+			index++;
+		}
+	}
+
+	// Select BOOLEAN such that Parent(s1,s2) and Modifies(5,"i") and Uses(s1,v1) and Modifies(s3,v2) and Uses(s3,"x")
+	TEST_METHOD(TestQueryEvaluator_TestEvaluate_Optimize6) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		synonymTable->insert(s1);
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s2);
+		SynonymObject s3(STMT, "s3");
+		synonymTable->insert(s3);
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(v1);
+		SynonymObject v2(VARIABLE, "v2");
+		synonymTable->insert(v2);
+
+		SynonymGroup* mSynonymGroup = SynonymGroup::getInstance();
+		mSynonymGroup->insertSynonym("s2", 1);
+		mSynonymGroup->insertSynonym("s1", 1);
+		mSynonymGroup->insertSynonym("v1", 1);
+		mSynonymGroup->insertSynonym("s3", 2);
+		mSynonymGroup->insertSynonym("v2", 2);
+
+		// Select BOOLEAN
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "", AttrType::INVALID, true);
+
+		// Parent(s1,s2) 
+		RelationshipType type = PARENT;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new  ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+
+		// Modifies(5,"i") 
+		RelationshipType type1 = MODIFIES;
+		ClauseSuchThatArgObject* argOne1 = new ClauseSuchThatArgObject(STMT, std::string(""), 5, false);
+		ClauseSuchThatArgObject* argTwo1 = new  ClauseSuchThatArgObject(VARIABLE, std::string("i"), 0, false);
+		ClauseSuchThatObject* suchThatObj1 = new ClauseSuchThatObject(type1, argOne1, argTwo1);
+
+		// Uses(s1,v1)
+		RelationshipType type2 = USES;
+		ClauseSuchThatArgObject* argOne2 = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo2 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
+
+		// Modifies(s3,v2) 
+		RelationshipType type3 = MODIFIES;
+		ClauseSuchThatArgObject* argOne3 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatArgObject* argTwo3 = new  ClauseSuchThatArgObject(VARIABLE, std::string("v2"), 0, true);
+		ClauseSuchThatObject* suchThatObj3 = new ClauseSuchThatObject(type3, argOne3, argTwo3);
+
+		// Uses(s3,"x")
+		RelationshipType type4 = USES;
+		ClauseSuchThatArgObject* argOne4 = new ClauseSuchThatArgObject(STMT, std::string("s3"), 0, true);
+		ClauseSuchThatArgObject* argTwo4 = new  ClauseSuchThatArgObject(VARIABLE, std::string("x"), 0, false);
+		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
+
+		QueryTable queryTable;
+		queryTable.insertSelectObject(selObject);
+		queryTable.insertSuchThatObject(suchThatObj);
+		queryTable.insertSuchThatObject(suchThatObj1);
+		queryTable.insertSuchThatObject(suchThatObj2);
+		queryTable.insertSuchThatObject(suchThatObj3);
+		queryTable.insertSuchThatObject(suchThatObj4);
+
+		std::vector<std::string> results = evaluator->evaluate(queryTable);
+		for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+			Assert::IsTrue("true"==(*it));
+		}
+	}
+	
 	// POPULATE SYNONYM GROUP
 	TEST_METHOD(TestQueryEvaluator_Populate_Synonym_Group) {
 

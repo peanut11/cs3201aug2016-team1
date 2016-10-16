@@ -99,25 +99,27 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 				if (it->getGroupType() == GroupType::NOT_RELATED || it->getGroupType() == GroupType::NOT_RELATED_CONTAIN_AFFECTS) {
 					isStopEvaluation = (clauseIndex == clauses.size() - 1);
 				}
+
 				// Evaluate such that clause
 				if (clauseType == ClauseType::SUCH_THAT) {
 					ClauseSuchThatObject* childObj = dynamic_cast<ClauseSuchThatObject*>(obj);
-					relationshipHolds = evaluateSuchThat(childObj)->getResultsBoolean();
+					relationshipHolds = evaluateSuchThat(childObj, isStopEvaluation)->getResultsBoolean();
 				}
 				// Evaluate with clause
 				else if (clauseType == ClauseType::WITH) {
 					ClauseWithObject* childObj = dynamic_cast<ClauseWithObject*>(obj);
-					relationshipHolds = evaluateWith(childObj)->getResultsBoolean();
+					relationshipHolds = evaluateWith(childObj, isStopEvaluation)->getResultsBoolean();
 				}
 				// Evaluate pattern clause
 				else if (clauseType == ClauseType::PATTERN) {
 					ClausePatternObject* childObj = dynamic_cast<ClausePatternObject*>(obj);
-					relationshipHolds = evaluatePattern(childObj)->getResultsBoolean();
+					relationshipHolds = evaluatePattern(childObj, isStopEvaluation)->getResultsBoolean();
 				}
 				// Stop evaluation if relationship is false
 				if (relationshipHolds == false) {
 					break;
 				}
+
 				clauseIndex++;
 			}
 			// Stop evaluation if relationship is false
@@ -172,11 +174,10 @@ ResultGridManager* QueryEvaluator::populateResultGrids() {
     return resultManager;
 }
 
-ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject) {
+ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject, bool isStopEvaluation) {
     RelationshipType type = suchThatRelObject->getRelationshipType();
     ClauseSuchThatArgObject* argOne = suchThatRelObject->getArgsOne();
     ClauseSuchThatArgObject* argTwo = suchThatRelObject->getArgsTwo();
-	bool isStopEvaluation = false;
     // FOLLOW / FOLLOWS_STAR / PARENT / PARENT_STAR / NEXT / NEXT_STAR relationship
     if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR || type == NEXT || type == NEXT_STAR) {
         // Both are statement numbers: Follows(3,4)
@@ -514,6 +515,30 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // Both args are synonym (Modifies(a,v));Modifies(s,v)
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
+/*
+			std::set<StmtNumber> test = resultManager->getValuesForSynonym(argOne->getStringValue());
+			std::set<VarIndex> test1 = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			std::tuple<SynonymString, SynonymString> testTuple (argOne->getStringValue(), argTwo->getStringValue());
+			ValueTupleSet testTupleStatements;
+			for (StmtSetIterator s1s = test.begin(); s1s != test.end(); s1s++) {
+				for (StmtSetIterator s2s = test1.begin(); s2s != test1.end(); s2s++) {
+					if (pkb->is(type, *s1s, *s2s)) {
+						std::tuple<StmtNumber, VarIndex> validTuple = { *s1s, *s2s };
+						testTupleStatements.insert(validTuple);
+						suchThatRelObject->setResultsBoolean(true);
+						if (isStopEvaluation) {
+							return suchThatRelObject;
+						}
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (testTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(testTuple, testTupleStatements);
+			}
+*/			
 			// Get current tuple synonyms 
 			SynonymString firstSynonym = argOne->getStringValue();
 			SynonymString secondSynonym = argTwo->getStringValue();
@@ -537,6 +562,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
 			}
+			
 /*            
 			// Retrieve current statements
             std::set<StmtNumber> s1s = resultManager->getValuesForSynonym(argOne->getStringValue());
@@ -933,10 +959,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 	return suchThatRelObject;
 }
 
-ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
+ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, bool isStopEvaluation) {
 	ClauseWithRefObject* leftObj = withObject->getRefObject1();
 	ClauseWithRefObject* rightObj = withObject->getRefObject2();
-	bool isStopEvaluation = false;
 
 	// left side is = synonym.attrName (attrRef)
 	if (leftObj->getRefType() == ATTRREF) {
@@ -1506,7 +1531,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject) {
 	return withObject;
 }
 
-ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patternObject) {
+ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patternObject, bool isStopEvaluation) {
     EntityType patternType = patternObject->getPatternType();
     EntityType firstArgType = patternObject->getFirstArgumentType();
     std::string patternSynonymArg = patternObject->getPatternSynonymArgument();
@@ -1514,7 +1539,6 @@ ClausePatternObject* QueryEvaluator::evaluatePattern(ClausePatternObject* patter
     std::string secondArg = patternObject->getSecondArgument();
     std::string thirdArg = patternObject->getThirdArgument();
     bool isFirstArgSynonym = patternObject->getIsFirstArgSynonym();
-    bool isStopEvaluation = false;
 
     // ASSIGN pattern:
     if (patternType == ASSIGN) {
