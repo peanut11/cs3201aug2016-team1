@@ -29,6 +29,7 @@ private:
 public:
 	static QueryEvaluator* getInstance();
     static VarName to_var_name(VarIndex varIndex);
+	static VarName to_proc_name(ProcIndex procIndex);
 
     ClausePatternObject* evaluatePattern(ClausePatternObject* patternObject, bool isStopEvaluation);
     ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject, bool isStopEvaluation);

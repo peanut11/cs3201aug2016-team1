@@ -31,11 +31,6 @@ QueryEvaluator* QueryEvaluator::getInstance() {
     return _instance;
 }
 
-VarName QueryEvaluator::to_var_name(VarIndex varIndex) {
-    // return PKB::getInstance()->getVarName(varIndex);              // Original
-    return QueryEvaluator::getInstance()->pkb->getVarName(varIndex); // DummyPKB
-}
-
 QueryEvaluator::QueryEvaluator() {
     pkb = PKB::getInstance();
     synonymTable = SynonymTable::getInstance();
@@ -60,6 +55,16 @@ std::set<VarName> QueryEvaluator::getValuesForSynonym(SynonymString syn) {
     std::set<VarName> nameSet;
     std::transform(indexSet.begin(), indexSet.end(), std::inserter(nameSet, nameSet.begin()), to_var_name);
     return nameSet;
+}
+
+VarName QueryEvaluator::to_var_name(VarIndex varIndex) {
+	// return PKB::getInstance()->getVarName(varIndex);              // Original
+	return QueryEvaluator::getInstance()->pkb->getVarName(varIndex); // DummyPKB
+}
+
+ProcName QueryEvaluator::to_proc_name(ProcIndex procIndex) {
+	// return PKB::getInstance()->getVarName(varIndex);              // Original
+	return QueryEvaluator::getInstance()->pkb->getProcName(procIndex); // DummyPKB
 }
 
 std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
@@ -1992,7 +1997,14 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(ClauseSelectObject Claus
                 std::vector<std::string> vectorResults1;
                 std::transform(setResults1.begin(), setResults1.end(), std::back_inserter(vectorResults1), to_var_name);
                 return vectorResults1;
-            } else {
+            } 
+			else if (ClauseSelectObject.getEntityType() == PROCEDURE) {
+				std::set<ProcIndex> setResults3 = resultManager->getValuesForSynonym(ClauseSelectObject.getSynonymString());
+				std::vector<std::string> vectorResults3;
+				std::transform(setResults3.begin(), setResults3.end(), std::back_inserter(vectorResults3), to_proc_name);
+				return vectorResults3;
+			}
+			else {
                 std::set<StmtNumber> setResults2 = resultManager->getValuesForSynonym(ClauseSelectObject.getSynonymString());
                 std::vector<StmtNumber> vectorStmtNumbers(setResults2.begin(), setResults2.end());
                 std::vector<std::string> vectorResults2;
