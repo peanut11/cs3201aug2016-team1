@@ -6373,7 +6373,6 @@ public:
 		mSynonymGroup->insertSynonym("c", 1);
 		mSynonymGroup->insertSynonym("n1", 2);
 		mSynonymGroup->insertSynonym("n2", 2);
-		mSynonymGroup->insertSynonym("stmtLst", 3);
 
 		// Select stmtLst
 		ClauseSelectObject selObject = ClauseSelectObject(STMTLST, "stmtLst", AttrType::INVALID, false);
@@ -6452,7 +6451,6 @@ public:
 		mSynonymGroup->insertSynonym("c", 1);
 		mSynonymGroup->insertSynonym("n1", 2);
 		mSynonymGroup->insertSynonym("n2", 2);
-		mSynonymGroup->insertSynonym("stmtLst", 3);
 
 		// Select stmtLst
 		ClauseSelectObject selObject = ClauseSelectObject(STMTLST, "stmtLst", AttrType::INVALID, false);
