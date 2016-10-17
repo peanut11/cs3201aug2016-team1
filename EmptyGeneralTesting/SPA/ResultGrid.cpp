@@ -13,20 +13,6 @@ bool ResultGrid::contains(ValueTupleSet valTupleSet, ValueTuple valTuple) {
     return valTupleSet.find(valTuple) != valTupleSet.end();
 }
 
-bool ResultGrid::contains(TuplePosition pos, ValueTuple valTuple, SynonymValue val) {
-    return extractValue(pos, valTuple) == val;
-}
-
-bool ResultGrid::contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val) {
-    ValueTupleSet::const_iterator valTuple = valTupleSet.begin();
-    
-    while (!contains(pos, *valTuple, val) && valTuple != valTupleSet.end()) {
-        valTuple++;
-    }
-
-    return valTuple == valTupleSet.end();
-}
-
 void ResultGrid::addSynonym(SynonymString syn) {
     refMap[syn] = refTable.size();
     refTable.push_back(syn);
@@ -91,8 +77,8 @@ SynonymString ResultGrid::getSynonymForColumn(GridColumn col) {
 
 void ResultGrid::sortResultListBySynonym(SynonymString syn) {
     GridColumn column = getColumnForSynonym(syn);
-    std::stable_sort(resultList.begin(), resultList.end(), [column](GridRow row1, GridRow row2) {
-        return (row1[column] < row2[column]); });
+    std::stable_sort(resultList.begin(), resultList.end(),
+                     [column](GridRow row1, GridRow row2) { return (row1[column] < row2[column]); });
 }
 
 ResultGrid::ResultGrid(SynonymString syn, ValueSet vals) {
@@ -218,26 +204,17 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
         for (GridListIterator otherRow = other->resultList.begin(); otherRow != other->resultList.end(); otherRow++) {
             // Keep row as template
-            size_t prevRowSize = (*row).size();
             GridRow newRow = *row;
-
             // Contatenate otherRow to newRow
             std::copy((*otherRow).begin(), (*otherRow).end(), std::back_inserter(newRow));
-
-            // Check that row was not modified
-            if (prevRowSize != (*row).size()) {
-                throw std::runtime_error("");
-            }
-
             // Insert newRow before row
-            size_t prevResultListSize = resultList.size();
             resultList.insert(row, newRow);
-
-            // Check that newRow was inserted
-            if (prevResultListSize + 1 != resultList.size()) {
-                throw std::runtime_error("");
-            }
         }
+    }
+
+    // Clear previous synonym values
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
     }
 
     // Transfer empty columns
@@ -246,35 +223,16 @@ bool ResultGrid::mergeGridBruteForce(ResultGrid * other, SynonymTuple synTuple, 
         addSynonym(otherSyn);
     }
 
-    // Clear previous synonym values
-    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
-        synVal->clear();
-    }
+    GridColumn column      = getColumnForSynonym(extractSynonym(LEFT,  synTuple));
+    GridColumn otherColumn = getColumnForSynonym(extractSynonym(RIGHT, synTuple));
+    GridListIterator row   = resultList.begin();
 
-    SynonymString syn = extractSynonym(LEFT, synTuple);
-    SynonymString otherSyn = extractSynonym(RIGHT, synTuple);
-    GridColumn column = getColumnForSynonym(syn);
-    GridColumn otherColumn = getColumnForSynonym(otherSyn);
-
-    for (GridListIterator row = resultList.begin(); row != resultList.end(); /* updated in loop */) {
-        bool isValidRow = false;
-
-        SynonymValue synVal = (*row)[column];
+    while (row != resultList.end()) {
+        SynonymValue synVal      = (*row)[column];
         SynonymValue otherSynVal = (*row)[otherColumn];
-        ValueTupleSet::const_iterator validT = validTuples.begin();
+        ValueTuple valueTuple    = ValueTuple(synVal, otherSynVal);
 
-        while (!isValidRow && validT != validTuples.end()) {
-            SynonymValue validSynVal = extractValue(LEFT, *validT);
-            SynonymValue otherValidSynVal = extractValue(RIGHT, *validT);
-
-            if ((synVal == validSynVal) && (otherSynVal == otherValidSynVal)) {
-                isValidRow = true;
-            } else {
-                validT++;
-            }
-        }
-
-        if (isValidRow) {
+        if (contains(validTuples, valueTuple)) {
             // Insert valid synonym values
             for (size_t column = 0; column < resultTable.size(); column++) {
                 resultTable[column].insert((*row)[column]);
@@ -316,15 +274,15 @@ bool ResultGrid::updateSynonym(SynonymString syn, ValueSet vals) {
     while (row != resultList.end()) {
         SynonymValue value = (*row)[column];
 
-        if (!contains(intersection, value)) {
-            row = resultList.erase(row);
-        } else {
+        if (contains(intersection, value)) {
             // Insert valid synonym values
             for (size_t column = 0; column < resultTable.size(); column++) {
                 resultTable[column].insert((*row)[column]);
             }
 
             row++;
+        } else {
+            row = resultList.erase(row);
         }
     }
 

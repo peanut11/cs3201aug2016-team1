@@ -32,8 +32,6 @@ private:
 
     bool contains(ValueSet valSet, SynonymValue val);
     bool contains(ValueTupleSet valTupleSet, ValueTuple valTuple);
-    bool contains(TuplePosition pos, ValueTuple valTuple, SynonymValue val);
-    bool contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val);
     void addSynonym(SynonymString syn);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
     void clearGrid();
