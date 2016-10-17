@@ -5,6 +5,7 @@ const std::string QueryValidator::SYNTAX_ASSIGN = "assign";
 const std::string QueryValidator::SYNTAX_WHILE = "while";
 const std::string QueryValidator::SYNTAX_IF = "if";
 const std::string QueryValidator::SYNTAX_STATEMENT = "stmt";
+const std::string QueryValidator::SYNTAX_STATEMENT_LIST = "stmtLst";
 const std::string QueryValidator::SYNTAX_VARIABLE = "variable";
 const std::string QueryValidator::SYNTAX_CONSTANT = "constant";
 const std::string QueryValidator::SYNTAX_PROG = "prog";
@@ -204,6 +205,11 @@ bool QueryValidator::isDeclaration(std::string str) {
 
 	bool isUnderDeclaration = true;
 	bool isValid = false;
+
+	if (mEntityType == EntityType::INVALID) {
+		return false;
+	}
+
 
 	while (isUnderDeclaration) {
 
@@ -1749,6 +1755,9 @@ EntityType QueryValidator::getSyntaxEntityType(std::string syntax) {
 	else if (isMatch(syntax, SYNTAX_STATEMENT)) {
 		return EntityType::STMT;
 	}
+	else if (isMatch(syntax, SYNTAX_STATEMENT_LIST)) {
+		return EntityType::STMTLST;
+	}
 	else if (isMatch(syntax, SYNTAX_VARIABLE)) {
 		return EntityType::VARIABLE;
 	}
@@ -1819,6 +1828,9 @@ std::string QueryValidator::getEntitySyntax(std::string str) {
 	else if (isMatch(str, SYNTAX_STATEMENT)) {
 		return SYNTAX_STATEMENT;
 	}
+	else if (isMatch(str, SYNTAX_STATEMENT_LIST)) {
+		return SYNTAX_STATEMENT_LIST;
+	}
 	else if (isMatch(str, SYNTAX_VARIABLE)) {
 		return SYNTAX_VARIABLE;
 	}
@@ -1840,13 +1852,17 @@ std::string QueryValidator::getEntitySyntax(std::string str) {
 std::string QueryValidator::getEntityTypeString(EntityType type) {
 	switch (type) {
 	case PROCEDURE:
-		return "procedure";
+		return SYNTAX_PROCEDURE;
 	case ASSIGN:
-		return "assign";
+		return SYNTAX_ASSIGN;
 	case IF:
-		return "if";
+		return SYNTAX_IF;
 	case WHILE:
-		return "while";
+		return SYNTAX_WHILE;
+	case STMT:
+		return SYNTAX_STATEMENT;
+	case STMTLST:
+		return SYNTAX_STATEMENT_LIST;
 	}
 
 	return "";

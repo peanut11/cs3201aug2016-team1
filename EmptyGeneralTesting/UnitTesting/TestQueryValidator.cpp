@@ -134,13 +134,19 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
-
+		std::string declaration = "stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+	
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
 		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
 		// output is "wrong". Select v such that Modifies (a1, "iter") pattern a("left", _)
 		// crash. assign a; Select a such that Parent*(38, a)
 		
+		// Success Result clause is statement list
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select sl1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+
 		// Success Modifies procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
@@ -151,8 +157,6 @@ public:
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
 		
-
-
 
 		// Success Next
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,2)"));
@@ -461,6 +465,11 @@ public:
 		auto funcPtrWildcardError2 = [validator] { validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\nSelect s1 such that Parent(s1, s2) Uses(_, \"x\") pattern a1(\"x\",\"y\")"); };
 		Assert::ExpectException<Exceptions>(funcPtrWildcardError2);
 
+		// Failure, wrong declaration
+		Assert::IsFalse(validator->isValidQuery("proc p;\nSelect p")); // wrong syntax
+		Assert::IsFalse(validator->isValidQuery("Procedure p;\nSelect p")); // wrong case
+		Assert::IsFalse(validator->isValidQuery("StmtLst sl1;\nSelect sl1")); // wrong case
+		Assert::IsFalse(validator->isValidQuery("Stmtlst sl1;\nSelect sl1")); // wrong case 
 
 	}
 

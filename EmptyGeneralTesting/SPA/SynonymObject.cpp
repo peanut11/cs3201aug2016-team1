@@ -35,6 +35,8 @@ SynonymString SynonymObject::getTypeString() {
 		return "while";
 	case STMT:
 		return "stmt";
+	case STMTLST:
+		return "stmtLst";
 	case VARIABLE:
 		return "variable";
 	case CONSTANT:

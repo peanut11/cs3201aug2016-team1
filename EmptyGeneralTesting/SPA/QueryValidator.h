@@ -32,6 +32,7 @@ class QueryValidator {
 	static const std::string SYNTAX_WHILE;
 	static const std::string SYNTAX_IF;
 	static const std::string SYNTAX_STATEMENT;
+	static const std::string SYNTAX_STATEMENT_LIST;
 	static const std::string SYNTAX_VARIABLE;
 	static const std::string SYNTAX_CONSTANT;
 	static const std::string SYNTAX_PROG;
