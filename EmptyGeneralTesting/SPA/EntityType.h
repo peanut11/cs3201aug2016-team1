@@ -13,6 +13,7 @@ enum EntityType {
 	TIMES,
 	VARIABLE, // String
 	CONSTANT, // Integer
+	STMTLST,
 	WILDCARD,
 	INVALID
 };
