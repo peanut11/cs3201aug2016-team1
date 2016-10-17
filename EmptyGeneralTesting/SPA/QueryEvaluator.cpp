@@ -158,8 +158,9 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
         // Evaluate results by constraint of select object
         return evaluateSelect(select, relationshipHolds);
 
-    } catch (std::runtime_error e) {
-        throw e.what();
+    } catch (std::runtime_error e) { // there's error
+        //throw e.what();
+		return std::vector<std::string>(); // return empty list 
     }
 }
 
