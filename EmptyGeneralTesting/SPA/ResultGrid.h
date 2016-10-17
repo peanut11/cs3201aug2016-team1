@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm> // std::stable_sort
 #include <list>
 
 #include "Exceptions.h"
@@ -32,12 +31,9 @@ private:
 
     bool contains(ValueSet valSet, SynonymValue val);
     bool contains(ValueTupleSet valTupleSet, ValueTuple valTuple);
-    bool contains(TuplePosition pos, ValueTuple valTuple, SynonymValue val);
-    bool contains(TuplePosition pos, ValueTupleSet valTupleSet, SynonymValue val);
     void addSynonym(SynonymString syn);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
     void clearGrid();
-    void sortResultListBySynonym(SynonymString syn); 
     SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
     GridColumn getColumnForSynonym(SynonymString syn);
@@ -47,7 +43,6 @@ public:
     ResultGrid(SynonymString syn, ValueSet vals);
 
     bool mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
-    bool mergeGridBruteForce(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
     bool updateSynonym(SynonymString syn, ValueSet vals);
     bool updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples);
     ValueSet getValuesForSynonym(SynonymString syn);

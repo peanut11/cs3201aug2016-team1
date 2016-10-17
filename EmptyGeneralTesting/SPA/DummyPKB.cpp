@@ -535,6 +535,10 @@ std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 		std::set<Constant> constants = { 0,1,2,3,5 };
 		return constants;
 	}
+	else if (stmtType == STMTLST) {
+		std::set<StmtNumber> stmtLists = { 1, 4, 7, 11, 12, 16 };
+		return stmtLists;
+	}
 
 	return std::set<StmtNumber>();
 }
