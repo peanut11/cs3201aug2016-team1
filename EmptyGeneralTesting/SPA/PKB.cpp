@@ -286,12 +286,6 @@ EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
 	return stmtTypeTable[stmt];
 }
 
-// Deprecated
-StmtSet PKB::getStmtsByVar(RelationshipType rel, VarName varName) {
-    return StmtSet();
-	// return varTable[getVarIndex(varName)][rel];
-}
-
 StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
     if (rel != MODIFIES && rel != USES) {
         throw Exception::INVALID_VAR_STMT_RELATION;
@@ -300,7 +294,7 @@ StmtSet PKB::getStmtsByVar(RelationshipType rel, VarIndex varIndex) {
     if (varIndex >= varTable.size()) {
         throw Exception::INVALID_VAR_INDEX;
     }
-
+	
     return varTable[varIndex][rel];
 }
 
@@ -431,28 +425,12 @@ std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifies
 	return stmtTable[stmt][modifiesOrUses];
 }
 
-std::set<VarIndex> PKB::getVarsByProc(ProcName procName, RelationshipType modifiesOrUses) {
-	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw Exception::INVALID_VAR_PROC_RELATION;
-	}
-
-	return procTable[getProcIndex(procName)][modifiesOrUses];
-}
-
 std::set<VarIndex> PKB::getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
 	return procTable[procIndex][modifiesOrUses];
-}
-
-std::set<ProcIndex>	PKB::getProcsByProc(ProcName procName, RelationshipType calls) {
-	if (calls != CALLS && calls != CALLS_STAR) {
-		throw Exception::INVALID_PROC_PROC_RELATION;
-	}
-
-	return procTable[getProcIndex(procName)][calls];
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType calls) {
@@ -463,14 +441,6 @@ std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType ca
 	return procTable[procIndex][calls];
 }
 
-std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcName procName ) {
-	if (calls != CALLS && calls != CALLS_STAR) {
-		throw Exception::INVALID_PROC_PROC_RELATION;
-	}
-
-	return procTable[getProcIndex(procName)][calls + 1];
-}
-
 std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcIndex procIndex) {
 	if (calls != CALLS && calls != CALLS_STAR) {
 		throw Exception::INVALID_PROC_PROC_RELATION;
@@ -479,26 +449,12 @@ std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcIndex procIn
 	return procTable[procIndex][calls + 1];
 }
 
-std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarName varName) {
-	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
-		throw Exception::INVALID_VAR_PROC_RELATION;
-	}
-
-	return varTable[getVarIndex(varName)][modifiesOrUses + 2];
-}
-
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex) {
 	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
 	return varTable[varIndex][modifiesOrUses + 2];
-}
-
-// Deprecated
-std::set<StmtNumber> PKB::getStmtsByProc(ProcName procName) {
-    return StmtSet();
-    // return procToStmtTable[getProcIndex(procName)];
 }
 
 std::set<StmtNumber> PKB::getStmtsByProc(ProcIndex procIndex) {

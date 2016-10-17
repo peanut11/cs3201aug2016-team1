@@ -82,26 +82,20 @@ public:
     virtual std::set<VarName>    getAllVarNames();
 
     // Get procedures
-    virtual std::set<ProcIndex>  getProcsByProc(ProcName procName, RelationshipType callsOrStar); //Deprecated
-	virtual std::set<ProcIndex>  getProcsByProc(ProcIndex procIndex, RelationshipType callsOrStar);
-    virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcName procName); // Check for inverse
-	virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcIndex procIndex);
-	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarName varName); //Deprecated
+    virtual std::set<ProcIndex>  getProcsByProc(ProcIndex procIndex, RelationshipType callsOrStar);
+    virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcIndex procIndex);
 	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 
     // Get statements
     virtual std::set<StmtNumber> getCallsByProc(ProcIndex procIndex);
     virtual std::set<StmtNumber> getStmtsByType(EntityType stmtType);
-    virtual std::set<StmtNumber> getStmtsByProc(ProcName procName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByProc(ProcIndex procIndex);
     virtual std::set<StmtNumber> getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel); // Gets x in Follows(x, 2)
     virtual std::set<StmtNumber> getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt); // Gets x in Follows(1, x)
-    virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarName varName); // Deprecated
     virtual std::set<StmtNumber> getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 
     // Get variables
-    virtual std::set<VarIndex>   getVarsByProc(ProcName procName, RelationshipType modifiesOrUses); // Deprecated
-	virtual std::set<VarIndex>   getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses);
+    virtual std::set<VarIndex>   getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses);
     virtual std::set<VarIndex>   getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
 
     // Warning: this one is public for testing purpose

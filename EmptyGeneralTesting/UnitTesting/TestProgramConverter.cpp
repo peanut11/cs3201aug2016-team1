@@ -333,13 +333,14 @@ public:
 
 		// check procedures
 		VarName varName1 = "x";
+		VarIndex varIndex1 = pkb->getVarIndex(varName1);
 
 		ProcName procName = "Second";
 		ProcIndex procIndex = pkb->getProcIndex(procName);
 
 		// check procedures that directly modifies x
 		std::set<ProcIndex> expected({ procIndex });
-		std::set<ProcIndex> actual= pkb->getProcsByVar(MODIFIES, varName1);
+		std::set<ProcIndex> actual= pkb->getProcsByVar(MODIFIES, varIndex1);
 		std::set<ProcIndex>::const_iterator expectedIt = expected.begin();
 		std::set<ProcIndex>::const_iterator actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -352,7 +353,7 @@ public:
 
 		// check procedures that directly uses x
 		expected = std::set<ProcIndex>({ procIndex });
-		actual = pkb->getProcsByVar(USES, varName1);
+		actual = pkb->getProcsByVar(USES, varIndex1);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -367,7 +368,7 @@ public:
 		StmtNumber stmt1 = 1;
 		StmtNumber stmt6 = 6;
 		expected = std::set<StmtNumber>({ stmt1, stmt6 });
-		actual = pkb->getStmtsByVar(MODIFIES, varName1);
+		actual = pkb->getStmtsByVar(MODIFIES, varIndex1);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -381,7 +382,7 @@ public:
 		// check stmts that directly uses x
 		StmtNumber stmt4 = 4;
 		expected = std::set<StmtNumber>({ stmt4});
-		actual = pkb->getStmtsByVar(USES, varName1);
+		actual = pkb->getStmtsByVar(USES, varIndex1);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -482,6 +483,7 @@ public:
 		ProgramConverter pc = ProgramConverter();
 		pc.convert(str);
 		ProcName procName = "Second";
+		ProcIndex procIndex = pkb->getProcIndex(procName);
 		StmtNumber stmt1 = 1;
 		StmtNumber stmt2 = 2;
 		StmtNumber stmt3 = 3;
@@ -490,7 +492,7 @@ public:
 		StmtNumber stmt6 = 6;
 		std::set<StmtNumber> expected({ stmt1, stmt2, stmt3, stmt4, stmt5, stmt6 });
 
-		std::set<StmtNumber> actual = pkb->getStmtsByProc(procName);
+		std::set<StmtNumber> actual = pkb->getStmtsByProc(procIndex);
 
 		Assert::AreEqual(expected.size(), actual.size());
 
@@ -551,10 +553,11 @@ public:
 
 		// check direct modifies for Third
 		ProcName procName = "Third";
+		ProcIndex procIndex = pkb->getProcIndex(procName);
 		VarName varName = "y";
 		VarIndex varIndex = pkb->getVarIndex(varName);
 		std::set<ProcStmtVarIndex> expected({ varIndex });
-		std::set<ProcStmtVarIndex> actual = pkb->getVarsByProc(procName, MODIFIES);
+		std::set<ProcStmtVarIndex> actual = pkb->getVarsByProc(procIndex, MODIFIES);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		std::set<ProcStmtVarIndex>::const_iterator expectedIt = expected.begin();
@@ -570,7 +573,7 @@ public:
 		varName = "y";
 		varIndex = pkb->getVarIndex(varName);
 		expected = std::set<VarIndex>({ varIndex });
-		actual = pkb->getVarsByProc(procName, USES);
+		actual = pkb->getVarsByProc(procIndex, USES);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		expectedIt = expected.begin();
@@ -583,10 +586,11 @@ public:
 
 		// check direct calls for Second
 		ProcName procName1 = "Second";
+		ProcIndex procIndex1 = pkb->getProcIndex(procName1);
 		ProcName procName2 = "Third";
-		ProcIndex procIndex = pkb->getProcIndex(procName2);
+		procIndex = pkb->getProcIndex(procName2);
 		expected = std::set<ProcStmtVarIndex>({ procIndex });
-		actual = pkb->getProcsByProc(procName1, CALLS);
+		actual = pkb->getProcsByProc(procIndex1, CALLS);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		expectedIt = expected.begin();
@@ -600,9 +604,10 @@ public:
 		// check direct called_by for Third
 		procName1 = "Second";
 		procName2 = "Third";
+		ProcIndex procIndex2 = pkb->getProcIndex(procName2);
 		procIndex = pkb->getProcIndex(procName1);
 		expected = std::set<ProcStmtVarIndex>({ procIndex });
-		actual = pkb->getProcsByProc(CALLS, procName2);
+		actual = pkb->getProcsByProc(CALLS, procIndex2);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		expectedIt = expected.begin();

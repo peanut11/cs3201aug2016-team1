@@ -102,12 +102,12 @@ namespace IntegrationTesting {
 
 			StmtNumber usesZ[] = { 3, 4, 5 };
 			std::set<StmtNumber> expectedUsesZ(usesZ, usesZ + 3),
-				actualUsesZ = pkb->getStmtsByVar(USES, "z");
+				actualUsesZ = pkb->getStmtsByVar(USES, pkb->getVarIndex("z"));
 			Assert::IsTrue(expectedUsesZ == actualUsesZ);
 
 			StmtNumber modifiesY[] = { 3, 5 };
 			std::set<StmtNumber> expectedModifiesY(modifiesY, modifiesY + 2),
-				actualModifiesY = pkb->getStmtsByVar(MODIFIES, "y");
+				actualModifiesY = pkb->getStmtsByVar(MODIFIES, pkb->getVarIndex("y"));
 			Assert::IsTrue(expectedModifiesY == actualModifiesY);
 
 			StmtNumber stmt3[] = {2, 3};
@@ -143,7 +143,7 @@ namespace IntegrationTesting {
 
 			StmtNumber usesX[] = { 2, 12, 14 };
 			std::set<StmtNumber> expectedUsesX(usesX, usesX + 3),
-				actualUsesX = pkb->getStmtsByVar(USES, "x");
+				actualUsesX = pkb->getStmtsByVar(USES, pkb->getVarIndex("x"));
 			Assert::IsTrue(expectedUsesX == actualUsesX);
 
 			VarIndex usedBy6[] = { pkb->getVarIndex("y"), pkb->getVarIndex("z"),
