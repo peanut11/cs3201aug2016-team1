@@ -12,7 +12,8 @@ class ClauseSelectResultObject : public ClauseObject {
 public:
 	ClauseSelectResultObject();
 	void insertClauseSelectObject(ClauseSelectObject object);
-	
+	void clearAll();
+
 	ClauseSelectResultObject* clone() { return new ClauseSelectResultObject(*this); }
 
 	std::vector<ClauseSelectObject> getClauseSelectObjectList();

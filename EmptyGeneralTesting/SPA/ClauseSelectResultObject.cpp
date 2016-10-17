@@ -9,6 +9,9 @@ void ClauseSelectResultObject::insertClauseSelectObject(ClauseSelectObject newOb
 	this->mClauseSelectObjList.push_back(newObject);
 }
 
+void ClauseSelectResultObject::clearAll() {
+	this->mClauseSelectObjList.clear();
+}
 
 std::vector<ClauseSelectObject> ClauseSelectResultObject::getClauseSelectObjectList() {
 	return this->mClauseSelectObjList;

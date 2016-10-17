@@ -14,6 +14,7 @@ QueryTable::QueryTable(){}
 //QueryTable::~QueryTable(){}
 
 void QueryTable::clearAll() {
+	this->result.clearAll();
 	this->suchThats.clear();
 	this->patterns.clear();
 	this->withs.clear();

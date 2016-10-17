@@ -200,7 +200,6 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(a1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,_)"));
 
-		
 		// Success Affects*
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,2)"));
@@ -216,6 +215,24 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,a2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(a1,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(_,_)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// Success Calls
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls(p,q)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls(\"First\",q)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls(\"First\",\"Second\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls(\"First\",_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls(p,\"Second\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls(_,\"Second\")"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// Success Calls*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls*(p,q)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls*(\"First\",q)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls*(\"First\",\"Second\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls*(\"First\",_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls*(p,\"Second\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Calls*(_,\"Second\")"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success With
@@ -952,6 +969,10 @@ public:
 		validator->initStringTokenizer("Calls(p,\"First\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Calls"));
+
+		validator->initStringTokenizer("Calls*(p,\"First\")");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Calls"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// failure
@@ -969,6 +990,57 @@ public:
 		validator->getNextToken();
 		auto funcPtrError3 = [validator] { validator->isRelationship("Calls"); };
 		Assert::ExpectException<Exceptions>(funcPtrError3);
+
+		validator->initStringTokenizer("Calls*(1, q)"); // 
+		validator->getNextToken();
+		auto funcPtrError101 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError101);
+
+		validator->initStringTokenizer("Calls*(p, 5)"); 
+		validator->getNextToken();
+		auto funcPtrError102 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError102);
+
+		validator->initStringTokenizer("Calls*(1, 5)"); 
+		validator->getNextToken();
+		auto funcPtrError103 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError103);
+
+		validator->initStringTokenizer("Calls*(1, )"); 
+		validator->getNextToken();
+		auto funcPtrError104 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError104);
+
+		validator->initStringTokenizer("Calls*(,q)"); 
+		validator->getNextToken();
+		auto funcPtrError105 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError105);
+
+		validator->initStringTokenizer("Calls*(,)");
+		validator->getNextToken();
+		auto funcPtrError106 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError106);
+
+		validator->initStringTokenizer("Calls*()");
+		validator->getNextToken();
+		auto funcPtrError107 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError107);
+
+		validator->initStringTokenizer("Calls*(,");
+		validator->getNextToken();
+		Assert::IsFalse(validator->isRelationship("Calls"));
+		//auto funcPtrError108 = [validator] { validator->isRelationship("Calls"); };
+		//Assert::ExpectException<Exceptions>(funcPtrError108);
+
+		validator->initStringTokenizer("Calls*,)");
+		validator->getNextToken();
+		auto funcPtrError109 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError109);
+
+		validator->initStringTokenizer("Calls*");
+		validator->getNextToken();
+		auto funcPtrError110 = [validator] { validator->isRelationship("Calls"); };
+		Assert::ExpectException<Exceptions>(funcPtrError110);
 
 	}
 
