@@ -38,7 +38,7 @@ PKB::PKB() {
 	stmtTypeTable.push_back(INVALID);    // StmtNumber starts from 1
 	stmtToProcTable.push_back(UINT_MAX); // StmtNumber starts from 1. Not sure of better invalid values to put here
 
-    while (stmtByTypeTable.size() <= EntityType::STMT) {
+    while (stmtByTypeTable.size() <= EntityType::STMTLST) {
         stmtByTypeTable.push_back(StmtSet());
     }
 }
@@ -351,7 +351,7 @@ std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
 }
 
 StmtSet PKB::getStmtsByType(EntityType stmtType) {
-    if (stmtType > STMT) {
+    if (stmtType > STMTLST) {
         throw Exception::INVALID_STMT_TYPE;
     }
 
@@ -670,4 +670,8 @@ bool PKB::putControlVarForStmt(StmtNumber ifOrWhile, VarName varName) {
 
 	controlVars.push_back(getVarIndex(varName));
 	return (ifOrWhile + 1 == controlVars.size());
+}
+
+bool PKB::putStmtLst(StmtNumber stmt) {
+	return stmtByTypeTable[STMTLST].insert(stmt).second;
 }

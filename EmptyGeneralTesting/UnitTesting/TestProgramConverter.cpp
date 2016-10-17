@@ -84,7 +84,7 @@ public:
 
 		PKB* pkb = PKB::getInstance();
 
-		std::string str = Tools::readFile("prototype_procedure_ConverterTest1.txt");
+		std::string str = Tools::readFile("prototype_procedure_ConverterTest3.txt");
 
 		ProgramConverter pc = ProgramConverter();
 		pc.convert(str);
@@ -94,9 +94,14 @@ public:
 		StmtNumber stmt4 = 4;
 		StmtNumber stmt5 = 5;
 		StmtNumber stmt6 = 6;
-		
+		StmtNumber stmt7 = 7;
+		StmtNumber stmt8 = 8;
+		StmtNumber stmt9 = 9;
+		StmtNumber stmt10 = 10;
+		StmtNumber stmt11 = 11;
+
 		// type == STMT
-		std::set<StmtNumber> expectedStmts({stmt1, stmt2, stmt3, stmt4, stmt5, stmt6});
+		std::set<StmtNumber> expectedStmts({stmt1, stmt2, stmt3, stmt4, stmt5, stmt6, stmt7, stmt8, stmt9,stmt10, stmt11});
 		std::set<StmtNumber> actual = pkb->getStmtsByType(STMT);
 		std::set<StmtNumber>::const_iterator expectedIt = expectedStmts.begin();
 		std::set<StmtNumber>::const_iterator actualIt = actual.begin();
@@ -109,7 +114,7 @@ public:
 		}
 
 		// type == ASSIGN
-		expectedStmts = std::set<StmtNumber> ({ stmt1, stmt2, stmt4, stmt5, stmt6 });
+		expectedStmts = std::set<StmtNumber> ({ stmt1, stmt2, stmt4, stmt6, stmt7, stmt9, stmt10, stmt11 });
 		actual = pkb->getStmtsByType(ASSIGN);
 		expectedIt = expectedStmts.begin();
 		actualIt = actual.begin();
@@ -122,8 +127,34 @@ public:
 		}
 
 		// type == WHILE
-		expectedStmts = std::set<StmtNumber>({ stmt3 });
+		expectedStmts = std::set<StmtNumber>({ stmt3, stmt5 });
 		actual = pkb->getStmtsByType(WHILE);
+		expectedIt = expectedStmts.begin();
+		actualIt = actual.begin();
+		Assert::AreEqual(expectedStmts.size(), actual.size());
+		while (expectedIt != expectedStmts.end()) {
+			Assert::AreEqual(*expectedIt, *actualIt);
+
+			expectedIt++;
+			actualIt++;
+		}
+
+		// type == STMTLST
+		expectedStmts = std::set<StmtNumber>({ stmt1, stmt4, stmt6, stmt9, stmt10});
+		actual = pkb->getStmtsByType(STMTLST);
+		expectedIt = expectedStmts.begin();
+		actualIt = actual.begin();
+		Assert::AreEqual(expectedStmts.size(), actual.size());
+		while (expectedIt != expectedStmts.end()) {
+			Assert::AreEqual(*expectedIt, *actualIt);
+
+			expectedIt++;
+			actualIt++;
+		}
+
+		// type == IF
+		expectedStmts = std::set<StmtNumber>({ stmt8 });
+		actual = pkb->getStmtsByType(IF);
 		expectedIt = expectedStmts.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expectedStmts.size(), actual.size());

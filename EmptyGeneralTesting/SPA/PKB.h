@@ -57,6 +57,7 @@ public:
     bool putVarForStmt(StmtNumber stmt, RelationshipType modifiesOrUses, VarName varName);
 	bool putVarForProc(ProcName procA, RelationshipType modifiesOrUses, VarName varName);
 	bool putStmtCallProc(StmtNumber stmt, ProcName procCalled);
+	bool putStmtLst(StmtNumber stmt);
 
     // API used by QP and DE
     virtual bool is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item);

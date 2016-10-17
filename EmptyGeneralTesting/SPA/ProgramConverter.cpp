@@ -56,6 +56,7 @@ int ProgramConverter::convert(std::string source) {
 	ProgLine currentLine;
 	ProcName procName;
 	bool isElse = false;
+	bool isStmtLst = false;
 	ProgLineNumber lastOfThenList = 0;
 
 	while (!(currentLine = nextLine()).empty()) {
@@ -81,6 +82,7 @@ int ProgramConverter::convert(std::string source) {
 		}
 
 		if (isEnterParent(FIRST_TOKEN)) {
+			isStmtLst = true;
 			if (isElse) {
 				currentLeader = 0;
 				std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(lineCount, PARENT);
@@ -121,6 +123,10 @@ int ProgramConverter::convert(std::string source) {
 		}
 
 		const ProgLineNumber lineNum = lineCount;
+		if (isStmtLst) {
+			pkb->putStmtLst(lineNum);
+			isStmtLst = false;
+		}
 		pkb->putStmtProc(lineNum, procName);
 		updateStmtInStmtTable(currentLine, lineNum);
 		currentLeader = lineNum;

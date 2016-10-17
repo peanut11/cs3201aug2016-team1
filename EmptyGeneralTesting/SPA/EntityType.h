@@ -5,6 +5,7 @@ enum EntityType {
     IF,
     WHILE,
     STMT,
+	STMTLST,
 
 	PROCEDURE,
 	PROGRAM_LINE,
@@ -13,7 +14,6 @@ enum EntityType {
 	TIMES,
 	VARIABLE, // String
 	CONSTANT, // Integer
-	STMTLST,
 	WILDCARD,
 	INVALID
 };
