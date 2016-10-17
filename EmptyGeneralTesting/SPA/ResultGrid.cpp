@@ -298,12 +298,26 @@ bool ResultGrid::updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTu
     GridColumn column1 = getColumnForSynonym(extractSynonym(LEFT, synTuple));
     GridColumn column2 = getColumnForSynonym(extractSynonym(RIGHT, synTuple));
 
-    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+    // Clear previous synonym values
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
+    }
+    
+    GridListIterator row = resultList.begin();
+
+    while (row != resultList.end()) {
         SynonymValue value1 = (*row)[column1];
         SynonymValue value2 = (*row)[column2];
         ValueTuple valueTuple = ValueTuple(value1, value2);
 
-        if (!contains(validTuples, valueTuple)) {
+        if (contains(validTuples, valueTuple)) {
+            // Insert valid synonym values
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((*row)[column]);
+            }
+
+            row++;
+        } else {
             row = resultList.erase(row);
         }
     }
