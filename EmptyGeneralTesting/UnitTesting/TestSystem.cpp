@@ -19,6 +19,8 @@ namespace UnitTesting
 	public:
 
 		TEST_METHOD(TestSystem_Full) {
+            PKB::getInstance()->clear();
+
 			Frontend frontend = Frontend();
 			frontend.parse(std::string("procedure_Second.txt"));
 
@@ -79,7 +81,7 @@ namespace UnitTesting
 */
 			strTitle = "GET STATEMENT BY ASSIGN from PKB";
 			Logger::WriteMessage(strTitle.c_str());
-			std::set<StmtNumber> c1 = queryProcessor->getQueryEvaluator()->getPKB()->getStmtsByType(ASSIGN);
+            std::set<StmtNumber> c1 = pkb->getStmtsByType(ASSIGN);
 			for (std::set<StmtNumber>::iterator it = c1.begin(); it != c1.end(); ++it) {
 				Logger::WriteMessage(std::to_string(*it).c_str());
 			}

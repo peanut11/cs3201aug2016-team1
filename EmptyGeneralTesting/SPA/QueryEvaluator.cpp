@@ -174,7 +174,9 @@ ResultGridManager* QueryEvaluator::populateResultGrids() {
         if (it->getType() == VARIABLE) {
             resultManager->initialiseSynonym(syn, pkb->getAllVarIndex());
         } else {
-            resultManager->initialiseSynonym(syn, pkb->getStmtsByType(it->getType()));
+            EntityType type = it->getType();
+            StmtSet stmts = pkb->getStmtsByType(type);
+            resultManager->initialiseSynonym(syn, stmts);
         }
     }
     return resultManager;
