@@ -154,9 +154,28 @@ public:
 		procIn = *procI;
 		Assert::AreEqual(procIn, 2);
 		ProcName test = pkb->getProcName(procIn);
-		const std::string expected = "Sixth";
+		std::string expected = "Sixth";
 		Assert::AreEqual(test, expected);
 	}
-	
+	TEST_METHOD(TestDesign_ProcedureUse) {
+		PKB* pkb = PKB::getInstance();
+		std::set<VarIndex> actualSet=pkb->getVarsByProc(3, MODIFIES_P);
+		std::string expected = "n";
+		VarIndex expectedInd= pkb->getVarIndex(expected);
+		StmtSetIterator actual = actualSet.begin();
+		VarIndex actualInd = *actual;
+		VarName actualVar = pkb->getVarName(actualInd);
+		Assert::AreEqual(actualVar, expected);
+	}
+	TEST_METHOD(TestDesign_StmtCallForUse) {
+		PKB* pkb = PKB::getInstance();
+		std::set<VarIndex> actualSet = pkb->getVarsByStmt(9, MODIFIES);
+		std::set<VarIndex> expectedSet = pkb->getVarsByProc(1, MODIFIES_P);
+		StmtSetIterator actual = actualSet.begin();
+		VarIndex actualInd = *actual;
+		StmtSetIterator expected = expectedSet.begin();
+		VarIndex expectedInd = *expected;
+		Assert::AreEqual(expectedInd, actualInd);
+	}
 	};
 }
