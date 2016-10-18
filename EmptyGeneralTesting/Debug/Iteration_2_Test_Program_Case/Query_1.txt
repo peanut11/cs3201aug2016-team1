@@ -19,7 +19,7 @@ Select w such that Follows* (w, s)
 8, 6
 5000
 5 - Comment
-stmt s;while w;
+variable v;
 Select v such that Modifies (24, v)
 d, m
 5000
