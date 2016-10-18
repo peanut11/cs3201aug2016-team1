@@ -92,7 +92,9 @@ int ProgramConverter::convert(std::string source) {
 				} else {
 					currentParent = *parentSet.begin();
 
-					while (pkb->getStmtTypeForStmt(currentParent) == WHILE) {
+					while (pkb->getStmtTypeForStmt(currentParent) == WHILE
+                           || (pkb->getStmtTypeForStmt(currentParent) == IF &&
+                               pkb->getStmtsByStmt(NEXT, currentParent).size() == 2)) {
 						StmtSet parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
 						currentParent = *parentSet.begin();
 					}

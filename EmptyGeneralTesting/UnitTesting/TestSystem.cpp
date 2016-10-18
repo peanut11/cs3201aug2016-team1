@@ -130,5 +130,19 @@ namespace UnitTesting
 				Logger::WriteMessage((*it).c_str());
 			}
 		}
+
+        TEST_METHOD(TestSystem_NestedIfWhileIf) {
+            PKB::getInstance()->clear();
+
+            Frontend frontend = Frontend();
+            frontend.parse(std::string("procedure_NestedIfWhileIf.txt"));
+        }
+
+        TEST_METHOD(TestSystem_NestedIfIf) {
+            PKB::getInstance()->clear();
+
+            Frontend frontend = Frontend();
+            frontend.parse(std::string("procedure_NestedIfIf.txt"));
+        }
 	};
 }
