@@ -52,12 +52,29 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 
 			// QueryEvaluator get result from PKB
 			std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(this->getQueryPreProcessor()->getQueryTable());
+			
 			// QP pass result to QResultProjector for data representation
 			return this->getQueryResultProjector()->evaluate(evaluatedResults);
 		}
 
 		return std::vector <std::string>();
 
+	}
+	catch (std::invalid_argument e) {
+		e.what();
+		return std::vector <std::string>();
+	}
+	catch (std::length_error e) {
+		e.what();
+		return std::vector <std::string>();
+	}
+	catch (std::out_of_range e) {
+		e.what();
+		return std::vector <std::string>();
+	}
+	catch (std::domain_error e) {
+		e.what();
+		return std::vector <std::string>();
 	}
 	catch (Exceptions e) {
 		//std::cout << e.what() << std::endl;
