@@ -23,7 +23,7 @@ int RelTable::insert(RelObject object) {
 }
 
 RelObject RelTable::getObject(int index) {
-	if (index >= this->relObjects.size() || index < 0) {
+	if ((size_t)index >= this->relObjects.size() || index < 0) {
         throw Exception::INVALID_OBJECT_INDEX;
 	}
 

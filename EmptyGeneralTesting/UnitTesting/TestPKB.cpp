@@ -44,7 +44,7 @@ public:
 			pkb->putStmtForStmt(StmtNumber(2), FOLLOWED_BY, StmtNumber(1));
 		} catch (std::invalid_argument e) {
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
-			Assert::Fail;
+			Assert::Fail();
 		}
 
 		try {
@@ -52,7 +52,7 @@ public:
 		}
 		catch (std::invalid_argument e) {
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
-			Assert::Fail;
+			Assert::Fail();
 		}
 
 		try {
@@ -60,7 +60,7 @@ public:
 		}
 		catch (std::invalid_argument e) {
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
-			Assert::Fail;
+			Assert::Fail();
 		}
 		
 		try {
@@ -68,7 +68,7 @@ public:
 		}
 		catch (std::invalid_argument e) {
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
-			Assert::Fail;
+			Assert::Fail();
 		}
 
 		try {
@@ -76,7 +76,7 @@ public:
 		}
 		catch (std::invalid_argument e) {
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
-			Assert::Fail;
+			Assert::Fail();
 		}
 
 		try {
@@ -84,7 +84,7 @@ public:
 		}
 		catch (std::invalid_argument e) {
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
-			Assert::Fail;
+			Assert::Fail();
 		}
 	}
 	};

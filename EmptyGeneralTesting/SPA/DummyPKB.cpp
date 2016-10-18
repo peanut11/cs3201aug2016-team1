@@ -449,7 +449,7 @@ bool DummyPKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr expr)
 	// "_z_"
 	std::vector<StringToken> stringComp1 = { "_","z","_" };
 	
-	if ((stmt == 7 || stmt == 11 | stmt == 13) && expr == stringComp)
+	if ((stmt == 7 || stmt == 11 || stmt == 13) && expr == stringComp)
 		return true;
 	if (stmt == 13 && expr == stringComp1)
 		return true;

@@ -2,7 +2,7 @@
 #include "ClauseType.h"
 
 ClauseSelectResultObject::ClauseSelectResultObject() {
-	this->mClauseType == ClauseType::ClauseType::RESULT;
+	this->mClauseType = ClauseType::ClauseType::RESULT;
 }
 
 void ClauseSelectResultObject::insertClauseSelectObject(ClauseSelectObject newObject) {
