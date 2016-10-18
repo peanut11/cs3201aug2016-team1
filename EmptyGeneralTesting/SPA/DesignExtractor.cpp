@@ -15,9 +15,9 @@ DesignExtractor::DesignExtractor() {}
 
 void DesignExtractor::process() {
     processCallsStar();
+    processCallsForUsesAndModifies(); // After processCallsStar
     processFollowsStar();
-    //processParentStar();
-    updateStmtTable();
+    updateStmtTable(); // Does processParentStar(*w)
 }
 
 void DesignExtractor::processCallsStar() {
