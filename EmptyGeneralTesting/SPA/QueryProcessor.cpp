@@ -61,19 +61,19 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 
 	}
 	catch (std::invalid_argument e) {
-		e.what();
+		//std::cout << e.what() << std::endl;
 		return std::vector <std::string>();
 	}
 	catch (std::length_error e) {
-		e.what();
+		//std::cout << e.what() << std::endl;
 		return std::vector <std::string>();
 	}
 	catch (std::out_of_range e) {
-		e.what();
+		//std::cout << e.what() << std::endl;
 		return std::vector <std::string>();
 	}
 	catch (std::domain_error e) {
-		e.what();
+		//std::cout << e.what() << std::endl;
 		return std::vector <std::string>();
 	}
 	catch (Exceptions e) {
