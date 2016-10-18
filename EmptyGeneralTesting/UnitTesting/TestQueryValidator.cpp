@@ -982,6 +982,10 @@ public:
 		validator->initStringTokenizer("Modifies(\"First\",\"x\")"); 
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		validator->initStringTokenizer("Modifies(1,var1)"); // constant & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// failure
@@ -1028,6 +1032,10 @@ public:
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
 		validator->initStringTokenizer("Uses(\"First\",\"x\")"); 
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+
+		validator->initStringTokenizer("Uses(1,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 

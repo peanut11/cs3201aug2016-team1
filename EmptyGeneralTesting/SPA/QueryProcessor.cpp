@@ -4,6 +4,7 @@
 // - QueryPreprocessor
 // - QueryEvaluator
 
+#include "Exceptions.h"
 #include "QueryProcessor.h"
 #include "../AutoTester/source/AbstractWrapper.h"
 
@@ -51,6 +52,7 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 
 			// QueryEvaluator get result from PKB
 			std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(this->getQueryPreProcessor()->getQueryTable());
+			
 			// QP pass result to QResultProjector for data representation
 			return this->getQueryResultProjector()->evaluate(evaluatedResults);
 		}
@@ -58,11 +60,28 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 		return std::vector <std::string>();
 
 	}
-	catch (std::runtime_error e) {
-		std::cout << e.what() << std::endl;
+	catch (std::invalid_argument e) {
+		//std::cout << e.what() << std::endl;
+		return std::vector <std::string>();
+	}
+	catch (std::length_error e) {
+		//std::cout << e.what() << std::endl;
+		return std::vector <std::string>();
+	}
+	catch (std::out_of_range e) {
+		//std::cout << e.what() << std::endl;
+		return std::vector <std::string>();
+	}
+	catch (std::domain_error e) {
+		//std::cout << e.what() << std::endl;
+		return std::vector <std::string>();
+	}
+	catch (Exceptions e) {
+		//std::cout << e.what() << std::endl;
+		return std::vector <std::string>();
 	}
 
-	return std::vector <std::string>();
+	
 
 }
 
