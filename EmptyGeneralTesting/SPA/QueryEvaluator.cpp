@@ -160,7 +160,7 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 
    // } catch (std::runtime_error e) { // there's error
         //throw e.what();
-		return std::vector<std::string>(); // return empty list 
+		//return std::vector<std::string>(); // return empty list 
    // }
 }
 
