@@ -426,11 +426,11 @@ std::set<VarIndex> PKB::getVarsByStmt(StmtNumber stmt, RelationshipType modifies
 }
 
 std::set<VarIndex> PKB::getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses) {
-	if (modifiesOrUses != MODIFIES && modifiesOrUses != USES) {
+	if (modifiesOrUses != MODIFIES_P && modifiesOrUses != USES_P) {
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
-	return procTable[procIndex][modifiesOrUses];
+	return procTable[procIndex][modifiesOrUses - 21];
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType calls) {

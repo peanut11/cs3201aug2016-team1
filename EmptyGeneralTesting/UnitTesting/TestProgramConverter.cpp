@@ -557,7 +557,7 @@ public:
 		VarName varName = "y";
 		VarIndex varIndex = pkb->getVarIndex(varName);
 		std::set<ProcStmtVarIndex> expected({ varIndex });
-		std::set<ProcStmtVarIndex> actual = pkb->getVarsByProc(procIndex, MODIFIES);
+		std::set<ProcStmtVarIndex> actual = pkb->getVarsByProc(procIndex, MODIFIES_P);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		std::set<ProcStmtVarIndex>::const_iterator expectedIt = expected.begin();
@@ -573,7 +573,7 @@ public:
 		varName = "y";
 		varIndex = pkb->getVarIndex(varName);
 		expected = std::set<VarIndex>({ varIndex });
-		actual = pkb->getVarsByProc(procIndex, USES);
+		actual = pkb->getVarsByProc(procIndex, USES_P);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		expectedIt = expected.begin();

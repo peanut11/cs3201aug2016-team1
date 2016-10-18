@@ -70,14 +70,14 @@ void DesignExtractor::dfs(StmtNumber index, bool *visited, StmtNumber caller) {
             ProcName addName = pkb->getProcName(addI);
             pkb->putProcForProc(caller, CALLS_STAR, addName);
         }
-		std::set<StmtNumber> useList = pkb->getVarsByProc(call, USES);
+		std::set<StmtNumber> useList = pkb->getVarsByProc(call, USES_P);
 		for (StmtSetIterator useInd = useList.begin(); useInd != useList.end(); useInd++) {
 			VarIndex var = *useInd;
 			VarName varName = pkb->getVarName(var);
 			pkb->putVarForProc(proc, USES, varName);
 			
 		}
-		std::set<StmtNumber> modList = pkb->getVarsByProc(call, MODIFIES);
+		std::set<StmtNumber> modList = pkb->getVarsByProc(call, MODIFIES_P);
 		for (StmtSetIterator modInd = modList.begin(); modInd != modList.end(); modInd++) {
 			VarIndex var = *modInd;
 			VarName varName = pkb->getVarName(var);
