@@ -4,6 +4,7 @@
 // - QueryPreprocessor
 // - QueryEvaluator
 
+#include "Exceptions.h"
 #include "QueryProcessor.h"
 #include "../AutoTester/source/AbstractWrapper.h"
 
@@ -58,11 +59,12 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 		return std::vector <std::string>();
 
 	}
-	catch (std::runtime_error e) {
-		std::cout << e.what() << std::endl;
+	catch (Exceptions e) {
+		//std::cout << e.what() << std::endl;
+		return std::vector <std::string>();
 	}
 
-	return std::vector <std::string>();
+	
 
 }
 
