@@ -227,12 +227,12 @@ void DesignExtractor::processLoopForUsesAndModifies(StmtNumber w) {
 
 		std::set<StmtNumber> modifiesList = pkb->getVarsByStmt(s, MODIFIES);
 
-		for (StmtSetIterator m = modifiesList.begin(); m != modifiesList.end(); m++) {
-			VarName addToVartableMod = pkb->getVarName(*m);
-			pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
-		}
-
+        for (StmtSetIterator m = modifiesList.begin(); m != modifiesList.end(); m++) {
+            VarName addToVartableMod = pkb->getVarName(*m);
+            pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
+        }
 	}
+
 	EntityType checkType = pkb->getStmtTypeForStmt(w);
 	if (checkType == IF) {
 		StmtSet nextList = pkb->getStmtsByStmt(NEXT, w);
@@ -249,6 +249,7 @@ void DesignExtractor::processLoopForUsesAndModifies(StmtNumber w) {
 			VarName addToVartableMod = pkb->getVarName(*m);
 			pkb->putVarForStmt(w, MODIFIES, addToVartableMod);
 		}
+		
 		std::set<StmtNumber> followStarForElse = pkb->getStmtsByStmt(FOLLOWS_STAR, nextInd);
 		for (StmtSetIterator f = followStarForElse.begin(); f != followStarForElse.end(); f++) {
 			StmtNumber s = *f;
