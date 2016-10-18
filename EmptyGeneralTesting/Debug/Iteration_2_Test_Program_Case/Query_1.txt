@@ -1,0 +1,35 @@
+1 - Comment
+stmt s;
+Select s such that Parent (s, 27) 
+25
+5000
+2 - Comment
+stmt s;
+Select s such that Follows (s, 13)
+6
+5000
+3 - Comment
+stmt s;while w;
+Select w such that Follows* (s, w)
+8, 6
+5000
+4 - Comment
+stmt s;while w;
+Select w such that Follows* (w, s)
+8, 6
+5000
+5 - Comment
+stmt s;while w;
+Select v such that Modifies (24, v)
+"d","m"
+5000
+6 - Comment
+stmt s;while w;
+Select s such that Uses (s, "d")
+22,6,20,12,27,19,23,24,25,28,4,8,11,18,26,30
+5000
+7 - Comment
+prog_line n;
+Select n such that Next*(n, n)
+6,7,8,9,10,11,12,19,20,21,22,25,26,27
+5000
