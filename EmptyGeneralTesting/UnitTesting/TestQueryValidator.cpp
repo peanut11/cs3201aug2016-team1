@@ -146,17 +146,46 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select sl1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
-
 		// Success Modifies procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
 		
-
 		// Success Uses procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
 		
+		// Success Parent*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(s1,s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent*(3,s1)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(1,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(1,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(s1,s2) pattern a1(\"x\",_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(s1,s2) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(s1,_) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,s1) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,_) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,_) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,_) pattern a1(_,_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent*(s1, s2) pattern a1(\"x\",\"y\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(_,_) pattern a1(\"x\", \"y+1\")"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent*(s1, s2) Parent*(_, _) pattern a1(\"x\",_\"y+1\"_)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// Success Follows*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt such that Follows* (5, ifstmt)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows* (s1, 3)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows* (s1, 3) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(s1, 2) Parent*(s1, s2) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(s1, _) Parent*(s1, s2) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent*(_, s2) pattern a1(\"x\",_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent*(_, s2) pattern a1(_,_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent*(_, s2) pattern a1(_,_\"y+1\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent*(_, s2) pattern a1(_,_\"1+y+x\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows*(_, _) Parent*(_, s2) pattern a1(_,\"1+y+x\")"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success Next
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(1,2)"));
@@ -172,6 +201,8 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(w,s1)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(w,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(w,n2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next(n1,n1)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success Next*
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,2)"));
@@ -708,7 +739,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;\nSelect p")); //
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
-		// success
+		// success Parent
 		validator->initStringTokenizer("Parent(1,2)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
@@ -750,6 +781,51 @@ public:
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
 		validator->initStringTokenizer("Parent(_,_)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		// Success Parent*
+		validator->initStringTokenizer("Parent*(1,2)"); 
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(s1,s2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(1,s2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(s1,2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(ifstmt1, ifstmt2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(ifstmt1, 1)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(w1, w2)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(w1, 1)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(s1,_)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(_,s1)"); // parent
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Parent"));
+
+		validator->initStringTokenizer("Parent*(_,_)"); // parent
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Parent"));
 
@@ -815,8 +891,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
-		// success
-		validator->clearSynonymOccurence();
+		// Success Follows
 		validator->initStringTokenizer("Follows(s1,2)"); // follows
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
@@ -825,16 +900,30 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(c1,c2)"); // calls
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("Follows(ifstmt1,c2)"); // if & call
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
+		// Success Follows*
+		validator->initStringTokenizer("Follows*(s1,2)"); // follows
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
+		validator->initStringTokenizer("Follows*(s1,s2)"); // follows
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
+		validator->initStringTokenizer("Follows*(c1,c2)"); // calls
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
+		validator->initStringTokenizer("Follows*(ifstmt1,c2)"); // if & call
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
 
 		// failure
 		validator->initStringTokenizer("Follows(p,q)"); // follows
