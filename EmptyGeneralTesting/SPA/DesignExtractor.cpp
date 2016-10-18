@@ -127,12 +127,12 @@ void DesignExtractor::processParentStar() {
         }
     }
 }*/
-void DesignExtractor::processParentStar(StmtNumber index) {
+void DesignExtractor::processParentStar(StmtNumber stmt) {
 	PKB* pkb = PKB::getInstance();
-	std::set<StmtNumber> parentList = pkb->getStmtsByStmt(PARENT,index);
+	std::set<StmtNumber> parentList = pkb->getStmtsByStmt(PARENT, stmt);
 	for (StmtSetIterator ind = parentList.begin(); ind != parentList.end(); ind++) {
 		StmtNumber add = *ind;
-		pkb->putStmtForStmt(index, PARENT_STAR, add);
+		pkb->putStmtForStmt(stmt, PARENT_STAR, add);
 		std::set<StmtNumber> PARENT_List = pkb->getStmtsByStmt(PARENT, add);
 		if (!PARENT_List.empty()) {
 			processParentStar(add);
@@ -140,7 +140,7 @@ void DesignExtractor::processParentStar(StmtNumber index) {
 		std::set<StmtNumber> PARENT_StarList = pkb->getStmtsByStmt(PARENT_STAR, add);
 		for (StmtSetIterator ind2 = PARENT_StarList.begin(); ind2 != PARENT_StarList.end(); ind2++) {
 			StmtNumber addStarInd = *ind2;
-			pkb->putStmtForStmt(index, PARENT_STAR, addStarInd);
+			pkb->putStmtForStmt(stmt, PARENT_STAR, addStarInd);
 		}
 	}
 
@@ -156,7 +156,7 @@ void DesignExtractor::updateStmtTable() {
                    std::inserter(mergeList, mergeList.end()));
 
     for (StmtSetIterator w = mergeList.begin(); w != mergeList.end(); w++) {
-        processLoopForUseAndModifies(*w);
+        processLoopForUsesAndModifies(*w);
 		processParentStar(*w);
     }
 }
@@ -166,14 +166,35 @@ StmtNumber DesignExtractor::getWhileListSize() {
     return pkb->getStmtsByType(WHILE).size();
 }
 
-void DesignExtractor::processLoopForUseAndModifies(StmtNumber w) { // For USES And Modifies
+void DesignExtractor::processCallsForUsesAndModifies() {
+    PKB* pkb = PKB::getInstance();
+    StmtSet calls = pkb->getStmtsByType(EntityType::CALL);
+
+    for (StmtSetIterator call = calls.begin(); call != calls.end(); call++) {
+        ProcIndex proc = pkb->getProcByCall(*call);
+
+        std::set<VarIndex> usedVars = pkb->getVarsByProc(proc, USES_P);
+        for (std::set<VarIndex>::const_iterator var = usedVars.begin(); var != usedVars.end(); var++) {
+            VarName varName = pkb->getVarName(*var);
+            pkb->putVarForStmt(*call, USES, varName);
+        }
+
+        std::set<VarIndex> modifiedVars = pkb->getVarsByProc(proc, MODIFIES_P);
+        for (std::set<VarIndex>::const_iterator var = modifiedVars.begin(); var != modifiedVars.end(); var++) {
+            VarName varName = pkb->getVarName(*var);
+            pkb->putVarForStmt(*call, MODIFIES, varName);
+        }
+    }
+}
+
+void DesignExtractor::processLoopForUsesAndModifies(StmtNumber w) {
     PKB* pkb = PKB::getInstance();
     std::set<StmtNumber> followlist = pkb->getStmtsByStmt(FOLLOWS,w);
 
     // StmtNumber followLine = *followlist.begin();
     std::set<StmtNumber> followStar = pkb->getStmtsByStmt(FOLLOWS_STAR,w + 1);
     if ((pkb->getStmtTypeForStmt((w + 1)) == WHILE) || (pkb->getStmtTypeForStmt((w + 1)) == IF)) {
-        processLoopForUseAndModifies((w + 1));
+        processLoopForUsesAndModifies((w + 1));
     }
 
     std::set<StmtNumber> useList = pkb->getVarsByStmt((w + 1), USES);
@@ -195,7 +216,7 @@ void DesignExtractor::processLoopForUseAndModifies(StmtNumber w) { // For USES A
         StmtNumber s = *f;
 
         if ((pkb->getStmtTypeForStmt(s) == WHILE) || (pkb->getStmtTypeForStmt(s) == IF)) {
-            processLoopForUseAndModifies(s);
+            processLoopForUsesAndModifies(s);
         }
 
         std::set<StmtNumber> useList = pkb->getVarsByStmt(s, USES);

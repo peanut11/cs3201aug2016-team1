@@ -41,7 +41,7 @@ namespace UnitTesting
 			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("2", std::to_string(results.size()).c_str());
+			Assert::AreEqual("5", std::to_string(results.size()).c_str());
 
 		}
 		TEST_METHOD(TestQueryProcessor_ModifiesPattern) {
@@ -64,7 +64,7 @@ namespace UnitTesting
 			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
 				Logger::WriteMessage((*it).c_str());
 			}
-			Assert::AreEqual("2", std::to_string(results.size()).c_str());
+			Assert::AreEqual("5", std::to_string(results.size()).c_str());
 		}
 	};
 }

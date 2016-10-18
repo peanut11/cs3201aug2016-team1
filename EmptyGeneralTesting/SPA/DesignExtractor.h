@@ -9,14 +9,16 @@ class DesignExtractor {
 private:
     void dfs(StmtNumber index, bool *visited, StmtNumber caller);
 
+    void processCallsForUsesAndModifies();
+    void processCallsStar();
+    void processFollowsStar();
+    void processLoopForUsesAndModifies(StmtNumber w);
+    void processParentStar(StmtNumber stmt);
+    void updateStmtTable();
+
 public:
     DesignExtractor();
 
     size_t getWhileListSize();
     void process();
-    void processCallsStar();
-    void processFollowsStar();
-    void processLoopForUseAndModifies(StmtNumber w);
-    void processParentStar(StmtNumber index);
-    void updateStmtTable();
 };

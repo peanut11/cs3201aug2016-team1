@@ -159,9 +159,6 @@
     <ClInclude Include="Frontend.h">
       <Filter>Header Files\PKB</Filter>
     </ClInclude>
-    <ClInclude Include="DesignExtractor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="QueryTable.h">
       <Filter>Header Files\QP</Filter>
     </ClInclude>
@@ -223,6 +220,9 @@
       <Filter>Header Files\QP</Filter>
     </ClInclude>
     <ClInclude Include="RelationshipPopulator.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="DesignExtractor.h">
       <Filter>Header Files\PKB</Filter>
     </ClInclude>
   </ItemGroup>
