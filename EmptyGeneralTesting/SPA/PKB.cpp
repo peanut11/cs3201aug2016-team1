@@ -430,7 +430,7 @@ std::set<VarIndex> PKB::getVarsByProc(ProcIndex procIndex, RelationshipType modi
 		throw Exception::INVALID_VAR_PROC_RELATION;
 	}
 
-	return procTable[procIndex][modifiesOrUses - 21];
+	return procTable[procIndex][modifiesOrUses - 17]; // MODIFIES = MODIFIES_P - 17; same for USES
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType calls) {

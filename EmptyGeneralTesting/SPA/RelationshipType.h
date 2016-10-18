@@ -17,14 +17,14 @@ enum RelationshipType {
 	PARENT_STAR,
 	PARENT_OF_STAR,   // PARENT_STAR + 1
     NEXT,
-    PREVIOUS,             // NEXT + 1
+    PREVIOUS,         // NEXT + 1
 
 	TOTAL_COUNT,
+    MODIFIES_P,       // MODIFIES + 17
+    USES_P,           // USES + 17
     PREVIOUS_STAR, 
     NEXT_STAR,
 	AFFECTS,
 	AFFECTS_STAR,
-	MODIFIES_P,
-	USES_P,
 	INVALID_RELATIONSHIP
 };
