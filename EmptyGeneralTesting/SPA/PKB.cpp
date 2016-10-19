@@ -5,6 +5,7 @@
 // - StmtTable
 // - VarTable
 
+#include <cassert>
 #include "PKB.h"
 #include "RelationshipPopulator.h"
 #include "Exceptions.h"
@@ -149,6 +150,17 @@ PostfixExpr PKB::infixToPostfix(InfixExpr infix) {
 }
 
 bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
+	assert(infixPattern.size() > 0);
+
+	if (infixPattern[0] == "_") {
+		infixPattern = InfixExpr(infixPattern.begin() + 1, infixPattern.end() - 1);
+	}
+
+	// remove double quote if any
+	if (infixPattern[0] == "\"") {
+		infixPattern = InfixExpr(infixPattern.begin() + 1, infixPattern.end() - 1);
+	}
+
 	PostfixExpr expr = postfixExprs[stmt],
 		postfixPattern = infixToPostfix(infixPattern);
 
@@ -166,6 +178,19 @@ bool PKB::isAssignExactPattern(StmtNumber stmt, InfixExpr infixPattern) {
 }
 
 bool PKB::isAssignContainsPattern(StmtNumber stmt, InfixExpr infixPattern) {
+	assert(infixPattern.size() > 0);
+	if (infixPattern[0] == "_") {
+		infixPattern = InfixExpr(infixPattern.begin() + 1, infixPattern.end() - 1);
+	}
+	else {
+		return isAssignExactPattern(stmt, infixPattern);
+	}
+
+	// remove double quote if any
+	if (infixPattern[0] == "\"") {
+		infixPattern = InfixExpr(infixPattern.begin() + 1, infixPattern.end() - 1);
+	}
+
 	PostfixExpr expr = postfixExprs[stmt],
 		postfixPattern = infixToPostfix(infixPattern);
 
