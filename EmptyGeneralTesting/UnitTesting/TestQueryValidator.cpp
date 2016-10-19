@@ -949,7 +949,7 @@ public:
 		// populate the synonym table first
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 	
 		// success
 		validator->initStringTokenizer("Modifies(p,var1)"); // proc & var
@@ -1011,6 +1011,7 @@ public:
 		validator->initStringTokenizer("Uses(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
+		
 
 		validator->initStringTokenizer("Uses(s1,var1)"); // stmt & var
 		validator->getNextToken();
@@ -1035,7 +1036,7 @@ public:
 		validator->initStringTokenizer("Uses(\"First\",\"x\")"); 
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
-
+	
 		validator->initStringTokenizer("Uses(1,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
