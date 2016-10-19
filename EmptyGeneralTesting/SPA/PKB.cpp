@@ -341,7 +341,11 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 }
 
 std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
-    return procToCallTable[procIndex];
+	if (procIndex >= procToCallTable.size()) {
+		throw Exception::INVALID_PROC_INDEX;
+	}
+	
+	return procToCallTable[procIndex];
 }
 
 StmtSet PKB::getStmtsByType(EntityType stmtType) {
@@ -458,7 +462,11 @@ std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarIndex
 }
 
 std::set<StmtNumber> PKB::getStmtsByProc(ProcIndex procIndex) {
-    return procToStmtTable[procIndex];
+	if (procIndex >= procToStmtTable.size()) {
+		throw Exception::INVALID_PROC_INDEX;
+	}
+	
+	return procToStmtTable[procIndex];
 }
 
 ProcIndex PKB::getProcByStmt(StmtNumber stmt) {
