@@ -14,17 +14,15 @@ QueryPreProcessor *QueryPreProcessor::_instance;
 /*
 Singleton
 */
-QueryPreProcessor *QueryPreProcessor::getInstance()
-{
-	if (!_instance)
-		_instance = new QueryPreProcessor;
-	_instance->init();
+QueryPreProcessor *QueryPreProcessor::getInstance() {
+    if (!_instance) {
+        _instance = new QueryPreProcessor();
+    }
+
 	return _instance;
 }
 
-
-void QueryPreProcessor::init() {
-
+QueryPreProcessor::QueryPreProcessor() {
 	this->validator = QueryValidator::getInstance();
 	this->mRelTable = RelTable::getInstance();
 	this->mSynonymTable = SynonymTable::getInstance();

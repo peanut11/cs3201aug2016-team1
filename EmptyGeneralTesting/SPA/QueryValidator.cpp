@@ -1017,6 +1017,22 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 					isUnderArg = false;
 				}
 
+				if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES
+					 || relationshipObject.getRelObjectType() == RelationshipType::USES) {
+
+					if (firstArgObject->getEntityType() == EntityType::VARIABLE ||
+						firstArgObject->getEntityType() == EntityType::PROCEDURE) {
+						relationshipObject.setRelationshipType(MODIFIES_P);
+
+					}
+					else {
+						relationshipObject.setRelationshipType(USES_P);
+					}
+
+					
+				}
+
+				/*
 				if (firstArgObject->getEntityType() == EntityType::VARIABLE) {
 					if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES) {
 						relationshipObject.setRelationshipType(MODIFIES_P);
@@ -1025,6 +1041,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 						relationshipObject.setRelationshipType(USES_P);
 					}
 				}
+				*/
 
 				ClauseSuchThatObject* newSuchThatObj = this->createClauseSuchThatObject(relationshipObject.getRelObjectType(), firstArgObject, secondArgObject);
 

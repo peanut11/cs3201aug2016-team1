@@ -1,0 +1,11 @@
+procedure NestedIfWhileIf {
+  if a then {
+    b = c;
+    while d {
+      e = f;
+      if g then {
+        h = i; }
+      else {
+        j = k; } } }
+  else {
+    l = m; } }

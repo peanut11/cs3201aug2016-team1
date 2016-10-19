@@ -74,7 +74,7 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
     resultManager = new ResultGridManager();
 	queryOptimizer = new QueryOptimization();
 
-    try {
+    //try {
         // Get select object and all clause objects
 		ClauseSelectObject select = queryTable.getResult().getClauseSelectObjectList()[0];
 		//ClauseSelectObject select = queryTable.getSelect();
@@ -158,10 +158,10 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
         // Evaluate results by constraint of select object
         return evaluateSelect(select, relationshipHolds);
 
-    } catch (std::runtime_error e) { // there's error
+   // } catch (std::runtime_error e) { // there's error
         //throw e.what();
-		return std::vector<std::string>(); // return empty list 
-    }
+		//return std::vector<std::string>(); // return empty list 
+   // }
 }
 
 ResultGridManager* QueryEvaluator::populateResultGrids() {
@@ -174,7 +174,9 @@ ResultGridManager* QueryEvaluator::populateResultGrids() {
         if (it->getType() == VARIABLE) {
             resultManager->initialiseSynonym(syn, pkb->getAllVarIndex());
         } else {
-            resultManager->initialiseSynonym(syn, pkb->getStmtsByType(it->getType()));
+            EntityType type = it->getType();
+            StmtSet stmts = pkb->getStmtsByType(type);
+            resultManager->initialiseSynonym(syn, stmts);
         }
     }
     return resultManager;

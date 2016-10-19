@@ -135,7 +135,7 @@ public:
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		std::string declaration = "stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
-		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		
 	
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
 		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
@@ -144,6 +144,7 @@ public:
 		
 		// Success Result clause is statement list
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select sl1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success Modifies procedure
@@ -948,7 +949,7 @@ public:
 		// populate the synonym table first
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 	
 		// success
 		validator->initStringTokenizer("Modifies(p,var1)"); // proc & var
@@ -982,6 +983,10 @@ public:
 		validator->initStringTokenizer("Modifies(\"First\",\"x\")"); 
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
+
+		validator->initStringTokenizer("Modifies(1,var1)"); // constant & var
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Modifies"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// failure
@@ -1000,12 +1005,13 @@ public:
 		// populate the synonym table first
 		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;variable var1;stmt s1, s2;if ifstmt1, ifstmt2;while w1, w2;call c1, c2;\nSelect p")); //
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
 		validator->initStringTokenizer("Uses(p,var1)"); // proc & var
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
+		
 
 		validator->initStringTokenizer("Uses(s1,var1)"); // stmt & var
 		validator->getNextToken();
@@ -1028,6 +1034,10 @@ public:
 		Assert::IsTrue(validator->isRelationship("Uses"));
 
 		validator->initStringTokenizer("Uses(\"First\",\"x\")"); 
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Uses"));
+	
+		validator->initStringTokenizer("Uses(1,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Uses"));
 

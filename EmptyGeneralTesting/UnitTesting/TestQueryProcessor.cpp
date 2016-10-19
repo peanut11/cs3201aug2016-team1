@@ -66,5 +66,17 @@ namespace UnitTesting
 			}
 			Assert::AreEqual("5", std::to_string(results.size()).c_str());
 		}
+		// Select p1 such that Modifies_P(p1, v1) and Calls(p1, p2) and Modifies_P(p2, v1) with p1.procName = "Second" ~ BUGGED
+		TEST_METHOD(TestQueryProcessor_MultiClause) {
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			DummyPKB dummyPKB;
+			queryProcessor->getQueryEvaluator()->setPKB(&dummyPKB);
+			std::string declaration = "procedure p1, p2;variable v1;\n";
+			std::vector<std::string> results = queryProcessor->evaluate(declaration + "Select p1 such that Modifies(p1,v1) and Calls(p1, p2) and Modifies(p2,v1) with p1.procName = \"Second\""); 
+			for (std::vector<std::string>::iterator it = results.begin(); it != results.end(); ++it) {
+				Logger::WriteMessage((*it).c_str());
+				Assert::AreEqual("Second", (*it).c_str());
+			}		
+		}
 	};
 }

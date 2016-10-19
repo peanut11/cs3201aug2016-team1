@@ -88,12 +88,22 @@ int ProgramConverter::convert(std::string source) {
 				std::set<StmtNumber> parentSet = pkb->getStmtsByStmt(lineCount, PARENT);
 
 				if (parentSet.empty()) {
-					currentParent = 0;
-					previous = 0;
-				}
-				else {
+					throw std::runtime_error("");
+				} else {
 					currentParent = *parentSet.begin();
-					previous = *parentSet.begin();
+
+					while (pkb->getStmtTypeForStmt(currentParent) == WHILE
+                           || (pkb->getStmtTypeForStmt(currentParent) == IF &&
+                               pkb->getStmtsByStmt(NEXT, currentParent).size() == 2)) {
+						StmtSet parentSet = pkb->getStmtsByStmt(currentParent, PARENT);
+						currentParent = *parentSet.begin();
+					}
+
+					if (pkb->getStmtTypeForStmt(currentParent) == IF) {
+						previous = currentParent;
+					} else {
+						throw std::runtime_error("");
+					}
 				}
 			} else {
 				currentLeader = 0;

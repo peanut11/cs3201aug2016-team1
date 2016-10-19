@@ -19,6 +19,8 @@ namespace UnitTesting
 	public:
 
 		TEST_METHOD(TestSystem_Full) {
+            PKB::getInstance()->clear();
+
 			Frontend frontend = Frontend();
 			frontend.parse(std::string("procedure_Second.txt"));
 
@@ -79,7 +81,7 @@ namespace UnitTesting
 */
 			strTitle = "GET STATEMENT BY ASSIGN from PKB";
 			Logger::WriteMessage(strTitle.c_str());
-			std::set<StmtNumber> c1 = queryProcessor->getQueryEvaluator()->getPKB()->getStmtsByType(ASSIGN);
+            std::set<StmtNumber> c1 = pkb->getStmtsByType(ASSIGN);
 			for (std::set<StmtNumber>::iterator it = c1.begin(); it != c1.end(); ++it) {
 				Logger::WriteMessage(std::to_string(*it).c_str());
 			}
@@ -102,5 +104,45 @@ namespace UnitTesting
 			}
 			Assert::AreEqual(size_t(1), results2.size()); // Follows*(2, 3) only
 		}
+		
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example1) {
+			// Select v such that Modifies (24, v) 
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration_2_Test_Program_Case/Source_1.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string strTitle = "TEST VARIABLES TYPE from PKB";
+			Logger::WriteMessage(strTitle.c_str());
+			std::set<VarIndex> haha2 = pkb->getVarsByStmt(24, MODIFIES);
+			for (std::set<VarIndex>::iterator it = haha2.begin(); it != haha2.end(); ++it) {
+				Logger::WriteMessage(pkb->getVarName(*it).c_str());
+			}
+
+			std::string strTitle1 = "TEST EVALUATOR";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "variable v;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select v such that Modifies(24,v)");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
+        TEST_METHOD(TestSystem_NestedIfWhileIf) {
+            PKB::getInstance()->clear();
+
+            Frontend frontend = Frontend();
+            frontend.parse(std::string("procedure_NestedIfWhileIf.txt"));
+        }
+
+        TEST_METHOD(TestSystem_NestedIfIf) {
+            PKB::getInstance()->clear();
+
+            Frontend frontend = Frontend();
+            frontend.parse(std::string("procedure_NestedIfIf.txt"));
+        }
 	};
 }
