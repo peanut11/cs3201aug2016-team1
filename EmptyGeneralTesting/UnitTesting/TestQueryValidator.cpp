@@ -14,7 +14,7 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;prog_line n1, n2;call c;constant const;\n";
+		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
@@ -134,7 +134,7 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;call c;constant const;\n";
+		std::string declaration = "stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;call c;constant const;\n";
 		
 	
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
@@ -295,63 +295,63 @@ public:
 		// Failure
 		/*
 		auto error1 = [validator] { 
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
 		};
 		Assert::ExpectException<Exceptions>(error1);
 		
 		auto error2 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(_,s2)");
 		};
 		Assert::ExpectException<Exceptions>(error2);
 
 		auto error3 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
 		};
 		Assert::ExpectException<Exceptions>(error3);
 		*/
 		auto error4 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,_)");
 		};
 		Assert::ExpectException<Exceptions>(error4);
 
 		auto error5 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(_,s2)");
 		};
 		Assert::ExpectException<Exceptions>(error5);
 
 		auto error6 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,p)");
 		};
 		Assert::ExpectException<Exceptions>(error6);
 
 		// Failure, same synonym in relationships
 		auto error7 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
 		};
 		Assert::ExpectException<Exceptions>(error7);
 
 		auto error8 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects(a1, a1)");
 		};
 		Assert::ExpectException<Exceptions>(error8);
 
 		auto error9 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
 		};
 		Assert::ExpectException<Exceptions>(error9);
 
-		// Failure, prog_line
+		// Failure, progline
 		auto error10 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) with n1 = p.procName");
 		};
 		Assert::ExpectException<Exceptions>(error10);
@@ -359,13 +359,13 @@ public:
 
 		// Failure, incorrect number of arguments
 		auto error100 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a2, _)");
 		};
 		Assert::ExpectException<Exceptions>(error100);
 
 		auto error101 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;prog_line n1, n2;\n";
+			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1)");
 		};
 		Assert::ExpectException<Exceptions>(error101);
@@ -1418,7 +1418,7 @@ public:
 	TEST_METHOD(TestQueryValidator_Clause_With) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;progline pl1, pl2;constant const;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
@@ -1512,7 +1512,7 @@ public:
 	TEST_METHOD(TestQueryValidator_Attribute_Ref) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;progline pl1, pl2;constant const;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 
@@ -1598,7 +1598,7 @@ public:
 	TEST_METHOD(TestQueryValidator_Tuple) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;prog_line pl1, pl2;constant const;\nSelect p")); //
+		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;progline pl1, pl2;constant const;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		
 		// Success
@@ -1644,7 +1644,7 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;variable v1, v2, v3;assign a1, a2, a3;if ifstmt;while w;stmt s1, s2, s3, s4, s5;prog_line n1, n2;call c;constant const;\n";
+		std::string declaration = "procedure p, q;variable v1, v2, v3;assign a1, a2, a3;if ifstmt;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
 	
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Follows(s3,s1) Parent(s4,s5) Follows(s1,s4)"));

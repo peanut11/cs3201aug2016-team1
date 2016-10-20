@@ -10,7 +10,8 @@ const std::string QueryValidator::SYNTAX_VARIABLE = "variable";
 const std::string QueryValidator::SYNTAX_CONSTANT = "constant";
 const std::string QueryValidator::SYNTAX_PROG = "prog";
 const std::string QueryValidator::SYNTAX_LINE = "line";
-const std::string QueryValidator::SYNTAX_PROG_LINE = "prog_line";
+//const std::string QueryValidator::SYNTAX_PROG_LINE = "prog_line";
+const std::string QueryValidator::SYNTAX_PROG_LINE = "progline"; // temporary string to prevent AutoTester crash
 const std::string QueryValidator::SYNTAX_SELECT = "Select";
 const std::string QueryValidator::SYNTAX_SUCH = "such";
 const std::string QueryValidator::SYNTAX_THAT = "that";
@@ -233,13 +234,20 @@ bool QueryValidator::isDeclaration(std::string str) {
 				return isValid;
 			}
 
-
+			/*
 			if (isMatch(st.peekNextToken(), SYNTAX_PROG)) { // start is prog
 				st.nextToken();
 				if (isMatch(st.nextToken(), SYNTAX_UNDERSCORE) && isMatch(st.nextToken(), SYNTAX_LINE)) {
 					mEntityType = EntityType::PROGRAM_LINE;
 					entitySyntax = SYNTAX_PROG_LINE;
 				}
+			}
+			*/
+			// Use progline instead of prog_line to prevent crash at AutoTester
+			if (isMatch(st.peekNextToken(), this->SYNTAX_PROG_LINE)) { // progline
+				st.nextToken();
+				mEntityType = EntityType::PROGRAM_LINE;
+				entitySyntax = SYNTAX_PROG_LINE;
 			}
 			else {
 				mEntityType = getSyntaxEntityType(st.peekNextToken()); // get type of entity (procedure, assign, if etc...)
