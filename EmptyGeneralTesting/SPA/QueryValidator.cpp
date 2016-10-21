@@ -1030,13 +1030,15 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 
 					if (firstArgObject->getEntityType() == EntityType::VARIABLE ||
 						firstArgObject->getEntityType() == EntityType::PROCEDURE) {
-						relationshipObject.setRelationshipType(MODIFIES_P);
 
+						if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES) {
+							relationshipObject.setRelationshipType(MODIFIES_P);
+						}
+						else {
+							relationshipObject.setRelationshipType(USES_P);
+						}
+						
 					}
-					else {
-						relationshipObject.setRelationshipType(USES_P);
-					}
-
 					
 				}
 
