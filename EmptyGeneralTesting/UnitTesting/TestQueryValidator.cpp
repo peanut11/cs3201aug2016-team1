@@ -16,7 +16,6 @@ public:
 
 		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
-
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) Next(s1, s2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
@@ -909,6 +908,10 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
 
+		validator->initStringTokenizer("Follows(_,_)"); // wildcard
+		validator->getNextToken();
+		Assert::IsTrue(validator->isRelationship("Follows"));
+
 		// Success Follows*
 		validator->initStringTokenizer("Follows*(s1,2)"); // follows
 		validator->getNextToken();
@@ -925,6 +928,8 @@ public:
 		validator->initStringTokenizer("Follows*(ifstmt1,c2)"); // if & call
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Follows"));
+
+
 
 		// failure
 		validator->initStringTokenizer("Follows(p,q)"); // follows
