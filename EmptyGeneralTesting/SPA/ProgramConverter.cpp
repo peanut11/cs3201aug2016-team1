@@ -236,8 +236,6 @@ bool ProgramConverter::isLineEnding(std::string str) {
 	return LINE_ENDINGS.find(ch) != std::string::npos;
 }
 
-}
-
 bool ProgramConverter::updateAssignmentInPostfixExprs(ProgLine line, ProgLineNumber lineNum) {
 	assert(line.size() > 2);
 	assert(line[1] == "=");
