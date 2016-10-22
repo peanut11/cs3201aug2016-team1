@@ -100,6 +100,11 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 				ClauseType::ClauseType clauseType = obj->getClauseType();
 				bool isStopEvaluation = false;
 
+				// Check if group is BOOLEAN
+				if (it->getGroupType() == GroupType::BOOLEAN) {
+					isStopEvaluation = true;
+				}
+
 				// Check if group need to stop evaluation when got results
 				if (it->getGroupType() == GroupType::NOT_RELATED || it->getGroupType() == GroupType::NOT_RELATED_CONTAIN_AFFECTS) {
 					isStopEvaluation = (clauseIndex == clauses.size() - 1);
