@@ -17,6 +17,9 @@ private:
 	ProgLineNumber lineCount;
 	ProgLine nextLine();
 
+    std::map<ProgLineNumber, std::array<ProgLineNumber,2>> lastOfIfLists;
+    
+    bool setNext(ProgLineNumber prev, ProgLineNumber next);
     bool updateAssignmentInPostfixExprs(ProgLine, ProgLineNumber);
     bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
     bool updateNextforBasedon(ProgLineNumber stmt, ProgLineNumber leader);
