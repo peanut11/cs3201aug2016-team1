@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cctype>
 #include <string>
 
@@ -15,6 +16,13 @@ private:
 	ProgLineNumber currentLeader;
 	ProgLineNumber lineCount;
 	ProgLine nextLine();
+
+    bool updateAssignmentInPostfixExprs(ProgLine, ProgLineNumber);
+    bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
+    bool updateNextforBasedon(ProgLineNumber stmt, ProgLineNumber leader);
+    bool updateParentAndPrevious(ProgLineNumber lineNum);
+    bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
+
 public:
 	ProgramConverter();
 	int convert(std::string source);
@@ -29,8 +37,4 @@ public:
 	bool isEnterParent(std::string str);
 	bool isExitParent(std::string str);
 	bool isLineEnding(std::string str);
-	bool updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum);
-	bool updateAssignmentInPostfixExprs(ProgLine, ProgLineNumber);
-	bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
-	bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
 };

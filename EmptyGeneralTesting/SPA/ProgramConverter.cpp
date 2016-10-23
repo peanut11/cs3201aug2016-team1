@@ -6,7 +6,6 @@
 // Constructs:
 // - AssignTree
 
-#include <cassert>
 #include "ProgramConverter.h"
 
 bool ProgramConverter::isVarName(std::string str) {
@@ -27,19 +26,17 @@ bool ProgramConverter::isVarName(std::string str) {
 	return true;
 }
 
-bool ProgramConverter::isConstant(std::string str)
-{
+bool ProgramConverter::isConstant(std::string str) {
 	if (str.empty()) {
 		return false;
-		
 	}
+
 	for (unsigned int i = 0; i < str.length(); i++) {
 		if (!std::isdigit(str.at(i))) {
-			return false;
-			
+			return false;		
 		}
-		
 	}
+
 	return true;
 }
 
@@ -239,13 +236,6 @@ bool ProgramConverter::isLineEnding(std::string str) {
 	return LINE_ENDINGS.find(ch) != std::string::npos;
 }
 
-bool ProgramConverter::updateAssignmentInAssignmentTrees(ProgLine line, ProgLineNumber lineNum) {
-//	const AssignTree tree = AssignTree(line);
-//	pkb->putAssignForStmt(lineNum, tree);
-
-	return false;
-}
-
 bool ProgramConverter::updateAssignmentInPostfixExprs(ProgLine line, ProgLineNumber lineNum) {
 	assert(line.size() > 2);
 	assert(line[1] == "=");
@@ -293,22 +283,22 @@ bool ProgramConverter::updateStmtInStmtTable(ProgLine line, ProgLineNumber lineN
 	if (isAssignment(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, ASSIGN) && success;
 		success = updateAssignmentInTable(line, lineNum) && success;
-		success = updateAssignmentInAssignmentTrees(line, lineNum) && success;
 		success = updateAssignmentInPostfixExprs(line, lineNum) && success;
+
 	} else if (isWhile(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, WHILE) && success;
-		
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
 		success = pkb->putVarForProc(pkb->getProcName(pkb->getProcByStmt(lineNum)), USES, varName) && success;
+
 	} else if (isIf(line)) {
 		success = pkb->putStmtTypeForStmt(lineNum, IF) && success;
-
 		const VarName varName = line[1];
 		success = pkb->putControlVarForStmt(lineNum, varName) && success;
 		success = pkb->putVarForStmt(lineNum, USES, varName) && success;
 		success = pkb->putVarForProc(pkb->getProcName(pkb->getProcByStmt(lineNum)), USES, varName) && success;
+
 	} else if (isCall(line)) {
 		ProcName procCalled = line[1];
 		success = pkb->putStmtTypeForStmt(lineNum, CALL) && success;
