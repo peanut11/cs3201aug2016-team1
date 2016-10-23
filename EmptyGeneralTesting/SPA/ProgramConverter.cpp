@@ -100,8 +100,11 @@ int ProgramConverter::convert(std::string source) {
 				}
 				
 			} else if (stmtType == WHILE) {
-			
-				setNext(previous, currentLeader);
+				if (pkb->getStmtTypeForStmt(previous) == IF) {
+					setNextOfIfStmt(previous, currentLeader);
+				} else {
+					setNext(previous, currentLeader);
+				}
 				previous = currentLeader;
 			}
 			stackOfParents.pop();
