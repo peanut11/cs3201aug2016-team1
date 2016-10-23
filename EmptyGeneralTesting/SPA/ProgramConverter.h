@@ -12,15 +12,18 @@ private:
 	PKB* pkb;
 	StringTokenizer st;
 	ProgLineNumber previous;
-	ProgLineNumber currentParent;
 	ProgLineNumber currentLeader;
 	ProgLineNumber lineCount;
 	ProgLine nextLine();
 
+    std::map<ProgLineNumber, std::array<ProgLineNumber,2>> lastOfIfLists;
+    
+    bool setNext(ProgLineNumber prev, ProgLineNumber next);
+	bool setParent(ProgLineNumber parent, ProgLineNumber child);
+	bool setFollows(ProgLineNumber leader, ProgLineNumber follower);
     bool updateAssignmentInPostfixExprs(ProgLine, ProgLineNumber);
     bool updateAssignmentInTable(ProgLine line, ProgLineNumber lineNum);
-    bool updateNextforBasedon(ProgLineNumber stmt, ProgLineNumber leader);
-    bool updateParentAndPrevious(ProgLineNumber lineNum);
+    bool setNextOfIfStmt(ProgLineNumber stmt, ProgLineNumber leader);
     bool updateStmtInStmtTable(ProgLine line, ProgLineNumber lineNum);
 
 public:
