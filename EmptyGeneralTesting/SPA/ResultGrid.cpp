@@ -108,17 +108,55 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         addSynonym(otherSyn);
     }
 
+    // Optimisation for 2 grids that contain 1 synonym each
+    if (refTable.size() == 2 && other->refTable.size() == 1) {
+        resultList.clear();
+
+        for (ValueTupleSet::const_iterator it = validTuples.begin(); it != validTuples.end(); it++) {
+            // Create newRow
+            GridRow newRow = { extractValue(LEFT, *it), extractValue(RIGHT, *it) };
+            // Insert newRow
+            resultList.push_back(newRow);
+            // Insert synonym values into resultTable
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((newRow)[column]);
+            }
+        }
+
+        return true;
+    }
+
     GridColumn column = getColumnForSynonym(extractSynonym(LEFT, synTuple));
     GridColumn otherColumn = other->getColumnForSynonym(extractSynonym(RIGHT, synTuple));
+
+    std::set<SynonymValue> synSet;
+    std::set<SynonymValue> otherSynSet;
+
+    for (ValueTupleSet::const_iterator it = validTuples.begin(); it != validTuples.end(); it++) {
+        synSet.insert(extractValue(LEFT, *it));
+        otherSynSet.insert(extractValue(RIGHT, *it));
+    }
 
     // Permutate
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row = resultList.erase(row)) {
         SynonymValue synVal = (*row)[column];
 
+        if (!contains(synSet, synVal)) {
+            continue;
+        }
+
         for (GridListIterator otherRow = other->resultList.begin(); otherRow != other->resultList.end(); otherRow++) {
             SynonymValue otherSynVal = (*otherRow)[otherColumn];
-            ValueTuple valueTuple = ValueTuple(synVal, otherSynVal);
 
+            if (!contains(otherSynSet, otherSynVal)) {
+                otherRow = other->resultList.erase(otherRow);
+                if (otherRow != other->resultList.begin()) {
+                    otherRow--;
+                }
+                continue;
+            }
+
+            ValueTuple valueTuple = ValueTuple(synVal, otherSynVal);
             // Only permutate valid tuples
             if (contains(validTuples, valueTuple)) {
                 // Keep row as template
