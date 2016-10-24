@@ -378,7 +378,7 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
+		std::string declaration = "variable v;procedure p;assign a1;if ifstmt;while w;stmt s1, s2;\n";
 
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1;if ifstmt;while w;stmt s1, s2;Select p such that Parent(s1,s2)"));
 
@@ -449,9 +449,20 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Uses(a1, \"x\") pattern a1(\"x\",\"y\")"));
 		//Logger::WriteMessage(validator->getSynonymOccurence()->toString().c_str());
 
-		Assert::IsTrue(validator->isValidQuery("assign a1;Select a1 pattern a1(_,_\"y\"_)"));
-		
+		// Success pattern
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(_,_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(v,_\"y\"_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(v,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern w(v,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern w(_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern ifstmt(v,_\"y\"_,_)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern ifstmt(v,_,_)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern ifstmt(_,_,_)"));
 
+
+	
 		
 		// Failed test cases
 		// wrong expression
@@ -1186,8 +1197,6 @@ public:
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		// populate the synonym table first
-		validator->clearSynonymOccurence();
-		validator->clearSynonymTable();
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
@@ -1225,123 +1234,108 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,_\"x\"_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(\"x\",_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,_   \"x\"_)"); // spaces
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("a1"));
 
-		validator->clearSynonymOccurence();
+		// Success while
+		validator->initStringTokenizer("w(v,_)"); // variable synonym
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("w"));
+
 		validator->initStringTokenizer("w(_,_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("w"));
 
-		validator->clearSynonymOccurence();
+		//validator->clearSynonymOccurence();
 		validator->initStringTokenizer("w(\"x\",_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("w"));
 		
-		validator->clearSynonymOccurence();
+		// Success if
+		validator->initStringTokenizer("ifstmt(v,_,_)"); // variable synonym
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClausePattern("ifstmt"));
+
 		validator->initStringTokenizer("ifstmt(\"x\",_,_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("ifstmt(\"x\",_,\"x\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("ifstmt(\"x\",\"x\",_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("ifstmt(\"x\",\"x\",\"y\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 		
 		// Failure
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(a1,_)");			// left = a1 (synonym)
 		validator->getNextToken();
 		auto funcPtrError1 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError1);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(a2,_)");			// left = a2 (synonym)
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isClausePattern("a1"));
 		auto funcPtrError2 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError2);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(\"x + 1\",_)"); // first arg is expression
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isClausePattern("a1"));
 		auto funcPtrError3 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError3);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(x,_)");
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isClausePattern("a1"));
 		auto funcPtrError4 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError4);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,x)");
 		validator->getNextToken();
-		//Assert::IsFalse();
 		auto funcPtrError5 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError5);
 
-
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,_\"x+1\")");	// right wrong expressions
 		validator->getNextToken();
 		auto funcPtrError6 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError6);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(x,x)"); // left and right are not variables
 		validator->getNextToken();
 		auto funcPtrError7 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError7);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("a1(_,a1)");			// right is not a variable
 		validator->getNextToken();
 		auto funcPtrError8 = [validator] { validator->isClausePattern("a1"); };
 		Assert::ExpectException<Exceptions>(funcPtrError8);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("w(\"x\",\"x+y\")"); // second arg is not _
 		validator->getNextToken();
 		auto funcPtrError9 = [validator] { validator->isClausePattern("w"); };
 		Assert::ExpectException<Exceptions>(funcPtrError9);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("w(w,_)");		// no control variable, use synonym while
 		validator->getNextToken();
 		auto funcPtrError10 = [validator] { validator->isClausePattern("w"); };
 		Assert::ExpectException<Exceptions>(funcPtrError10);
 
-		validator->clearSynonymOccurence();
 		validator->initStringTokenizer("ifstmt(a,_,_)");	// no control variable, use synonym assign
 		validator->getNextToken();
 		auto funcPtrError11 = [validator] { validator->isClausePattern("ifstmt"); };

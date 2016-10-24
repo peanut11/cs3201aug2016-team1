@@ -22,11 +22,21 @@ namespace UnitTesting
             PKB::getInstance()->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("procedure_Second.txt"));
+			frontend.parse(std::string("it1/source1.txt"));
 
 			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
 			PKB* pkb = PKB::getInstance();
-			std::set<StmtNumber> haha = pkb->getStmtsByStmt(2, FOLLOWS);
+
+			std::string dec = "assign a; variable v;\n";
+			try {
+				std::vector<std::string> res = queryProcessor->evaluate(dec + "Select v such that Parent(3, a) pattern a(v,_\"0\"_)");
+			}
+			catch (size_t i) {
+				Assert::IsTrue(i == 1);
+				//Assert::IsTrue(res.size() == 0);
+			}
+
+/*			std::set<StmtNumber> haha = pkb->getStmtsByStmt(2, FOLLOWS);
 			for (std::set<StmtNumber>::iterator it = haha.begin(); it != haha.end(); ++it) {
 //				Logger::WriteMessage(std::to_string(*it).c_str());
 			}
@@ -52,7 +62,7 @@ namespace UnitTesting
 			}
 			*/
 
-			std::string declaration = "stmt s;\n";
+/*			std::string declaration = "stmt s;\n";
 			Assert::IsTrue(queryProcessor->getQueryPreProcessor()->isValidQuery(declaration + "Select s such that Follows(s,2)"));
 
 //			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
@@ -79,12 +89,12 @@ namespace UnitTesting
 			}
 			Assert::AreEqual(size_t(2), results1.size());
 */
-			strTitle = "GET STATEMENT BY ASSIGN from PKB";
+/*			strTitle = "GET STATEMENT BY ASSIGN from PKB";
 			Logger::WriteMessage(strTitle.c_str());
             std::set<StmtNumber> c1 = pkb->getStmtsByType(ASSIGN);
 			for (std::set<StmtNumber>::iterator it = c1.begin(); it != c1.end(); ++it) {
 				Logger::WriteMessage(std::to_string(*it).c_str());
-			}
+			} */
 
 /*			std::string declaration2 = "assign a;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select a pattern a(_,_\"z\"_)");
@@ -95,7 +105,7 @@ namespace UnitTesting
 			}
 			Assert::AreEqual(size_t(2), results2.size()); */
 
-			std::string declaration2 = "stmt s;\n";
+/*			std::string declaration2 = "stmt s;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s such that Follows*(2, s)");
 			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
 			// Logger::WriteMessage(queryProcessor->getQueryEvaluator()->getResultsTable().toString().c_str());
@@ -103,6 +113,7 @@ namespace UnitTesting
 				Logger::WriteMessage((*it).c_str());
 			}
 			Assert::AreEqual(size_t(1), results2.size()); // Follows*(2, 3) only
+			*/
 		}
 		
 		TEST_METHOD(TestSystem_Iteration2_Program1_Example1) {
@@ -126,6 +137,106 @@ namespace UnitTesting
 			Logger::WriteMessage(strTitle1.c_str());
 			std::string declaration2 = "variable v;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select v such that Modifies(24,v)");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example2) {
+			// procedure p, q;
+			// Select p such that Calls(p, q)
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration_2_Test_Program_Case/source.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string strTitle = "TEST VARIABLES TYPE from PKB";
+			Logger::WriteMessage(strTitle.c_str());
+			std::set<ProcIndex> procedures1 = pkb->getAllProcIndex();
+			std::set<ProcIndex> procedures2 = pkb->getAllProcIndex();
+			std::set<ProcName> evaluatedProcedures;
+			for (std::set<ProcIndex>::iterator it = procedures1.begin(); it != procedures1.end(); ++it) {
+				for (std::set<ProcIndex>::iterator itz = procedures2.begin(); itz != procedures2.end(); ++itz) {
+					if (pkb->is(CALLS_STAR, *it, *itz)) {
+						evaluatedProcedures.insert(pkb->getProcName(*itz));
+					}
+				}
+			}
+			for (std::set<ProcName>::iterator it = evaluatedProcedures.begin(); it != evaluatedProcedures.end(); ++it) {
+				Logger::WriteMessage((*it).c_str());
+			}
+
+			std::string strTitle1 = "TEST EVALUATOR";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "procedure p, q;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select q such that Calls(p, q)");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example3) {
+			// Select s1 such that Modifies(s1, "x")
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration_2_Test_Program_Case/source.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::set<StmtNumber> correctValues = { 65,1,137,9,10,11,13,78,14,79,15,16,82,18,19,35,37,38,110,46,47,48,114,50,51,117,53,55,56,57,123,59,60,125,61,128,64,130,66,131,67,69,70,71,76,81,89,154,90,92,93,158,94,103,105,106,107,108,109,118,122,127,132,136,151,159,163,165,175,179,180,181,190,191,195,199,200,208,210,211,212,213,217,219,220,221,226,227,228,229,232,233,234,235,236,240,241,242,243,244 };
+			std::string strTitle = "TEST VARIABLES TYPE from PKB";
+			Logger::WriteMessage(strTitle.c_str());
+			std::set<StmtNumber> haha2 = pkb->getStmtsByVar(MODIFIES, pkb->getVarIndex("x"));
+			for (std::set<StmtNumber>::iterator it = haha2.begin(); it != haha2.end(); ++it) {
+				Logger::WriteMessage(std::to_string(*it).c_str());
+			}
+			Assert::AreEqual(correctValues.size(), haha2.size());
+
+			std::string strTitle1 = "TEST EVALUATOR";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "stmt s1;\n"; 
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s1 such that Modifies(s1, \"x\")");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example4) {
+			// procedure p; variable v1;
+			// Select p such that Modifies(p, v1)
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration_2_Test_Program_Case/source.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string strTitle = "TEST VARIABLES TYPE from PKB";
+			Logger::WriteMessage(strTitle.c_str());
+			std::set<ProcIndex> procedures1 = pkb->getAllProcIndex();
+			std::set<VarIndex> variables = pkb->getAllVarIndex();
+			std::set<ProcName> evaluatedProcedures;
+			for (std::set<ProcIndex>::iterator it = procedures1.begin(); it != procedures1.end(); ++it) {
+				for (std::set<VarIndex>::iterator itz = variables.begin(); itz != variables.end(); ++itz) {
+					if (pkb->is(MODIFIES_P, *it, *itz)) {
+						evaluatedProcedures.insert(pkb->getProcName(*itz));
+					}
+				}
+			}
+			for (std::set<ProcName>::iterator it = evaluatedProcedures.begin(); it != evaluatedProcedures.end(); ++it) {
+				Logger::WriteMessage((*it).c_str());
+			}
+
+			std::string strTitle1 = "TEST EVALUATOR";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "procedure p; variable v1;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select p such that Modifies(p, v1)");
 			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
