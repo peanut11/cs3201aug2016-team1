@@ -179,7 +179,11 @@ ResultGridManager* QueryEvaluator::populateResultGrids() {
         SynonymString syn = it->getSynonym();
         if (it->getType() == VARIABLE) {
             resultManager->initialiseSynonym(syn, pkb->getAllVarIndex());
-        } else {
+        } 
+		else if (it->getType() == PROCEDURE) {
+			resultManager->initialiseSynonym(syn, pkb->getAllProcIndex());
+		}
+		else {
             EntityType type = it->getType();
             StmtSet stmts = pkb->getStmtsByType(type);
             resultManager->initialiseSynonym(syn, stmts);
