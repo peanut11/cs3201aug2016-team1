@@ -590,7 +590,7 @@ public:
 		ProcName procName2 = "Third";
 		procIndex = pkb->getProcIndex(procName2);
 		expected = std::set<ProcStmtVarIndex>({ procIndex });
-		actual = pkb->getProcsByProc(procIndex1, CALLS);
+		actual = pkb->getProcsByProc(CALLS, procIndex1);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		expectedIt = expected.begin();
@@ -607,7 +607,7 @@ public:
 		ProcIndex procIndex2 = pkb->getProcIndex(procName2);
 		procIndex = pkb->getProcIndex(procName1);
 		expected = std::set<ProcStmtVarIndex>({ procIndex });
-		actual = pkb->getProcsByProc(CALLS, procIndex2);
+		actual = pkb->getProcsByProc(procIndex2, CALLS);
 		Assert::AreEqual(expected.size(), actual.size());
 
 		expectedIt = expected.begin();

@@ -31,6 +31,7 @@ void QueryProcessor::observeGlobalStop(volatile bool* stop) {
     while (!isEvaluated) {
         if (*stop) {
             mEvaluator->isGlobalStop = true;
+            return;
         } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
