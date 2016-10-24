@@ -374,10 +374,10 @@ std::set<StmtNumber> PKB::getCallsByProc(ProcIndex procIndex) {
 }
 
 StmtSet PKB::getStmtsByType(EntityType stmtType) {
-    if (stmtType > STMTLST) {
+    if (stmtType > STMTLST && stmtType != PROGRAM_LINE) {
         throw Exception::INVALID_STMT_TYPE;
     }
-
+	if (stmtType == PROGRAM_LINE) stmtType = STMT;
 	return stmtByTypeTable[stmtType];
 }
 
