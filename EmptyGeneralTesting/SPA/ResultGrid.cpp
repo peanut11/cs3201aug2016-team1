@@ -108,6 +108,24 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
         addSynonym(otherSyn);
     }
 
+    // Optimisation for 2 grids that contain 1 synonym each
+    if (refTable.size() == 2 && other->refTable.size() == 1) {
+        resultList.clear();
+
+        for (ValueTupleSet::const_iterator it = validTuples.begin(); it != validTuples.end(); it++) {
+            // Create newRow
+            GridRow newRow = { extractValue(LEFT, *it), extractValue(RIGHT, *it) };
+            // Insert newRow
+            resultList.push_back(newRow);
+            // Insert synonym values into resultTable
+            for (size_t column = 0; column < resultTable.size(); column++) {
+                resultTable[column].insert((newRow)[column]);
+            }
+        }
+
+        return true;
+    }
+
     GridColumn column = getColumnForSynonym(extractSynonym(LEFT, synTuple));
     GridColumn otherColumn = other->getColumnForSynonym(extractSynonym(RIGHT, synTuple));
 
