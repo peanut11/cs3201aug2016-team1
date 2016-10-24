@@ -54,37 +54,40 @@ void PKB::clear() {
 
 bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarIndex item) {
 	if (rel == NEXT_STAR) {
-		if (stmtOrProcIndex >= stmtTable.size() || item >= stmtTable.size()) { // Avoid running DFS
+		if (stmtOrProcIndex >= stmtTable.size() || item >= stmtTable.size()) {
+            // Avoid running DFS
 			return false;
 		}
+
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
 		return rp->isNextStar(stmtOrProcIndex, item);
-	} else if (rel == NEXT || rel == MODIFIES || rel == USES) { // Gets from direct-rel column in StmtTable
-		if (stmtOrProcIndex >= stmtTable.size()) {
-			return false;
-		}
-
-		StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
-
-		return entry.find(item) != entry.end();
-
-	} else if (rel == FOLLOWS || rel == PARENT || 
-		rel == FOLLOWS_STAR || rel == PARENT_STAR) { // Gets from supp-rel column in StmtTable
-		if (stmtOrProcIndex >= stmtTable.size()) {
-			return false;
-		}
-		int supplementaryRel = rel + 1;
 		
-		StmtEntry entry = stmtTable[stmtOrProcIndex][supplementaryRel];
+	} else if (rel == NEXT || rel == MODIFIES || rel == USES) {
+        // Get from direct-rel column in StmtTable
+
+		if (stmtOrProcIndex >= stmtTable.size()) {
+			return false;
+		}
+		const StmtEntry entry = stmtTable[stmtOrProcIndex][rel];
 		return entry.find(item) != entry.end();
 
-	} else if (rel == CALLS || rel == CALLS_STAR || 
-		rel == MODIFIES_P || rel == USES_P) { // Gets from ProcTable
+	} else if (rel == FOLLOWS || rel == PARENT || rel == FOLLOWS_STAR || rel == PARENT_STAR) {
+        // Get from supplementary-rel column in StmtTable
+		if (stmtOrProcIndex >= stmtTable.size()) {
+			return false;
+		}
+		const int supplementaryRel = rel + 1;
+		const StmtEntry entry = stmtTable[stmtOrProcIndex][supplementaryRel];
+		return entry.find(item) != entry.end();
+
+	} else if (rel == CALLS || rel == CALLS_STAR || rel == MODIFIES_P || rel == USES_P) {
+        // Get from offset-rel in ProcTable
 		if (stmtOrProcIndex >= procTable.size()) {
 			return false;
 		}
-
-		return procTable[stmtOrProcIndex][rel].find(item) != procTable[stmtOrProcIndex][rel].end();
+        const ProcIndex proc = stmtOrProcIndex;
+        const unsigned int OFFSET = (rel < 17) ? 0 : 17;
+		return procTable[proc][rel - OFFSET].find(item) != procTable[proc][rel - OFFSET].end();
 
 	} else {
 		throw Exception::INVALID_RELATION;
