@@ -145,14 +145,12 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
             continue;
         }
 
-        for (GridListIterator otherRow = other->resultList.begin(); otherRow != other->resultList.end(); otherRow++) {
+        GridListIterator otherRow = other->resultList.begin();
+        while (otherRow != other->resultList.end()) {
             SynonymValue otherSynVal = (*otherRow)[otherColumn];
 
             if (!contains(otherSynSet, otherSynVal)) {
                 otherRow = other->resultList.erase(otherRow);
-                if (otherRow != other->resultList.begin()) {
-                    otherRow--;
-                }
                 continue;
             }
 
@@ -170,6 +168,8 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
                     resultTable[column].insert((newRow)[column]);
                 }
             }
+
+            otherRow++;
         }
     }
 
