@@ -36,6 +36,7 @@ QueryEvaluator::QueryEvaluator() {
     synonymTable = SynonymTable::getInstance();
     resultManager = new ResultGridManager();
 	queryOptimizer = new QueryOptimization();
+    isGlobalStop = false;
 }
 
 QueryOptimization* QueryEvaluator::getQueryOptimizer() {
