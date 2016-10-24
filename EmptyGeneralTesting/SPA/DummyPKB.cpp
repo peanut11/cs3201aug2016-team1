@@ -547,19 +547,50 @@ std::set<StmtNumber> DummyPKB::getStmtsByType(EntityType stmtType)
 	return std::set<StmtNumber>();
 }
 
-// ** Not used anymore **
-std::set<StmtNumber> DummyPKB::getStmtsByVar(RelationshipType modifiesOrUses, VarName varName)
+std::set<StmtNumber> DummyPKB::getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex)
 {
-	// Modifies(s,"x") : s => 3,8
-	// Modifies(s,"w") : s => 4,5
-	if (modifiesOrUses == MODIFIES && varName == "x") {
-		std::set<StmtNumber> cases = { 3,8 };
-		return cases;
+	// (Modifies(s,"x") - Get 's'
+	if (varIndex == 0) {
+		if (modifiesOrUses == MODIFIES) {
+			return std::set<StmtNumber>({ 5, 9 });
+		}
+		else if (modifiesOrUses == USES) {
+			return std::set<StmtNumber>({ 6, 9, 13 });
+		}
+	} 
+	else if (varIndex == 1) {
+		if (modifiesOrUses == MODIFIES) {
+			return std::set<StmtNumber>({ 17 });
+		}
+		else if (modifiesOrUses == USES) {
+			return std::set<StmtNumber>();
+		}
 	}
-	else if (modifiesOrUses == MODIFIES && varName == "w") {
-		std::set<StmtNumber> cases = { 4,5 };
-		return cases;
+	else if (varIndex == 2) {
+		if (modifiesOrUses == MODIFIES) {
+			return std::set<StmtNumber>({ 1, 4, 7, 11, 15 });
+		}
+		else if (modifiesOrUses == USES) {
+			return std::set<StmtNumber>({ 7, 10, 11, 13, 15 });
+		}
 	}
+	else if (varIndex == 3) {
+		if (modifiesOrUses == MODIFIES) {
+			return std::set<StmtNumber>({ 14 });
+		}
+		else if (modifiesOrUses == USES) {
+			return std::set<StmtNumber>({ 7, 15});
+		}
+	}
+	else if (varIndex == 4) {
+		if (modifiesOrUses == MODIFIES) {
+			return std::set<StmtNumber>({ 2, 12, 13, 16 });
+		}
+		else if (modifiesOrUses == USES) {
+			return std::set<StmtNumber>({ 13, 14, 15, 17 });
+		}
+	}
+
 	return std::set<StmtNumber>();
 }
 
@@ -653,6 +684,54 @@ std::set<ProcIndex> DummyPKB::getProcsByProc(ProcIndex procIndex, RelationshipTy
 		return std::set<ProcIndex>({ 1 });
 	}
 	return std::set<ProcIndex>({});
+}
+
+std::set<ProcIndex> DummyPKB::getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex)
+{
+	// (Modifies(p,"x") - Get 'p'
+
+	if (varIndex == 0) {
+		if (modifiesOrUses == MODIFIES_P) {
+			return std::set<ProcIndex>({ 0, 1 });
+		}
+		else if (modifiesOrUses == USES_P) {
+			return std::set<ProcIndex>({ 1 });
+		}
+	}
+	else if (varIndex == 1) {
+		if (modifiesOrUses == MODIFIES_P) {
+			return std::set<ProcIndex>({ 0, 1, 2 });
+		}
+		else if (modifiesOrUses == USES_P) {
+			return std::set<ProcIndex>();
+		}
+	}
+	else if (varIndex == 2) {
+		if (modifiesOrUses == MODIFIES_P) {
+			return std::set<ProcIndex>({ 0, 1 });
+		}
+		else if (modifiesOrUses == USES_P) {
+			return std::set<ProcIndex>({ 1 });
+		}
+	}
+	else if (varIndex == 3) {
+		if (modifiesOrUses == MODIFIES_P) {
+			return std::set<ProcIndex>({ 0, 1 });
+		}
+		else if (modifiesOrUses == USES_P) {
+			return std::set<ProcIndex>({ 1 });
+		}
+	}
+	else if (varIndex == 4) {
+		if (modifiesOrUses == MODIFIES_P) {
+			return std::set<ProcIndex>({ 0, 1, 2 });
+		}
+		else if (modifiesOrUses == USES_P) {
+			return std::set<ProcIndex>({ 1, 2 });
+		}
+	}
+
+	return std::set<ProcIndex>();
 }
 
 std::set<VarIndex> DummyPKB::getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses)

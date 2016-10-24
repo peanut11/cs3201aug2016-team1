@@ -36,7 +36,7 @@ public:
 	virtual std::set<Constant>		getAllConstantValues();
 
 	virtual std::set<StmtNumber>	getStmtsByType(EntityType stmtType);
-	virtual std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarName varName);
+	virtual std::set<StmtNumber>	getStmtsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 	virtual std::set<StmtNumber>	getStmtsByStmt(StmtNumber stmt, RelationshipType followsOrParent);
 	virtual std::set<StmtNumber>	getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt);
 	virtual std::set<VarIndex>		getVarsByStmt(StmtNumber stmt, RelationshipType modifiesOrUses);
@@ -44,6 +44,7 @@ public:
 	virtual ProcIndex				getProcByCall(StmtNumber callStmt);
 	virtual std::set<ProcIndex>		getProcsByProc(RelationshipType calls, ProcIndex procIndex);
 	virtual std::set<ProcIndex>		getProcsByProc(ProcIndex procIndex, RelationshipType calls);
+	virtual std::set<ProcIndex>		getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
 	virtual std::set<VarIndex>		getVarsByProc(ProcIndex procIndex, RelationshipType modifiesOrUses);
 
 };
