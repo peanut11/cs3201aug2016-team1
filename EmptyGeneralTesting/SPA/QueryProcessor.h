@@ -1,32 +1,31 @@
 #pragma once
-#include<stdio.h>
-#include <iostream>
-#include <list>
 
+#include <chrono>
+#include <thread>
+
+#include "Exceptions.h"
 #include "QueryPreProcessor.h"
 #include "QueryEvaluator.h"
-#include "../AutoTester/source/AbstractWrapper.h"
 
 class QueryProcessor {
-
+private:
 	static QueryProcessor *_instance;
+    QueryProcessor();
 
-	QueryPreProcessor *mPreProcessor;
-	QueryEvaluator *mEvaluator;
-	QueryResultProjector *mResultProjector;
-	void init();
+	QueryPreProcessor*    mPreProcessor;
+	QueryEvaluator*       mEvaluator;
+	QueryResultProjector* mResultProjector;
+
+    std::thread t;
+    bool isEvaluated;
+    void observeGlobalStop(volatile bool* stop);
 
 public:
-	
-	static QueryProcessor *getInstance();
-	std::vector <std::string> evaluate(std::string queryString);
-	QueryPreProcessor *getQueryPreProcessor();
-	QueryEvaluator *getQueryEvaluator();
-	QueryResultProjector *getQueryResultProjector();
+	static QueryProcessor* getInstance();
 
-	
+	QueryPreProcessor*     getQueryPreProcessor();
+	QueryEvaluator*        getQueryEvaluator();
 
-
-
-
+    void startObserver(volatile bool* stop);
+    std::vector<std::string> evaluate(std::string queryString);
 };

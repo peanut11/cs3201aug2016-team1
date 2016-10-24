@@ -146,7 +146,7 @@ public:
 	TEST_METHOD(TestDesign_Call) {
 		PKB* pkb = PKB::getInstance();
 		 
-		std::set<ProcIndex> procList = pkb->getProcsByProc(0, CALLS_STAR);
+		std::set<ProcIndex> procList = pkb->getProcsByProc(CALLS_STAR,0);
 		StmtSetIterator procI = procList.begin();
 		int procIn = *procI;
 		Assert::AreEqual(procIn, 1);
