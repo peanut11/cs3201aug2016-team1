@@ -200,8 +200,14 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         // arg1 is synonym, arg2 is integer: Follows(s,3); Follows(a,4)
         else if (argOne->getIsSynonym() && argTwo->getIntegerValue() > 0) {
             // Store results
- //         std::set<StmtNumber> statements = pkb->getStmtsByStmt(argTwo->getIntegerValue(), type);     // Get stmts that arg2(integer) follows
+			std::set<StmtNumber> statements = pkb->getStmtsByStmt(argTwo->getIntegerValue(), type);     // Get stmts that arg2(integer) follows
 			
+			if (statements.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), statements);
+			}
+			/*
 			// Retrieve current statements																							
 			std::set<StmtNumber> s = resultManager->getValuesForSynonym(argOne->getStringValue());
 
@@ -223,13 +229,21 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
             }
+			*/
             
         }
         // arg1 is integer, and arg1 is synonym: Follows(3,s);Follows(4,a)
         else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym()) {
             // Store results
- //         std::set<StmtNumber> statements = pkb->getStmtsByStmt(type, argOne->getIntegerValue()); // Get stmts that arg1(integer) is followed by
-			// Retrieve current statements																							
+	        std::set<StmtNumber> statements = pkb->getStmtsByStmt(type, argOne->getIntegerValue()); // Get stmts that arg1(integer) is followed by
+			
+			if (statements.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), statements);
+			}
+ /*
+			// Retrieve current statements			
 			std::set<StmtNumber> s = resultManager->getValuesForSynonym(argTwo->getStringValue());
 
 			// Get results
@@ -250,7 +264,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
                 // Update the results table
 				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
             }
-        
+*/
         }
         // arg1 is underscore & arg2 is integer: Follows(_,10);
         else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIntegerValue() > 0) {
@@ -417,6 +431,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // If left arg is 'statement number', right arg is a synonym (Modifies(3,v))
         else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym()) {
+		/*
 			// Retrieve current variables																							
 			std::set<VarIndex> v = resultManager->getValuesForSynonym(argTwo->getStringValue());
 
@@ -438,16 +453,17 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedV);
 			}
-			
-/*
+*/
+
 			// Get results
             std::set<VarIndex> variableIndexes = pkb->getVarsByStmt(argOne->getIntegerValue(), type);
 
+			if (variableIndexes.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), variableIndexes);
+			}
 
-
-            // Update the results table
-            resultManager->updateSynonym(argTwo->getStringValue(), variableIndexes);
-*/
         }
         // If left arg is 'statement number', right arg is "_" (Modifies(3,_);
         else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -461,6 +477,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // If left arg is synonym, right arg is "x" (Modifies(s,"x")); Modifies(a,"x")
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() != "_") {
+/*
 			// Retrieve current statements																							
 			std::set<StmtNumber> s = resultManager->getValuesForSynonym(argOne->getStringValue());
 
@@ -482,8 +499,9 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
 			}
+			*/
 
-/*			
+			
 			// Get all statements that modifies variable
 			VarIndex varIndex = pkb->getVarIndex(argTwo->getStringValue());
 			std::set<StmtNumber> statements = pkb->getStmtsByVar(type, varIndex);
@@ -491,11 +509,12 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
             // Check if relationship holds/have results
             if (statements.size() > 0) {
                 suchThatRelObject->setResultsBoolean(true);
+				// Update the synonym table
+				resultManager->updateSynonym(argOne->getStringValue(), statements);
             }
 
-            // Update the synonym table
-            resultManager->updateSynonym(argOne->getStringValue(), statements);
-*/
+            
+
         }
         // If left arg is synonym, right arg is "_" (Modifies(s,_);
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -623,6 +642,17 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 		// If left arg is 'procedure name', right arg is a synonym (Modifies("Giraffe",v))
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() != "_" && argTwo->getIsSynonym()) {
+			// Get all statements that modifies variable
+			ProcIndex procIndex = pkb->getProcIndex(argOne->getStringValue());
+			std::set<VarIndex> variables = pkb->getVarsByProc(procIndex, type);
+
+			// Check if relationship holds/have results
+			if (variables.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the synonym table
+				resultManager->updateSynonym(argTwo->getStringValue(), variables);
+			}
+/*			
 			// Retrieve current variables																							
 			std::set<VarIndex> v = resultManager->getValuesForSynonym(argTwo->getStringValue());
 
@@ -644,7 +674,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedV);
 			}
-			
+*/
 		}
 		// If left arg is 'procedure name', right arg is "_" (Modifies("Giraffe",_);
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() != "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -658,6 +688,17 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 		// If left arg is synonym, right arg is "x" (Modifies(p,"x")); 
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() != "_") {
+			// Get all statements that modifies variable
+			VarIndex varIndex = pkb->getVarIndex(argTwo->getStringValue());
+			std::set<ProcIndex> procedures = pkb->getProcsByVar(type, varIndex);
+
+			// Check if relationship holds/have results
+			if (procedures.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the synonym table
+				resultManager->updateSynonym(argOne->getStringValue(), procedures);
+			}
+/*			
 			// Retrieve current statements																							
 			std::set<ProcIndex> p = resultManager->getValuesForSynonym(argOne->getStringValue());
 
@@ -677,7 +718,8 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 			if (evaluatedP.size() > 0) {
 				// Update the results table
 				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
-			}			
+			}	
+*/
 		}
 		// If left arg is synonym, right arg is "_" (Modifies(p,_);
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -741,6 +783,17 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 		// arg1 is synonym, arg2 is proc name: Calls(p1,"Panda")
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() != "_") {
+			// Store results
+			ProcIndex procIndex = pkb->getProcIndex(argTwo->getStringValue());
+			std::set<ProcIndex> procedures = pkb->getProcsByProc(procIndex, type);     // Get stmts that arg2(integer) follows
+
+			if (procedures.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), procedures);
+			}
+
+/*
 			// Retrieve current statements																							
 			std::set<ProcIndex> p = resultManager->getValuesForSynonym(argOne->getStringValue());
 
@@ -761,6 +814,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
 			}
+*/
 /*
 			// Store results
 			std::set<ProcIndex> procedures = pkb->getProcsByProc(argTwo->getStringValue(), type);
@@ -776,6 +830,16 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 		// arg1 is integer, and arg1 is synonym: Calls("Giraffe", p1)
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() != "_" && argTwo->getIsSynonym()) {
+			// Store results
+			ProcIndex procIndex = pkb->getProcIndex(argOne->getStringValue());
+			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, procIndex);     // Get stmts that arg2(integer) follows
+
+			if (procedures.size() > 0) {
+				suchThatRelObject->setResultsBoolean(true);
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), procedures);
+			}
+	/*
 			// Retrieve current statements																							
 			std::set<ProcIndex> p = resultManager->getValuesForSynonym(argTwo->getStringValue());
 
@@ -796,7 +860,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
 			}
-			
+*/
 /*
 			// Store results
 			std::set<ProcIndex> procedures = pkb->getProcsByProc(type, argTwo->getStringValue());
