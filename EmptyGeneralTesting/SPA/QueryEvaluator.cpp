@@ -9,6 +9,7 @@
 // ClauseSelectObject
 
 #include "QueryEvaluator.h"
+#include "RelationshipPopulator.h"
 
 QueryEvaluator* QueryEvaluator::_instance = nullptr;
 
@@ -74,7 +75,8 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 	delete queryOptimizer;
     resultManager = new ResultGridManager();
 	queryOptimizer = new QueryOptimization();
-
+	RelationshipPopulator* rp = RelationshipPopulator::getInstance();
+	rp->clear();
     //try {
         // Get select object and all clause objects
 		ClauseSelectObject select = queryTable.getResult().getClauseSelectObjectList()[0];
