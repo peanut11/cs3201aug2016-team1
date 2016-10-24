@@ -74,7 +74,6 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
 			return false;
 		}
 		int supplementaryRel = rel + 1;
-
 		
 		StmtEntry entry = stmtTable[stmtOrProcIndex][supplementaryRel];
 		return entry.find(item) != entry.end();
@@ -467,7 +466,7 @@ std::set<ProcIndex>	PKB::getProcsByProc(ProcIndex procIndex, RelationshipType ca
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 
-	return procTable[procIndex][calls];
+	return procTable[procIndex][calls + 1];
 }
 
 std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcIndex procIndex) {
@@ -475,7 +474,7 @@ std::set<ProcIndex>	PKB::getProcsByProc(RelationshipType calls, ProcIndex procIn
 		throw Exception::INVALID_PROC_PROC_RELATION;
 	}
 
-	return procTable[procIndex][calls + 1];
+	return procTable[procIndex][calls];
 }
 
 std::set<ProcIndex> PKB::getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex) {
