@@ -824,7 +824,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 	// check if reach max synonym occurence
 	//if (this->getSynonymOccurence()->hasMaximumOccurence(str, ClauseType::PATTERN)) { return false; }
 	// update synonym occurence
-	this->getSynonymOccurence()->setIncrementOccurence(str, ClauseType::PATTERN);
+	//this->getSynonymOccurence()->setIncrementOccurence(str, ClauseType::PATTERN);
 
 	//st.nextToken(); // point to valid synonym
 
@@ -847,9 +847,9 @@ bool QueryValidator::isClausePattern(std::string str) {
 			if (numOfArgs == maxNumOfArgs) { // WHILE and ASSIGN have max 2 args, IF has max 3 args
 
 				// check the number of common synonyms in clauses
-				if (this->mSynonymOccurence->hasMaxCommonSynonym()) {
-					throw Exceptions::exceed_common_synonym_count();
-				}
+				//if (this->mSynonymOccurence->hasMaxCommonSynonym()) {
+				//	throw Exceptions::exceed_common_synonym_count();
+				//}
 
 				ClausePatternObject* newPatternObj;
 
@@ -880,17 +880,16 @@ bool QueryValidator::isClausePattern(std::string str) {
 
 		// first argument, if synonym, assign must match with assign, same for while and if
 		if (numOfArgs == 0 && numOfComma == 0) {
-			if (isSynonym(nextToken)) {
+			if (isSynonym(nextToken) && 
+				this->mSynonymTable->getObject(nextToken).getType() == EntityType::VARIABLE) {
 
-				// WHILE and IF cannot have synonym as control variable
-				if (selectedSynonymObj.getType() == ASSIGN 
-					&& this->mSynonymTable->getObject(nextToken).getType() == EntityType::VARIABLE) { //selectedSynonymObj.getType()
-					
-					firstArgType = EntityType::VARIABLE;
-					isFirstArgSynonym = true;
-					firstArg = nextToken;
-					numOfArgs += 1;
-				}
+				// ASSIGN, WHILE and IF can synonym as control variable
+				firstArgType = EntityType::VARIABLE;
+				isFirstArgSynonym = true;
+				firstArg = nextToken;
+				numOfArgs += 1;
+
+				//if (selectedSynonymObj.getType() == ASSIGN) {}
 				
 			}
 			else if (isVariable(nextToken)) {
