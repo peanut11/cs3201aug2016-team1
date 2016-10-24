@@ -254,7 +254,7 @@ paket-files/
 # UnitTesting
 !Debug
 **/Debug/*
-!*/Debug/UnitTesting/
+!*/Debug/*/
 
 # Frontend
 !*/Debug/*.txt

@@ -40,7 +40,11 @@ void ResultGrid::addColumnForSynonym(SynonymString syn, ValueSet vals) {
 
 void ResultGrid::clearGrid() {
     resultList.clear();
-    resultTable.clear();
+
+    // Leave empty rows for 'Select' clause, not resultTable.clear()
+    for (std::vector<ValueSet>::iterator synVal = resultTable.begin(); synVal != resultTable.end(); synVal++) {
+        synVal->clear();
+    }
 }
 
 SynonymString ResultGrid::extractSynonym(TuplePosition pos, SynonymTuple synTuple) {

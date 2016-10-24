@@ -1,0 +1,281 @@
+procedure IamCrazy {
+  while Crazyyyyyy {
+    apple = orange + pears;
+    apple = 1;
+    while orange {
+      pears = apples + 1 + orange;
+      pears = orange + pears + apple;}
+    orange = 83910;
+    orange = antman * orange;
+    call Panda;
+    call First;
+    while x {
+      h3ll0 = apples + 1;
+      call Movie;
+      if t then{
+        call Dream;
+        x = x + 1;}
+      else{
+      t = a + apple;
+      call Panda;
+      call First;}}}}
+procedure Panda {
+a = 4;
+b = a * a;
+c = a * b + 3 * a;
+marvel = ironman * a + pears;
+if a then{
+b = b + c;
+while orange {
+      pears = apples + 1 + orange;
+      pears = orange + pears + apple;}
+    orange = 83910;
+    orange = antman * orange;
+c = antman;}
+else{
+d = e + f;
+f = f * f;}
+y = a + 2 + c; 
+while d { 
+  d = a + y; 
+  while z { 
+    x = b + 5 + y + z;
+  pears = apples + doraemon * pikachu;
+  if pears then{
+    a = 4; 
+    b = a + a; 
+    c = a + b + 3 + a; 
+    m = z + 1; } 
+  else{
+  v = d + 40 + 1;   } }
+  x = z + 2 + m + v;
+  x = x + a;}
+x = x + a;
+y = x + 2; 
+call A;
+call Happy;
+y = a + 2 * c;
+while d {
+  d = a + y;
+while z {
+  call Monkey;
+  x = b + 5 * y + z;
+  m = z - 1;
+  while z {
+  call Monkey;
+  x = b + 5 * y + z;
+  m = z - 1;}  }
+v = d + 40 + 1; }
+x = z + 2 * m + v;
+if a then {
+  x = x * a;}
+else {
+  x = x + a; }
+  y = x + 2;}
+procedure Elephant {
+while c {
+  call Giraffe;
+  if b then {
+  apple = orange * grape * pineapple;
+  apple = a + c + f;
+  d = v + a; }
+else {
+  d = x * y + v * y + d; 
+  while d{
+  ice = orange + water;
+  while l{
+    while d{
+      ice = orange + water;
+      while l{
+        x = water + fire * ice;}
+        water = 231123325;
+        fire = 3654543 * ice;}}}}
+  a = a * c - t - b + x * m;
+  a = b + c;
+  c = b + a - orange * pears;
+  c = 1341 * 12341;
+  call Dream;
+  call A;} } 
+procedure Monkey {
+t = d + y;
+if t then {
+  call Elephant;
+  call Giraffe;
+  while x {
+    d = d + a; 
+    a = b + c;}}
+else {
+  m = z + d + 1 + a; } }
+procedure Giraffe {
+a = a * c - t - b + x * m;
+a = b + c;
+c = b + a - orange * pears;
+c = 1341 * 12341;
+while d{
+  ice = orange + antman;
+  while l{
+    if fire then{
+      while water{
+        x = ice + fire * ice;
+        while ice{
+        x = pears + apple * ice;}}}
+    else{
+    water = 231123325;
+    fire = 3654543 * ice;}}}
+water = ice + fire;}
+procedure Dream{
+call Happy;
+orange = a + pears;
+m = orange + z;
+call A;
+while f{
+    v = v + m;
+  v = m + d + pears;
+  m = d + 500 + m;
+  call Happy;}}
+procedure First {
+x = 2; 
+z = 3;
+call Second;
+call Third;}
+procedure Second{
+x = 0;
+call Movie;
+i = 5;
+call Main;
+while i{
+  x = x + 2*y;
+  i = i - 1;}
+  c = d + e;
+  a = sailormoon * sad + spiderman + superman;
+if x then {
+  x = x +1;}
+else{
+  z = 1;}
+z = z + x + i;
+y = z + 2;
+while orange {
+      pears = apples + apple + orange;
+      pears = 132124 + pears + apple;}
+    orange = 83910132;
+    while orange {
+      pears = apples + apple + orange;
+      pears = 132124 + pears + apple;}
+    orange = superman;
+    apple = antman * orange;
+    y = y + 1234151256;
+    x = x * y +z;
+    orange = antman * orange;
+y = y + 1234151256;
+x = x * y +z;}
+procedure Third{
+z = 5;
+call P;
+v = z * z;}
+procedure Main {
+x = y + (x + 1);
+if i then {
+  y = x + 1;
+  call P;
+  z = x + z; }
+else {
+  x = x + 3; }}
+procedure P {
+y = y + 5; }
+procedure A {
+x = a +1 ;
+call P;
+b = x * c + a * antman;
+q = ice + water * fire;
+while b{
+  l = fire * b + 13;}
+  a = b + c;
+  c = b + a;
+  c = 1341 * 12341;
+  water = ice + fire;
+  call Happy;
+call B;
+z = z + x;
+z = z * x;
+call D;
+if x then{
+  x = x * z + c;}
+else{
+  call B;
+  p = pears * orange + a;}}
+procedure B {
+while x {
+call C;
+a = b; 
+c = d + a;
+f = f * c + 1234 + a;}}
+procedure C {
+z = c; }
+procedure D {
+x = d;
+call Movie; }
+procedure Movie{
+marvel = ironman + hawk * spiderman;
+marvel = marvel + blackwidow + antman;
+n = a + 12312312;
+if marvel then{
+  fire = superman + ironman;
+  water = sailormoon + powerranger;}
+else{
+  doraemon = fun + apples + c;
+  while water{
+  call Happy;
+  a = b + c;
+  c = b + a;
+  c = 1341 * 12341;
+  water = ice + fire;
+  ice = water * fire;
+  a = apple + apples;}}}
+procedure Happy{
+h = ice + water * sad;
+while d{
+  ice = orange + water;
+  while l{
+    if water then{
+      while orange{
+        x = water + fire * ice;}}
+    else{
+    water = 231123325;
+    fire = 3654543 * ice;}}}}
+procedure Useless{
+a = b + c * d;
+call A;
+call B;
+call Happy;
+call Dream;
+call Main;
+c = f + g;
+c = c * g;
+call C;
+antman = sad;
+while l{
+    if water then{
+      while orange{
+        x = water + fire * ice;}}
+    else{
+    water = 231123325;
+    fire = 3654543 * ice;}}
+call D;
+call Movie;
+call D;
+call Dream;
+call Main;
+c = f + g;
+c = c * g;
+call C;
+call D;
+call Movie;
+call D;
+call Panda;
+call Elephant;
+if l then{
+  apple = apples * apple + pears;
+  l = m + n * a + 902;
+  m = n + c * b;}
+else{
+  orange = orange * pears;}}

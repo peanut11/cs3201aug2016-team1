@@ -22,7 +22,7 @@ namespace UnitTesting
             PKB::getInstance()->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("it1/source1.txt"));
+			frontend.parse("Iteration_1/source1.txt");
 
 			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
 			PKB* pkb = PKB::getInstance();
@@ -222,10 +222,10 @@ namespace UnitTesting
 			std::set<ProcIndex> procedures1 = pkb->getAllProcIndex();
 			std::set<VarIndex> variables = pkb->getAllVarIndex();
 			std::set<ProcName> evaluatedProcedures;
-			for (std::set<ProcIndex>::iterator it = procedures1.begin(); it != procedures1.end(); ++it) {
-				for (std::set<VarIndex>::iterator itz = variables.begin(); itz != variables.end(); ++itz) {
-					if (pkb->is(MODIFIES_P, *it, *itz)) {
-						evaluatedProcedures.insert(pkb->getProcName(*itz));
+			for (std::set<ProcIndex>::iterator proc = procedures1.begin(); proc != procedures1.end(); ++proc) {
+				for (std::set<VarIndex>::iterator var = variables.begin(); var != variables.end(); ++var) {
+					if (pkb->is(MODIFIES_P, *proc, *var)) {
+						evaluatedProcedures.insert(pkb->getProcName(*proc));
 					}
 				}
 			}
