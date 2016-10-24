@@ -1,3 +1,1 @@
-AutoTester Iteration_2_Test_Program_Case/Source_1.txt Iteration_2_Test_Program_Case/Query_1.txt Iteration_2_Test_Program_Case/out2.xml
-
-AutoTester Iteration_2_Test_Program_Case/source_200.txt Iteration_2_Test_Program_Case/query_200.txt Iteration_2_Test_Program_Case/out1.xml
+AutoTester Iteration_2_Test_Program_Case/source.txt Iteration_2_Test_Program_Case/timeoutQueries.txt Iteration_2_Test_Program_Case/out1.xml
