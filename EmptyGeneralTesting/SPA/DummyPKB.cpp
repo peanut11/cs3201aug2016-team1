@@ -120,10 +120,14 @@
 		-
 		UsesP (2,4)
 
+		ModifiesP (0,0)
+		ModifiesP (0,1)
 		ModifiesP (0,2)
+		ModifiesP (0,3)
 		ModifiesP (0,4)
 		-
 		ModifiesP (1,0)
+		ModifiesP (1,1)
 		ModifiesP (1,2)
 		ModifiesP (1,3)
 		ModifiesP (1,4)
@@ -660,7 +664,7 @@ std::set<VarIndex> DummyPKB::getVarsByProc(ProcIndex procIndex, RelationshipType
 		if (procIndex == 1) {
 			return std::set<VarIndex>({0,1,2,3,4});
 		}
-		if (procIndex == 0) {
+		if (procIndex == 2) {
 			return std::set<VarIndex>({1,4});
 		}
 	}
@@ -672,7 +676,7 @@ std::set<VarIndex> DummyPKB::getVarsByProc(ProcIndex procIndex, RelationshipType
 		if (procIndex == 1) {
 			return std::set<VarIndex>({ 0,2,3,4 });
 		}
-		if (procIndex == 0) {
+		if (procIndex == 2) {
 			return std::set<VarIndex>({ 4 });
 		}
 	}

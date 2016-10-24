@@ -36,6 +36,7 @@ QueryEvaluator::QueryEvaluator() {
     synonymTable = SynonymTable::getInstance();
     resultManager = new ResultGridManager();
 	queryOptimizer = new QueryOptimization();
+    isGlobalStop = false;
 }
 
 QueryOptimization* QueryEvaluator::getQueryOptimizer() {
@@ -278,7 +279,28 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // arg1 is underscore & arg2 is synonym: Follows(_,s);
         else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIsSynonym()) {
-            // Set "_" to retrieve all statements and also get all statements of synonym
+			// Set "_" to retrieve all statements and also get all statements of synonym
+			std::set<StmtNumber> currentStatements = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			
+			std::set<StmtNumber> evaluatedS;
+			for (StmtSetIterator k = currentStatements.begin(); k != currentStatements.end(); k++) {
+				std::set<StmtNumber> validStatements = pkb->getStmtsByStmt(*k, type);
+				if (validStatements.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					evaluatedS.insert(*k);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedS.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
+			}
+/*			
+			// Set "_" to retrieve all statements and also get all statements of synonym
             std::set<StmtNumber> statements = pkb->getAllStmts();
             std::set<StmtNumber> evaluatedS;
 
@@ -303,7 +325,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedS);
             }
-        
+*/
         }
         // arg1 is integer & arg2 is underscore: Follows(3,_);
         else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -317,7 +339,28 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // arg1 is synonym & arg2 is underscore: Follows(s,_);
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
-            // Set "_" to retrieve all statements and also get all statements of synonym
+			// Set "_" to retrieve all statements and also get all statements of synonym
+			std::set<StmtNumber> currentStatements = resultManager->getValuesForSynonym(argOne->getStringValue());
+
+			std::set<StmtNumber> evaluatedS;
+			for (StmtSetIterator k = currentStatements.begin(); k != currentStatements.end(); k++) {
+				std::set<StmtNumber> validStatements = pkb->getStmtsByStmt(type, *k);
+				if (validStatements.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					evaluatedS.insert(*k);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedS.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
+			}
+/*			
+			// Set "_" to retrieve all statements and also get all statements of synonym
             std::set<StmtNumber> statements = pkb->getAllStmts();
             std::set<StmtNumber> evaluatedS;
 
@@ -342,10 +385,36 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
             }
-
+			*/
         }
         // Both arguments are a synonym: Follows(s1,s2); Follow(a,s1);
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
+			// Get current statements
+			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
+			std::set<StmtNumber> statements1 = resultManager->getValuesForSynonym(argOne->getStringValue());
+			std::set<StmtNumber> statements2 = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			ValueTupleSet evaluatedTupleStatements;
+			
+			for (StmtSetIterator k = statements1.begin(); k != statements1.end(); k++) {
+				std::set<StmtNumber> retrievedStatements = pkb->getStmtsByStmt(type, *k);
+				for (StmtSetIterator m = retrievedStatements.begin(); m != retrievedStatements.end(); m++) {
+					if (statements2.count(*m)) {
+						std::tuple<StmtNumber, StmtNumber> validTuple(*k, *m);
+						evaluatedTupleStatements.insert(validTuple);
+						suchThatRelObject->setResultsBoolean(true);
+						if (isStopEvaluation) {
+							return suchThatRelObject;
+						}
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}
+/*
 			// Get current tuple synonyms 
 			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
 			std::set<ValueTuple> tupleStatements = resultManager->getValuesForSynonymTuple(synonymTuple);
@@ -366,7 +435,8 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 			if (evaluatedTupleStatements.size() > 0) {
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
-			}		
+			}	
+			*/
 /*
 			// Retrieve current statements
 			std::set<StmtNumber> s1s = resultManager->getValuesForSynonym(argOne->getStringValue());
@@ -518,7 +588,29 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
         }
         // If left arg is synonym, right arg is "_" (Modifies(s,_);
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
-            // Set "_" to retrieve all statements and also get all statements of synonym
+			// Set "_" to retrieve all statements and also get all statements of synonym
+			std::set<StmtNumber> currentStatements = resultManager->getValuesForSynonym(argOne->getStringValue());
+
+			std::set<VarIndex> evaluatedV;
+			for (StmtSetIterator k = currentStatements.begin(); k != currentStatements.end(); k++) {
+				// Store results
+				std::set<VarIndex> variables = pkb->getVarsByStmt(*k, type);
+				if (variables.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					evaluatedV.insert(*k);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedV.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedV);
+			}
+/*
+			// Set "_" to retrieve all statements and also get all statements of synonym
             std::set<VarIndex> variables = pkb->getAllVarIndex();
             std::set<StmtNumber> evaluatedS;
 
@@ -543,10 +635,35 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
                 // Update the results table
 				 resultManager->updateSynonym(argOne->getStringValue(), evaluatedS);
             }
-            
+ */
         }
         // Both args are synonym (Modifies(a,v));Modifies(s,v)
         else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
+			// Get current statements
+			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
+			std::set<StmtNumber> statements = resultManager->getValuesForSynonym(argOne->getStringValue());
+			std::set<VarIndex> variables = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			ValueTupleSet evaluatedTupleStatements;
+
+			for (StmtSetIterator k = statements.begin(); k != statements.end(); k++) {
+				std::set<VarIndex> variableIndexes = pkb->getVarsByStmt(*k, type);
+				for (StmtSetIterator m = variableIndexes.begin(); m != variableIndexes.end(); m++) {
+					if (variables.count(*m)) {
+						std::tuple<StmtNumber, VarIndex> validTuple(*k, *m);
+						evaluatedTupleStatements.insert(validTuple);
+						suchThatRelObject->setResultsBoolean(true);
+						if (isStopEvaluation) {
+							return suchThatRelObject;
+						}
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}
 /*
 			std::set<StmtNumber> test = resultManager->getValuesForSynonym(argOne->getStringValue());
 			std::set<VarIndex> test1 = resultManager->getValuesForSynonym(argTwo->getStringValue());
@@ -570,7 +687,8 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(testTuple, testTupleStatements);
 			}
-*/			
+*/
+			/*
 			// Get current tuple synonyms 
 			SynonymString firstSynonym = argOne->getStringValue();
 			SynonymString secondSynonym = argTwo->getStringValue();
@@ -594,7 +712,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
 			}
-			
+			*/
 /*            
 			// Retrieve current statements
             std::set<StmtNumber> s1s = resultManager->getValuesForSynonym(argOne->getStringValue());
@@ -724,6 +842,29 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		// If left arg is synonym, right arg is "_" (Modifies(p,_);
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
 			// Set "_" to retrieve all statements and also get all statements of synonym
+			std::set<ProcIndex> currentProcedures = resultManager->getValuesForSynonym(argOne->getStringValue());
+
+			std::set<VarIndex> evaluatedV;
+			for (StmtSetIterator k = currentProcedures.begin(); k != currentProcedures.end(); k++) {
+				// Store results
+				std::set<VarIndex> variables = pkb->getVarsByProc(*k, type);
+				if (variables.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					evaluatedV.insert(*k);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedV.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedV);
+			}
+			
+/*
+			// Set "_" to retrieve all statements and also get all statements of synonym
 			std::set<VarIndex> variables = pkb->getAllVarIndex();
 			std::set<ProcIndex> evaluatedP;
 
@@ -748,9 +889,39 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update the results table
 				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
 			}
+*/
+
 		}
 		// Both args are synonym (Modifies(p,v));
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
+			// Get current statements
+			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
+			std::set<ProcIndex> procedures = resultManager->getValuesForSynonym(argOne->getStringValue());
+			std::set<VarIndex> variables = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			ValueTupleSet evaluatedTupleStatements;
+
+			for (StmtSetIterator k = procedures.begin(); k != procedures.end(); k++) {
+				std::set<VarIndex> retrievedVariables = pkb->getVarsByProc(*k, type);
+				for (StmtSetIterator m = retrievedVariables.begin(); m != retrievedVariables.end(); m++) {
+					if (variables.count(*m)) {
+						std::tuple<ProcIndex, VarIndex> validTuple(*k, *m);
+						evaluatedTupleStatements.insert(validTuple);
+						suchThatRelObject->setResultsBoolean(true);
+						if (isStopEvaluation) {
+							return suchThatRelObject;
+						}
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}
+			
+			
+/*			
 			// Get current tuple synonyms 
 			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
 			std::set<ValueTuple> tupleStatements = resultManager->getValuesForSynonymTuple(synonymTuple);
@@ -772,6 +943,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
 			}
+			*/
 		}
 	}
 	
@@ -884,6 +1056,29 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 		// arg1 is underscore & arg2 is synonym: Calls(_,p1)
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIsSynonym()) {
+			// Set "_" to retrieve all statements and also get all statements of synonym
+			std::set<ProcIndex> currentProcedures = resultManager->getValuesForSynonym(argTwo->getStringValue());
+
+			std::set<ProcIndex> evaluatedP;
+			for (StmtSetIterator k = currentProcedures.begin(); k != currentProcedures.end(); k++) {
+				// Store results
+				std::set<ProcIndex> procedures = pkb->getProcsByProc(*k, type);
+				if (procedures.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					evaluatedP.insert(*k);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedP.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
+			}
+			
+/*			
 			// Retrieve all procedures name for "_"
 			std::set<ProcIndex> procedures = pkb->getAllProcIndex();
 			std::set<ProcIndex> evaluatedP;
@@ -909,7 +1104,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				resultManager->updateSynonym(argTwo->getStringValue(), evaluatedP);
 			}
 			
-
+			*/
 		}
 		// arg1 is proc name & arg2 is underscore: Calls("Giraffe",_)
 		else if (argOne->getIntegerValue() > 0 && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
@@ -923,6 +1118,29 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		}
 		// arg1 is synonym & arg2 is underscore: Calls(p1,_)
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
+			// Set "_" to retrieve all statements and also get all statements of synonym
+			std::set<ProcIndex> currentProcedures = resultManager->getValuesForSynonym(argOne->getStringValue());
+
+			std::set<ProcIndex> evaluatedP;
+			for (StmtSetIterator k = currentProcedures.begin(); k != currentProcedures.end(); k++) {
+				// Store results
+				std::set<ProcIndex> procedures = pkb->getProcsByProc(type, *k);
+				if (procedures.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					evaluatedP.insert(*k);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedP.size() > 0) {
+				// Update the results table
+				resultManager->updateSynonym(argOne->getStringValue(), evaluatedP);
+			}
+/*		
+			
 			// Set "_" to retrieve all statements and also get all statements of synonym
 			std::set<ProcIndex> procedures = pkb->getAllProcIndex();
 			std::set<StmtNumber> evaluatedP;
@@ -950,10 +1168,37 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 			}
 
 			
-
+			*/
 		}
 		// Both arguments are a synonym: Calls(p1,p2)
 		else if (argOne->getIsSynonym() && argTwo->getIsSynonym()) {
+			// Get current statements
+			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
+			std::set<ProcIndex> procedures1 = resultManager->getValuesForSynonym(argOne->getStringValue());
+			std::set<ProcIndex> procedures2 = resultManager->getValuesForSynonym(argTwo->getStringValue());
+			ValueTupleSet evaluatedTupleStatements;
+
+			for (StmtSetIterator k = procedures1.begin(); k != procedures1.end(); k++) {
+				std::set<ProcIndex> retrievedProcedures = pkb->getProcsByProc(type, *k);
+				for (StmtSetIterator m = retrievedProcedures.begin(); m != retrievedProcedures.end(); m++) {
+					if (procedures2.count(*m)) {
+						std::tuple<ProcIndex, ProcIndex> validTuple(*k, *m);
+						evaluatedTupleStatements.insert(validTuple);
+						suchThatRelObject->setResultsBoolean(true);
+						if (isStopEvaluation) {
+							return suchThatRelObject;
+						}
+					}
+				}
+			}
+
+			// Check if relationship holds/have results
+			if (evaluatedTupleStatements.size() > 0) {
+				// Update tuple with evaluation results
+				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleStatements);
+			}
+			
+/*			
 			// Get current tuple synonyms 
 			std::tuple<SynonymString, SynonymString> synonymTuple(argOne->getStringValue(), argTwo->getStringValue());
 			std::set<ValueTuple> tupleProcedures = resultManager->getValuesForSynonymTuple(synonymTuple);
@@ -974,7 +1219,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 				// Update tuple with evaluation results
 				resultManager->updateSynonymTuple(synonymTuple, evaluatedTupleProcedures);
 			}
-			
+*/
 /*			
 			// Retrieve current statements
 			std::set<ProcIndex> p1s = resultManager->getValuesForSynonym(argOne->getStringValue());

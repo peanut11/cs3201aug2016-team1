@@ -29,7 +29,7 @@ void TestWrapper::evaluate(std::string query, std::list<std::string>& results){
   // ...code to evaluate query...
 	QueryProcessor *qp = QueryProcessor::getInstance();
 
-    qp->startObserver(&GlobalStop);
+    // qp->startObserver(&GlobalStop);
 	std::vector<std::string> vector = qp->evaluate(query);
 	// store the answers to the query in the results list (it is initially empty)
 	// each result must be a string.
