@@ -22,11 +22,21 @@ namespace UnitTesting
             PKB::getInstance()->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("procedure_Second.txt"));
+			frontend.parse(std::string("it1/source1.txt"));
 
 			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
 			PKB* pkb = PKB::getInstance();
-			std::set<StmtNumber> haha = pkb->getStmtsByStmt(2, FOLLOWS);
+
+			std::string dec = "assign a; variable v;\n";
+			try {
+				std::vector<std::string> res = queryProcessor->evaluate(dec + "Select v such that Parent(3, a) pattern a(v,_\"0\"_)");
+			}
+			catch (size_t i) {
+				Assert::IsTrue(i == 1);
+				//Assert::IsTrue(res.size() == 0);
+			}
+
+/*			std::set<StmtNumber> haha = pkb->getStmtsByStmt(2, FOLLOWS);
 			for (std::set<StmtNumber>::iterator it = haha.begin(); it != haha.end(); ++it) {
 //				Logger::WriteMessage(std::to_string(*it).c_str());
 			}
@@ -52,7 +62,7 @@ namespace UnitTesting
 			}
 			*/
 
-			std::string declaration = "stmt s;\n";
+/*			std::string declaration = "stmt s;\n";
 			Assert::IsTrue(queryProcessor->getQueryPreProcessor()->isValidQuery(declaration + "Select s such that Follows(s,2)"));
 
 //			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
@@ -79,12 +89,12 @@ namespace UnitTesting
 			}
 			Assert::AreEqual(size_t(2), results1.size());
 */
-			strTitle = "GET STATEMENT BY ASSIGN from PKB";
+/*			strTitle = "GET STATEMENT BY ASSIGN from PKB";
 			Logger::WriteMessage(strTitle.c_str());
             std::set<StmtNumber> c1 = pkb->getStmtsByType(ASSIGN);
 			for (std::set<StmtNumber>::iterator it = c1.begin(); it != c1.end(); ++it) {
 				Logger::WriteMessage(std::to_string(*it).c_str());
-			}
+			} */
 
 /*			std::string declaration2 = "assign a;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select a pattern a(_,_\"z\"_)");
@@ -95,7 +105,7 @@ namespace UnitTesting
 			}
 			Assert::AreEqual(size_t(2), results2.size()); */
 
-			std::string declaration2 = "stmt s;\n";
+/*			std::string declaration2 = "stmt s;\n";
 			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s such that Follows*(2, s)");
 			Logger::WriteMessage(queryProcessor->getQueryPreProcessor()->getQueryTable().toString().c_str());
 			// Logger::WriteMessage(queryProcessor->getQueryEvaluator()->getResultsTable().toString().c_str());
@@ -103,6 +113,7 @@ namespace UnitTesting
 				Logger::WriteMessage((*it).c_str());
 			}
 			Assert::AreEqual(size_t(1), results2.size()); // Follows*(2, 3) only
+			*/
 		}
 		
 		TEST_METHOD(TestSystem_Iteration2_Program1_Example1) {
