@@ -340,7 +340,7 @@ public:
 
 		// check procedures that directly modifies x
 		std::set<ProcIndex> expected({ procIndex });
-		std::set<ProcIndex> actual= pkb->getProcsByVar(MODIFIES, varIndex1);
+		std::set<ProcIndex> actual= pkb->getProcsByVar(MODIFIES_P, varIndex1);
 		std::set<ProcIndex>::const_iterator expectedIt = expected.begin();
 		std::set<ProcIndex>::const_iterator actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());
@@ -353,7 +353,7 @@ public:
 
 		// check procedures that directly uses x
 		expected = std::set<ProcIndex>({ procIndex });
-		actual = pkb->getProcsByVar(USES, varIndex1);
+		actual = pkb->getProcsByVar(USES_P, varIndex1);
 		expectedIt = expected.begin();
 		actualIt = actual.begin();
 		Assert::AreEqual(expected.size(), actual.size());

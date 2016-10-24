@@ -84,7 +84,7 @@ public:
     // Get procedures
     virtual std::set<ProcIndex>  getProcsByProc(ProcIndex procIndex, RelationshipType callsOrStar); // Gets x in Calls(x, 2)
     virtual std::set<ProcIndex>  getProcsByProc(RelationshipType calls, ProcIndex procIndex); // Gets x in Calls(2, x)
-	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses, VarIndex varIndex);
+	virtual std::set<ProcIndex>  getProcsByVar(RelationshipType modifiesOrUses_P, VarIndex varIndex);
 
     // Get statements
     virtual std::set<StmtNumber> getCallsByProc(ProcIndex procIndex);
