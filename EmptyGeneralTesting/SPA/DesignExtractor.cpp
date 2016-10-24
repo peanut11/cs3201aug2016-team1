@@ -30,7 +30,7 @@ void DesignExtractor::processCallsStar() {
 	}
 
 	for (StmtNumber stmt = 0; stmt < size; stmt++) {
-		std::set<ProcIndex> callList = pkb->getProcsByProc(stmt, CALLS);
+		std::set<ProcIndex> callList = pkb->getProcsByProc(CALLS,stmt);
 
 		if (!visited[stmt]) {
 			visited[stmt] = true;
@@ -52,7 +52,7 @@ void DesignExtractor::dfs(StmtNumber index, bool *visited, StmtNumber caller) {
 	ProcName indexName = pkb->getProcName(index);
 	pkb->putProcForProc(caller, CALLS_STAR, indexName);
 
-	std::set<ProcIndex> callList = pkb->getProcsByProc(index, CALLS);
+	std::set<ProcIndex> callList = pkb->getProcsByProc(CALLS,index);
 
 	ProcName proc = pkb->getProcName(caller);
 	for (StmtSetIterator callit = callList.begin(); callit != callList.end(); callit++) {
@@ -63,7 +63,7 @@ void DesignExtractor::dfs(StmtNumber index, bool *visited, StmtNumber caller) {
 
 		ProcName addProcName = pkb->getProcName(call);
 		pkb->putProcForProc(caller, CALLS_STAR, addProcName);
-		std::set<ProcIndex> callStarList = pkb->getProcsByProc(call, CALLS_STAR);
+		std::set<ProcIndex> callStarList = pkb->getProcsByProc(CALLS_STAR,call);
 
 		for (StmtSetIterator addInd = callStarList.begin(); addInd != callStarList.end(); addInd++) {
 			ProcIndex addI = *addInd;
