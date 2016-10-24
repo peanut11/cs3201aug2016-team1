@@ -41,6 +41,20 @@ void DesignExtractor::processCallsStar() {
 				if (!visited[call]) {
 					dfs(call, visited, stmt);
 				}
+				ProcName indexName = pkb->getProcName(stmt);
+				std::set<StmtNumber> useList = pkb->getVarsByProc(call, USES_P);
+				for (StmtSetIterator useInd = useList.begin(); useInd != useList.end(); useInd++) {
+					VarIndex var = *useInd;
+					VarName varName = pkb->getVarName(var);
+					pkb->putVarForProc(indexName, USES, varName);
+
+				}
+				std::set<StmtNumber> modList = pkb->getVarsByProc(call, MODIFIES_P);
+				for (StmtSetIterator modInd = modList.begin(); modInd != modList.end(); modInd++) {
+					VarIndex var = *modInd;
+					VarName varName = pkb->getVarName(var);
+					pkb->putVarForProc(indexName, MODIFIES, varName);
+				}
 			}
 		}
 	}
@@ -74,14 +88,14 @@ void DesignExtractor::dfs(StmtNumber index, bool *visited, StmtNumber caller) {
 		for (StmtSetIterator useInd = useList.begin(); useInd != useList.end(); useInd++) {
 			VarIndex var = *useInd;
 			VarName varName = pkb->getVarName(var);
-			pkb->putVarForProc(proc, USES, varName);
+			pkb->putVarForProc(indexName, USES, varName);
 
 		}
 		std::set<StmtNumber> modList = pkb->getVarsByProc(call, MODIFIES_P);
 		for (StmtSetIterator modInd = modList.begin(); modInd != modList.end(); modInd++) {
 			VarIndex var = *modInd;
 			VarName varName = pkb->getVarName(var);
-			pkb->putVarForProc(proc, MODIFIES, varName);
+			pkb->putVarForProc(indexName, MODIFIES, varName);
 		}
 	}
 }

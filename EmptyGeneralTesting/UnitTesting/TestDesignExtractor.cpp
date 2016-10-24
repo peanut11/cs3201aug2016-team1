@@ -171,11 +171,18 @@ public:
 		PKB* pkb = PKB::getInstance();
 		std::set<VarIndex> actualSet = pkb->getVarsByStmt(9, MODIFIES);
 		std::set<VarIndex> expectedSet = pkb->getVarsByProc(1, MODIFIES_P);
+		
 		StmtSetIterator actual = actualSet.begin();
 		VarIndex actualInd = *actual;
+		std::set<StmtNumber> number = pkb->getStmtsByVar(MODIFIES, actualInd);
 		StmtSetIterator expected = expectedSet.begin();
 		VarIndex expectedInd = *expected;
-		Assert::AreEqual(expectedInd, actualInd);
+		VarName actualName = pkb->getVarName(actualInd);
+		std::string test = "n";
+		StmtSetIterator numberC = number.begin();
+		StmtNumber n = *numberC;
+		StmtNumber chec = 9;
+		Assert::AreEqual(n, chec);
 	}
 	};
 }
