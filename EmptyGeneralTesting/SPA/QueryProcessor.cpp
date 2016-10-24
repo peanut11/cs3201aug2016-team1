@@ -24,6 +24,21 @@ QueryProcessor::QueryProcessor() {
 	this->mEvaluator = QueryEvaluator::getInstance();
 	this->mResultProjector = new QueryResultProjector();
 	// Do other initialization here
+    isEvaluated = false;
+}
+
+void QueryProcessor::observeGlobalStop(volatile bool* stop) {
+    while (!isEvaluated) {
+        if (*stop) {
+            mEvaluator->isGlobalStop = true;
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    }
+}
+
+void QueryProcessor::startObserver(volatile bool* stop) {
+    t = std::thread(&QueryProcessor::observeGlobalStop, this, stop);
 }
 
 /*
@@ -39,15 +54,10 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 		bool isQueryValid = this->getQueryPreProcessor()->isValidQuery(queryString);
 
 		if (isQueryValid) {
-
-			//if (AbstractWrapper::GlobalStop) {
-			//	return std::vector<std::string>();
-			//}
-
-
 			// QueryEvaluator get result from PKB
 			std::vector<std::string> evaluatedResults = this->getQueryEvaluator()->evaluate(this->getQueryPreProcessor()->getQueryTable());
-			
+            isEvaluated = true;
+
 			// QP pass result to QResultProjector for data representation
 			return this->mResultProjector->evaluate(evaluatedResults);
 		}
@@ -63,6 +73,7 @@ std::vector<std::string> QueryProcessor::evaluate(std::string queryString) {
 		//std::cout << e.what() << std::endl;
     }
 
+    isEvaluated = true;
     return std::vector <std::string>();
 }
 

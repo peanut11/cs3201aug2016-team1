@@ -30,6 +30,8 @@ public:
 	static QueryEvaluator* getInstance();
     static VarName to_var_name(VarIndex varIndex);
 	static VarName to_proc_name(ProcIndex procIndex);
+    
+    bool isGlobalStop;
 
     ClausePatternObject* evaluatePattern(ClausePatternObject* patternObject, bool isStopEvaluation);
     ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject, bool isStopEvaluation);
@@ -38,7 +40,6 @@ public:
 	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
 	QueryOptimization* getQueryOptimizer();
-
 
     // For unit tests
     PKB* getPKB();
