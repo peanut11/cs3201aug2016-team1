@@ -29,8 +29,8 @@ public:
 		pkb->putStmtForStmt(StmtNumber(6), PARENT_STAR, StmtNumber(10));
 		pkb->putStmtForStmt(StmtNumber(7), PARENT_STAR, StmtNumber(8));
 */
-		RelationshipPopulator rp = RelationshipPopulator();
-		std::set<StmtNumber> actualSet = rp.getAndMemoiseNextStar(true, 1);
+		RelationshipPopulator *rp = RelationshipPopulator::getInstance();
+		std::set<StmtNumber> actualSet = rp->getAndMemoiseNextStar(true, 1);
 		
 		// Check Next*(1, 3) for no if/while
 		//std::set<StmtNumber> actualSet = RelationshipPopulator::getNextStar(StmtNumber(1), StmtNumber(2));
@@ -45,7 +45,7 @@ public:
 		}
 
 		// Checks Next*(4, x) for if+nestedWhile
-		actualSet = rp.getAndMemoiseNextStar(true, 8);
+		actualSet = rp->getAndMemoiseNextStar(true, 8);
 
 		actualSize = actualSet.size();
 		expectedSize = 4;
@@ -60,7 +60,7 @@ public:
 		}
 
 		// Checks Next*(x, 2) for no if/while
-		actualSet = rp.getAndMemoiseNextStar(false, 8);
+		actualSet = rp->getAndMemoiseNextStar(false, 8);
 
 		actualSize = actualSet.size();
 		expectedSize = 8;
@@ -71,7 +71,25 @@ public:
 			Assert::AreEqual(StmtNumber(i), *actualIt);
 			actualIt++;
 		}
+		pkb->clear();
+		rp->clear();
 	}
 
+	TEST_METHOD(TestPopulator_Source) {
+		PKB* pkb = PKB::getInstance();
+		std::string str = Tools::readFile("source.txt");
+
+		ProgramConverter pc = ProgramConverter();
+		pc.convert(str);
+		DesignExtractor de = DesignExtractor();
+		de.process();
+		
+		RelationshipPopulator *rp = RelationshipPopulator::getInstance();
+		std::set<StmtNumber> actualSet = rp->getAndMemoiseNextStar(true, 1);
+
+		Assert::IsTrue(true);
+		pkb->clear();
+		rp->clear();
+	}
 	};
 }

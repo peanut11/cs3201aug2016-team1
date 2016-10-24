@@ -117,7 +117,7 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
 				results.insert(whileChildren.begin(), whileChildren.end());
 
 				potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
-				if (potentialNextStmts.empty()) {
+				if (potentialNextStmts.empty() && oldestWhile != stmt) {
 					// While is the end of a stmtLst
 					// Might be inside an if-else stmtLst
 					potentialNextStmts = pkb->getStmtsByStmt(NEXT, oldestWhile);
@@ -153,7 +153,7 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
 				results.insert(whileChildren.begin(), whileChildren.end());
 
 				potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, FOLLOWS);
-				if (potentialNextStmts.empty()) {
+				if (potentialNextStmts.empty() && oldestWhile != stmt) {
 					// While is the start of a stmtLst 
 					// Might be inside an if-else stmtLst
 					potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, PARENT);
