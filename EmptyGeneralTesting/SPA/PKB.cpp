@@ -58,10 +58,13 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
             // Avoid running DFS
 			return false;
 		}
-		return !RelationshipPopulator::getNextStar(stmtOrProcIndex, item).empty();
 
+		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
+		return rp->isNextStar(stmtOrProcIndex, item);
+		
 	} else if (rel == NEXT || rel == MODIFIES || rel == USES) {
         // Get from direct-rel column in StmtTable
+
 		if (stmtOrProcIndex >= stmtTable.size()) {
 			return false;
 		}
@@ -333,8 +336,10 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 		throw Exception::INTERNAL_USE_ERROR;
 	}
 
-	if (stmtRel == NEXT_STAR) return RelationshipPopulator::getNextStar(StmtNumber(0), stmt);
-    
+	if (stmtRel == NEXT_STAR) {
+		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
+		return rp->getAndMemoiseNextStar(false, stmt);
+	}
 	if (stmt >= stmtTable.size()) {
         return StmtSet();
     }
@@ -353,8 +358,10 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 		throw Exception::INTERNAL_USE_ERROR;
 	}
 
-	if (followsOrParent == NEXT_STAR) return RelationshipPopulator::getNextStar(stmt, StmtNumber(0));
-
+	if (followsOrParent == NEXT_STAR) {
+		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
+		return rp->getAndMemoiseNextStar(true, stmt);
+	}
     if (stmt >= stmtTable.size()) {
         return StmtSet();
     }

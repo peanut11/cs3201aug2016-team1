@@ -84,5 +84,23 @@ public:
 			Assert::AreEqual(e.what(), Exception::INTERNAL_USE_ERROR.what());
 		}
 	}
+
+	TEST_METHOD(TestPKB_RelationshipPopulator) {
+		PKB* pkb = PKB::getInstance();
+
+		pkb->putStmtForStmt(1, NEXT, 2);
+		pkb->putStmtForStmt(2, NEXT, 3);
+		pkb->putStmtForStmt(3, NEXT, 4);
+		pkb->putStmtProc(1, "Second");
+		pkb->putStmtProc(2, "Second");
+		pkb->putStmtProc(3, "Second");
+		pkb->putStmtProc(4, "Second");
+		int size = pkb->getStmtsByStmt(NEXT_STAR, 1).size();
+		Assert::AreEqual(3, size);
+
+		bool res = pkb->is(NEXT_STAR, 1, 4);
+
+		Assert::IsTrue(res);
+	}
 	};
 }
