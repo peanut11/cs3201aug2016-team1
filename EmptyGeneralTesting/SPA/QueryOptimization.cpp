@@ -199,7 +199,29 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 			ClauseSuchThatObject* rhsObj = dynamic_cast<ClauseSuchThatObject*>(rhs);
 
 
-			return lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym();
+			if (lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym()) {
+				return true;
+			}
+			else {
+				if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
+					&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
+
+					return true;
+				}
+
+				return false;
+			}
+
+			/*
+			if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
+				&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
+				return true;
+			}
+			else {
+				return lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym();
+			}
+			*/
+			
 
 		}
 		else {
@@ -400,8 +422,12 @@ std::string QueryOptimization::getRelationshipString(RelationshipType type) {
 	switch (type) {
 	case MODIFIES:
 		return "modifies";
+	case MODIFIES_P:
+		return "modifies_p";
 	case USES:
 		return "uses";
+	case USES_P:
+		return "uses_p";
 	case CALLS:
 		return "calls";
 	case CALLS_STAR:
