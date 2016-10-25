@@ -31,7 +31,7 @@ void DesignExtractor::processCallsStar() {
 
 	for (StmtNumber stmt = 0; stmt < size; stmt++) {
 		std::set<ProcIndex> callList = pkb->getProcsByProc(CALLS,stmt);
-
+		
 		if (!visited[stmt]) {
 			visited[stmt] = true;
 
@@ -58,6 +58,7 @@ void DesignExtractor::processCallsStar() {
 			}
 		}
 	}
+
 }
 
 void DesignExtractor::dfs(StmtNumber index, bool *visited, StmtNumber caller) {
