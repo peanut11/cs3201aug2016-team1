@@ -151,8 +151,11 @@ bool ResultGrid::mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleS
 
         GridListIterator otherRow = other->resultList.begin();
         while (otherRow != other->resultList.end()) {
-            SynonymValue otherSynVal = (*otherRow)[otherColumn];
+            if (Exceptions::globalStop) {
+                return false;
+            }
 
+            SynonymValue otherSynVal = (*otherRow)[otherColumn];
             if (!contains(otherSynSet, otherSynVal)) {
                 otherRow = other->resultList.erase(otherRow);
                 continue;

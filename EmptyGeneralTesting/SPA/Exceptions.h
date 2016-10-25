@@ -19,6 +19,12 @@ std::logic_error
 */
 
 class Exceptions : public std::logic_error {
+public:
+    static volatile bool globalStop;
+
+    const char* what() { return msg.c_str(); }
+    const char* type() { return error_type.c_str(); }
+
 private:
     typedef const Exceptions E;
 
@@ -105,10 +111,6 @@ public:
     static E duplicate_object_synonym(std::string synonym) {
         return E(invalid_argument, "SynonymTable insert duplicate object synonym: " + synonym);
     }
-
-public:
-    const char* what() { return msg.c_str(); }
-    const char* type() { return error_type.c_str(); }
 
 private:
     std::string error_type;
