@@ -391,7 +391,7 @@ StmtNumber PKB::getStmtTableSize() {
 	return stmtTable.size() - 1; // StmtNumber starts from 1
 }
 StmtNumber PKB::getProcTableSize() {
-	return procTable.size() - 1;
+	return procTable.size(); // ProcIndex starts from 0
 }
 
 ProcIndex PKB::getProcByCall(StmtNumber callStmt) {

@@ -31,7 +31,7 @@ void DesignExtractor::processCallsStar() {
 
 	for (StmtNumber stmt = 0; stmt < size; stmt++) {
 		std::set<ProcIndex> callList = pkb->getProcsByProc(CALLS,stmt);
-
+		
 		if (!visited[stmt]) {
 			visited[stmt] = true;
 
@@ -55,6 +55,28 @@ void DesignExtractor::processCallsStar() {
 					VarName varName = pkb->getVarName(var);
 					pkb->putVarForProc(indexName, MODIFIES, varName);
 				}
+			}
+		}
+	}
+	// Read again to capture not called Procedure
+	for (StmtNumber stmt = 0; stmt < size; stmt++) {
+		std::set<ProcIndex> callList = pkb->getProcsByProc(CALLS, stmt);
+		for (StmtSetIterator callit = callList.begin(); callit != callList.end(); callit++) {
+			ProcIndex call = *callit;
+
+			ProcName indexName = pkb->getProcName(stmt);
+			std::set<StmtNumber> useList = pkb->getVarsByProc(call, USES_P);
+			for (StmtSetIterator useInd = useList.begin(); useInd != useList.end(); useInd++) {
+				VarIndex var = *useInd;
+				VarName varName = pkb->getVarName(var);
+				pkb->putVarForProc(indexName, USES, varName);
+
+			}
+			std::set<StmtNumber> modList = pkb->getVarsByProc(call, MODIFIES_P);
+			for (StmtSetIterator modInd = modList.begin(); modInd != modList.end(); modInd++) {
+				VarIndex var = *modInd;
+				VarName varName = pkb->getVarName(var);
+				pkb->putVarForProc(indexName, MODIFIES, varName);
 			}
 		}
 	}
