@@ -29,3 +29,8 @@ bool ClauseWithObject::getResultsBoolean()
 {
 	return this->isResultsBoolean;
 }
+
+bool ClauseWithObject::isSynonymContained(std::string synonym) {
+	return this->getRefObject1()->getSynonym().compare(synonym) ||
+		this->getRefObject2()->getSynonym().compare(synonym);
+}

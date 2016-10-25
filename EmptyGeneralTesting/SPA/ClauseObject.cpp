@@ -12,3 +12,7 @@ ClauseType::ClauseType ClauseObject::getClauseType() const {
 	return this->mClauseType;
 }
 
+/*
+bool ClauseObject::isSynonymContained(std::string synonym) {
+}
+*/

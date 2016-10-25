@@ -35,22 +35,11 @@ public:
 	
 	std::string printFinalResult(std::vector<GroupObject> groups);
 	std::string printMapGroupObjectToString(std::map<int, GroupObject> mapGroupObject); //std::map<int, GroupObject> mMap
-	//std::vector<std::vector<ClauseObject>> getGroups();
+	
 
-	/*
-	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);
-	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClausePatternObject mClauseObject);
-	GroupType::GroupType getGroupType(QueryTable mQueryTable, ClauseWithObject mClauseObject);
-	bool isClauseReturnBoolean(ClauseSuchThatObject mClauseObject);
-	bool isClauseReturnBoolean(ClausePatternObject mClauseObject);
-	bool isClauseAffectsResult(QueryTable mQueryTable, ClauseSuchThatObject mClauseObject);
-	bool isClauseAffectsResult(QueryTable mQueryTable, ClausePatternObject mClauseObject);
-	bool isClauseAffectsResult(QueryTable mQueryTable, ClauseWithObject mClauseObject);
-	bool isClauseOthers(ClauseSuchThatObject mClauseObject);
-	*/
 
 	bool isSynonymGroupAffectResult(QueryTable mQueryTable, std::vector<std::string> synonymList);
-
+	bool isSynonymUsedBefore(ClauseObject* lhs, ClauseObject* rhs);
 	
 
 	

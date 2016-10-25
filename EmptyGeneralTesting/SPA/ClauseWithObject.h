@@ -16,6 +16,7 @@ public:
 	ClauseWithRefObject* getRefObject1();
 	ClauseWithRefObject* getRefObject2();
 	bool getResultsBoolean();
+	bool isSynonymContained(std::string synonym);
 	void setResultsBoolean(bool boolean);
 
 };

@@ -47,6 +47,11 @@ bool ClauseSuchThatObject::getResultsBoolean()
 	return this->isResultsBoolean;
 }
 
+bool ClauseSuchThatObject::isSynonymContained(std::string synonym) {
+	return this->argsOne->getStringValue().compare(synonym) == 0 ||
+		this->argsTwo->getStringValue().compare(synonym) == 0;
+}
+
 int ClauseSuchThatObject::getNumberOfSynonym() {
 	return this->numOfSynonym;
 }

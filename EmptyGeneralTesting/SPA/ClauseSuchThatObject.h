@@ -24,6 +24,7 @@ public:
 	ClauseSuchThatArgObject* getArgsOne() const;
 	ClauseSuchThatArgObject* getArgsTwo() const;
 	bool getResultsBoolean();
+	bool isSynonymContained(std::string synonym);
 	int getNumberOfSynonym();
 	void setResultsBoolean(bool boolean);
 	

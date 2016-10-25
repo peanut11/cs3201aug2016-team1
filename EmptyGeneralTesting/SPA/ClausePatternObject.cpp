@@ -69,3 +69,9 @@ bool ClausePatternObject::getResultsBoolean()
 {
 	return this->isResultsBoolean;
 }
+
+bool ClausePatternObject::isSynonymContained(std::string synonym) {
+	return firstArg.compare(synonym) == 0 || 
+		secondArg.compare(synonym) == 0 || 
+		thirdArg.compare(synonym) == 0;
+}

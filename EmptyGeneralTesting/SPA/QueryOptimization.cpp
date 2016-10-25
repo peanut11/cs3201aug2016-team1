@@ -184,13 +184,15 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 	6. Push Affects/* clauses on the last positions in a group
 	*/
 	
+	std::string usedSynonym1 = "";
+	std::string usedSynonym2 = "";
+
 
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), 
 		[](ClauseObject* lhs, ClauseObject* rhs) {
 		// if true, means lhs is before rhs
 		// if false, means lhs is after rhs
 
-	
 		
 		if (lhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT &&
 			rhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT) {
@@ -198,38 +200,31 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 			ClauseSuchThatObject* lhsObj = dynamic_cast<ClauseSuchThatObject*>(lhs); // const_cast< const ClauseSuchThatObject*>(lhs)
 			ClauseSuchThatObject* rhsObj = dynamic_cast<ClauseSuchThatObject*>(rhs);
 
-
 			if (lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym()) {
 				return true;
 			}
 			else {
+				/*
+				if (rhsObj->getArgsOne()->getStringValue().compare(lhsObj->getArgsOne()->getStringValue()) == 0
+					|| rhsObj->getArgsTwo()->getStringValue().compare(lhsObj->getArgsTwo()->getStringValue()) == 0) {
+					return true;
+				}
+
 				if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
 					&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
 
 					return true;
 				}
-
+				*/
 				return false;
 			}
-
-			/*
-			if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
-				&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
-				return true;
-			}
-			else {
-				return lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym();
-			}
-			*/
-			
+	
 
 		}
 		else {
 			return lhs->getClauseType() < rhs->getClauseType();
 		}
 		
-
-
 
 
 	});

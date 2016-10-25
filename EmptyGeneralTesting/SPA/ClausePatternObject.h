@@ -32,4 +32,5 @@ public:
 	bool getIsFirstArgSynonym();
 	bool getResultsBoolean();
 	void setResultsBoolean(bool boolean);
+	bool isSynonymContained(std::string synonym);
 };

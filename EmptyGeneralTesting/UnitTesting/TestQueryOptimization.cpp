@@ -389,8 +389,9 @@ namespace UnitTesting {
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(_,_) Parent(s1,s2)"));
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt pattern ifstmt(\"x\",_,_) such that Modifies(ifstmt,v) with v.varName=\"x\""));
 
-			Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Uses(p, v1) and Uses(a, v1) and Modifies(p, v2) with v2.varName = \"x\""));
-			
+			//Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Uses(p, v1) and Uses(a, v1) and Modifies(p, v2) with v2.varName = \"x\""));
+			Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Uses(p, v1) and Uses(a, v1) and Uses(p, v2) with v2.varName = \"x\""));
+
 
 			std::map<int, GroupObject> output = optimize.doGroup(validator->getSynonymGroup(),
 				validator->getQueryTable());
