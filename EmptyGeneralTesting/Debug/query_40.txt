@@ -1,0 +1,5 @@
+40 - time limit exceeded, refused to stop (66 - 70 s)
+procedure p; assign a; variable v1, v2;
+Select p such that Uses(p, v1) and Uses(a, v1) and Modifies(p, v2) with v2.varName = "x"
+IamCrazy,Main,Panda,Elephant,Monkey,Giraffe,Dream,First,Second,A,D,Movie,Happy,Useless
+79999

@@ -918,34 +918,31 @@ bool QueryValidator::isClausePattern(std::string str) {
 					secondArg = nextToken;
 					numOfArgs += 1;
 				}
+				
 				else if (isPatternExprArgument(nextToken)) { // "x + y"
 
-					// Only WHILE cannot have pattern behind
-					if (selectedSynonymObj.getType() != EntityType::WHILE) {
+					// Only ASSIGN can have expression as second argument
+					if (selectedSynonymObj.getType() == EntityType::ASSIGN) {
+					//if (selectedSynonymObj.getType() != EntityType::WHILE) {
 						secondArg = this->validatedExpression;
 						numOfArgs += 1;
 					}
 					
 				}
+				
 			} 
 			
 		}
 		else if (numOfArgs == 2 && numOfComma == 2) {
 			// third argument which is for IF
+			// Only allows wildcard
 			if (!isMatch(nextToken, SYNTAX_COMMA) && selectedSynonymObj.getType() == EntityType::IF) {
 				if (isWildcard(nextToken) && !isMatch(st.peekNextToken(), SYNTAX_DOUBLE_QUOTE)) {
 					thirdArg = nextToken;
 					numOfArgs += 1;
 				}
-				else if (isPatternExprArgument(nextToken)) {
-					thirdArg = validatedExpression;
-					numOfArgs += 1;
-				}
 				/*
-				if ((isWildcard(nextToken) 
-					&& !isMatch(st.peekNextToken(), SYNTAX_DOUBLE_QUOTE))
-					|| isPatternExprArgument(nextToken)) { // "_" or "x + y"
-
+				else if (isPatternExprArgument(nextToken)) {
 					thirdArg = validatedExpression;
 					numOfArgs += 1;
 				}

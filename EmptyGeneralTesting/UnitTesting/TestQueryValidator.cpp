@@ -134,8 +134,7 @@ public:
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		std::string declaration = "variable v;stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;call c;constant const;\n";
-		
-	
+
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
 		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
 		// output is "wrong". Select v such that Modifies (a1, "iter") pattern a("left", _)
@@ -1270,22 +1269,8 @@ public:
 		validator->initStringTokenizer("ifstmt(v,_,_)"); // variable synonym
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
-		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
 
 		validator->initStringTokenizer("ifstmt(\"x\",_,_)");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isClausePattern("ifstmt"));
-
-		validator->initStringTokenizer("ifstmt(\"x\",_,\"x\")");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isClausePattern("ifstmt"));
-
-		validator->initStringTokenizer("ifstmt(\"x\",\"x\",_)");
-		validator->getNextToken();
-		Assert::IsTrue(validator->isClausePattern("ifstmt"));
-
-		validator->initStringTokenizer("ifstmt(\"x\",\"x\",\"y\")");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
 		
@@ -1345,6 +1330,20 @@ public:
 		auto funcPtrError11 = [validator] { validator->isClausePattern("ifstmt"); };
 		Assert::ExpectException<Exceptions>(funcPtrError11);
 		
+		validator->initStringTokenizer("ifstmt(v,\"x+y\",_)");	// expression for second argument
+		validator->getNextToken();
+		auto funcPtrError12 = [validator] { validator->isClausePattern("ifstmt"); };
+		Assert::ExpectException<Exceptions>(funcPtrError12);
+
+		validator->initStringTokenizer("ifstmt(v,_,\"x+y\")");	// expression for third argument
+		validator->getNextToken();
+		auto funcPtrError13 = [validator] { validator->isClausePattern("ifstmt"); };
+		Assert::ExpectException<Exceptions>(funcPtrError13);
+
+		validator->initStringTokenizer("ifstmt(v,\"x-y\",\"x+y\")");	// expression for second & third argument
+		validator->getNextToken();
+		auto funcPtrError14 = [validator] { validator->isClausePattern("ifstmt"); };
+		Assert::ExpectException<Exceptions>(funcPtrError14);
 	}
 
 	TEST_METHOD(TestQueryValidator_Pattern_Expr_Only) {

@@ -204,18 +204,19 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 				return true;
 			}
 			else {
-				/*
+				
 				if (rhsObj->getArgsOne()->getStringValue().compare(lhsObj->getArgsOne()->getStringValue()) == 0
 					|| rhsObj->getArgsTwo()->getStringValue().compare(lhsObj->getArgsTwo()->getStringValue()) == 0) {
-					return true;
+					return false;
 				}
+				
 
 				if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
 					&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
 
 					return true;
 				}
-				*/
+				
 				return false;
 			}
 	
