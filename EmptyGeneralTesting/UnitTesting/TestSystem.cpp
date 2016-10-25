@@ -242,6 +242,37 @@ namespace UnitTesting
 			}
 		}
 
+        TEST_METHOD(TestSystem_Iteration2_Query40) {
+            // This query takes ~ 1 min to evaluate
+            return; // Comment-out this line to run
+
+            PKB::getInstance()->clear();
+
+            Frontend frontend = Frontend();
+            frontend.parse("Iteration_2_Test_Program_Case/source.txt");
+
+            std::string declaration = "procedure p; assign a; variable v1, v2;\n";
+            std::string clauses = (std::string("")
+                                   + "Select p such that Uses(p, v1) and Uses(a, v1) "
+                                   + "and Modifies(p, v2) with v2.varName = \"x\"");
+
+            QueryProcessor *qp = QueryProcessor::getInstance();
+            std::vector<std::string> v = qp->evaluate(declaration + clauses);
+            std::set<std::string> results(v.begin(), v.end());
+
+            std::set<std::string> expected = { "IamCrazy","Main","Panda","Elephant","Monkey",
+                "Giraffe","Dream","First","Second","A","D","Movie","Happy","Useless" };
+            Assert::AreEqual(expected.size(), results.size());
+
+            std::set<std::string>::const_iterator expect = expected.begin();
+            std::set<std::string>::const_iterator actual = results.begin();
+            while (expect != expected.end()) {
+                Assert::AreEqual(*expect, *actual);
+                expect++;
+                actual++;
+            }
+        }
+
         TEST_METHOD(TestSystem_NestedIfWhileIf) {
             PKB::getInstance()->clear();
 
