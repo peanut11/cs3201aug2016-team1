@@ -27,11 +27,13 @@ QueryProcessor::QueryProcessor() {
     isEvaluated = false;
 }
 
+volatile bool Exceptions::globalStop = false;
+
 void QueryProcessor::observeGlobalStop(volatile bool* stop) {
     while (!isEvaluated) {
         if (*stop) {
-            mEvaluator->isGlobalStop = true;
-            return;
+            Exceptions::globalStop = true;
+            isEvaluated = true;
         } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
@@ -39,6 +41,8 @@ void QueryProcessor::observeGlobalStop(volatile bool* stop) {
 }
 
 void QueryProcessor::startObserver(volatile bool* stop) {
+    Exceptions::globalStop = false;
+    isEvaluated = false;
     t = std::thread(&QueryProcessor::observeGlobalStop, this, stop);
 }
 

@@ -37,7 +37,6 @@ QueryEvaluator::QueryEvaluator() {
     synonymTable = SynonymTable::getInstance();
     resultManager = new ResultGridManager();
 	queryOptimizer = new QueryOptimization();
-    isGlobalStop = false;
 }
 
 QueryOptimization* QueryEvaluator::getQueryOptimizer() {
@@ -100,6 +99,10 @@ std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
 			// Iterate the clauses in each group
 			int clauseIndex = 0;
 			for (ClauseObject* obj : clauses) {
+                if (Exceptions::globalStop) {
+                    return std::vector<std::string>();
+                }
+
 				ClauseType::ClauseType clauseType = obj->getClauseType();
 				bool isStopEvaluation = false;
 
