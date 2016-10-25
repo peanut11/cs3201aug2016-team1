@@ -133,7 +133,7 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;call c;constant const;\n";
+		std::string declaration = "variable v;stmtLst sl1; procedure p, q;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;call c;constant const;\n";
 		
 	
 		// Follows (s, s), Parent*(_, _) must return error, cos same synonym
@@ -143,8 +143,8 @@ public:
 		
 		// Success Result clause is statement list
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select sl1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success Modifies procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
@@ -289,6 +289,9 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"x*y\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"x+y-z\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"w*x+y-z\")"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt pattern ifstmt(\"x\",_,_) such that Modifies(ifstmt,v) with v.varName=\"x\""));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Failure
@@ -1199,7 +1202,7 @@ public:
 		// populate the synonym table first
 		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
-
+		
 		// success
 		validator->initStringTokenizer("a1(v,\"x+y\")");
 		validator->getNextToken();
@@ -1259,7 +1262,6 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("w"));
 
-		//validator->clearSynonymOccurence();
 		validator->initStringTokenizer("w(\"x\",_)");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("w"));
@@ -1268,6 +1270,8 @@ public:
 		validator->initStringTokenizer("ifstmt(v,_,_)"); // variable synonym
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClausePattern("ifstmt"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
 
 		validator->initStringTokenizer("ifstmt(\"x\",_,_)");
 		validator->getNextToken();

@@ -1,0 +1,15 @@
+procedure Panda { 
+a = 4; 
+b = a + a; 
+c = a + b + 3 + a; 
+y = a + 2 + c; 
+while d { 
+  d = a + y; 
+  while z { 
+    x = b + 5 + y + z; 
+    m = z + 1; } 
+  v = d + 40 + 1; }
+x = z + 2 + m + v;
+x = x + a;
+x = x + a;
+y = x + 2; }

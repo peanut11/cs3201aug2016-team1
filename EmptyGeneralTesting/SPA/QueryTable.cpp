@@ -91,7 +91,13 @@ std::string QueryTable::toString() {
 			str.append("false");
 		}
 
-		str.append(", " + value->getPatternSynonymArgument() + ", " + value->getFirstArgument() + ", " + value->getSecondArgument() + "\n");
+		str.append(", " + value->getPatternSynonymArgument() + ", " + value->getFirstArgument() + ", " + value->getSecondArgument());
+
+		if (value->getPatternType() == EntityType::IF) {
+			str.append(", " + value->getThirdArgument());
+		}
+
+		str.append("\n");
 
 	}
 

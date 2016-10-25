@@ -69,6 +69,8 @@ QueryValidator *QueryValidator::getInstance()
 	_instance->mRelTable = RelTable::getInstance();
 	_instance->mQueryTable = QueryTable();
 	_instance->mSynonymGroup = SynonymGroup::getInstance();
+	_instance->validatedExpression = "";
+	_instance->validatedVariableName = "";
 	return _instance;
 }
 
@@ -797,13 +799,11 @@ bool QueryValidator::isClausePattern(std::string str) {
 	// start is a synonym (assign, while, if) must be written next
 	if (!isSynonym(str)) { 
 		throw Exceptions::invalid_pattern_missing_syntax();
-		//return false; 
 	}
 
-	selectedSynonymObj = this->mSynonymTable->getObject(str); // st.peekNextToken()
+	selectedSynonymObj = this->mSynonymTable->getObject(str);
 	if (selectedSynonymObj.getType() == EntityType::INVALID) {
-		throw Exceptions::invalid_pattern(str);
-		//return false; // invalid synonym, did not declare in the first place
+		throw Exceptions::invalid_pattern(str); // invalid synonym, did not declare in the first place
 	}
 
 	if (selectedSynonymObj.getType() != EntityType::ASSIGN
@@ -825,7 +825,6 @@ bool QueryValidator::isClausePattern(std::string str) {
 	//if (this->getSynonymOccurence()->hasMaximumOccurence(str, ClauseType::PATTERN)) { return false; }
 	// update synonym occurence
 	//this->getSynonymOccurence()->setIncrementOccurence(str, ClauseType::PATTERN);
-
 	//st.nextToken(); // point to valid synonym
 
 	// check if there's open bracket
@@ -934,6 +933,15 @@ bool QueryValidator::isClausePattern(std::string str) {
 		else if (numOfArgs == 2 && numOfComma == 2) {
 			// third argument which is for IF
 			if (!isMatch(nextToken, SYNTAX_COMMA) && selectedSynonymObj.getType() == EntityType::IF) {
+				if (isWildcard(nextToken) && !isMatch(st.peekNextToken(), SYNTAX_DOUBLE_QUOTE)) {
+					thirdArg = nextToken;
+					numOfArgs += 1;
+				}
+				else if (isPatternExprArgument(nextToken)) {
+					thirdArg = validatedExpression;
+					numOfArgs += 1;
+				}
+				/*
 				if ((isWildcard(nextToken) 
 					&& !isMatch(st.peekNextToken(), SYNTAX_DOUBLE_QUOTE))
 					|| isPatternExprArgument(nextToken)) { // "_" or "x + y"
@@ -941,7 +949,7 @@ bool QueryValidator::isClausePattern(std::string str) {
 					thirdArg = validatedExpression;
 					numOfArgs += 1;
 				}
-				
+				*/
 			}
 
 		}
@@ -1223,6 +1231,8 @@ bool QueryValidator::isPatternExprArgument(std::string str) {
 	bool isValidExpression = false;
 	int numofDoubleQuote = 0;
 	int numOfWildcard = 0;
+
+	this->validatedExpression = "";
 
 	if (str.compare("") == 0) { // empty
 		throw Exceptions::invalid_pattern_argument();
