@@ -301,18 +301,16 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
 			// Retrieve wild card statements
 			std::set<StmtNumber> statements1 = pkb->getAllStmts();
-			std::set<StmtNumber> statements2 = pkb->getAllStmts();
 
 			// Obtain evaluation results
 			for (StmtSetIterator s1s = statements1.begin(); s1s != statements1.end(); s1s++) {
-				for (StmtSetIterator s2s = statements2.begin(); s2s != statements2.end(); s2s++) {
-					if (pkb->is(type, *s1s, *s2s)) {
-						suchThatRelObject->setResultsBoolean(true);
-						if (isStopEvaluation) {
-							return suchThatRelObject;
-						}
+				std::set<StmtNumber> validStatements = pkb->getStmtsByStmt(type, *s1s);
+				if (validStatements.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
 					}
-				}
+				}				
 			}
 		}
     }
@@ -654,20 +652,19 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
 		else if (argOne->getIsSynonym() == false && argOne->getStringValue() == "_" && argTwo->getIsSynonym() == false && argTwo->getStringValue() == "_") {
 			// Retrieve wild card procedure names
 			std::set<ProcIndex> procedures1 = pkb->getAllProcIndex();
-			std::set<ProcIndex> procedures2 = pkb->getAllProcIndex();
 
 			// Obtain evaluation results
 			for (StmtSetIterator s1s = procedures1.begin(); s1s != procedures1.end(); s1s++) {
-				for (StmtSetIterator s2s = procedures2.begin(); s2s != procedures2.end(); s2s++) {
-					if (pkb->is(type, *s1s, *s2s)) {
-						suchThatRelObject->setResultsBoolean(true);
-						if (isStopEvaluation) {
-							return suchThatRelObject;
-						}
+				// Store results
+				std::set<ProcIndex> procedures = pkb->getProcsByProc(type, *s1s);
+				if (procedures.size() > 0) {
+					suchThatRelObject->setResultsBoolean(true);
+					if (isStopEvaluation) {
+						return suchThatRelObject;
 					}
 				}
 			}
-	
+			
 		}
 	}
     
