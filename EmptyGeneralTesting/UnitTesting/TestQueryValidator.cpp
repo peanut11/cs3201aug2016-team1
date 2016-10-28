@@ -16,6 +16,10 @@ public:
 
 		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(\"x\",_\"x\"_) and a2(var1, _\"x\"_) and a2(_, _\"y\"_) such that Next(a1, a2)"));
+		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) Next(s1, s2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
