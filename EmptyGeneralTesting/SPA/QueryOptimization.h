@@ -17,6 +17,10 @@ class QueryOptimization {
 
 	//std::map<int, GroupObject> mapGroupObject;
 
+
+
+
+
 public:
 	/*
 	Assign all ClauseObjects in QueryTable into specific group
@@ -36,10 +40,11 @@ public:
 	std::string printFinalResult(std::vector<GroupObject> groups);
 	std::string printMapGroupObjectToString(std::map<int, GroupObject> mapGroupObject); //std::map<int, GroupObject> mMap
 	
-
+	//std::string getFirstSynonym(ClauseObject* current);
+	//std::string getSecondSynonym(ClauseObject* current);
 
 	bool isSynonymGroupAffectResult(QueryTable mQueryTable, std::vector<std::string> synonymList);
-	bool isSynonymUsedBefore(ClauseObject* lhs, ClauseObject* rhs);
+	//bool hasSynonymUsedBefore(ClauseObject* current, std::string synonym);
 	
 
 	
