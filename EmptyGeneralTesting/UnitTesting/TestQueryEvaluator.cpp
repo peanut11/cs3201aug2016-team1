@@ -15,12 +15,12 @@ public:
     TEST_METHOD(TestQueryEvaluator_SelectObject) {
         QueryEvaluator *evaluator = QueryEvaluator::getInstance();
         // 'Select BOOLEAN'
-		ClauseSelectObject selTrue = ClauseSelectObject(CONSTANT, "", AttrType::VAR_NAME, true);
+		ClauseSelectObject selTrue = ClauseSelectObject(CONSTANT, "", AttrType::VAR_NAME);
 		ClauseSelectResultObject relObject;
 		relObject.insertClauseSelectObject(selTrue);
 		relObject.setBoolean(true);
         // 'Select s'
-        ClauseSelectObject selFalse = ClauseSelectObject(CONSTANT, "s", AttrType::VAR_NAME, false);
+        ClauseSelectObject selFalse = ClauseSelectObject(CONSTANT, "s", AttrType::VAR_NAME);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selFalse);
 		relObject1.setBoolean(false);
@@ -131,7 +131,7 @@ public:
         Assert::AreEqual("true", results.begin()->c_str());
 
         // SELECT s such that Follows(4,5)
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -187,7 +187,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(s,10)
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -244,7 +244,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Follows(a,8)
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -302,7 +302,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(10,s)
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -360,7 +360,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Follows(16,a)
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -411,7 +411,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(_,10);
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -469,7 +469,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(_,s);
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -518,7 +518,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(8,_);
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -576,7 +576,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(s,_);
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -658,7 +658,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s1 such that Follows(s1,s2)
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -670,7 +670,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s2 such that Follows(s1,s2)
-        ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
         std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -682,7 +682,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Follows(s1,s2)
-        ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
         std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -737,7 +737,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that (Modifies(4,"x"))
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -793,7 +793,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that (Modifies(9,v))
-        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -844,7 +844,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that (Modifies(13,_)
-        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -902,7 +902,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that (Modifies(s,"x")
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -960,7 +960,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that (Modifies(s,_);
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1037,7 +1037,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT s such that Modifies(s,v);
-        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1049,7 +1049,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that Modifies(s,v);
-        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
         std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -1125,7 +1125,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(v,_)
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1136,7 +1136,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that Pattern a(v,_)
-        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
         std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -1187,7 +1187,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(_,_)
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1247,7 +1247,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a("x",_)
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1324,7 +1324,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(v,"_x_")
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1335,7 +1335,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT v such that Pattern a(v,"_x_")
-        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+        ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
         std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -1394,7 +1394,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a(_, "_x_")
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1454,7 +1454,7 @@ public:
         Logger::WriteMessage("=============");
 
         // SELECT a such that Pattern a("z","_z_")
-        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+        ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
         std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1512,7 +1512,7 @@ public:
 		Assert::AreEqual("true", results.begin()->c_str());
 
 		// SELECT s such that CALLS ("First", "Second")
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1577,7 +1577,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS (p,"Third")
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1644,7 +1644,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS ("First",p)
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1695,7 +1695,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS (_,"Second");
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1762,7 +1762,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS (_,p);
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1811,7 +1811,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS ("First",_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1878,7 +1878,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS (p,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1960,7 +1960,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p1 such that CALLS (p1, p2) 
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -1972,7 +1972,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p2 such that CALLS (p1, p2) 
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "p2", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "p2", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -1984,7 +1984,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that CALLS (p1, p2) 
-		ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -2039,7 +2039,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that MODIFIES ("First", "x")
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2095,7 +2095,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that MODIFIES ("First",v)
-		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2146,7 +2146,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that MODIFIES ("Second",_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2213,7 +2213,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p such that MODIFIES (p,"x")
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2280,7 +2280,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p such that MODIFIES (p,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2359,7 +2359,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p such that MODIFIES (p,v);
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2371,7 +2371,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that MODIFIES (p,v);
-		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2436,7 +2436,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p with p.procName = "First"
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2448,7 +2448,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with p.procName = "First"
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2529,7 +2529,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p1 with p1.procName = p2.procName
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2541,7 +2541,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with p1.procName = p2.procName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2622,7 +2622,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p1 with p1.procName = c1.procName
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2634,7 +2634,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with p1.procName = p2.procName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2715,7 +2715,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT p1 with p1.procName = v.varName
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2727,7 +2727,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with p1.procName = v.varName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2792,7 +2792,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT c with c.procName = "Second"
-		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2804,7 +2804,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c.procName = "Second"
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2885,7 +2885,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT c with c.procName = p.procName
-		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2897,7 +2897,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c.procName = p.procName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -2978,7 +2978,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT c1 with c1.procName = c2.procName
-		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -2990,7 +2990,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c1.procName = c2.procName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3071,7 +3071,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT c with c.procName = v.varName
-		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3083,7 +3083,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c.procName = v.varName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3139,7 +3139,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with s.stmt# = 3
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3207,7 +3207,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with s.stmt# = c.value
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3275,7 +3275,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with s.stmt#  = a.stmt#
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3343,7 +3343,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v with v.varName = "x"
-		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3355,7 +3355,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with v.varName = "x"
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3436,7 +3436,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v with v.varName = p.procName
-		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3448,7 +3448,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c.procName = p.procName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3529,7 +3529,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v1 with v1.varName = v2.varName
-		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3541,7 +3541,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with v1.varName = v2.varName
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3606,7 +3606,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c.value = 3
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3683,7 +3683,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c1.value = c2.value
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3751,7 +3751,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with c.value = s.stmt#
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3819,7 +3819,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with n = 10
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3895,7 +3895,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT n with n = n1
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROGRAM_LINE, "n", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROGRAM_LINE, "n", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3907,7 +3907,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with n = n1
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -3975,7 +3975,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT n with n = s.stmt#
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROGRAM_LINE, "n", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROGRAM_LINE, "n", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -3987,7 +3987,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with n = s.stmt#
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4063,7 +4063,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT n with n = c.value
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROGRAM_LINE, "n", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROGRAM_LINE, "n", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4075,7 +4075,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s with n = c.value
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4155,7 +4155,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT w such that PATTERN w(v,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(WHILE, "w", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(WHILE, "w", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4166,7 +4166,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that PATTERN w(v,_)
-		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4234,7 +4234,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT w such that PATTERN W(_,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(WHILE, "w", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(WHILE, "w", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4245,7 +4245,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that PATTERN W(_,_)
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4313,7 +4313,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT w such that PATTERN W("i",_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(WHILE, "w", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(WHILE, "w", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4324,7 +4324,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that PATTERN W("i",_)
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4402,7 +4402,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT ifstat such that PATTERN IF(V,_,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(IF, "ifstat", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(IF, "ifstat", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4413,7 +4413,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that PATTERN IF(V,_,_)
-		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4482,7 +4482,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT ifstat such that PATTERN IF(_,_,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(IF, "ifstat", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(IF, "ifstat", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4493,7 +4493,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that PATTERN IF(V,_,_)
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4562,7 +4562,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT ifstat such that PATTERN IF("x",_,_)
-		ClauseSelectObject selObject1 = ClauseSelectObject(IF, "ifstat", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(IF, "ifstat", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4573,7 +4573,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that PATTERN IF("x",_,_)
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4673,7 +4673,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT a such that PATTERN a(v,_) and FOLLOWS (a,8)
-		ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4684,7 +4684,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that PATTERN a(v,_) and FOLLOWS (a,8)
-		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4777,7 +4777,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT a such that MODIFIES (9, v) and PATTERN a(v, _)
-		ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(ASSIGN, "a", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4871,7 +4871,7 @@ public:
 
 		// SELECT s1 such that PARENT (s1,s2) and FOLLOWS (s2,s3)
 		// s1 = { 6 }
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -4883,7 +4883,7 @@ public:
 
 		// SELECT s2 such that PARENT (s1,s2) and FOLLOWS (s2,s3)
 		// s2 = { 7, 8 }
-		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -4895,7 +4895,7 @@ public:
 
 		// SELECT s3 such that PARENT (s1,s2) and FOLLOWS (s2,s3)
 		// s3 = { 8, 9 }
-		ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s3", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(STMT, "s3", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -4993,7 +4993,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s such that MODIFIES (s, v) with v.varName = "x"
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -5004,7 +5004,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v such that MODIFIES (s, v) with v.varName = "x"
-		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5055,7 +5055,7 @@ public:
 
 		// SELECT p1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
 		// p1 = { 2 }
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5067,7 +5067,7 @@ public:
 
 		// SELECT v1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
 		// v1 = { z }
-		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -5119,7 +5119,7 @@ public:
 
 		// SELECT p1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
 		// p1 = { 1 }
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5131,7 +5131,7 @@ public:
 
 		// SELECT v1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) with p1.procName = "Third"
 		// v1 = { i, x, y, z }
-		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -5193,7 +5193,7 @@ public:
 
 		// SELECT p1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
 		// p1 = { 1 }
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5205,7 +5205,7 @@ public:
 
 		// SELECT v1 such that Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
 		// v1 = { i, x, y, z }
-		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -5217,7 +5217,7 @@ public:
 
 		// SELECT p2 such that Modifies_P (p1, v1) and Uses_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
 		// p2 = { 2 }
-		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID);
 		ClauseSelectResultObject relObject4;
 		relObject4.insertClauseSelectObject(selObject4);
 		std::vector<std::string> results4 = evaluator->evaluateSelect(relObject4, resultObj->getResultsBoolean());
@@ -5271,7 +5271,7 @@ public:
 
 		// SELECT p1 such that Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
 		// p1 = { 1 }
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5283,7 +5283,7 @@ public:
 
 		// SELECT v1 such that Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
 		// v1 = { i, v, x, y, z }
-		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -5295,7 +5295,7 @@ public:
 
 		// SELECT p2 such that Modifies_P (p1, v1) and Calls(p1, p2) with p1.procName = "Second"
 		// p2 = { 2 }
-		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID);
 		ClauseSelectResultObject relObject4;
 		relObject4.insertClauseSelectObject(selObject4);
 		std::vector<std::string> results4 = evaluator->evaluateSelect(relObject4, resultObj->getResultsBoolean());
@@ -5373,7 +5373,7 @@ public:
 
 		// SELECT p1 such that Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second"
 		// p1 = { 1 }
-		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5385,7 +5385,7 @@ public:
 
 		// SELECT p2 such that Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second"
 		// p2 = { 2 }
-		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		ClauseSelectObject selObject4 = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID);
 		ClauseSelectResultObject relObject4;
 		relObject4.insertClauseSelectObject(selObject4);
 		std::vector<std::string> results4 = evaluator->evaluateSelect(relObject4, resultObj->getResultsBoolean());
@@ -5397,7 +5397,7 @@ public:
 
 		// SELECT v1 such that Modifies_P (p1, v1) and Calls(p1, p2) and Modifies_P (p2, v1) with p1.procName = "Second"
 		// v1 = { v, z }
-		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject3 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject3;
 		relObject3.insertClauseSelectObject(selObject3);
 		std::vector<std::string> results3 = evaluator->evaluateSelect(relObject3, resultObj->getResultsBoolean());
@@ -5474,7 +5474,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT s1 such that Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x"
-		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 		ClauseSelectResultObject relObject1;
 		relObject1.insertClauseSelectObject(selObject1);
 		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
@@ -5485,7 +5485,7 @@ public:
 		Logger::WriteMessage("=============");
 
 		// SELECT v1 such that Modifies (s1,v1) and Uses (s1,v1) and v1.varName = "x"
-		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID, false);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
 		ClauseSelectResultObject relObject2;
 		relObject2.insertClauseSelectObject(selObject2);
 		std::vector<std::string> results2 = evaluator->evaluateSelect(relObject2, resultObj->getResultsBoolean());
@@ -5516,7 +5516,7 @@ public:
 		mSynonymGroup->insertSynonym("v1", 2);
 		
 		// Select s1
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 
 
 		// Modifies(s2,"x") 
@@ -5575,7 +5575,7 @@ public:
 		mSynonymGroup->insertSynonym("v1", 2);
 
 		// Select s1
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 
 		// Modifies(s2,"x") 
 		RelationshipType type = MODIFIES;
@@ -5626,7 +5626,7 @@ public:
 		mSynonymGroup->insertSynonym("v1", 2);
 
 		// Select BOOLEAN
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, true);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 
 		// Modifies(s2,"x") 
 		RelationshipType type = MODIFIES;
@@ -5647,7 +5647,7 @@ public:
 		ClauseSuchThatObject* suchThatObj2 = new ClauseSuchThatObject(type2, argOne2, argTwo2);
 
 		QueryTable queryTable;
-		queryTable.insertSelectObject(selObject);
+		queryTable.setResultBooelan(true);
 		queryTable.insertSuchThatObject(suchThatObj);
 		queryTable.insertSuchThatObject(suchThatObj1);
 		queryTable.insertSuchThatObject(suchThatObj2);
@@ -5688,7 +5688,7 @@ public:
 		mSynonymGroup->insertSynonym("v2", 2);
 
 		// Select s1
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 
 		// Parent(s1,s2) 
 		RelationshipType type = PARENT;
@@ -5765,7 +5765,7 @@ public:
 		mSynonymGroup->insertSynonym("v2", 2);
 
 		// Select s2
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 
 		// Parent(s1,s2) 
 		RelationshipType type = PARENT;
@@ -5842,7 +5842,7 @@ public:
 		mSynonymGroup->insertSynonym("v2", 2);
 
 		// Select BOOLEAN
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "", AttrType::INVALID, true);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "", AttrType::INVALID);
 
 		// Parent(s1,s2) 
 		RelationshipType type = PARENT;
@@ -5875,7 +5875,7 @@ public:
 		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
 
 		QueryTable queryTable;
-		queryTable.insertSelectObject(selObject);
+		queryTable.setResultBooelan(true);
 		queryTable.insertSuchThatObject(suchThatObj);
 		queryTable.insertSuchThatObject(suchThatObj1);
 		queryTable.insertSuchThatObject(suchThatObj2);
@@ -5916,7 +5916,7 @@ public:
 		mSynonymGroup->insertSynonym("n2", 2);
 
 		// Select s1
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 
 		// Next(n1,n2) 
 		RelationshipType type = NEXT;
@@ -5992,7 +5992,7 @@ public:
 		mSynonymGroup->insertSynonym("n2", 2);
 
 		// Select s2
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 
 		// Next(n1,n2) 
 		RelationshipType type = NEXT;
@@ -6068,7 +6068,7 @@ public:
 		mSynonymGroup->insertSynonym("n2", 2);
 
 		// Select BOOLEAN
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, true);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 
 		// Next(n1,n2) 
 		RelationshipType type = NEXT;
@@ -6100,7 +6100,7 @@ public:
 		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
 
 		QueryTable queryTable;
-		queryTable.insertSelectObject(selObject);
+		queryTable.setResultBooelan(true);
 		queryTable.insertSuchThatObject(suchThatObj);
 		queryTable.insertSuchThatObject(suchThatObj1);
 		queryTable.insertWithObject(withThatObj);
@@ -6141,7 +6141,7 @@ public:
 		mSynonymGroup->insertSynonym("n2", 2);
 
 		// Select BOOLEAN
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, true);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 
 		// Next(n1,n2) 
 		RelationshipType type = NEXT;
@@ -6173,7 +6173,7 @@ public:
 		ClauseSuchThatObject* suchThatObj4 = new ClauseSuchThatObject(type4, argOne4, argTwo4);
 
 		QueryTable queryTable;
-		queryTable.insertSelectObject(selObject);
+		queryTable.setResultBooelan(true);
 		queryTable.insertSuchThatObject(suchThatObj);
 		queryTable.insertSuchThatObject(suchThatObj1);
 		queryTable.insertWithObject(withThatObj);
@@ -6217,7 +6217,7 @@ public:
 		mSynonymGroup->insertSynonym("c", 2);
 
 		// Select p1
-		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 
 		// Modifies_P (p1,v1)
 		RelationshipType type1 = MODIFIES_P;
@@ -6295,7 +6295,7 @@ public:
 		mSynonymGroup->insertSynonym("c", 2);
 
 		// Select p2
-		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID);
 
 		// Modifies_P (p1,v1)
 		RelationshipType type1 = MODIFIES_P;
@@ -6373,7 +6373,7 @@ public:
 		mSynonymGroup->insertSynonym("c", 2);
 
 		// Select BOOLEAN
-		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID, true);
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p2", AttrType::INVALID);
 
 		// Modifies_P (p1,v1)
 		RelationshipType type1 = MODIFIES_P;
@@ -6404,7 +6404,7 @@ public:
 		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
 
 		QueryTable queryTable;
-		queryTable.insertSelectObject(selObject);
+		queryTable.setResultBooelan(true);
 		queryTable.insertSuchThatObject(suchThatObj);
 		queryTable.insertSuchThatObject(suchThatObj1);
 		queryTable.insertSuchThatObject(suchThatObj4);
@@ -6451,7 +6451,7 @@ public:
 		mSynonymGroup->insertSynonym("c", 2);
 
 		// Select s1
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
 
 		// Modifies_P (p1,v1)
 		RelationshipType type1 = MODIFIES_P;
@@ -6529,7 +6529,7 @@ public:
 		mSynonymGroup->insertSynonym("c", 2);
 
 		// Select s2
-		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
 
 		// Modifies_P (p1,v1)
 		RelationshipType type1 = MODIFIES_P;
@@ -6607,7 +6607,7 @@ public:
 		mSynonymGroup->insertSynonym("c", 2);
 
 		// Select p1
-		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(PROCEDURE, "p1", AttrType::INVALID);
 
 		// Modifies_P (p1,v1)
 		RelationshipType type1 = MODIFIES_P;
@@ -6678,7 +6678,7 @@ public:
 		mSynonymGroup->insertSynonym("n2", 2);
 
 		// Select stmtLst
-		ClauseSelectObject selObject = ClauseSelectObject(STMTLST, "stmtLst", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMTLST, "stmtLst", AttrType::INVALID);
 
 		// Next(n1,n2) 
 		RelationshipType type = NEXT;
@@ -6756,7 +6756,7 @@ public:
 		mSynonymGroup->insertSynonym("n2", 2);
 
 		// Select stmtLst
-		ClauseSelectObject selObject = ClauseSelectObject(STMTLST, "stmtLst", AttrType::INVALID, false);
+		ClauseSelectObject selObject = ClauseSelectObject(STMTLST, "stmtLst", AttrType::INVALID);
 
 		// Next(n1,n2) 
 		RelationshipType type = NEXT;
