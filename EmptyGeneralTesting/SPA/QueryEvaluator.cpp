@@ -174,7 +174,7 @@ ClauseSuchThatObject* QueryEvaluator::evaluateSuchThat(ClauseSuchThatObject* suc
     ClauseSuchThatArgObject* argTwo = suchThatRelObject->getArgsTwo();
     
 	// FOLLOW / FOLLOWS_STAR / PARENT / PARENT_STAR / NEXT / NEXT_STAR / AFFECTS / AFFECTS_STAR relationship :
-    if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR || type == NEXT || type == NEXT_STAR) {
+    if (type == FOLLOWS || type == FOLLOWS_STAR || type == PARENT || type == PARENT_STAR || type == NEXT || type == NEXT_STAR || type == AFFECTS || type == AFFECTS_STAR) {
         // Follows(3,4)
         if (argOne->getIntegerValue() > 0 && argTwo->getIntegerValue() > 0) {
             suchThatRelObject->setResultsBoolean(pkb->is(type, argOne->getIntegerValue(), argTwo->getIntegerValue()));
