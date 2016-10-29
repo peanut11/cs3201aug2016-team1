@@ -35,7 +35,8 @@ public:
     ClauseSuchThatObject* evaluateSuchThat(ClauseSuchThatObject* suchThatRelObject, bool isStopEvaluation);
 	ClauseWithObject* evaluateWith(ClauseWithObject* withObject, bool isStopEvaluation);
     std::vector<std::string> evaluate(QueryTable queryTable);
-	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
+//	std::vector<std::string> evaluateSelect(ClauseSelectObject ClauseSelectObject, bool relationshipHolds);
+	std::vector<std::string> evaluateSelect(ClauseSelectResultObject ClauseSelectResultObject, bool relationshipHolds);
     ResultGridManager* populateResultGrids();
 	QueryOptimization* getQueryOptimizer();
 
