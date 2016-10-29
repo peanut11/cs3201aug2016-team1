@@ -467,11 +467,9 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(_,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern w(v,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern w(_,_)"));
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern ifstmt(v,_\"y\"_,_)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern ifstmt(v,_,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern ifstmt(_,_,_)"));
-
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 	
 		

@@ -1607,7 +1607,16 @@ bool QueryValidator::isAttributeReference(std::string str) {
 
 		st.popNextToken(); // remove "." from stack
 
-		return this->isSynonymContainsAttrName(selectedSynonymObj.getType(), st.nextToken());
+		std::string attrName = st.nextToken();
+
+		if (isMatch(attrName, SYNTAX_ATTRIBUTE_STATEMENT)) {
+			return this->isSynonymContainsAttrName(selectedSynonymObj.getType(), attrName) && 
+				isMatch(st.nextToken(), SYNTAX_ATTRIBUTE_HEX);
+		}
+		else {
+			return this->isSynonymContainsAttrName(selectedSynonymObj.getType(), attrName);
+		}
+		
 
 		/*
 		switch (selectedSynonymObj.getType()) {
