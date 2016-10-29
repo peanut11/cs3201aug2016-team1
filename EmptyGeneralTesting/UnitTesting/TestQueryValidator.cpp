@@ -25,6 +25,8 @@ public:
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select BOOLEAN such that Parent(s1,_) and Next(s1, s2)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select c.stmt# such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select var1.varName such that Parent(s1,_) and Next(s1, s2)"));
