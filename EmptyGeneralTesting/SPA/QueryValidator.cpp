@@ -120,8 +120,8 @@ SynonymGroup *QueryValidator::getSynonymGroup() {
 	return this->mSynonymGroup;
 }
 
-ClauseSelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString, bool isBoolean) {
-	return ClauseSelectObject(entityType, synonymString, attrType, isBoolean);
+ClauseSelectObject QueryValidator::createSelectObject(EntityType entityType, AttrType::AttrType attrType, std::string synonymString) {
+	return ClauseSelectObject(entityType, synonymString, attrType);
 }
 
 // Clause Such that object
@@ -345,9 +345,8 @@ bool QueryValidator::isSelect(std::string str) {
 
 			case ClauseType::ClauseType::SELECT:
 				isValid = isClauseResult(currentToken);
-
+				/*
 				if (isValid) {
-					
 					// insert into clause select table
 					EntityType mSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
 
@@ -359,12 +358,8 @@ bool QueryValidator::isSelect(std::string str) {
 
 						this->getQueryTable().insertSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
 					}
-
-					// insert into synonym occurence table
-					//this->mSynonymOccurence->setIncrementOccurence(currentToken, ClauseType::SELECT);
-
 				}
-
+				*/
 				break;
 
 			case ClauseType::SUCH_THAT:
@@ -402,6 +397,8 @@ bool QueryValidator::isClauseResult(std::string str) {
 		return true;
 	}
 	else if (isSyntaxBoolean(str)) {
+		//this->getQueryTable().insertSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
+		this->getQueryTable().setResultBooelan(true);
 		return true;
 	}
 	return false;
@@ -1371,20 +1368,51 @@ bool QueryValidator::isTuple(std::string str) {
 		if (isSynonym(str)
 			&& this->isDeclaredSynonym(str)) {
 			
+			EntityType mEntityType = this->getSynonymTable()->getObject(str).getType();
+
 			if (isMatch(st.peekNextToken(), this->SYNTAX_DOT)) {
-				st.popNextToken();
-				if (isSynonymContainsAttrName(this->getSynonymTable()->getObject(str).getType(), st.nextToken())) {
+				st.popNextToken(); // remove "." from stack
+
+				AttrType::AttrType mAttrType = AttrType::AttrType::INVALID;
+				std::string attrName = st.nextToken();
+
+				if (mEntityType == EntityType::PROGRAM_LINE) {
+					// progline cannot have any attribute name
+					//throw Exceptions::invalid_attribute_name(str);
+					return false;
+				}
+				
+				if (isSynonymContainsAttrName(mEntityType, attrName)) {
+					if (isMatch(attrName, SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+						mAttrType = AttrType::AttrType::PROC_NAME;
+					}
+					else if (isMatch(attrName, SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+						mAttrType = AttrType::AttrType::VAR_NAME;
+					}
+					else if (isMatch(attrName, SYNTAX_ATTRIBUTE_VALUE)) {
+						mAttrType = AttrType::AttrType::VALUE;
+					}
+					else if (isMatch(attrName, SYNTAX_ATTRIBUTE_STATEMENT) && isMatch(st.peekNextToken(), SYNTAX_ATTRIBUTE_HEX)) {
+						st.popNextToken(); // remove "#" from stack
+						mAttrType = AttrType::AttrType::STMT_NO;
+					}
+
+					if (mAttrType == AttrType::AttrType::INVALID) { return false; }
+
+					this->getQueryTable().insertSelectObject(ClauseSelectObject(mEntityType, str, mAttrType));
 					return true;
 				}
 				else {
 					return false;
 				}
+				
 			}
-		
+
+			this->getQueryTable().insertSelectObject(ClauseSelectObject(mEntityType, str, AttrType::AttrType::INVALID));
 			return true;
 		}
 
-		return false;
+		return false; // not even a declared synonym
 	}
 
 	std::string currentToken = "";
@@ -1415,6 +1443,18 @@ bool QueryValidator::isTuple(std::string str) {
 				previousValidSynonym = st.nextToken(); // points to synonym, after ","
 				isValid = true;
 				synonymCount++;
+
+				if (!isMatch(st.peekNextToken(), SYNTAX_DOT)) { 
+					// register the synonym if next token doesnt have a dot
+					// meaning there's no attribute..
+					// if there's attribute, the "." is detected and register the next else if
+					this->getQueryTable().insertSelectObject(
+						ClauseSelectObject(this->mSynonymTable->getObject(
+							previousValidSynonym).getType(),
+							previousValidSynonym,
+							AttrType::AttrType::INVALID));
+				}
+
 			}
 			else {
 				isWithinTuple = false;
@@ -1424,27 +1464,40 @@ bool QueryValidator::isTuple(std::string str) {
 		}
 		else if (isMatch(currentToken, this->SYNTAX_DOT)) {
 			// means before that there's a synonym
+
+			EntityType mPreviousSynonymEntityType = this->mSynonymTable->getObject(previousValidSynonym).getType();
+
 			if (isSynonym(previousValidSynonym)
 				&& this->isDeclaredSynonym(previousValidSynonym)
-				&& this->isSynonymContainsAttrName(this->mSynonymTable->getObject(previousValidSynonym).getType(), st.nextToken())) {
+				&& this->isSynonymContainsAttrName(mPreviousSynonymEntityType, st.peekNextToken())) {
 
+				AttrType::AttrType mAttrType = AttrType::AttrType::INVALID;
+				std::string attrName = st.nextToken(); // points to attribute name
+
+				if (mPreviousSynonymEntityType == EntityType::PROGRAM_LINE) {
+					// progline cannot have any attribute name
+					//throw Exceptions::invalid_attribute_name(str);
+					return false;
+				}
+
+				if (isMatch(attrName, SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+					mAttrType = AttrType::AttrType::PROC_NAME;
+				}
+				else if (isMatch(attrName, SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+					mAttrType = AttrType::AttrType::VAR_NAME;
+				}
+				else if (isMatch(attrName, SYNTAX_ATTRIBUTE_VALUE)) {
+					mAttrType = AttrType::AttrType::VALUE;
+				}
+				else if (isMatch(attrName, SYNTAX_ATTRIBUTE_STATEMENT) && isMatch(st.peekNextToken(), SYNTAX_ATTRIBUTE_HEX)) {
+					st.popNextToken(); // remove "#" from stack
+					mAttrType = AttrType::AttrType::STMT_NO;
+				}
+
+				if (mAttrType == AttrType::AttrType::INVALID) { isValid = false; }
+
+				this->getQueryTable().insertSelectObject(ClauseSelectObject(mPreviousSynonymEntityType, previousValidSynonym, mAttrType));
 				isValid = true;
-				/*
-				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
-					st.popNextToken();
-					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
-						st.popNextToken();
-						isValid = true;
-					}
-					else {
-						isValid = false;
-					}
-				}
-				else {
-					st.popNextToken();
-					isValid = true;
-				}
-				*/
 
 			} else {
 				isValid = false;
@@ -1456,6 +1509,11 @@ bool QueryValidator::isTuple(std::string str) {
 					|| isMatch(st.peekNextToken(), this->SYNTAX_RIGHT_ARROW_BRACKET))) {
 
 			if (this->isDeclaredSynonym(currentToken)) {
+				this->getQueryTable().insertSelectObject(
+					ClauseSelectObject(this->mSynonymTable->getObject(
+						currentToken).getType(), 
+						currentToken,
+						AttrType::AttrType::INVALID));
 				previousValidSynonym = currentToken;
 				isValid = true;
 				synonymCount++;
@@ -1471,35 +1529,44 @@ bool QueryValidator::isTuple(std::string str) {
 
 			st.popNextToken(); // remove "."
 
+			EntityType mNewSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
+
 			if (this->isDeclaredSynonym(currentToken)
-				&& isSynonymContainsAttrName(this->mSynonymTable->getObject(currentToken).getType(), st.nextToken())) {
+				&& isSynonymContainsAttrName(mNewSynonymEntityType, st.peekNextToken())) {
 				
-				previousValidSynonym = currentToken;
+				AttrType::AttrType mAttrType = AttrType::AttrType::INVALID;
+				std::string attrName = st.nextToken(); // points to attribute name
+
+				if (mNewSynonymEntityType == EntityType::PROGRAM_LINE) {
+					// progline cannot have any attribute name
+					//throw Exceptions::invalid_attribute_name(str);
+					return false;
+				}
+
+
+				if (isMatch(attrName, SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
+					mAttrType = AttrType::AttrType::PROC_NAME;
+				}
+				else if (isMatch(attrName, SYNTAX_ATTRIBUTE_VARIABLE_NAME)) {
+					mAttrType = AttrType::AttrType::VAR_NAME;
+				}
+				else if (isMatch(attrName, SYNTAX_ATTRIBUTE_VALUE)) {
+					mAttrType = AttrType::AttrType::VALUE;
+				}
+				else if (isMatch(attrName, SYNTAX_ATTRIBUTE_STATEMENT) && isMatch(st.peekNextToken(), SYNTAX_ATTRIBUTE_HEX)) {
+					st.popNextToken(); // remove "#" from stack
+					mAttrType = AttrType::AttrType::STMT_NO;
+				}
+
+				if (mAttrType == AttrType::AttrType::INVALID) { isValid = false; }
+
+				this->getQueryTable().insertSelectObject(ClauseSelectObject(mNewSynonymEntityType, currentToken, mAttrType));
+				
 				isValid = true;
+				previousValidSynonym = currentToken;
 				synonymCount++;
 
-				/*
-				if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_STATEMENT)) {
-					st.popNextToken();
-					if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
-						st.popNextToken();
-
-						previousValidSynonym = currentToken;
-						isValid = true;
-						synonymCount++;
-					}
-					else {
-						isValid = false;
-					}
-				}
-				else {
-					st.popNextToken();
-					previousValidSynonym = currentToken;
-					isValid = true;
-					synonymCount++;
-				}
-				*/
-
+				
 			}
 			else {
 				isWithinTuple = false;
@@ -1680,6 +1747,7 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 	case WHILE:
 	case ASSIGN:
 		if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT)) {
+			/*
 			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
 				st.popNextToken(); // remove "#" from stack
 				return true;
@@ -1687,6 +1755,7 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 			else {
 				return false;
 			}
+			*/
 		}
 		else {
 			return false;
@@ -1699,7 +1768,7 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 
 	case CALL:
 		if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_STATEMENT)) {
-
+			/*
 			if (isMatch(st.peekNextToken(), this->SYNTAX_ATTRIBUTE_HEX)) {
 				st.popNextToken(); // remove "#" from stack
 				return true;
@@ -1707,7 +1776,7 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 			else {
 				return false;
 			}
-
+			*/
 		} 
 		else if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
 			return true;

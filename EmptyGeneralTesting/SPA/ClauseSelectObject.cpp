@@ -7,12 +7,15 @@ ClauseSelectObject::ClauseSelectObject()
 {
 }
 
-ClauseSelectObject::ClauseSelectObject(EntityType entityType, std::string synonymString, AttrType::AttrType attrType, bool isBoolean)
+ClauseSelectObject::ClauseSelectObject(EntityType entityType, std::string synonymString, AttrType::AttrType attrType, bool isBoolean) {
+	ClauseSelectObject(entityType, synonymString, attrType);
+}
+
+ClauseSelectObject::ClauseSelectObject(EntityType entityType, std::string synonymString, AttrType::AttrType attrType)
 {
 	this->entityType = entityType;
 	this->synonymString = synonymString;
 	this->attrType = attrType;
-	this->isBoolean = isBoolean;
 }
 
 EntityType ClauseSelectObject::getEntityType()
@@ -32,7 +35,7 @@ AttrType::AttrType ClauseSelectObject::getAttrType()
 
 bool ClauseSelectObject::getBoolean()
 {
-	return isBoolean;
+	return false;
 }
 
 void ClauseSelectObject::setEntityType(EntityType entityType) {
@@ -46,9 +49,9 @@ void ClauseSelectObject::setSynonymString(std::string synonymString) {
 void ClauseSelectObject::setAttrType(AttrType::AttrType attrType) {
 	this->attrType = attrType;
 }
-
+/*
 void ClauseSelectObject::setIsBoolean(bool isBoolean) {
 	this->isBoolean = isBoolean;
 }
-
+*/
 

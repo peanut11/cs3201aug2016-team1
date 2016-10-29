@@ -5,6 +5,10 @@ ClauseSelectResultObject::ClauseSelectResultObject() {
 	this->mClauseType = ClauseType::ClauseType::RESULT;
 }
 
+void ClauseSelectResultObject::setBoolean(bool value) {
+	this->isBoolean = value;
+}
+
 void ClauseSelectResultObject::insertClauseSelectObject(ClauseSelectObject newObject) {
 	this->mClauseSelectObjList.push_back(newObject);
 }

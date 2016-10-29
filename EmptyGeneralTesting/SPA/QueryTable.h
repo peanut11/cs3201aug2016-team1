@@ -26,7 +26,8 @@ public:
 	//~QueryTable();
 
 	void clearAll();
-	
+	void setResultBooelan(bool value);
+
 	ClauseSelectResultObject getResult();
 	//ClauseSelectObject getSelect();
 	std::vector<ClauseSuchThatObject*>& getSuchThats();

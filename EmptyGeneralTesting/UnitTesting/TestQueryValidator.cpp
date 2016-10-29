@@ -17,11 +17,12 @@ public:
 		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(\"x\",_\"x\"_) and a2(var1, _\"x\"_) and a2(_, _\"y\"_) such that Next(a1, a2)"));
-		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
+		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p.procName such that Parent(s1,_) Next(s1, s2)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 		
 
@@ -51,10 +52,11 @@ public:
 		// Success Tuple with single synonym with or without attrName
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p> such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName> such that Parent(s1,_) and Next(s1, s2)"));
-
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		
 		// Success Tuple with mutliple synonym and attrName
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p.procName, q> such that Parent(s1,_) and Next(s1, s2)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success Tuple with similar synonyms and attrNames
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <p, p> such that Parent(s1,_) and Next(s1, s2)"));
@@ -71,10 +73,11 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, const.value> such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <a1.stmt#, n2> such that Parent(s1,_) and Next(s1, s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, n2> such that Parent(s1,_) and Next(s1, s2)"));
-		
+	
+
 		// Success Tuple with two or more synonyms
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select <n1, p, var1, const, w, n2, q, const> such that Parent(s1,_) and Next(s1, s2)"));
-
+		
 		
 		// Failure, incorrect attrRef syntax
 		Assert::IsFalse(validator->isValidQuery(declaration + "Select p.proc such that Parent(s1,_) and Next(s1, s2)"));
@@ -1618,6 +1621,8 @@ public:
 		validator->initStringTokenizer("<p, a1, a2>");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isTuple("<"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
 
 		validator->initStringTokenizer("<p, a1, a2, w, v, c, pl1>");
 		validator->getNextToken();

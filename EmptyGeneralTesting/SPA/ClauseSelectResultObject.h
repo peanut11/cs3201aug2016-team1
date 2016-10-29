@@ -5,12 +5,13 @@
 class ClauseSelectResultObject : public ClauseObject {
 
 	std::vector<ClauseSelectObject> mClauseSelectObjList;
-	bool isBoolean;
+	bool isBoolean = false;
 	
 	
 
 public:
 	ClauseSelectResultObject();
+	void setBoolean(bool value);
 	void insertClauseSelectObject(ClauseSelectObject object);
 	void clearAll();
 

@@ -19,6 +19,11 @@ void QueryTable::clearAll() {
 	this->patterns.clear();
 	this->withs.clear();
 }
+
+void QueryTable::setResultBooelan(bool value) {
+	this->result.setBoolean(value);
+}
+
 /*
 ClauseSelectObject QueryTable::getSelect()
 {
@@ -51,7 +56,19 @@ std::string QueryTable::toString() {
 	str.append("size = " + std::to_string(this->result.size()) + "\n");
 	//str.append(this->select.getSynonymString() + "\n");
 	for (auto value : this->result.getClauseSelectObjectList()) {
-		str.append(value.getSynonymString() + "\n");
+		str.append(value.getSynonymString());
+		if (value.getAttrType() != AttrType::AttrType::INVALID) {
+			str.append("." + this->getAttrString(value.getAttrType()));
+		}
+		str.append(", ");
+	}
+	str.append("\n");
+
+	if (this->result.getBoolean()) {
+		str.append("BOOLEAN - true \n");
+	}
+	else {
+		str.append("BOOLEAN - false\n");
 	}
 
 		
