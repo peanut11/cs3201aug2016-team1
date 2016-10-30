@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AffectsCalculator.cpp" />
     <ClCompile Include="ClauseObject.cpp" />
     <ClCompile Include="ClauseSelectResultObject.cpp" />
     <ClCompile Include="DesignExtractor.cpp" />
@@ -46,6 +47,7 @@
     <ClCompile Include="ClauseWithRefObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AffectsCalculator.h" />
     <ClInclude Include="AttrType.h" />
     <ClInclude Include="ClauseObject.h" />
     <ClInclude Include="ClauseSelectResultObject.h" />
