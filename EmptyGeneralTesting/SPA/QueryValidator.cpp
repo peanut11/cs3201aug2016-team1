@@ -1765,6 +1765,7 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 				return false;
 			}
 			*/
+			return true;
 		}
 		else {
 			return false;
@@ -1786,6 +1787,7 @@ bool  QueryValidator::isSynonymContainsAttrName(EntityType type, std::string att
 				return false;
 			}
 			*/
+			return true;
 		} 
 		else if (isMatch(attrName, this->SYNTAX_ATTRIBUTE_PROCEDURE_NAME)) {
 			return true;

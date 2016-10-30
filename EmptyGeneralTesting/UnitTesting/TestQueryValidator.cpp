@@ -14,7 +14,12 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;variable var1;assign a1, a2;if ifstmt;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
+		std::string declaration = "procedure p, q;variable var1,v;assign a1, a2;if ifstmt,ifs;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
+
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next*(s2, s1) and Next*(s1, s1)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next(s2, s1)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select v such that Uses(ifs, v) with ifs.stmt# = 22"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(\"x\",_\"x\"_) and a2(var1, _\"x\"_) and a2(_, _\"y\"_) such that Next(a1, a2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
@@ -1544,6 +1549,10 @@ public:
 		validator->initStringTokenizer("a1.stmt#");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isAttributeReference("a1"));
+
+		validator->initStringTokenizer("ifstmt.stmt#");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isAttributeReference("ifstmt"));
 
 		validator->initStringTokenizer("v.varName");
 		validator->getNextToken();
