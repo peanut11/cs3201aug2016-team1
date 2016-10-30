@@ -40,11 +40,11 @@ public:
 	std::string printFinalResult(std::vector<GroupObject> groups);
 	std::string printMapGroupObjectToString(std::map<int, GroupObject> mapGroupObject); //std::map<int, GroupObject> mMap
 	
-	//std::string getFirstSynonym(ClauseObject* current);
-	//std::string getSecondSynonym(ClauseObject* current);
+	std::string getFirstSynonym(ClauseObject* current);
+	std::string getSecondSynonym(ClauseObject* current);
 
 	bool isSynonymGroupAffectResult(QueryTable mQueryTable, std::vector<std::string> synonymList);
-	//bool hasSynonymUsedBefore(ClauseObject* current, std::string synonym);
+	bool hasSynonymUsedBefore(ClauseObject* current, std::string synonym);
 	
 
 	

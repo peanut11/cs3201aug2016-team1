@@ -360,11 +360,7 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 	6. Push Affects/* clauses on the last positions in a group
 	*/
 	
-	std::string usedSynonym1 = "";
-	std::string usedSynonym2 = "";
-
-
-	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_recomputed_synonym());
+	//sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_recomputed_synonym());
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_clause_type());
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_relationship_type());
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_number_of_synonym());
@@ -372,8 +368,33 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 	/*
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), 
 		[this](ClauseObject* lhs, ClauseObject* rhs) {
-		// if true, means lhs is before rhs
-		// if false, means lhs is after rhs		
+		
+		if (hasSynonymUsedBefore(lhs, getFirstSynonym(rhs)) || hasSynonymUsedBefore(lhs, getSecondSynonym(rhs))) {
+			return true;
+		}
+
+		return false;
+
+	});
+	
+	// Sort Clause Type
+	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(),
+		[this](ClauseObject* lhs, ClauseObject* rhs) {
+
+		if (lhs->getClauseType() == ClauseType::ClauseType::WITH) {
+			return true;
+		}
+
+		if (rhs->getClauseType() == ClauseType::ClauseType::WITH) {
+			return false;
+		}
+
+		return false;
+	});
+
+	// Sort Relationship Type
+	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(),
+		[this](ClauseObject* lhs, ClauseObject* rhs) {
 
 		if (lhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT &&
 			rhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT) {
@@ -381,50 +402,40 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 			ClauseSuchThatObject* lhsObj = dynamic_cast<ClauseSuchThatObject*>(lhs); // const_cast< const ClauseSuchThatObject*>(lhs)
 			ClauseSuchThatObject* rhsObj = dynamic_cast<ClauseSuchThatObject*>(rhs);
 
-
-			if (lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym()) {
+			if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
+				&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
 				return true;
 			}
-			else {
-				
-				if (rhsObj->getArgsOne()->getStringValue().compare(lhsObj->getArgsOne()->getStringValue()) == 0 // 1 compare 1
-					|| rhsObj->getArgsOne()->getStringValue().compare(lhsObj->getArgsTwo()->getStringValue()) == 0 // 1 compare 2
-					|| rhsObj->getArgsTwo()->getStringValue().compare(lhsObj->getArgsOne()->getStringValue()) == 0 // 2 compare 1
-					|| rhsObj->getArgsTwo()->getStringValue().compare(lhsObj->getArgsTwo()->getStringValue()) == 0) { // 2 compare 2
-					return true; // false
-				}
-				
 
-				if ((lhsObj->getRelationshipType() == MODIFIES || lhsObj->getRelationshipType() == MODIFIES_P)
-					&& (rhsObj->getRelationshipType() == USES || rhsObj->getRelationshipType() == USES_P)) {
-					return true;
-				}
+			if (lhsObj->getRelationshipType() == USES && rhsObj->getRelationshipType() == USES_P) {
+				return true;
+			}
 
-				if (lhsObj->getRelationshipType() == USES && rhsObj->getRelationshipType() == USES_P) {
-					return true;
-				}
-
-				if (lhsObj->getRelationshipType() == USES_P && rhsObj->getRelationshipType() == USES) {
-					return false;
-				}
-				
+			if (lhsObj->getRelationshipType() == USES_P && rhsObj->getRelationshipType() == USES) {
 				return false;
 			}
-	
-			
-		}
-		else {
 
-			if (hasSynonymUsedBefore(lhs, getFirstSynonym(rhs)) || hasSynonymUsedBefore(lhs, getSecondSynonym(rhs))) {
-				return true;
-			}
-
-			return lhs->getClauseType() < rhs->getClauseType();
 		}
 
+		return false;
+	});
 
+	// Sort Number of Synonyms
+	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(),
+		[this](ClauseObject* lhs, ClauseObject* rhs) {
+
+		if (lhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT &&
+			rhs->getClauseType() == ClauseType::ClauseType::SUCH_THAT) {
+
+			ClauseSuchThatObject* lhsObj = dynamic_cast<ClauseSuchThatObject*>(lhs); // const_cast< const ClauseSuchThatObject*>(lhs)
+			ClauseSuchThatObject* rhsObj = dynamic_cast<ClauseSuchThatObject*>(rhs);
+
+			return lhsObj->getNumberOfSynonym() < rhsObj->getNumberOfSynonym();
+		}
+		return false;
 	});
 	*/
+	
 	return mGroupObject;
 
 }
@@ -650,7 +661,105 @@ std::string QueryOptimization::getRelationshipString(RelationshipType type) {
 	}
 }
 
+std::string QueryOptimization::getFirstSynonym(ClauseObject* current) {
 
+	switch (current->getClauseType()) {
+
+	case ClauseType::ClauseType::PATTERN: {
+		ClausePatternObject* derivedPattern = dynamic_cast<ClausePatternObject*>(current);
+		return derivedPattern->getPatternSynonymArgument();
+
+	}
+	case ClauseType::ClauseType::WITH: {
+		ClauseWithObject* derivedWith = dynamic_cast<ClauseWithObject*>(current);
+		return derivedWith->getRefObject1()->getSynonym();
+	}
+	case ClauseType::ClauseType::SUCH_THAT: {
+		ClauseSuchThatObject* derivedSuchThat = dynamic_cast<ClauseSuchThatObject*>(current);
+		if (derivedSuchThat->getArgsOne()->getIsSynonym()) {
+			return derivedSuchThat->getArgsOne()->getStringValue();
+		}
+		else {
+			return "";
+		}
+		//break;
+	}
+
+	}
+
+	return "";
+}
+
+std::string QueryOptimization::getSecondSynonym(ClauseObject* current) {
+	switch (current->getClauseType()) {
+
+	case ClauseType::ClauseType::PATTERN: {
+		// Pattern second arg is always an expression
+		ClausePatternObject* derivedPattern = dynamic_cast<ClausePatternObject*>(current);
+		if (derivedPattern->getIsFirstArgSynonym()) {
+			return derivedPattern->getFirstArgument();
+		}
+		return "";
+
+	}
+	case ClauseType::ClauseType::WITH: {
+		ClauseWithObject* derivedWith = dynamic_cast<ClauseWithObject*>(current);
+		return derivedWith->getRefObject2()->getSynonym();
+	}
+	case ClauseType::ClauseType::SUCH_THAT: {
+		ClauseSuchThatObject* derivedSuchThat = dynamic_cast<ClauseSuchThatObject*>(current);
+		if (derivedSuchThat->getArgsTwo()->getIsSynonym()) {
+			return derivedSuchThat->getArgsTwo()->getStringValue();
+		}
+		else {
+			return "";
+		}
+	}
+	}
+	return "";
+
+}
+
+bool QueryOptimization::hasSynonymUsedBefore(ClauseObject* current, std::string synonym) {
+
+	switch (current->getClauseType()) {
+
+	case ClauseType::ClauseType::PATTERN: {
+		ClausePatternObject* derivedPattern = dynamic_cast<ClausePatternObject*>(current);
+		if (derivedPattern->getIsFirstArgSynonym()) {
+			return derivedPattern->getFirstArgument().compare(synonym) == 0;
+		}
+		else {
+			return false;
+		}
+
+	}
+	case ClauseType::ClauseType::WITH: {
+		ClauseWithObject* derivedWith = dynamic_cast<ClauseWithObject*>(current);
+
+		return derivedWith->getRefObject1()->getSynonym().compare(synonym) == 0 ||
+			derivedWith->getRefObject2()->getSynonym().compare(synonym) == 0;
+
+	}
+	case ClauseType::ClauseType::SUCH_THAT: {
+		ClauseSuchThatObject* derivedSuchThat = dynamic_cast<ClauseSuchThatObject*>(current);
+
+		if (derivedSuchThat->getArgsOne()->getIsSynonym()) {
+			return derivedSuchThat->getArgsOne()->getStringValue().compare(synonym) == 0;
+		}
+
+		if (derivedSuchThat->getArgsTwo()->getIsSynonym()) {
+			return derivedSuchThat->getArgsTwo()->getStringValue().compare(synonym) == 0;
+		}
+
+		return false;
+
+	}
+	}
+
+	return false;
+
+}
 
 
 
