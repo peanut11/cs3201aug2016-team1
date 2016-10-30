@@ -93,6 +93,7 @@ int ProgramConverter::convert(std::string source) {
 					lastOfIfLists[stackOfParents.top()][1] = previous;
 					
 					isElse = false;
+                    previous = stackOfParents.top();
 				} else {
 					std::array<ProgLineNumber, 2> progLines = { previous, 0 };
 					lastOfIfLists.insert(std::make_pair(stackOfParents.top(), progLines));
