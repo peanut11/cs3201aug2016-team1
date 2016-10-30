@@ -1,0 +1,25 @@
+procedure A {
+    b = c * d - d * 50 + x;
+    if c then {
+        z = z * 5 + x;
+        if z then {
+            while d {
+                a = a - c * d + 5;
+                b = z * d * c + 5 - c;
+            }
+            x = 10 + y;            }
+        else {
+            z = 12;
+            while x {
+                t = 5 * z + d;
+                z = t1;                }}}
+    else {
+        if s then {
+            z = t + z * c;
+            c = s - t * z;            }
+            else {
+            if z then {
+                c = t - s;            }
+            else {
+                d = t + s;               }            }        }
+}

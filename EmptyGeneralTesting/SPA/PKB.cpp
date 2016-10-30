@@ -8,6 +8,7 @@
 #include <cassert>
 #include "PKB.h"
 #include "RelationshipPopulator.h"
+#include "AffectsCalculator.h"
 #include "Exceptions.h"
 
 PKB* PKB::theOne = nullptr;
@@ -62,7 +63,15 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
 		return rp->isNextStar(stmtOrProcIndex, item);
 		
-	} else if (rel == NEXT || rel == MODIFIES || rel == USES) {
+	} else if (rel == AFFECTS || rel == AFFECTS_STAR) {
+		if (stmtOrProcIndex >= stmtTable.size() || item >= stmtTable.size()) {
+			return false;
+		}
+
+		AffectsCalculator* ac = AffectsCalculator::getInstance();
+		return ac->isAffects(stmtOrProcIndex, item, rel==AFFECTS_STAR);	
+	}
+	else if (rel == NEXT || rel == MODIFIES || rel == USES) {
         // Get from direct-rel column in StmtTable
 
 		if (stmtOrProcIndex >= stmtTable.size()) {
@@ -336,13 +345,20 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 		throw Exception::INTERNAL_USE_ERROR;
 	}
 
+	if (stmt >= stmtTable.size()) {
+		return StmtSet();
+	}
+
 	if (stmtRel == NEXT_STAR) {
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
 		return rp->getAndMemoiseNextStar(false, stmt);
 	}
-	if (stmt >= stmtTable.size()) {
-        return StmtSet();
-    }
+
+	if (stmtRel == AFFECTS || stmtRel == AFFECTS_STAR) {
+		AffectsCalculator * ac = AffectsCalculator::getInstance();
+		return ac->getAffectors(stmt, stmtRel == AFFECTS_STAR);
+	}
+
 	if (stmtRel == NEXT) stmtRel = RelationshipType(stmtRel + 1);
 	return stmtTable[stmt][stmtRel];
 }
@@ -358,13 +374,19 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 		throw Exception::INTERNAL_USE_ERROR;
 	}
 
+    if (stmt >= stmtTable.size()) {
+        return StmtSet();
+    }
+
 	if (followsOrParent == NEXT_STAR) {
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
 		return rp->getAndMemoiseNextStar(true, stmt);
 	}
-    if (stmt >= stmtTable.size()) {
-        return StmtSet();
-    }
+
+	if (followsOrParent == AFFECTS || followsOrParent == AFFECTS_STAR) {
+		AffectsCalculator * ac = AffectsCalculator::getInstance();
+		return ac->getAffected(stmt, followsOrParent == AFFECTS_STAR);
+	}
 
 	if(followsOrParent != NEXT) followsOrParent = RelationshipType(followsOrParent + 1);
 
