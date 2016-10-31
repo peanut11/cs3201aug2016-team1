@@ -100,6 +100,9 @@
     <ClCompile Include="RelationshipPopulator.cpp">
       <Filter>Source Files\PKB</Filter>
     </ClCompile>
+    <ClCompile Include="AffectsCalculator.cpp">
+      <Filter>Source Files\PKB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClauseType.h">
@@ -223,6 +226,9 @@
       <Filter>Header Files\PKB</Filter>
     </ClInclude>
     <ClInclude Include="DesignExtractor.h">
+      <Filter>Header Files\PKB</Filter>
+    </ClInclude>
+    <ClInclude Include="AffectsCalculator.h">
       <Filter>Header Files\PKB</Filter>
     </ClInclude>
   </ItemGroup>

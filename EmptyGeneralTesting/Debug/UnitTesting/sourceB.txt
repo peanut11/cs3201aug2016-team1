@@ -1,0 +1,10 @@
+procedure B {
+    e = k + v;
+    e = v + d;
+    while x {
+        e = d + 1;
+        d = c + 2;
+        c = b + 3;
+        b = a + 4;
+        a = e + 5;}
+    v = a + d;}

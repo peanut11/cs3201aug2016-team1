@@ -19,6 +19,7 @@
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="TestRelationshipPopulator.cpp" />
     <ClCompile Include="TestPKB.cpp" />
+    <ClCompile Include="TestAffectsCalculator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

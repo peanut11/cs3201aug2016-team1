@@ -15,6 +15,7 @@ void ClauseSelectResultObject::insertClauseSelectObject(ClauseSelectObject newOb
 
 void ClauseSelectResultObject::clearAll() {
 	this->mClauseSelectObjList.clear();
+	this->setBoolean(false);
 }
 
 std::vector<ClauseSelectObject> ClauseSelectResultObject::getClauseSelectObjectList() {
