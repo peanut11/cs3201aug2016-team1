@@ -16,11 +16,16 @@ public:
 
 		std::string declaration = "procedure p, q;variable var1,v;assign a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next*(s2, s1) and Next*(s1, s1)"));
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next(s2, s1)"));
+		// Query 34
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select v such that Uses(ifs, v) with ifs.stmt# = 22"));
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
+		// Query 41
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next*(s2, s1) and Next*(s1, s1)"));
 		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		// Query 47
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next(s2, s1)"));
+		// Query 51
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
+		
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(\"x\",_\"x\"_) and a2(var1, _\"x\"_) and a2(_, _\"y\"_) such that Next(a1, a2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());

@@ -85,7 +85,8 @@ struct sort_recomputed_synonym
 				return derivedPattern->getFirstArgument().compare(synonym) == 0;
 			}
 			else {
-				return false;
+				return derivedPattern->getPatternSynonymArgument().compare(synonym) == 0;
+				//return false;
 			}
 
 		}
@@ -360,7 +361,7 @@ GroupObject QueryOptimization::sortGroup(GroupObject mGroupObject) {
 	6. Push Affects/* clauses on the last positions in a group
 	*/
 	
-	//sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_recomputed_synonym());
+	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_recomputed_synonym());
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_clause_type());
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_relationship_type());
 	sort(mGroupObject.getClauseObjectList().begin(), mGroupObject.getClauseObjectList().end(), sort_number_of_synonym());
