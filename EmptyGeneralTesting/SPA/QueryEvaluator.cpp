@@ -68,6 +68,12 @@ ProcName QueryEvaluator::to_proc_name(ProcIndex procIndex) {
 	return QueryEvaluator::getInstance()->pkb->getProcName(procIndex); // DummyPKB
 }
 
+ProcName QueryEvaluator::from_call_to_proc_name(StmtNumber callStmt) {
+	// return PKB::getInstance()->getVarName(varIndex);              // Original
+	ProcIndex procIndex = QueryEvaluator::getInstance()->pkb->getProcByCall(callStmt); // DummyPKB
+	return QueryEvaluator::getInstance()->pkb->getProcName(procIndex);
+}
+
 std::vector<std::string> QueryEvaluator::evaluate(QueryTable queryTable) {
     // Get new instance for new query
     delete resultManager;
@@ -1525,6 +1531,21 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(ClauseSelectResultObject
 					std::transform(setResults3.begin(), setResults3.end(), std::back_inserter(vectorResults3), to_proc_name);
 					return vectorResults3;
 				}
+				else if (selectObj.getEntityType() == CALL) {
+					std::set<StmtNumber> setResults4 = resultManager->getValuesForSynonym(selectObj.getSynonymString());
+					std::vector<StmtNumber> vectorStmtNumbers4(setResults4.begin(), setResults4.end());
+					std::vector<std::string> vectorResults4;
+					if (selectObj.getAttrType() == AttrType::PROC_NAME) {
+						std::transform(setResults4.begin(), setResults4.end(), std::back_inserter(vectorResults4), from_call_to_proc_name);
+					}
+					else {
+						for (std::vector<StmtNumber>::iterator it = vectorStmtNumbers4.begin(); it != vectorStmtNumbers4.end(); it++) {
+							vectorResults4.push_back(std::to_string(*it));
+						}
+					}
+
+					return vectorResults4;
+				}
 				else {
 					std::set<StmtNumber> setResults2 = resultManager->getValuesForSynonym(selectObj.getSynonymString());
 					std::vector<StmtNumber> vectorStmtNumbers(setResults2.begin(), setResults2.end());
@@ -1537,12 +1558,50 @@ std::vector<std::string> QueryEvaluator::evaluateSelect(ClauseSelectResultObject
 			}
 			// Select TUPLES
 			else {
-				std::vector<std::string> synonyms;
-				for (ClauseSelectObject obj : ClauseSelectResultObject.getClauseSelectObjectList()) {
+				// Store all the synonyms and send to ResultManager
+				std::vector<SynonymString> synonyms;
+				std::vector<ClauseSelectObject> selectObjects = ClauseSelectResultObject.getClauseSelectObjectList();
+				for (ClauseSelectObject obj : selectObjects) {
 					synonyms.push_back(obj.getSynonymString());
+				}				
+				// Retrieve tuple values in set<vector<StmtOrIndex>>
+				std::set<std::vector<SynonymValue>> setResults3 = resultManager->getValuesForSynonymTuple(synonyms);
+				std::vector<std::string> vectorResults3;
+				// Iterate all the tuple combinations 
+				for (std::set<std::vector<SynonymValue>>::iterator it = setResults3.begin(); it != setResults3.end(); it++) {
+					std::string stringResult = "";
+					// Iterate each element in each tuple combiation
+					for (size_t i = 0; i < it->size(); i++) {
+						// add space
+						if (i != 0) {
+							stringResult.append(" ");
+						}
+						// synonym is VARIABLE
+						if (selectObjects[i].getEntityType() == VARIABLE) {
+							stringResult.append(to_var_name((*it)[i]));
+						}
+						// synonym is PROCEDURE
+						else if (selectObjects[i].getEntityType() == PROCEDURE) {
+							stringResult.append(to_proc_name((*it)[i])); 
+						}
+						// synoynm is CALL
+						else if (selectObjects[i].getEntityType() == CALL) {
+							// synonym is c.procName
+							if (selectObjects[i].getAttrType() == AttrType::PROC_NAME) {
+								stringResult.append(from_call_to_proc_name((*it)[i]));
+							}
+							else {
+								stringResult.append(std::to_string((*it)[i]));
+							}
+						}
+						// synonym is others (stmt/assign/while/etc.. - all statment numbers)
+						else {
+							stringResult.append(std::to_string((*it)[i]));
+						}
+					}
+					vectorResults3.push_back(stringResult);
 				}
-
-				//	return resultManager->getValuesForSynonym(synonyms);
+				return vectorResults3;
 			}
 		}
 	}
