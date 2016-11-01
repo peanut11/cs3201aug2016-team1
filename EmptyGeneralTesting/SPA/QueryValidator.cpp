@@ -417,8 +417,8 @@ bool QueryValidator::isClauseWith(std::string str) {
 	
 	AttrType::AttrType mAttributeType = AttrType::AttrType::INVALID;
 	SynonymObject selectedSynonymObj;
-	ClauseWithRefObject* leftRefObject;
-	ClauseWithRefObject* rightRefObject;
+	ClauseWithRefObject* leftRefObject = nullptr;
+    ClauseWithRefObject* rightRefObject = nullptr;
 		
 
 	std::string currentToken;
@@ -701,7 +701,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						std::string rightSynonym = currentToken;
 						EntityType rightEntityType = this->getSynonymTable()->getObject(currentToken).getType();
-						AttrType::AttrType rightAttrType;
+						AttrType::AttrType rightAttrType = AttrType::INVALID;
 
 						if (isMatch(st.peekNextToken(), SYNTAX_STATEMENT)) {
 							currentToken = st.nextToken(); // point to stmt
@@ -996,8 +996,8 @@ bool QueryValidator::isRelationship(std::string str) {
 
 bool QueryValidator::isRelationshipArgument(std::string str, RelObject relationshipObject) {
 
-	ClauseSuchThatArgObject* firstArgObject;
-	ClauseSuchThatArgObject* secondArgObject;
+	ClauseSuchThatArgObject* firstArgObject = new ClauseSuchThatArgObject();
+	ClauseSuchThatArgObject* secondArgObject = new ClauseSuchThatArgObject();
 
 	bool isUnderArg = true;
 	bool hasComma = false;

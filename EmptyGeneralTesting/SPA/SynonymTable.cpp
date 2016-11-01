@@ -143,8 +143,9 @@ EntityType SynonymTable::getType(SynonymString synonym) {
 		if (obj.getSynonym().compare(synonym) == 0) {
 			return obj.getType();
 		}
-		EntityType::INVALID;
 	}
+
+    return EntityType::INVALID;
 }
 
 std::vector<SynonymObject> SynonymTable::getObjects()

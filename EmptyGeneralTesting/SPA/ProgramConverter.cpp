@@ -56,7 +56,6 @@ int ProgramConverter::convert(std::string source) {
 	bool isFirstStmtinStmtLst;
 	bool isElse = false;
 	EntityType stmtType;
-	StmtNumber parent;
 
 	while (!(currentLine = nextLine()).empty()) {
 		const std::string FIRST_TOKEN = currentLine[0];
@@ -345,10 +344,14 @@ bool ProgramConverter::setParent(ProgLineNumber parent, ProgLineNumber child) {
 	if (parent != 0) {
 		return pkb->putStmtForStmt(parent, PARENT, child);
 	} 
+
+    return false;
 }
 
 bool ProgramConverter::setFollows(ProgLineNumber leader, ProgLineNumber follower) {
 	if (leader != 0) {
 		return pkb->putStmtForStmt(leader, FOLLOWS, follower);
 	} 
+    
+    return false;
 }

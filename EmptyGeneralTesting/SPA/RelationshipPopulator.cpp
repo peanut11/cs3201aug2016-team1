@@ -7,12 +7,12 @@ RelationshipPopulator* RelationshipPopulator::theOne = nullptr;
 
 RelationshipPopulator::RelationshipPopulator() {
 	PKB* pkb = PKB::getInstance();
-	int tableSize = pkb->getStmtTableSize();
+	size_t tableSize = pkb->getStmtTableSize();
 	/*nextStars.reserve(tableSize+1);
 	doneNextFlags.reserve(tableSize + 1);
 	previousStars.reserve(tableSize + 1);
 	donePreviousFlags.reserve(tableSize + 1);*/
-	for (unsigned int i = 1; i <= tableSize + 1; i++) {
+	for (size_t i = 1; i <= tableSize + 1; i++) {
 		nextStars.push_back(std::set<StmtNumber>());
 		previousStars.push_back(std::set<StmtNumber>());
 		doneNextFlags.push_back(false);
