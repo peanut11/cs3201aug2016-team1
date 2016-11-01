@@ -222,6 +222,7 @@ std::string QueryTable::getAttrString(AttrType::AttrType type) {
 		return "value";
 	}
 	
+    return std::string();
 }
 
 bool QueryTable::insertSelectObject(ClauseSelectObject object) {

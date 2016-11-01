@@ -73,7 +73,7 @@ public:
 
 		char c[10];
 		Logger::WriteMessage("=======");
-		for (StmtNumber s : actualSet) Logger::WriteMessage(itoa(s, c, 10));
+		for (StmtNumber s : actualSet) Logger::WriteMessage(_itoa(s, c, 10));
 		Logger::WriteMessage("=======");
 
 		Assert::IsFalse(pkb->is(MODIFIES, 130, pkb->getVarIndex("i")));
@@ -106,7 +106,7 @@ public:
 
 		char c[10];
 		Logger::WriteMessage("=======");
-		for (StmtNumber s : actualSet) Logger::WriteMessage(itoa(s, c, 10));
+		for (StmtNumber s : actualSet) Logger::WriteMessage(_itoa(s, c, 10));
 		Logger::WriteMessage("=======");
 
 		Assert::IsTrue(actualSet == expectedSet);

@@ -14,9 +14,20 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;variable var1,v;assign a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
+		std::string declaration = "procedure p, q;variable var1,v;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
 		Assert::IsTrue(validator->isValidQuery("Select BOOLEAN such that Parent(3,4)"));
+		Assert::IsFalse(validator->isValidQuery("Select BOOLEAN such that Parent(-1,4)"));
+		Assert::IsFalse(validator->isValidQuery("Select BOOLEAN such that Parent(4,-10)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		//
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Next*(s1,s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2)"));
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2) with s1.stmt# = const.value"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Query 34
@@ -229,6 +240,7 @@ public:
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Success Next*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Next*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(n1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Next*(1,n2)"));
@@ -260,6 +272,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,_)"));
 
 		// Success Affects*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Affects*(8,8)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,n2)"));
@@ -763,6 +776,18 @@ public:
 		auto funcPtr5 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
 		Assert::ExpectException<Exceptions>(funcPtr5);
 
+		validator->initStringTokenizer("0,4)"); // parent should have stmt args, but both args are procedure
+		auto funcPtr6 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<Exceptions>(funcPtr6);
+
+		validator->initStringTokenizer("(-1,4)");
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // parent
+
+		validator->initStringTokenizer("(4,-10)");
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // parent
+
+		
+
 	}
 
 	TEST_METHOD(TestQueryValidator_Relationship_Parent) {
@@ -1196,7 +1221,6 @@ public:
 
 	}
 
-
 	TEST_METHOD(TestQueryValidator_Clause_Result) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
@@ -1446,10 +1470,15 @@ public:
 	TEST_METHOD(TestQueryValidator_Clause_With) {
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		Assert::IsTrue(validator->isValidQuery("procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;progline pl1, pl2;constant const;\nSelect p")); //
+		Assert::IsTrue(validator->isValidQuery("stmt s1;procedure p;assign a1, a2;if ifstmt;while w;variable v;call c;progline pl1, pl2;constant const;\nSelect p")); //
 		Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
 
 		// success
+		validator->initStringTokenizer("s1.stmt# = const.value");
+		validator->getNextToken();
+		Assert::IsTrue(validator->isClauseWith("c"));
+
+
 		validator->initStringTokenizer("p.procName=\"First\"");
 		validator->getNextToken();
 		Assert::IsTrue(validator->isClauseWith("p"));

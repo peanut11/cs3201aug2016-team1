@@ -26,6 +26,7 @@ const std::string QueryValidator::SYNTAX_UNDERSCORE = "_";
 const std::string QueryValidator::SYNTAX_DOUBLE_QUOTE = "\"";
 const std::string QueryValidator::SYNTAX_COMMA = ",";
 const std::string QueryValidator::SYNTAX_EQUAL = "=";
+const std::string QueryValidator::SYNTAX_MINUS = "-";
 const std::string QueryValidator::SYNTAX_BOOLEAN = "BOOLEAN";
 const std::string QueryValidator::SYNTAX_STAR = "*";
 const std::string QueryValidator::SYNTAX_DOT = ".";
@@ -417,9 +418,8 @@ bool QueryValidator::isClauseWith(std::string str) {
 	
 	AttrType::AttrType mAttributeType = AttrType::AttrType::INVALID;
 	SynonymObject selectedSynonymObj;
-	ClauseWithRefObject* leftRefObject;
-	ClauseWithRefObject* rightRefObject;
-		
+	ClauseWithRefObject* leftRefObject = nullptr;
+	ClauseWithRefObject* rightRefObject = nullptr;	
 
 	std::string currentToken;
 	
@@ -701,7 +701,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						std::string rightSynonym = currentToken;
 						EntityType rightEntityType = this->getSynonymTable()->getObject(currentToken).getType();
-						AttrType::AttrType rightAttrType;
+						AttrType::AttrType rightAttrType = AttrType::INVALID;
 
 						if (isMatch(st.peekNextToken(), SYNTAX_STATEMENT)) {
 							currentToken = st.nextToken(); // point to stmt
@@ -996,8 +996,8 @@ bool QueryValidator::isRelationship(std::string str) {
 
 bool QueryValidator::isRelationshipArgument(std::string str, RelObject relationshipObject) {
 
-	ClauseSuchThatArgObject* firstArgObject;
-	ClauseSuchThatArgObject* secondArgObject;
+	ClauseSuchThatArgObject* firstArgObject = nullptr;
+	ClauseSuchThatArgObject* secondArgObject = nullptr;
 
 	bool isUnderArg = true;
 	bool hasComma = false;
@@ -1025,6 +1025,11 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				//if (this->mSynonymOccurence->hasMaxCommonSynonym()) {  
 				//	this->exceed_common_synonym_count();
 				//}
+
+				if (firstArgObject == nullptr || secondArgObject == nullptr) {
+					throw Exceptions::invalid_relationship_argument(relationshipObject.getRelObjectType(), str);
+					isUnderArg = false;
+				}
 
 				if (relationshipObject.getRelObjectType() != RelationshipType::NEXT 
 						&& relationshipObject.getRelObjectType() != RelationshipType::NEXT_STAR 
@@ -1078,6 +1083,11 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 		}
 
 		std::string nextToken = st.nextToken();
+
+
+		if (isMatch(nextToken, SYNTAX_MINUS) && isStatementNumber(st.peekNextToken())) { // negative integer is not allow!
+			return false;
+		}
 
 		if (isStatementNumber(nextToken)) {	// integer of statement# (e.g. 1, 2)
 
