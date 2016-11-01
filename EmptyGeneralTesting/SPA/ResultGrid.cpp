@@ -279,3 +279,22 @@ ValueTupleSet ResultGrid::getValuesForSynonymTuple(SynonymTuple synTuple) {
     }
     return results;
 }
+
+ValueVectorSet ResultGrid::getValuesForSynonymTuple(SynonymVector synonyms) {
+    ColumnVector columns;
+    for (SynonymVector::const_iterator syn = synonyms.begin(); syn != synonyms.end(); syn++) {
+        columns.push_back(getColumnForSynonym(*syn));
+    }
+
+    ValueVectorSet results;
+    for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
+        ValueVector values;
+        for (ColumnVector::const_iterator col = columns.begin(); col != columns.end(); col++) {
+            values.push_back((*row)[*col]);
+        }
+
+        results.insert(results.end(), values);
+    }
+
+    return results;
+}

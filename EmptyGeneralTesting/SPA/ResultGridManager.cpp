@@ -110,3 +110,9 @@ ValueTupleSet ResultGridManager::getValuesForSynonymTuple(SynonymTuple synTuple)
     
     return ValueTupleSet();
 }
+
+ValueVectorSet ResultGridManager::getValuesForSynonymTuple(SynonymVector synonyms) {
+    // Currently assumes all synonyms from same ResultGrid
+    ResultGrid* grid = getGridForSynonym(synonyms[0]);
+    return grid->getValuesForSynonymTuple(synonyms);
+}

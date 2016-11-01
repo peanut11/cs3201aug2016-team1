@@ -23,4 +23,5 @@ public:
     bool updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet valTuples);
     ValueSet getValuesForSynonym(SynonymString syn);
     ValueTupleSet getValuesForSynonymTuple(SynonymTuple synTuple);
+    ValueVectorSet getValuesForSynonymTuple(SynonymVector synonyms);
 };
