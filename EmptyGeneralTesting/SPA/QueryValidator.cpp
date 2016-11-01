@@ -1027,6 +1027,11 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				//	this->exceed_common_synonym_count();
 				//}
 
+				if (firstArgObject == nullptr || secondArgObject == nullptr) {
+					throw Exceptions::invalid_relationship_argument(relationshipObject.getRelObjectType(), str);
+					isUnderArg = false;
+				}
+
 				if (relationshipObject.getRelObjectType() != RelationshipType::NEXT 
 						&& relationshipObject.getRelObjectType() != RelationshipType::NEXT_STAR 
 						&& firstArgObject->getIsSynonym() 
