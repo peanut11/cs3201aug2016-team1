@@ -102,9 +102,9 @@ int ProgramConverter::convert(std::string source) {
 				}
 				
 			} else if (stmtType == WHILE) {
-				parent = *pkb->getStmtsByStmt(previous, PARENT).begin();
-				if (pkb->getStmtTypeForStmt(parent) == IF) {
-					setNextOfIfStmt(currentLeader, parent);
+                // 'previous' points to last stmt in stmtLst
+				if (pkb->getStmtTypeForStmt(previous) == IF) {
+					setNextOfIfStmt(currentLeader, previous);
 				} else {
 					setNext(previous, currentLeader);
 				}

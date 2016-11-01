@@ -315,7 +315,7 @@ std::set<ProcIndex>	 PKB::getAllProcIndex() {
 }
 
 EntityType PKB::getStmtTypeForStmt(StmtNumber stmt) {
-    if (stmt >= stmtTypeTable.size()) {
+    if (stmt == 0 || stmt >= stmtTypeTable.size()) {
         return INVALID;
     }
 
