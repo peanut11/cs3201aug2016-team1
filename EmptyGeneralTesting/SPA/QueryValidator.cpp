@@ -419,8 +419,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 	AttrType::AttrType mAttributeType = AttrType::AttrType::INVALID;
 	SynonymObject selectedSynonymObj;
 	ClauseWithRefObject* leftRefObject = nullptr;
-	ClauseWithRefObject* rightRefObject = nullptr;
-		
+	ClauseWithRefObject* rightRefObject = nullptr;	
 
 	std::string currentToken;
 	
@@ -702,7 +701,7 @@ bool QueryValidator::isClauseWith(std::string str) {
 
 						std::string rightSynonym = currentToken;
 						EntityType rightEntityType = this->getSynonymTable()->getObject(currentToken).getType();
-						AttrType::AttrType rightAttrType;
+						AttrType::AttrType rightAttrType = AttrType::INVALID;
 
 						if (isMatch(st.peekNextToken(), SYNTAX_STATEMENT)) {
 							currentToken = st.nextToken(); // point to stmt
