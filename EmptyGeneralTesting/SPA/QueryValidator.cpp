@@ -26,6 +26,7 @@ const std::string QueryValidator::SYNTAX_UNDERSCORE = "_";
 const std::string QueryValidator::SYNTAX_DOUBLE_QUOTE = "\"";
 const std::string QueryValidator::SYNTAX_COMMA = ",";
 const std::string QueryValidator::SYNTAX_EQUAL = "=";
+const std::string QueryValidator::SYNTAX_MINUS = "-";
 const std::string QueryValidator::SYNTAX_BOOLEAN = "BOOLEAN";
 const std::string QueryValidator::SYNTAX_STAR = "*";
 const std::string QueryValidator::SYNTAX_DOT = ".";
@@ -1078,6 +1079,11 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 		}
 
 		std::string nextToken = st.nextToken();
+
+
+		if (isMatch(nextToken, SYNTAX_MINUS) && isStatementNumber(st.peekNextToken())) { // negative integer is not allow!
+			return false;
+		}
 
 		if (isStatementNumber(nextToken)) {	// integer of statement# (e.g. 1, 2)
 

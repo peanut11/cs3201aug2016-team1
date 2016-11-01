@@ -17,6 +17,8 @@ public:
 		std::string declaration = "procedure p, q;variable var1,v;assign a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
 		Assert::IsTrue(validator->isValidQuery("Select BOOLEAN such that Parent(3,4)"));
+		Assert::IsFalse(validator->isValidQuery("Select BOOLEAN such that Parent(-1,4)"));
+		Assert::IsFalse(validator->isValidQuery("Select BOOLEAN such that Parent(4,-10)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Query 34
@@ -260,6 +262,7 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects(_,_)"));
 
 		// Success Affects*
+		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Affects*(8,8)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(n1,2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) and Affects*(1,n2)"));
@@ -763,6 +766,19 @@ public:
 		auto funcPtr5 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
 		Assert::ExpectException<Exceptions>(funcPtr5);
 
+		validator->initStringTokenizer("0,4)"); // parent should have stmt args, but both args are procedure
+		auto funcPtr6 = [validator] { validator->isRelationshipArgument("(", validator->getRelationshipTable()->getObject(4)); };
+		Assert::ExpectException<Exceptions>(funcPtr6);
+
+
+		validator->initStringTokenizer("(-1,4)");
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // parent
+
+		validator->initStringTokenizer("(4,-10)");
+		Assert::IsFalse(validator->isRelationshipArgument("(", validator->getRelationshipTable()->find(RelationshipType::PARENT))); // parent
+
+		
+
 	}
 
 	TEST_METHOD(TestQueryValidator_Relationship_Parent) {
@@ -1195,7 +1211,6 @@ public:
 		Assert::ExpectException<Exceptions>(funcPtrError110);
 
 	}
-
 
 	TEST_METHOD(TestQueryValidator_Clause_Result) {
 		QueryValidator *validator = QueryValidator::getInstance();
