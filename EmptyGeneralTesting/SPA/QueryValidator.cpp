@@ -418,8 +418,8 @@ bool QueryValidator::isClauseWith(std::string str) {
 	
 	AttrType::AttrType mAttributeType = AttrType::AttrType::INVALID;
 	SynonymObject selectedSynonymObj;
-	ClauseWithRefObject* leftRefObject;
-	ClauseWithRefObject* rightRefObject;
+	ClauseWithRefObject* leftRefObject = nullptr;
+	ClauseWithRefObject* rightRefObject = nullptr;
 		
 
 	std::string currentToken;
@@ -997,8 +997,8 @@ bool QueryValidator::isRelationship(std::string str) {
 
 bool QueryValidator::isRelationshipArgument(std::string str, RelObject relationshipObject) {
 
-	ClauseSuchThatArgObject* firstArgObject;
-	ClauseSuchThatArgObject* secondArgObject;
+	ClauseSuchThatArgObject* firstArgObject = nullptr;
+	ClauseSuchThatArgObject* secondArgObject = nullptr;
 
 	bool isUnderArg = true;
 	bool hasComma = false;

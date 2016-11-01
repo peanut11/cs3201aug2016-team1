@@ -1,0 +1,20 @@
+1 - comment
+assign a; while w;
+Select a such that Next*(a,w) pattern w(_,_)
+
+5000
+2 - comment
+stmt s1, s2; constant c;
+Select s2 such that Parent*(s1,s2) and Next*(s1,s2) with s1.stmt# = c.value
+
+5000
+3 - comment
+stmt s1, s2;
+Select s1 such that Next*(s1,s2) and Next(s1,s2)
+
+5000
+4 - comment
+assign a, a1, a2; while w;
+Select a1 such that Affects*(a1,a2) pattern a2(_,_)
+
+5000

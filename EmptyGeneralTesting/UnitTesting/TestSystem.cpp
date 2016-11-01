@@ -262,6 +262,26 @@ namespace UnitTesting
 			}
 		}
 
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example10) {
+			// if if1, if2; while w;
+			// Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1("y",_, _) and w(_, _)
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration_2_Test_Program_Case/source.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string strTitle1 = "TestSystem_Iteration2_Program1_Example10";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "assign a; while w;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select a such that Next*(a,w) pattern w(_,_)");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
         TEST_METHOD(TestSystem_Iteration2_Query40) {
             // This query takes ~ 1 min to evaluate
             return; // Comment-out this line to run
