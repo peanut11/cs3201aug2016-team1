@@ -9,13 +9,16 @@ typedef unsigned int TuplePosition;
 typedef unsigned int GridIndexOrCol;
 typedef GridIndexOrCol GridIndex;
 typedef GridIndexOrCol GridColumn;
+typedef std::vector<GridColumn> ColumnVector;
 typedef std::map<SynonymString, GridIndex> GridIndexMap;
 typedef std::map<SynonymString, GridColumn> GridColumnMap;
 typedef std::tuple<SynonymString, SynonymString> SynonymTuple;
+typedef std::vector<SynonymString> SynonymVector;
 typedef std::tuple<SynonymValue, SynonymValue> ValueTuple;
 typedef std::vector<SynonymValue> GridRow;
 typedef std::set<SynonymValue> ValueSet;
 typedef std::set<ValueTuple> ValueTupleSet;
+typedef std::set<std::vector<SynonymValue>> ValueVectorSet;
 typedef std::list<GridRow>::iterator GridListIterator;
 typedef GridColumnMap::const_iterator GridMapConstIter;
 
@@ -47,4 +50,5 @@ public:
     bool updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples);
     ValueSet getValuesForSynonym(SynonymString syn);
     ValueTupleSet getValuesForSynonymTuple(SynonymTuple synTuple);
+    ValueVectorSet getValuesForSynonymTuple(SynonymVector synonyms);
 };
