@@ -187,11 +187,20 @@ bool QueryValidator::isValidQuery(std::string str) {
 	this->validatedVariableName = "";
 	this->validatedExpression = "";
 
+	/*
 	// Declaration is a must for every query
 	hasDeclared = isDeclaration(st.nextToken());
 	if (!hasDeclared) { return false; }
+	*/
 
-	hasSelect = isSelect(st.hasMoreTokens() ? st.nextToken() : "");
+	std::string currentWord = st.nextToken();
+
+	if (!isMatch(currentWord, SYNTAX_SELECT)) { // not Select
+		hasDeclared = isDeclaration(currentWord);
+		currentWord = st.hasMoreTokens() ? st.nextToken() : "";
+	}
+
+	hasSelect = isSelect(currentWord);
 
 	return hasSelect;
 	// validate both synonym declaration & select clause string
