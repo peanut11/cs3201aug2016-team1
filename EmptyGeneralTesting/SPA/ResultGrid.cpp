@@ -288,8 +288,7 @@ ValueVectorSet ResultGrid::getValuesForSynonymTuple(SynonymVector synonyms) {
 
     ValueVectorSet results;
     for (GridListIterator row = resultList.begin(); row != resultList.end(); row++) {
-        std::vector<SynonymValue> values;
-
+        ValueVector values;
         for (ColumnVector::const_iterator col = columns.begin(); col != columns.end(); col++) {
             values.push_back((*row)[*col]);
         }
