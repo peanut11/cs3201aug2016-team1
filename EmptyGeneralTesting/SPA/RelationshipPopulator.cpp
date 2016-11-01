@@ -117,10 +117,23 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
 				results.insert(whileChildren.begin(), whileChildren.end());
 
 				potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
-				if (potentialNextStmts.empty() && oldestWhile != stmt) {
+                StmtNumber currentStmt = oldestWhile;
+                bool isContinue = currentStmt != stmt;
+				while (potentialNextStmts.empty() && isContinue) {
 					// While is the end of a stmtLst
-					// Might be inside an if-else stmtLst
-					potentialNextStmts = pkb->getStmtsByStmt(NEXT, oldestWhile);
+					// Might be at the end of many nested if-else stmtLst
+                    StmtSet parentSet = pkb->getStmtsByStmt(currentStmt, PARENT);
+                    if (!parentSet.empty()) {
+                        StmtNumber parent = *parentSet.begin();
+                        if (pkb->getStmtTypeForStmt(parent) == IF) {
+                            StmtSet followSet = pkb->getStmtsByStmt(FOLLOWS, parent);
+                            potentialNextStmts = followSet;
+                        } else {
+                            isContinue = false;
+                        }
+                    } else {
+                        isContinue = false;
+                    }
 				}
 				for (it = potentialNextStmts.begin(); it != potentialNextStmts.end(); it++) {
 					results.insert(*it);
@@ -202,7 +215,7 @@ StmtNumber RelationshipPopulator::getOldestWhile(StmtNumber currentStmt) {
 	if (!grandparents.empty()) {
 		while (grandparentsIt != grandparents.end()) {
 			if (pkb->getStmtTypeForStmt(*grandparentsIt) == WHILE) {
-				oldestWhile = *grandparentsIt;
+				return *grandparentsIt;
 			}
 			grandparentsIt++;
 		}
