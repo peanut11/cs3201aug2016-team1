@@ -20,6 +20,7 @@
     <ClCompile Include="TestRelationshipPopulator.cpp" />
     <ClCompile Include="TestPKB.cpp" />
     <ClCompile Include="TestAffectsCalculator.cpp" />
+    <ClCompile Include="TestFrontend.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

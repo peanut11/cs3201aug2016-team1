@@ -88,12 +88,21 @@ int ProgramConverter::convert(std::string source) {
 			currentLeader = stackOfParents.top();
 			stmtType = pkb->getStmtTypeForStmt(currentLeader);
 			
+            if (isElse || stackOfParents.size() >= 2) {
+                StmtNumber stmt = stackOfParents.top();
+                stackOfParents.pop();
+                isElse = (stmt == stackOfParents.top());
+                stackOfParents.push(stmt);
+            }
+
 			if ((stmtType == IF)) {
 				if (isElse) {
+                    isElse = false;
 					lastOfIfLists[stackOfParents.top()][1] = previous;
 					
-					isElse = false;
                     previous = stackOfParents.top();
+                    stackOfParents.pop();
+                    stackOfParents.pop();
 				} else {
 					std::array<ProgLineNumber, 2> progLines = { previous, 0 };
 					lastOfIfLists.insert(std::make_pair(stackOfParents.top(), progLines));
@@ -102,15 +111,15 @@ int ProgramConverter::convert(std::string source) {
 				}
 				
 			} else if (stmtType == WHILE) {
-				parent = *pkb->getStmtsByStmt(previous, PARENT).begin();
-				if (pkb->getStmtTypeForStmt(parent) == IF) {
-					setNextOfIfStmt(currentLeader, parent);
+                // 'previous' points to last stmt in stmtLst
+				if (pkb->getStmtTypeForStmt(previous) == IF) {
+					setNextOfIfStmt(currentLeader, previous);
 				} else {
 					setNext(previous, currentLeader);
 				}
 				previous = currentLeader;
+                stackOfParents.pop();
 			}
-			stackOfParents.pop();
 			continue; // Skips the rest of the code
 		}
 

@@ -1,0 +1,22 @@
+procedure Deletion{
+	cloud = ironman * water - ace;
+	sad = ace * blackwidow - cloud + orange;
+	l = m * n - l * 123312;
+	if m then{
+		l = k;
+		while k{
+			m = n * o;
+			n = p - d * u;
+			t = t;}
+			r = l;}
+	else{
+		p = r;
+		r = s;
+		while l{
+			m = pears * pineapple;
+			powerranger = m;}
+		if l then{
+			apple = apples * apple + pears;}
+		else{
+			orange = orange * pears;}
+	d = d * d;}}
