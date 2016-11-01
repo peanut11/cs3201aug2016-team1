@@ -6799,6 +6799,157 @@ public:
 		Assert::IsTrue(0 == results.size());
 	}
 
+	// Select <s1,s2> such that Follows(s1,s2)
+	TEST_METHOD(TestQueryEvaluator_Tuple1) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s1);
+		synonymTable->insert(s2);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// FOLLOWS (s1,s2)
+		RelationshipType type = FOLLOWS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("s2"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// SELECT <s1,s2> such that Follows(s1,s2)
+		// <s1,s2> = { 1 2, 2 3, 4 5, 5 6, 6 10, 7 8, 8 9, 10 13, 13 14, 14 15, 16 17}
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
+		ClauseSelectResultObject relObject1;
+		relObject1.insertClauseSelectObject(selObject1);
+		relObject1.insertClauseSelectObject(selObject2);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(11).c_str(), std::to_string(results1.size()).c_str());
+
+		Logger::WriteMessage("=============");
+		
+	}
+
+	// Select <s1,v1> such that Uses(s1,v1)
+	TEST_METHOD(TestQueryEvaluator_Tuple2) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		SynonymObject v1(VARIABLE, "v1");
+		synonymTable->insert(s1);
+		synonymTable->insert(v1);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Uses (s1,v1)
+		RelationshipType type = USES;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("s1"), 0, true);
+		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(VARIABLE, std::string("v1"), 0, true);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Select <s1,v1> such that Uses(s1,v1)
+		// <s1,s2> = { 6 i, 7 x, 7 y, 9 i, 10 x, 11 x, 13 i, 13 x, 13 z, 14 z, 15 x, 15 y, 15 z, 17 z}
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
+		ClauseSelectObject selObject2 = ClauseSelectObject(VARIABLE, "v1", AttrType::INVALID);
+		ClauseSelectResultObject relObject1;
+		relObject1.insertClauseSelectObject(selObject1);
+		relObject1.insertClauseSelectObject(selObject2);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(14).c_str(), std::to_string(results1.size()).c_str());
+
+		Logger::WriteMessage("=============");
+
+	}
+	
+	// Select c.procName such that Follows(_,_)
+	TEST_METHOD(TestQueryEvaluator_Tuple3) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject c(CALL, "c");
+		synonymTable->insert(c);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// Follows(_,_)
+		RelationshipType type = FOLLOWS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// Select c.procName such that Follows(_,_)
+		// c.procName = { Second, Third }
+		ClauseSelectObject selObject1 = ClauseSelectObject(CALL, "c", AttrType::PROC_NAME);
+		ClauseSelectResultObject relObject1;
+		relObject1.insertClauseSelectObject(selObject1);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(2).c_str(), std::to_string(results1.size()).c_str());
+
+		Logger::WriteMessage("=============");
+
+	}
+	
+	// Select <s1,s2> such that Follows(_, _)
+	TEST_METHOD(TestQueryEvaluator_Tuple4) {
+		// Initialization
+		QueryEvaluator *evaluator = QueryEvaluator::getInstance();
+		SynonymTable *synonymTable = SynonymTable::getInstance();
+		synonymTable->clearAll();
+		DummyPKB dummyPKB;
+		evaluator->setPKB(&dummyPKB);
+		SynonymObject s1(STMT, "s1");
+		SynonymObject s2(STMT, "s2");
+		synonymTable->insert(s1);
+		synonymTable->insert(s2);
+		ResultGridManager* resultManager = evaluator->populateResultGrids();
+
+		// FOLLOWS (s1,s2)
+		RelationshipType type = FOLLOWS;
+		ClauseSuchThatArgObject* argOne = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+		ClauseSuchThatArgObject* argTwo = new ClauseSuchThatArgObject(STMT, std::string("_"), 0, false);
+		ClauseSuchThatObject* suchThatObj = new ClauseSuchThatObject(type, argOne, argTwo);
+		ClauseSuchThatObject* resultObj = evaluator->evaluateSuchThat(suchThatObj, false);
+		Assert::IsTrue(resultObj->getResultsBoolean());
+
+		// SELECT <s1,s2> such that Follows(_, _)
+		// <s1,s2> = { (1-17,1-17) =  289 possibilities }
+		ClauseSelectObject selObject1 = ClauseSelectObject(STMT, "s1", AttrType::INVALID);
+		ClauseSelectObject selObject2 = ClauseSelectObject(STMT, "s2", AttrType::INVALID);
+		ClauseSelectResultObject relObject1;
+		relObject1.insertClauseSelectObject(selObject1);
+		relObject1.insertClauseSelectObject(selObject2);
+		std::vector<std::string> results1 = evaluator->evaluateSelect(relObject1, resultObj->getResultsBoolean());
+		for (std::vector<std::string>::iterator it = results1.begin(); it != results1.end(); ++it) {
+			Logger::WriteMessage((*it).c_str());
+		}
+		Assert::AreEqual(std::to_string(289).c_str(), std::to_string(results1.size()).c_str());
+
+		Logger::WriteMessage("=============");
+
+	}
 	// POPULATE SYNONYM GROUP
 	TEST_METHOD(TestQueryEvaluator_Populate_Synonym_Group) {
 
