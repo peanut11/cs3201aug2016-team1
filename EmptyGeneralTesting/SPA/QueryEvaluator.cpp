@@ -165,6 +165,9 @@ ResultGridManager* QueryEvaluator::populateResultGrids() {
 		else if (it->getType() == PROCEDURE) {
 			resultManager->initialiseSynonym(syn, pkb->getAllProcIndex());
 		}
+		else if (it->getType() == CONSTANT) {
+			resultManager->initialiseSynonym(syn, pkb->getAllConstantValues());
+		}
 		else {
             EntityType type = it->getType();
             StmtSet stmts = pkb->getStmtsByType(type);
