@@ -326,5 +326,23 @@ namespace UnitTesting
             Frontend frontend = Frontend();
             frontend.parse(std::string("procedure_NestedIfIf.txt"));
         }
+
+		TEST_METHOD(TestSystem_Iteration_Tuple) {
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse("Iteration_1/source1.txt");
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string dec = "stmt s1, s2;\n";
+			std::vector<std::string> res = queryProcessor->evaluate(dec + "Select <s1,s2> such that Follows (s1,s2)");
+			for (std::vector<std::string>::iterator it = res.begin(); it != res.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+			Assert::IsTrue(3==res.size());
+		}
+
 	};
 }
