@@ -85,6 +85,7 @@ public:
 		de.process();
 		
 		RelationshipPopulator *rp = RelationshipPopulator::getInstance();
+		rp->clear();
 		std::set<StmtNumber> actualSet = rp->getAndMemoiseNextStar(false, 1);
 		actualSet = rp->getAndMemoiseNextStar(true, 2);
 		Assert::IsTrue(rp->isNextStar(2, 5));
@@ -104,6 +105,7 @@ public:
 
 		// Proc One
 		RelationshipPopulator *rp = RelationshipPopulator::getInstance();
+		rp->clear();
 		std::set<StmtNumber> actualSet = rp->getAndMemoiseNextStar(true, 1);
 		Assert::AreEqual(StmtNumber(4), actualSet.size());
 		StmtSetIterator actualIt = actualSet.begin();
