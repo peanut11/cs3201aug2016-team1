@@ -54,6 +54,14 @@ bool RelationshipPopulator::isNextStar(StmtNumber startStmt, StmtNumber endStmt)
 	if (startStmt!= 0 && endStmt!= 0 && 
 		pkb->getProcByStmt(startStmt) != pkb->getProcByStmt(endStmt)) return false;
  
+	if (doneNextFlags[startStmt]) {
+		return nextStars[startStmt].find(endStmt) != nextStars[startStmt].end();
+	}
+
+	if (donePreviousFlags[endStmt]) {
+		return previousStars[endStmt].find(startStmt) != previousStars[endStmt].end();
+	}
+
 	potentialNextStmts = pkb->getStmtsByStmt(NEXT, startStmt);
 	
 	nextStmts.insert(nextStmts.begin(), potentialNextStmts.begin(), potentialNextStmts.end());
@@ -155,7 +163,7 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
 					nextStmts = getAndMemoiseNextStar(isNext, *it);
 					results.insert(nextStmts.begin(), nextStmts.end());
 				}
-				
+				storeNextStar(stmt, results);
 				return results;
 			} else if (oldestWhile != 0) {
 				return getAndMemoiseNextStar(isNext, oldestWhile);
@@ -203,7 +211,7 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
 					nextStmts = getAndMemoiseNextStar(isNext, *it);
 					results.insert(nextStmts.begin(), nextStmts.end());
 				}
-				
+				storePrevStar(stmt, results);
 				return results;
 			} else if (oldestWhile != 0) {
 				// Children of While

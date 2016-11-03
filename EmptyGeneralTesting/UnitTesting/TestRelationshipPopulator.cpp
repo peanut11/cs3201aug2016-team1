@@ -71,6 +71,7 @@ public:
 			Assert::AreEqual(StmtNumber(i), *actualIt);
 			actualIt++;
 		}
+
 		pkb->clear();
 		rp->clear();
 	}
@@ -85,8 +86,7 @@ public:
 		de.process();
 		
 		RelationshipPopulator *rp = RelationshipPopulator::getInstance();
-		rp->clear();
-		std::set<StmtNumber> actualSet = rp->getAndMemoiseNextStar(false, 1);
+		std::set<StmtNumber> actualSet = rp->getAndMemoiseNextStar(true, 1);
 		actualSet = rp->getAndMemoiseNextStar(true, 2);
 		Assert::IsTrue(rp->isNextStar(2, 5));
 		Assert::IsTrue(true);
