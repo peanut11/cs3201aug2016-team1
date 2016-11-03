@@ -78,12 +78,26 @@ bool RelationshipPopulator::isNextStar(StmtNumber startStmt, StmtNumber endStmt)
 			}
 			
 			// Adds follower of while into next
-				potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
-				if (potentialNextStmts.empty()) { 
-					// While is the end of a stmtLst
-					// Might be inside an if-else stmtLst
-					potentialNextStmts = pkb->getStmtsByStmt(NEXT, oldestWhile);
+			potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
+			StmtNumber currentStmt = oldestWhile;
+			bool isContinue = currentStmt != startStmt;
+			while (potentialNextStmts.empty() && isContinue) {
+				// While is the end of a stmtLst
+				// Might be at the end of many nested if-else stmtLst
+				StmtSet parentSet = pkb->getStmtsByStmt(currentStmt, PARENT);
+				if (!parentSet.empty()) {
+					StmtNumber parent = *parentSet.begin();
+					if (pkb->getStmtTypeForStmt(parent) == IF) {
+						StmtSet followSet = pkb->getStmtsByStmt(FOLLOWS, parent);
+						potentialNextStmts = followSet;
+						currentStmt = parent;
+					} else {
+						isContinue = false;
+					}
+				} else {
+					isContinue = false;
 				}
+			}
 			oldestWhile = 0;
 		} else {
 			if (currentStmt == endStmt) break;
@@ -128,6 +142,7 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
                         if (pkb->getStmtTypeForStmt(parent) == IF) {
                             StmtSet followSet = pkb->getStmtsByStmt(FOLLOWS, parent);
                             potentialNextStmts = followSet;
+							currentStmt = parent;
                         } else {
                             isContinue = false;
                         }
@@ -166,10 +181,22 @@ std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, S
 				results.insert(whileChildren.begin(), whileChildren.end());
 
 				potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, FOLLOWS);
-				if (potentialNextStmts.empty() && oldestWhile != stmt) {
+				
+				if (potentialNextStmts.empty()) {
 					// While is the start of a stmtLst 
 					// Might be inside an if-else stmtLst
-					potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, PARENT);
+					StmtSet parentSet = pkb->getStmtsByStmt(oldestWhile, PARENT);
+					if (!parentSet.empty()) {
+						StmtNumber parent = *parentSet.begin();
+						if (pkb->getStmtTypeForStmt(parent) == IF) {
+							potentialNextStmts.insert(parent);
+						} else {
+							// Parent is a while -> oldestWhile is not oldest
+							throw std::runtime_error("");
+						}
+					} else {
+						// While is the start of a procedure
+					}
 				}
 				for (it = potentialNextStmts.begin(); it != potentialNextStmts.end(); it++) {
 					results.insert(*it);

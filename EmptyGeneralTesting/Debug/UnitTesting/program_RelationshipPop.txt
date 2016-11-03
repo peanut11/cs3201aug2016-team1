@@ -1,0 +1,41 @@
+procedure One {
+	a = b;
+	while x {
+		a = B + 1;
+		c = r * 21;}
+	n = 500;
+}
+
+procedure Two {
+	while x {
+		a = B + 1;
+		c = r * 21;}
+}
+
+procedure Three {
+	if x then {
+		a = b;
+		while x {
+			a = B + 1;
+			c = r * 21;}
+		n = 500;
+	} else {
+		a = b;
+		while x {
+			a = B + 1;
+			c = r * 21;}
+		n = 500;
+	}
+}
+
+procedure Four {
+	if x then {
+		while x {
+		a = B + 1;
+		c = r * 21;}
+	} else {
+		while x {
+		a = B + 1;
+		c = r * 21;}
+	}
+}
