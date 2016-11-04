@@ -10,12 +10,14 @@ private:
     std::vector<std::vector<SynonymString>> gridTable; // getSynonymsInGrid
 
     bool areInSameGrid(SynonymString syn1, SynonymString syn2);
+    bool areInSameGrid(SynonymVector synonyms);
     bool createGridForSynonym(SynonymString syn, ValueSet vals); 
 
     GridIndex getGridIndexForSynonym(SynonymString syn);
     ResultGrid* getGridByIndex(GridIndex index);
     ResultGrid* getGridForSynonym(SynonymString syn);
     ValueTupleSet permutate(ValueSet vals1, ValueSet vals2);
+    std::list<ValueVector> permutateForSynonymTuple(SynonymVector synonyms);
 
 public:
     bool initialiseSynonym(SynonymString syn, ValueSet vals);
