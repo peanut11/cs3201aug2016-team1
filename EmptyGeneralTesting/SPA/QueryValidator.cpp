@@ -1043,8 +1043,10 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 				if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES
 					 || relationshipObject.getRelObjectType() == RelationshipType::USES) {
 
-					if (firstArgObject->getEntityType() == EntityType::VARIABLE ||
-						firstArgObject->getEntityType() == EntityType::PROCEDURE) {
+					//if (firstArgObject->getEntityType() == EntityType::VARIABLE ||
+					//	firstArgObject->getEntityType() == EntityType::PROCEDURE) {
+
+					if (firstArgObject->getEntityType() == EntityType::PROCEDURE) {
 
 						if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES) {
 							relationshipObject.setRelationshipType(MODIFIES_P);

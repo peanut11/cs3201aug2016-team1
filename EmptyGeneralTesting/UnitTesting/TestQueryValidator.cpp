@@ -14,16 +14,10 @@ public:
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
-		std::string declaration = "procedure p, q;variable var1,v;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
+		std::string declaration = "procedure p, p1,q;variable var1,v,v1;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
-		Assert::IsTrue(validator->isValidQuery("Select BOOLEAN such that Parent(3,4)"));
-		Assert::IsFalse(validator->isValidQuery("Select BOOLEAN such that Parent(-1,4)"));
-		Assert::IsFalse(validator->isValidQuery("Select BOOLEAN such that Parent(4,-10)"));
-		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
-		//
+	
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Next*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2)"));
@@ -38,10 +32,12 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next(s2, s1)"));
 		// Query 49
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s such that Modifies(s, \"apple\")"));
-		
 		// Query 51
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
-		
+		// Query 163
+		//Assert::IsTrue(validator->isValidQuery(declaration + "Select <p1,s1,v1> such that Modifies(_,v1) such that Uses(s1,_)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(\"x\",_\"x\"_) and a2(var1, _\"x\"_) and a2(_, _\"y\"_) such that Next(a1, a2)"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
@@ -1054,15 +1050,22 @@ public:
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
 
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 
 		// failure
+
+		
 		validator->initStringTokenizer("Modifies(_,var1)"); // _ & var
 		validator->getNextToken();
-		//Assert::IsFalse(validator->isRelationship("Modifies"));
 		auto funcPtrError1 = [validator] { validator->isRelationship("Modifies"); };
 		Assert::ExpectException<Exceptions>(funcPtrError1);
+
+		validator->initStringTokenizer("Modifies(var1,_)"); // _ & var
+		validator->getNextToken();
+		auto funcPtrError2 = [validator] { validator->isRelationship("Modifies"); };
+		Assert::ExpectException<Exceptions>(funcPtrError2);
+
 
 	}
 

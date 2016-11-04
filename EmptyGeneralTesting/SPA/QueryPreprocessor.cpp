@@ -32,13 +32,13 @@ QueryPreProcessor::QueryPreProcessor() {
 void QueryPreProcessor::populateRelationshipTable() {
 
 	RelObject object = this->createRelationshipObject(RelationshipType::MODIFIES,
-	{ EntityType::VARIABLE, EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT },	// args 1
-	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2
+	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT },	// args 1 // EntityType::VARIABLE, 
+	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2 
 		2);
 	this->mRelTable->insert(object);
 
 	object = this->createRelationshipObject(RelationshipType::USES,
-	{ EntityType::VARIABLE, EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT },	// args 1
+	{ EntityType::PROCEDURE, EntityType::STMT, EntityType::IF, EntityType::WHILE, EntityType::CALL, EntityType::ASSIGN, EntityType::CONSTANT },	// args 1
 	{ EntityType::VARIABLE, EntityType::WILDCARD },						// args 2
 		2);
 	this->mRelTable->insert(object);

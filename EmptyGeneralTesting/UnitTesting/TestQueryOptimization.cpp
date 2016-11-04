@@ -375,7 +375,7 @@ namespace UnitTesting {
 			QueryValidator *validator = QueryValidator::getInstance();
 			QueryOptimization optimize = QueryOptimization();
 
-			std::string declaration = "procedure p, q;variable v,v1, v2, v3;assign a, a1, a2, a3;if ifstmt,ifs,if1,if2;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
+			std::string declaration = "procedure p,p1, q;variable v,v1, v2, v3;assign a, a1, a2, a3;if ifstmt,ifs,if1,if2;while w;stmt s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 			
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Follows(s3,s1) Parent(s4,s5) Follows(s1,s4)"));
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select <s1, s2, v2> such that Uses (s3, v1) and Modifies (s3, \"x\") and Follows (s1, s2) and Parent (s3, s1) and Uses (s2, v1) such that Uses(5, \"y\") and Follows(3, 4) pattern a1(v2, _\"x + y\"_) such that Affects(a1, a2) with a2.stmt#  = 20 such that Modifies(a3, v3) pattern a3(\"z\", _)"));
@@ -397,8 +397,8 @@ namespace UnitTesting {
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select v such that Uses(ifs, v) with ifs.stmt# = 22"));
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
 
-			Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
-
+			//Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
+			Assert::IsTrue(validator->isValidQuery(declaration + "Select <p1,s1,v1> such that Modifies(v1,_) such that Uses(s1,_)"));
 			//
 
 			std::map<int, GroupObject> output = optimize.doGroup(validator->getSynonymGroup(),
