@@ -15,8 +15,8 @@ RelationshipPopulator::RelationshipPopulator() {
 	for (size_t i = 1; i <= tableSize + 1; i++) {
 		nextStars.push_back(std::set<StmtNumber>());
 		previousStars.push_back(std::set<StmtNumber>());
-		doneNextFlags.push_back(false);
-		donePreviousFlags.push_back(false);
+		hasNextStars.push_back(false);
+		hasPrevStars.push_back(false);
 	}
 }
 
@@ -35,209 +35,14 @@ void RelationshipPopulator::clear() {
 
 	theOne = new RelationshipPopulator();
 }
-
-bool RelationshipPopulator::isNextStar(StmtNumber startStmt, StmtNumber endStmt)
-{
-	std::set<StmtNumber> results;
-	if (startStmt == 0 && endStmt == 0) return false;
-	
-	PKB* pkb = PKB::getInstance();
-	std::vector<StmtNumber> nextStmts;
-	std::set<StmtNumber> potentialNextStmts;
-	std::set<StmtNumber> whileChildren;
-	std::set<StmtNumber> grandparents;
-	std::set<StmtNumber>::const_iterator grandparentsIt;
-	bool isTopDown = (startStmt!= 0);
-	StmtNumber currentStmt;
-	StmtNumber oldestWhile = 0;
-
-	if (startStmt!= 0 && endStmt!= 0 && 
-		pkb->getProcByStmt(startStmt) != pkb->getProcByStmt(endStmt)) return false;
- 
-	if (doneNextFlags[startStmt]) {
-		return nextStars[startStmt].find(endStmt) != nextStars[startStmt].end();
-	}
-
-	if (donePreviousFlags[endStmt]) {
-		return previousStars[endStmt].find(startStmt) != previousStars[endStmt].end();
-	}
-
-	potentialNextStmts = pkb->getStmtsByStmt(NEXT, startStmt);
-	
-	nextStmts.insert(nextStmts.begin(), potentialNextStmts.begin(), potentialNextStmts.end());
-	
-	while (!nextStmts.empty()) {
-		currentStmt = nextStmts.back();
-		nextStmts.pop_back();
-		results.insert(currentStmt);
-
-		oldestWhile = getOldestWhile(currentStmt);
-
-		if (oldestWhile != 0) {
-			// Adds all children of oldest while into results
-			whileChildren = pkb->getStmtsByStmt(PARENT_STAR, oldestWhile);
-			whileChildren.insert(oldestWhile);
-			if (whileChildren.find(endStmt) != whileChildren.end()) {
-				// Children of while contains endStmt
-				results.insert(whileChildren.begin(), whileChildren.find(endStmt));
-				break;
-			} else {
-				results.insert(whileChildren.begin(), whileChildren.end());
-			}
-			
-			// Adds follower of while into next
-			potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
-			StmtNumber currentStmt = oldestWhile;
-			bool isContinue = currentStmt != startStmt;
-			while (potentialNextStmts.empty() && isContinue) {
-				// While is the end of a stmtLst
-				// Might be at the end of many nested if-else stmtLst
-				StmtSet parentSet = pkb->getStmtsByStmt(currentStmt, PARENT);
-				if (!parentSet.empty()) {
-					StmtNumber parent = *parentSet.begin();
-					if (pkb->getStmtTypeForStmt(parent) == IF) {
-						StmtSet followSet = pkb->getStmtsByStmt(FOLLOWS, parent);
-						potentialNextStmts = followSet;
-						currentStmt = parent;
-					} else {
-						isContinue = false;
-					}
-				} else {
-					isContinue = false;
-				}
-			}
-			oldestWhile = 0;
-		} else {
-			if (currentStmt == endStmt) break;
-			potentialNextStmts = pkb->getStmtsByStmt(NEXT, currentStmt); // Gets next
-			
-		}
-		
-		nextStmts.insert(nextStmts.end(), potentialNextStmts.begin(), potentialNextStmts.end());
-		
-	}
-	return !results.empty();
-}
-
-std::set<StmtNumber> RelationshipPopulator::getAndMemoiseNextStar(bool isNext, StmtNumber stmt) {
-	std::set<StmtNumber> nextStmts;
-	std::set<StmtNumber> potentialNextStmts;
-	PKB* pkb = PKB::getInstance();
-	std::set<StmtNumber> results;
-	StmtSetIterator it;
-	StmtNumber oldestWhile = 0;
-	std::set<StmtNumber> whileChildren;
-	StmtSetIterator whileChildrenIt;
-	if (isNext) {
-		if (doneNextFlags[stmt]) {
-			return nextStars[stmt];
-		} else {
-			oldestWhile = getOldestWhile(stmt);
-			if (oldestWhile == stmt) {
-				whileChildren = pkb->getStmtsByStmt(PARENT_STAR, oldestWhile);
-				whileChildren.insert(oldestWhile);
-				results.insert(whileChildren.begin(), whileChildren.end());
-
-				potentialNextStmts = pkb->getStmtsByStmt(FOLLOWS, oldestWhile);
-				StmtNumber currentStmt = oldestWhile;
-				bool isContinue = currentStmt != stmt;
-				while (potentialNextStmts.empty() && isContinue) {
-					// While is the end of a stmtLst
-					// Might be at the end of many nested if-else stmtLst
-					StmtSet parentSet = pkb->getStmtsByStmt(currentStmt, PARENT);
-					if (!parentSet.empty()) {
-						StmtNumber parent = *parentSet.begin();
-						if (pkb->getStmtTypeForStmt(parent) == IF) {
-							StmtSet followSet = pkb->getStmtsByStmt(FOLLOWS, parent);
-							potentialNextStmts = followSet;
-							currentStmt = parent;
-						} else {
-							isContinue = false;
-						}
-					} else {
-						isContinue = false;
-					}
-				}
-				for (it = potentialNextStmts.begin(); it != potentialNextStmts.end(); it++) {
-					results.insert(*it);
-					nextStmts = getAndMemoiseNextStar(isNext, *it);
-					results.insert(nextStmts.begin(), nextStmts.end());
-				}
-				storeNextStar(stmt, results);
-				return results;
-			} else if (oldestWhile != 0) {
-				return getAndMemoiseNextStar(isNext, oldestWhile);
-			} else {
-				potentialNextStmts = pkb->getStmtsByStmt(NEXT, stmt); // Gets next
-				for (it = potentialNextStmts.begin(); it != potentialNextStmts.end(); it++) {
-					results.insert(*it);
-					nextStmts = getAndMemoiseNextStar(isNext, *it);
-					results.insert(nextStmts.begin(), nextStmts.end());
-				}
-				storeNextStar(stmt, results);
-				return results;
-			}
-		}
-	} else {
-		if (donePreviousFlags[stmt]) {
-			return previousStars[stmt];
-		} else {
-			oldestWhile = getOldestWhile(stmt);
-			if (oldestWhile == stmt) {
-				whileChildren = pkb->getStmtsByStmt(PARENT_STAR, oldestWhile);
-				whileChildren.insert(oldestWhile);
-				results.insert(whileChildren.begin(), whileChildren.end());
-
-				potentialNextStmts = pkb->getStmtsByStmt(oldestWhile, FOLLOWS);
-
-				if (potentialNextStmts.empty()) {
-					// While is the start of a stmtLst 
-					// Might be inside an if-else stmtLst
-					StmtSet parentSet = pkb->getStmtsByStmt(oldestWhile, PARENT);
-					if (!parentSet.empty()) {
-						StmtNumber parent = *parentSet.begin();
-						if (pkb->getStmtTypeForStmt(parent) == IF) {
-							potentialNextStmts.insert(parent);
-						} else {
-							// Parent is a while -> oldestWhile is not oldest
-							throw std::runtime_error("");
-						}
-					} else {
-						// While is the start of a procedure
-					}
-				}
-				for (it = potentialNextStmts.begin(); it != potentialNextStmts.end(); it++) {
-					results.insert(*it);
-					nextStmts = getAndMemoiseNextStar(isNext, *it);
-					results.insert(nextStmts.begin(), nextStmts.end());
-				}
-				storePrevStar(stmt, results);
-				return results;
-			} else if (oldestWhile != 0) {
-				// Children of While
-				return getAndMemoiseNextStar(isNext, oldestWhile);
-			} else {
-				potentialNextStmts = pkb->getStmtsByStmt(stmt, NEXT); // Gets previous
-				for (it = potentialNextStmts.begin(); it != potentialNextStmts.end(); it++) {
-					results.insert(*it);
-					nextStmts = getAndMemoiseNextStar(isNext, *it);
-					results.insert(nextStmts.begin(), nextStmts.end());
-				}
-				storePrevStar(stmt, results);
-				return results;
-			}
-		}
-	}
-}
-
 void RelationshipPopulator::storeNextStar(StmtNumber stmt, std::set<StmtNumber> nextStar) {
-	doneNextFlags[stmt] = true;
-	nextStars[stmt] = nextStar;
+	hasNextStars[stmt] = true;
+	nextStars[stmt].insert(nextStar.begin(), nextStar.end());
 }
 
 void RelationshipPopulator::storePrevStar(StmtNumber stmt, std::set<StmtNumber> previousStar) {
-	donePreviousFlags[stmt] = true;
-	previousStars[stmt] = previousStar;
+	hasPrevStars[stmt] = true;
+	previousStars[stmt].insert(previousStar.begin(), previousStar.end());
 }
 
 StmtNumber RelationshipPopulator::getOldestWhile(StmtNumber currentStmt) {
@@ -245,7 +50,7 @@ StmtNumber RelationshipPopulator::getOldestWhile(StmtNumber currentStmt) {
 	PKB* pkb = PKB::getInstance();
 	std::set<StmtNumber> grandparents;
 	StmtSetIterator grandparentsIt;
-	if (pkb->getStmtTypeForStmt(currentStmt) == WHILE) oldestWhile = currentStmt;
+	//if (pkb->getStmtTypeForStmt(currentStmt) == WHILE) oldestWhile = currentStmt;
 	grandparents = pkb->getStmtsByStmt(currentStmt, PARENT_STAR);
 	grandparentsIt = grandparents.begin();
 	if (!grandparents.empty()) {
@@ -257,4 +62,215 @@ StmtNumber RelationshipPopulator::getOldestWhile(StmtNumber currentStmt) {
 		}
 	}
 	return oldestWhile;
+}
+
+
+std::set<StmtNumber> RelationshipPopulator::getNextStar(StmtNumber startStmt, StmtNumber endStmt)
+{
+	std::set<StmtNumber> results;
+	PKB* pkb = PKB::getInstance();
+	bool isNext;
+	StmtNumber oldestWhile;
+
+	if (startStmt != 0 && endStmt != 0) {
+		// Check if same procedure
+		if (pkb->getProcByStmt(startStmt) != pkb->getProcByStmt(endStmt)) {
+			return results;
+		} else if (hasNextStars[startStmt]) {
+			if (nextStars[startStmt].find(endStmt) != nextStars[startStmt].end()) {
+				return nextStars[startStmt];
+			}
+		} else if (hasPrevStars[endStmt]) {
+			if (previousStars[endStmt].find(startStmt) != previousStars[endStmt].end()) {
+				return previousStars[endStmt];
+			}
+		}
+	}
+
+	if (startStmt == 0 && endStmt == 0) { // Invalid 
+		return results;
+	} else if (startStmt != 0) {
+		isNext = true;
+	} else { // startStmt == 0 && endStmt != 0
+		isNext = false;
+	}
+
+	if (isNext) {
+		oldestWhile = getOldestWhile(startStmt); // oldestWhile is not inclusive of startStmt
+
+		if (oldestWhile != 0) { // startStmt is a child of WHILE loop
+			return getNextStar(oldestWhile, endStmt);
+			// Don't need to store NextStar of children in WHILE 
+		} else if (pkb->getStmtTypeForStmt(startStmt) == WHILE) {
+			if (hasNextStars[startStmt]) {
+				results = nextStars[startStmt];
+
+				if (endStmt != 0 && results.find(endStmt) != results.end()) {
+					return results;
+				}
+
+				StmtNumber follower = getFollowsOfWhile(startStmt);
+				if (follower != 0) {
+					results = getNextStar(getFollowsOfWhile(startStmt), endStmt);
+					results.insert(follower);
+					storeNextStar(startStmt, results);
+				}
+
+
+			} else {
+				results = pkb->getStmtsByStmt(PARENT_STAR, startStmt);
+				results.insert(startStmt);
+				storeNextStar(startStmt, results);
+
+				if (endStmt != 0 && results.find(endStmt) != results.end()) {
+					return results;
+				}
+
+				StmtNumber follower = getFollowsOfWhile(startStmt);
+				if (follower != 0) {
+					results = getNextStar(getFollowsOfWhile(startStmt), endStmt);
+					results.insert(follower);
+					storeNextStar(startStmt, results);
+				}
+			}
+		} else {
+			if (hasNextStars[startStmt]) {
+				results = nextStars[startStmt];
+
+				if (endStmt != 0 && results.find(endStmt) != results.end()) {
+					return results;
+				}
+
+				if (!nextStars[startStmt].empty()) {
+					results = getNextStar(getLastOfMemoiseNextStar(startStmt), endStmt);
+					storeNextStar(startStmt, results);
+				}
+
+			} else {
+				results = pkb->getStmtsByStmt(NEXT, startStmt);
+				storeNextStar(startStmt, results);
+				StmtSetIterator it = results.begin();
+				while (it != results.end()) {
+					storeNextStar(startStmt, getNextStar(*it, endStmt));
+					if (endStmt != 0 && *it == endStmt) {
+						return nextStars[startStmt];
+					}
+					it++;
+				}
+			}
+		}
+		return nextStars[startStmt];
+	} else { // Previous*
+		oldestWhile = getOldestWhile(endStmt);
+		if (oldestWhile != 0) {
+			return getNextStar(StmtNumber(0), oldestWhile);
+
+		} else if (pkb->getStmtTypeForStmt(endStmt) == WHILE) {
+			if (hasPrevStars[endStmt]) {
+				results = previousStars[endStmt];
+
+				results = getNextStar(StmtNumber(0), getLeaderOfWhile(endStmt));
+				storePrevStar(endStmt, results);
+			} else {
+				results = pkb->getStmtsByStmt(PARENT_STAR, endStmt);
+				results.insert(endStmt);
+				storePrevStar(endStmt, results);
+
+				StmtNumber leader = getLeaderOfWhile(endStmt);
+				if (leader != 0) {
+					results = getNextStar(StmtNumber(0), leader);
+					results.insert(leader);
+					storePrevStar(endStmt, results);
+				}
+			}
+		} else {
+			if (hasPrevStars[endStmt]) {
+				if (!previousStars[endStmt].empty()) {
+					results = getNextStar(StmtNumber(0), getFirstOfMemoisePrevStar(endStmt));
+					storePrevStar(endStmt, results);
+				}
+
+			} else {
+				results = pkb->getStmtsByStmt(endStmt, NEXT);
+				storePrevStar(endStmt, results);
+				StmtSetIterator it = results.begin();
+				while (it != results.end()) {
+					storePrevStar(endStmt, getNextStar(StmtNumber(0), *it));
+					it++;
+				}
+			}
+		}
+		return previousStars[endStmt];
+	}
+}
+
+StmtNumber RelationshipPopulator::getFollowsOfWhile(StmtNumber stmt) {
+	PKB* pkb = PKB::getInstance();
+	std::set<StmtNumber> follows = pkb->getStmtsByStmt(FOLLOWS, stmt);
+
+	StmtNumber currentStmt = stmt;
+	bool isContinue = true;
+	while (follows.empty() && isContinue) {
+		// While is the end of a stmtLst
+		// Might be at the end of many nested if-else stmtLst
+		StmtSet parentSet = pkb->getStmtsByStmt(currentStmt, PARENT);
+		if (!parentSet.empty()) {
+			StmtNumber parent = *parentSet.begin();
+			if (pkb->getStmtTypeForStmt(parent) == IF) {
+				StmtSet followSet = pkb->getStmtsByStmt(FOLLOWS, parent);
+				follows = followSet;
+				currentStmt = parent;
+			} else {
+				isContinue = false;
+			}
+		} else {
+			isContinue = false;
+		}
+	}
+	if (!follows.empty()) {
+		return *follows.begin();
+	} else {
+		return StmtNumber(0);
+	}
+	
+}
+
+StmtNumber RelationshipPopulator::getLastOfMemoiseNextStar(StmtNumber stmt) {
+	if (!nextStars[stmt].empty()) {
+		return *nextStars[stmt].rbegin();
+	} else return 0;
+}
+
+StmtNumber RelationshipPopulator::getLeaderOfWhile(StmtNumber stmt) {
+	PKB* pkb = PKB::getInstance();
+	StmtSet leaders = pkb->getStmtsByStmt(stmt, FOLLOWS);
+
+	if (leaders.empty()) {
+		// While is the start of a stmtLst 
+		// Might be inside an if-else stmtLst
+		StmtSet parentSet = pkb->getStmtsByStmt(stmt, PARENT);
+		if (!parentSet.empty()) {
+			StmtNumber parent = *parentSet.begin();
+			if (pkb->getStmtTypeForStmt(parent) == IF) {
+				leaders.insert(parent);
+			} else {
+				// Parent is a while -> oldestWhile is not oldest
+				throw std::runtime_error("");
+			}
+		} else {
+			// While is the start of a procedure
+		}
+	}
+
+	if (!leaders.empty()) {
+		return *leaders.begin();
+	} else {
+		return StmtNumber(0);
+	}
+}
+
+StmtNumber RelationshipPopulator::getFirstOfMemoisePrevStar(StmtNumber stmt) {
+	if (!previousStars[stmt].empty()) {
+		return *previousStars[stmt].begin();
+	} else return 0;
 }
