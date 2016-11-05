@@ -16,6 +16,9 @@ public:
 
 		std::string declaration = "procedure p, p1,q;variable var1,v,v1;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
+		Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Calls* (p1, \"Deletion\") and Next* (n1, n2) and Follows(c1, _) with p1.procName = c1.procName and M/odifies(p1, v1) and pattern a1(\"pears\", _) and Uses(a1, v1) and Follows* (s1, s2) with s2.stmt#  = con1.value and Affects*(a1, _) and con1 = a1.stmt# and Parent* (c1, s2)"));
+
+
 	
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2)"));
@@ -34,9 +37,16 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s such that Modifies(s, \"apple\")"));
 		// Query 51
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
-		// Query 163
-		//Assert::IsTrue(validator->isValidQuery(declaration + "Select <p1,s1,v1> such that Modifies(_,v1) such that Uses(s1,_)"));
+		
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// Query 165
+		//Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Calls* (p1, \"Deletion\") and Next* (n1, n2) and Follows(c1, _) with p1.procName = c1.procName and Modifies(p1, v1) and pattern a1(\"pears\", _) and Uses(a1, v1) and Follows* (s1, s2) with s2.stmt#  = con1.value and Affects*(a1, _) and con1 = a1.stmt# and Parent* (c1, s2)"));
+		//Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Follows(c1, _) with p1.procName = c1.procName"));
+		//Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Follows* (s1, s2) with s2.stmt#  = con1.value"));
+
+		// 
+		//
 
 
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 pattern a1(\"x\",_\"x\"_) and a2(var1, _\"x\"_) and a2(_, _\"y\"_) such that Next(a1, a2)"));
@@ -1045,6 +1055,7 @@ public:
 		validator->initStringTokenizer("Modifies(\"First\",\"x\")"); 
 		validator->getNextToken();
 		Assert::IsTrue(validator->isRelationship("Modifies"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		validator->initStringTokenizer("Modifies(1,var1)"); // constant & var
 		validator->getNextToken();
