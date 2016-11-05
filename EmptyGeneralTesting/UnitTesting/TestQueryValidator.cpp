@@ -16,9 +16,6 @@ public:
 
 		std::string declaration = "procedure p, p1,q;variable var1,v,v1;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
-		Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Calls* (p1, \"Deletion\") and Next* (n1, n2) and Follows(c1, _) with p1.procName = c1.procName and M/odifies(p1, v1) and pattern a1(\"pears\", _) and Uses(a1, v1) and Follows* (s1, s2) with s2.stmt#  = con1.value and Affects*(a1, _) and con1 = a1.stmt# and Parent* (c1, s2)"));
-
-
 	
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2)"));
@@ -27,23 +24,16 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2) with s1.stmt# = const.value"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
-		// Query 34
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select v such that Uses(ifs, v) with ifs.stmt# = 22"));
-		// Query 41
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next*(s2, s1) and Next*(s1, s1)"));
-		// Query 47
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Next(s1, s2) and Next(s2, s1)"));
-		// Query 49
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select s such that Modifies(s, \"apple\")"));
-		// Query 51
-		Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
-		
+		// Query 44
+		Assert::IsTrue(validator->isValidQuery("while w1; progline n1; Select w1 such that Next(w1, n1)"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
-		// Query 165
-		//Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Calls* (p1, \"Deletion\") and Next* (n1, n2) and Follows(c1, _) with p1.procName = c1.procName and Modifies(p1, v1) and pattern a1(\"pears\", _) and Uses(a1, v1) and Follows* (s1, s2) with s2.stmt#  = con1.value and Affects*(a1, _) and con1 = a1.stmt# and Parent* (c1, s2)"));
-		//Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Follows(c1, _) with p1.procName = c1.procName"));
-		//Assert::IsTrue(validator->isValidQuery("procedure p1; progline n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;Select <p1, c1, a1, v1> such that Follows* (s1, s2) with s2.stmt#  = con1.value"));
+		// Query 189
+		Assert::IsTrue(validator->isValidQuery("assign a1, a2; stmt s; Select <a1, a2, s> such that Next*(a1, a1) and Next*(s, s) and Affects*(a1, a2) and Affects*(a2, a2)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// Query 203
+
 
 		// 
 		//
@@ -376,6 +366,7 @@ public:
 		Assert::ExpectException<Exceptions>(error6);
 
 		// Failure, same synonym in relationships
+		/*
 		auto error7 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
@@ -393,6 +384,8 @@ public:
 			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
 		};
 		Assert::ExpectException<Exceptions>(error9);
+		*/
+		
 
 		// Failure, progline
 		auto error10 = [validator] {
@@ -942,11 +935,12 @@ public:
 		auto funcPtr9 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<Exceptions>(funcPtr9);
 
+		/*
 		validator->initStringTokenizer("Parent(s1,s1)"); // same synonyms in both arguments
 		validator->getNextToken();
 		auto funcPtr10 = [validator] { validator->isRelationship("Parent"); };
 		Assert::ExpectException<Exceptions>(funcPtr10);
-
+		*/
 	}
 
 	TEST_METHOD(TestQueryValidator_Relationship_Follows) {
@@ -1004,11 +998,12 @@ public:
 		auto funcPtrError1 = [validator] { validator->isRelationship("Follows"); };
 		Assert::ExpectException<Exceptions>(funcPtrError1);
 
+		/*
 		validator->initStringTokenizer("Follows(s1,s1)"); // same synonym for both args
 		validator->getNextToken();
 		auto funcPtrError2 = [validator] { validator->isRelationship("Follows"); };
 		Assert::ExpectException<Exceptions>(funcPtrError2);
-
+		*/
 	}
 
 	TEST_METHOD(TestQueryValidator_Relationship_Modifies) {

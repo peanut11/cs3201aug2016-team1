@@ -1031,6 +1031,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 					isUnderArg = false;
 				}
 
+				/*
 				if (relationshipObject.getRelObjectType() != RelationshipType::NEXT 
 						&& relationshipObject.getRelObjectType() != RelationshipType::NEXT_STAR 
 						&& firstArgObject->getIsSynonym() 
@@ -1039,6 +1040,7 @@ bool QueryValidator::isRelationshipArgument(std::string str, RelObject relations
 					throw Exceptions::invalid_relationship_same_synonym_arguments(relationshipObject.getRelObjectType(), firstArgObject->getStringValue(), secondArgObject->getStringValue());
 					isUnderArg = false;
 				}
+				*/
 
 				if (relationshipObject.getRelObjectType() == RelationshipType::MODIFIES
 					 || relationshipObject.getRelObjectType() == RelationshipType::USES) {
