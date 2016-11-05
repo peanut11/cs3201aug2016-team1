@@ -61,8 +61,9 @@ bool PKB::is(RelationshipType rel, ProcStmtIndex stmtOrProcIndex, ProcStmtVarInd
 		}
 
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
-		return rp->isNextStar(stmtOrProcIndex, item);
-		
+		StmtSet results = rp->getNextStar(stmtOrProcIndex, item);
+		return results.find(item) != results.end();
+
 	} else if (rel == AFFECTS || rel == AFFECTS_STAR) {
 		if (stmtOrProcIndex >= stmtTable.size() || item >= stmtTable.size()) {
 			return false;
@@ -351,7 +352,7 @@ StmtSet PKB::getStmtsByStmt(StmtNumber stmt, RelationshipType stmtRel) {
 
 	if (stmtRel == NEXT_STAR) {
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
-		return rp->getAndMemoiseNextStar(false, stmt);
+		return rp->getNextStar(0, stmt);
 	}
 
 	if (stmtRel == AFFECTS || stmtRel == AFFECTS_STAR) {
@@ -380,7 +381,7 @@ StmtSet PKB::getStmtsByStmt(RelationshipType followsOrParent, StmtNumber stmt) {
 
 	if (followsOrParent == NEXT_STAR) {
 		RelationshipPopulator* rp = RelationshipPopulator::getInstance();
-		return rp->getAndMemoiseNextStar(true, stmt);
+		return rp->getNextStar(stmt, 0);
 	}
 
 	if (followsOrParent == AFFECTS || followsOrParent == AFFECTS_STAR) {

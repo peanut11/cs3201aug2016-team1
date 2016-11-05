@@ -121,7 +121,7 @@ namespace UnitTesting
 			PKB::getInstance()->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse(std::string("Iteration_2_Test_Program_Case/Source_1.txt"));
+			frontend.parse(std::string("source.txt"));
 
 			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
 			PKB* pkb = PKB::getInstance();
@@ -135,8 +135,8 @@ namespace UnitTesting
 
 			std::string strTitle1 = "TEST EVALUATOR";
 			Logger::WriteMessage(strTitle1.c_str());
-			std::string declaration2 = "variable v;\n";
-			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select v such that Modifies(24,v)");
+			std::string declaration2 = "stmt s1, s2; constant c;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2) with s1.stmt# = c.value");
 			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
 				Logger::WriteMessage((*it).c_str());
 			}
