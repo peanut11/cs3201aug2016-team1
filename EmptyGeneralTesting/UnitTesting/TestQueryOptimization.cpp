@@ -397,7 +397,11 @@ namespace UnitTesting {
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select v such that Uses(ifs, v) with ifs.stmt# = 22"));
 			//Assert::IsTrue(validator->isValidQuery(declaration + "Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1(\"y\",_,_) and w(_, _)"));
 
-			Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
+			//Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
+
+			// Query 114
+			Assert::IsTrue(validator->isValidQuery("stmt s1, s2; variable v1; Select <s1, v1, s2> such that Follows (s1, s2) and Uses (60, v1) and Modifies (s1, v1)"));
+
 
 			std::map<int, GroupObject> output = optimize.doGroup(validator->getSynonymGroup(),
 				validator->getQueryTable());

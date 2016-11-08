@@ -306,6 +306,12 @@ bool QueryValidator::isSelect(std::string str) {
 	
 	bool isUnderSelect = true;
 	bool isValid = true;
+	bool isValidSuchThat = false;
+	bool isValidPattern = false;
+	bool isValidWith = false;
+	bool hasSuchThat = false;
+	bool hasPattern = false;
+	bool hasWith = false;
 	bool hasSelectOnce = false;
 	ClauseType::ClauseType previousClauseType = ClauseType::SELECT;
 
@@ -338,16 +344,18 @@ bool QueryValidator::isSelect(std::string str) {
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_SUCH) && isMatch(st.nextToken(), QueryValidator::SYNTAX_THAT)) {
 			// first token = "such" & next token = "that"
 			previousClauseType = ClauseType::SUCH_THAT;
+			isValid = isRelationship(st.nextToken());
 		}
-		 
-		else if (isMatch(currentToken, QueryValidator::SYNTAX_PATTERN)) {
+		else if (isMatch(currentToken, QueryValidator::SYNTAX_PATTERN)) { // 
 			previousClauseType = ClauseType::ClauseType::PATTERN;
+			isValid = isClausePattern(st.nextToken());
 		}
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_AND)) {
 			// remain the same previous clause type
 		}
 		else if (isMatch(currentToken, QueryValidator::SYNTAX_WITH)) {
 			previousClauseType = ClauseType::ClauseType::WITH;
+			isValid = isClauseWith(st.nextToken());
 		}
 		else {
 			// not clauses (such that, with, pattern, and)
@@ -355,32 +363,17 @@ bool QueryValidator::isSelect(std::string str) {
 
 			case ClauseType::ClauseType::SELECT:
 				isValid = isClauseResult(currentToken);
-				/*
-				if (isValid) {
-					// insert into clause select table
-					EntityType mSynonymEntityType = this->mSynonymTable->getObject(currentToken).getType();
-
-					if (isSyntaxBoolean(currentToken)) {  // BOOLEAN
-						this->getQueryTable().insertSelectObject(ClauseSelectObject(EntityType::INVALID, "", AttrType::INVALID, true));
-					}
-					else if (isSynonym(currentToken)	// synonym
-						&& mSynonymEntityType != EntityType::INVALID) {
-
-						this->getQueryTable().insertSelectObject(ClauseSelectObject(mSynonymEntityType, currentToken, AttrType::INVALID, false));
-					}
-				}
-				*/
 				break;
 
-			case ClauseType::SUCH_THAT:
+			case ClauseType::ClauseType::SUCH_THAT:
 				isValid = isRelationship(currentToken);
 				break;
 
-			case ClauseType::WITH:
+			case ClauseType::ClauseType::WITH:
 				isValid = isClauseWith(currentToken);
 				break;
 
-			case ClauseType::PATTERN:
+			case ClauseType::ClauseType::PATTERN:
 				isValid = isClausePattern(currentToken);
 				break;
 			}
@@ -395,6 +388,7 @@ bool QueryValidator::isSelect(std::string str) {
 bool QueryValidator::isMatch(std::string s1, std::string s2) {
 	//std::transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 	//std::transform(s2.begin(), s2.end(), s2.begin(), ::tolower);
+	//return s1.compare(s2) == 0;
 	return s1 == s2;
 }
 
