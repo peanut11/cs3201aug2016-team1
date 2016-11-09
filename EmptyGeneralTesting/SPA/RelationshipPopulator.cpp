@@ -178,6 +178,11 @@ std::set<StmtNumber> RelationshipPopulator::getNextStar(StmtNumber startStmt, St
 
 				StmtNumber leader = getLeaderOfWhile(endStmt);
 				if (leader != 0) {
+					if (pkb->getStmtTypeForStmt(leader) == IF || pkb->getStmtTypeForStmt(leader) == WHILE) {
+						StmtSet ifChildren = pkb->getStmtsByStmt(PARENT_STAR, leader);
+						results.insert(ifChildren.begin(), ifChildren.end());
+						storePrevStar(endStmt, results);
+					}
 					results = getNextStar(StmtNumber(0), leader);
 					results.insert(leader);
 					storePrevStar(endStmt, results);
