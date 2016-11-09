@@ -313,6 +313,47 @@ namespace UnitTesting
             }
         }
 
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example11) {
+			// if if1, if2; while w;
+			// Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1("y",_, _) and w(_, _)
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration3/it3_source2.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string strTitle1 = "TestSystem_Iteration2_Program1_Example11";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "assign a, a2;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select <a, a2> such that Next*(a, 90)");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
+		TEST_METHOD(TestSystem_Iteration2_Program1_Example12) {
+			// if if1, if2; while w;
+			// Select if1 such that Next(if1, w) and Next*(if1, if2) pattern if1("y",_, _) and w(_, _)
+			PKB::getInstance()->clear();
+
+			Frontend frontend = Frontend();
+			frontend.parse(std::string("Iteration3/it3_edited_source.txt"));
+
+			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
+			PKB* pkb = PKB::getInstance();
+
+			std::string strTitle1 = "TestSystem_Iteration2_Program1_Example12";
+			Logger::WriteMessage(strTitle1.c_str());
+			std::string declaration2 = "progline n1;\n";
+			std::vector<std::string> results2 = queryProcessor->evaluate(declaration2 + "Select BOOLEAN with n1 = 10");
+			for (std::vector<std::string>::iterator it = results2.begin(); it != results2.end(); it++) {
+				Logger::WriteMessage((*it).c_str());
+			}
+		}
+
+
         TEST_METHOD(TestSystem_NestedIfWhileIf) {
             PKB::getInstance()->clear();
 

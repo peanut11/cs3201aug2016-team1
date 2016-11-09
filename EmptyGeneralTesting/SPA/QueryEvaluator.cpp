@@ -654,6 +654,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 								withObject->setResultsBoolean(true);
 								// Update the result table
 								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+								resultManager->updateSynonym(rightObj->getSynonym(), evaluatedProcedures);
 							}						
 						}
 						// if right synonym = call -> p1.procName = call.procName
@@ -673,11 +674,18 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 							set_intersection(procedures.begin(), procedures.end(), callProcedureIndexs.begin(), callProcedureIndexs.end(),
 								std::inserter(evaluatedProcedures, evaluatedProcedures.begin()));
 
+							std::set<StmtNumber> evalutedCallStmts;
+							for (StmtSetIterator s1 = callStatements.begin(); s1 != callStatements.end(); s1++) {
+								if (evaluatedProcedures.find(pkb->getProcByCall(*s1))!=evaluatedProcedures.end()) {
+									evalutedCallStmts.insert(*s1);
+								}
+							}
 							// Check relationships holds
 							if (evaluatedProcedures.size() > 0) {
 								withObject->setResultsBoolean(true);
 								// Update the result table
 								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+								resultManager->updateSynonym(rightObj->getSynonym(), evalutedCallStmts);
 							}					
 						}
 					}
@@ -698,17 +706,21 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 							// get all the variable names and check whether it exists inside p synonym
 							// if exist, add the procedure index of the name inside
 							std::set<ProcIndex> evaluatedProcedures({});
+							std::set<StmtNumber> evaluatedVariables;
 							for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
 								if (procedureNames.count(pkb->getVarName(*v1))) {
 									evaluatedProcedures.insert(pkb->getProcIndex(pkb->getVarName(*v1)));
+									evaluatedVariables.insert(*v1);
+
 								}
 							}
-
+			
 							// Check relationships holds
 							if (evaluatedProcedures.size() > 0) {
 								withObject->setResultsBoolean(true);
 								// Update the result table
 								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedProcedures);
+								resultManager->updateSynonym(rightObj->getSynonym(), evaluatedVariables);
 							}					
 						}
 					}
@@ -778,6 +790,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 								withObject->setResultsBoolean(true);
 								// Update the result table
 								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+								resultManager->updateSynonym(rightObj->getSynonym, evaluatedProceduresIndex);
 							}							
 						}
 						// if right synonym = call -> c1.procName = c2.procName
@@ -815,6 +828,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 								withObject->setResultsBoolean(true);
 								// Update the result table
 								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+								resultManager->updateSynonym(rightObj->getSynonym(), evaluatedCallStatements);
 							}						
 						}
 					}
@@ -835,9 +849,11 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 							// get all the variable names and check whether it exists inside p synonym
 							// if exist, add the procedure index of the name inside
 							std::set<ProcIndex> evaluatedProcedures;
+							std::set<VarIndex> evaluatedVariables;
 							for (StmtSetIterator v1 = variables.begin(); v1 != variables.end(); v1++) {
 								if (procedureNames.count(pkb->getVarName(*v1))) {
 									evaluatedProcedures.insert(pkb->getProcIndex(pkb->getVarName(*v1)));
+									evaluatedVariables.insert(*v1);
 								}
 							}
 
@@ -854,6 +870,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 								withObject->setResultsBoolean(true);
 								// Update the result table
 								resultManager->updateSynonym(leftObj->getSynonym(), evaluatedCallStatements);
+								resultManager->updateSynonym(righObj->getSynonym(), evaluatedVariables);
 							}							
 						}
 					}
@@ -925,6 +942,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 						withObject->setResultsBoolean(true);
 						// Update the result table
 						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedStatements);
+						resultManager->updateSynonym(rightObj->getSynonym(), evaluatedStatements);
 					}					
 				}
 			}
@@ -989,11 +1007,20 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 						}
 					}
 
+					std::set<ProcIndex> evaluatedProcedures;
+					for (StmtSetIterator p1 = procedures.begin(); p1 != procedures.end(); v1++) {
+						if (evaluatedVariablesNames.count(pkb->getProcName(*p1))) {
+							evaluatedProcedures.insert(*p1);
+						}
+					}
+
+
 					// Check relationships holds
 					if (evaluatedVariables.size() > 0) {
 						withObject->setResultsBoolean(true);
 						// Update the result table
 						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
+						resultManager->updateSynonym(rightObj->getSynonym(), evaluatedProcedures);
 					}					
 				}
 				// right side is varName; v1.varName = v2.varName;
@@ -1011,6 +1038,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 						withObject->setResultsBoolean(true);
 						// Update the result table
 						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedVariables);
+						resultManager->updateSynonym(rightObj->getSynonym(), evaluatedVariables);
 					}					
 				}
 			}
@@ -1059,6 +1087,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 							withObject->setResultsBoolean(true);
 							// Update the result table
 							resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+							resultManager->updateSynonym(rightObj->getSynonym(), evaluatedConstants);
 						}					
 					}
 				}
@@ -1078,6 +1107,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 						withObject->setResultsBoolean(true);
 						// Update the result table
 						resultManager->updateSynonym(leftObj->getSynonym(), evaluatedConstants);
+						resultManager->updateSynonym(rightObj->getSynonym(), evaluatedConstants);
 					}					
 				}
 			}
@@ -1094,7 +1124,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 				StmtNumber stmtNumber = rightObj->getIntegerValue();
 
 				// Get current results
-				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj->getStringValue());
+				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj->getSynonym());
 
 				// Check if current lines results contain integer
 				std::set<StmtNumber> evaluatedLines;
@@ -1106,15 +1136,15 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 				if (evaluatedLines.size() > 0) {
 					withObject->setResultsBoolean(true);
 					// Update the result table
-					resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedLines);
 				}			
 			}
 		}
 		// right side is SYNONYM; n = n1;
 		else if (rightObj->getRefType() == SYNONYM) {
 			// Get current results
-			std::set<StmtNumber> lines1 = resultManager->getValuesForSynonym(leftObj->getStringValue());
-			std::set<StmtNumber> lines2 = resultManager->getValuesForSynonym(rightObj->getStringValue());
+			std::set<StmtNumber> lines1 = resultManager->getValuesForSynonym(leftObj->getSynonym());
+			std::set<StmtNumber> lines2 = resultManager->getValuesForSynonym(rightObj->getSynonym());
 
 			// Intersect both sets
 			std::set<Constant> evaluatedLines;
@@ -1125,7 +1155,8 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 			if (evaluatedLines.size() > 0) {
 				withObject->setResultsBoolean(true);
 				// Update the results table
-				resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+				resultManager->updateSynonym(leftObj->getSynonym(), evaluatedLines);
+				resultManager->updateSynonym(rightObj->getSynonym(), evaluatedLines);
 			}		
 		}
 		// right side is ATTRREF; n = synonym.attrName
@@ -1133,7 +1164,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 			// right side is stmt#; n = s.stmt#
 			if (rightObj->getAttrType() == AttrType::STMT_NO) {
 				// Get current results
-				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj->getStringValue());
+				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj->getSynonym());
 				std::set<StmtNumber> statements = resultManager->getValuesForSynonym(rightObj->getSynonym());
 
 				// Intersect both sets
@@ -1145,13 +1176,14 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 				if (evaluatedLines.size() > 0) {
 					withObject->setResultsBoolean(true);
 					// Update the results table
-					resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedLines);
+					resultManager->updateSynonym(rightObj->getSynonym(), evaluatedLines);
 				}				
 			}
 			// right side is value; n = c.value;
 			else if (rightObj->getAttrType() == AttrType::VALUE) {
 				// Get current results
-				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj->getStringValue());
+				std::set<StmtNumber> lines = resultManager->getValuesForSynonym(leftObj->getSynonym());
 				std::set<Constant> constants = resultManager->getValuesForSynonym(rightObj->getSynonym());
 
 				// Intersect both sets
@@ -1163,7 +1195,7 @@ ClauseWithObject* QueryEvaluator::evaluateWith(ClauseWithObject* withObject, boo
 				if (evaluatedLines.size() > 0) {
 					withObject->setResultsBoolean(true);
 					// Update the results table
-					resultManager->updateSynonym(leftObj->getStringValue(), evaluatedLines);
+					resultManager->updateSynonym(leftObj->getSynonym(), evaluatedLines);
 				}				
 			}
 		}
