@@ -10,31 +10,67 @@ namespace UnitTesting {
 	TEST_CLASS(TestQueryValidator) {
 public:
 	
+	TEST_METHOD(TestQueryValidator__It_3_Test_Own_Queries) {
+		QueryProcessor *processor = QueryProcessor::getInstance();
+		QueryValidator *validator = QueryValidator::getInstance();
+
+		std::string declaration = "procedure p, p1,q;variable var1,v,v1;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
+
+		// Query 44
+		Assert::IsTrue(validator->isValidQuery("while w1; progline n1; Select w1 such that Next(w1, n1)"));
+
+		// Query 77
+		auto funcPtrExprError1 = [validator] { validator->isValidQuery("if ifstmt; Select ifstmt such that pattern ifstmt(_,_,_)"); };
+		Assert::ExpectException<Exceptions>(funcPtrExprError1);
+
+		// Query 77 modified valid
+		Assert::IsTrue(validator->isValidQuery("if ifstmt; Select ifstmt pattern ifstmt(_,_,_)"));
+		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+
+		// Query 77 inspired wrong queries
+		auto error2 = [validator] { validator->isValidQuery("if ifstmt; Select ifstmt such that such that ifstmt(_,_,_)"); };
+		Assert::ExpectException<Exceptions>(error2);
+
+		auto error3 = [validator] { validator->isValidQuery("procedure p;if ifstmt; Select ifstmt such that with p.procName=\"test\""); };
+		Assert::ExpectException<Exceptions>(error3);
+
+		// Query 127
+		Assert::IsTrue(validator->isValidQuery("procedure p1,p2; variable v1; Select <p1, p2, v1> such that Calls*(p1, p2) such that Uses(p1, v1) and Modifies(p2, v1) and Follows(_, _)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
+		// Query 152
+		Assert::IsTrue(validator->isValidQuery("stmt s1, s2; call c1; Select <s2, s1, c1.procName> such that Uses(s1, \"pineapple\") and Next(s1, s2) and Follows(c1, s1) with c1.stmt#  = s2.stmt#"));
+
+		// Query 170
+		Assert::IsTrue(validator->isValidQuery("stmt s1, a1, a2; variable v;Select <s1, a1, a2> such that Affects(a1, a2) and Uses(s1, v) and Next*(s1, a1) and Modifies(a1, v)"));
+
+		// Query 189
+		Assert::IsTrue(validator->isValidQuery("assign a1, a2; stmt s; Select <a1, a2, s> such that Next*(a1, a1) and Next*(s, s) and Affects*(a1, a2) and Affects*(a2, a2)"));
+
+		// Query 203
+		// 
+		Assert::IsTrue(validator->isValidQuery("assign a1, a2; stmt s; Select <a1, a2, s> such that Next*(a1, a1) and Next*(s, s) and Affects*(a1, a1) and Affects*(a2, a2)"));
+
+
+	
+		
+	}
+
 	TEST_METHOD(TestQueryValidator__Iteration_3_Full_Query) {
 		QueryProcessor *processor = QueryProcessor::getInstance();
 		QueryValidator *validator = QueryValidator::getInstance();
 
 		std::string declaration = "procedure p, p1,q;variable var1,v,v1;assign a, a1, a2;if ifstmt,ifs,if1,if2;while w;stmt s, s1, s2, s3, s4, s5;progline n1, n2;call c;constant const;\n";
 
-	
+		
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a such that Next*(a,w) pattern w(_,_)"));
+		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Next*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s2 such that Parent*(s1,s2) and Next*(s1,s2) with s1.stmt# = const.value"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
-		// Query 44
-		Assert::IsTrue(validator->isValidQuery("while w1; progline n1; Select w1 such that Next(w1, n1)"));
-		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
-		// Query 189
-		Assert::IsTrue(validator->isValidQuery("assign a1, a2; stmt s; Select <a1, a2, s> such that Next*(a1, a1) and Next*(s, s) and Affects*(a1, a2) and Affects*(a2, a2)"));
-		Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-
-		// Query 203
-
-
+	
 		// 
 		//
 
@@ -171,7 +207,7 @@ public:
 		// output is "wrong". while w; variable v; Select v such that Uses (w, _)
 		// output is "wrong". Select v such that Modifies (a1, "iter") pattern a("left", _)
 		// crash. assign a; Select a such that Parent*(38, a)
-		
+
 		// Success Result clause is statement list
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select sl1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		//Logger::WriteMessage(validator->getSynonymTable()->toString().c_str());
@@ -180,12 +216,12 @@ public:
 		// Success Modifies procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Modifies(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
-		
+
 		// Success Uses procedure
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(a1, \"x\") pattern a1(\"x\",\"y+1\")"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select a1 such that Uses(\"First\", \"x\") pattern a1(\"x\",\"y+1\")"));
-		
+
 		// Success Parent*
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent*(s1,s2)"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select s1 such that Parent*(3,s1)"));
@@ -323,30 +359,29 @@ public:
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"x+y-z\")"));
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select p such that Parent(s1,s2) pattern a1(\"x\", \"w*x+y-z\")"));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
-		
+
 		Assert::IsTrue(validator->isValidQuery(declaration + "Select ifstmt pattern ifstmt(\"x\",_,_) such that Modifies(ifstmt,v) with v.varName=\"x\""));
 		//Logger::WriteMessage(validator->getQueryTable().toString().c_str());
 
 		// Failure
 		/*
-		auto error1 = [validator] { 
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
-			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
+		auto error1 = [validator] {
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
+		validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(s1,_)");
 		};
 		Assert::ExpectException<Exceptions>(error1);
-		
+
 		auto error2 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
-			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(_,s2)");
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
+		validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(_,s2)");
 		};
 		Assert::ExpectException<Exceptions>(error2);
-
 		auto error3 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
-			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
+		validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Next(p,s2)");
 		};
 		Assert::ExpectException<Exceptions>(error3);
-		*/
+		
 		auto error4 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,_)");
@@ -358,7 +393,7 @@ public:
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(_,s2)");
 		};
 		Assert::ExpectException<Exceptions>(error5);
-
+		*/
 		auto error6 = [validator] {
 			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
 			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s2) Affects(s1,p)");
@@ -368,24 +403,22 @@ public:
 		// Failure, same synonym in relationships
 		/*
 		auto error7 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
-			validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
+		validator->isValidQuery(declaration + "Select s1 such that Parent(s1, s1)");
 		};
 		Assert::ExpectException<Exceptions>(error7);
-
 		auto error8 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
-			validator->isValidQuery(declaration + "Select s1 such that Affects(a1, a1)");
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
+		validator->isValidQuery(declaration + "Select s1 such that Affects(a1, a1)");
 		};
 		Assert::ExpectException<Exceptions>(error8);
-
 		auto error9 = [validator] {
-			std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
-			validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
+		std::string declaration = "procedure p;assign a1, a2;if ifstmt;while w;stmt s1, s2;progline n1, n2;\n";
+		validator->isValidQuery(declaration + "Select s1 such that Affects*(a1, a1)");
 		};
 		Assert::ExpectException<Exceptions>(error9);
 		*/
-		
+
 
 		// Failure, progline
 		auto error10 = [validator] {
@@ -409,7 +442,6 @@ public:
 		Assert::ExpectException<Exceptions>(error101);
 
 
-		
 
 	}
 
