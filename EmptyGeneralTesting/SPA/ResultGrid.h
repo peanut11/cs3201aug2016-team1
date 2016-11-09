@@ -41,6 +41,7 @@ private:
     bool contains(ValueTupleSet valTupleSet, ValueTuple valTuple);
     void addSynonym(SynonymString syn);
     void addColumnForSynonym(SynonymString syn, ValueSet vals);
+    void sortResultListBySynonym(SynonymString syn);
     void clearGrid();
     SynonymString extractSynonym(TuplePosition pos, SynonymTuple synTuple);
     GridColumn extractValue(TuplePosition pos, ValueTuple valTuple);
@@ -51,6 +52,7 @@ public:
     ResultGrid(SynonymString syn, ValueSet vals);
 
     bool mergeGrid(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
+    bool mergeGridWithSort(ResultGrid* other, SynonymTuple synTuple, ValueTupleSet validTuples);
     bool updateSynonym(SynonymString syn, ValueSet vals);
     bool updateSynonymTuple(SynonymTuple synTuple, ValueTupleSet validTuples);
     ValueSet getValuesForSynonym(SynonymString syn);
