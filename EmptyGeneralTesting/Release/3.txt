@@ -1,0 +1,20 @@
+Parameters : it3_source3.txt it3_source3_queries.txt 3.xml
+Beginning to parse Simple Program.
+End of parsing Simple Program.
+Release
+Beginning to evaluate Query File.
+1 - comment
+
+Select BOOLEAN such that Follows (1, 6)
+false
+5000
+Evaluating query 1 - comment
+The final tag string is ReturnBoolean="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" 
+Your answer: false 
+Correct answer: false 
+2 - comment
+stmt s1;
+Select s1 such that Follows (132, s1)
+133
+5000
+Evaluating query 2 - comment

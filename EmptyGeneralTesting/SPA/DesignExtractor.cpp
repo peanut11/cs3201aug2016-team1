@@ -253,6 +253,9 @@ void DesignExtractor::processLoopForUsesAndModifies(StmtNumber w) {
 		StmtSetIterator nextIndex = nextList.begin();
 		nextIndex++;
 		int nextInd = *nextIndex;
+		if ((pkb->getStmtTypeForStmt((nextInd)) == WHILE) || (pkb->getStmtTypeForStmt((nextInd)) == IF)) {
+			processLoopForUsesAndModifies((nextInd));
+		}
 		std::set<StmtNumber> useListForElse = pkb->getVarsByStmt((nextInd), USES);
 		for (StmtSetIterator u = useListForElse.begin(); u != useListForElse.end(); u++) {
 			VarName addToVartableUse = pkb->getVarName(*u);
