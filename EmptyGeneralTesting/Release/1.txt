@@ -1,0 +1,305 @@
+Parameters : it3_edited_source.txt it3_edited_source_queries_proglines_only.txt 1.xml
+Beginning to parse Simple Program.
+End of parsing Simple Program.
+Release
+Beginning to evaluate Query File.
+37 - comment
+
+Select BOOLEAN such that Next(22, 23)
+
+5000
+Evaluating query 37 - comment
+The final tag string is ReturnBoolean="1" Next="1" SuchThat="1" CondNum="3" RelNum="1" 
+Your answer: true 
+Correct answer: 
+Missing: 
+Additional: true 
+38 - comment
+prog_line n1;
+Select n1 such that Next(n1, 23)
+
+5000
+Evaluating query 38 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" 
+TIMEOUT
+39 - comment
+prog_line n1;
+Select n1 such that Next(22, n1)
+
+5000
+Evaluating query 39 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" 
+Your answer: 
+Correct answer: 
+40 - comment
+prog_line n1;
+Select n1 such that Next(n1,_)
+
+5000
+Evaluating query 40 - comment
+prog_line is an Unnamedvar 
+n1,_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+41 - comment
+prog_line n1;
+Select n1 such that Next(20,_)
+
+5000
+Evaluating query 41 - comment
+prog_line is an Unnamedvar 
+20,_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+42 - comment
+prog_line n1;
+Select n1 such that Next(_,n1)
+
+5000
+Evaluating query 42 - comment
+prog_line is an Unnamedvar 
+_,n1 is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+43 - comment
+prog_line n1;
+Select n1 such that Next(_,100)
+
+5000
+Evaluating query 43 - comment
+prog_line is an Unnamedvar 
+_,100 is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+TIMEOUT
+44 - comment
+while w1; prog_line n1;
+Select w1 such that Next(w1, n1)
+
+5000
+Evaluating query 44 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" 
+Your answer: 
+Correct answer: 
+45 - comment
+
+Select BOOLEAN such that Next*(22, 23)
+
+5000
+Evaluating query 45 - comment
+The final tag string is ReturnBoolean="1" Nextstar="1" SuchThat="1" CondNum="3" RelNum="1" 
+Your answer: true 
+Correct answer: 
+Missing: 
+Additional: true 
+46 - comment
+prog_line n1;
+Select n1 such that Next*(n1, 23)
+
+5000
+Evaluating query 46 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" 
+Your answer: 
+Correct answer: 
+47 - comment
+prog_line n1;
+Select n1 such that Next*(22, n1)
+
+5000
+Evaluating query 47 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" 
+TIMEOUT
+48 - comment
+prog_line n1;
+Select n1 such that Next*(n1,_)
+
+5000
+Evaluating query 48 - comment
+prog_line is an Unnamedvar 
+n1,_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+49 - comment
+prog_line n1;
+Select n1 such that Next*(20,_)
+
+5000
+Evaluating query 49 - comment
+prog_line is an Unnamedvar 
+20,_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+50 - comment
+prog_line n1;
+Select n1 such that Next*(_,n1)
+
+5000
+Evaluating query 50 - comment
+prog_line is an Unnamedvar 
+_,n1 is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+51 - comment
+prog_line n1;
+Select n1 such that Next*(_,100)
+
+5000
+Evaluating query 51 - comment
+prog_line is an Unnamedvar 
+_,100 is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+52 - comment
+while w1; prog_line n1;
+Select w1 such that Next*(w1, n1)
+
+5000
+Evaluating query 52 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="4" RelNum="1" 
+TIMEOUT
+53 - comment
+while w1
+Select w1 such that Next(_, _)
+
+5000
+Evaluating query 53 - comment
+_, is an Unnamedvar 
+_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Next="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 
+Correct answer: 
+54 - comment
+if ifs;
+Select ifs such that Next*(_, _)
+
+5000
+Evaluating query 54 - comment
+_, is an Unnamedvar 
+_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="5" RelNum="1" 
+Your answer: 14 24 40 65 71 92 106 111 145 171 181 200 215 231 250 268 275 283 295 
+Correct answer: 
+Missing: 
+Additional: 106 111 14 145 171 181 200 215 231 24 250 268 275 283 295 40 65 71 92 
+110 - comment
+procedure p1; prog_line n1, n2;
+Select <p1, n1> such that Calls* (p1, "Deletion") and Next* (n1, n2)
+
+5000
+Evaluating query 110 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Callsstar="1" Nextstar="1" UnnamedVar="1" SuchThat="1" CondNum="5" RelNum="2" 
+Your answer: 
+Correct answer: 
+120 - comment
+procedure p1; prog_line n1, n2; call c1;
+Select <p1, c1, n1> such that Calls* (p1, "Deletion") and Next* (n1, n2) and Follows (c1, _)
+
+5000
+Evaluating query 120 - comment
+prog_line is an Unnamedvar 
+_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Callsstar="1" Follows="1" Nextstar="1" UnnamedVar="2" SuchThat="1" CondNum="7" RelNum="3" 
+TIMEOUT
+147 - comment
+prog_line n1;
+Select BOOLEAN with n1 = 10
+
+5000
+Evaluating query 147 - comment
+prog_line is an Unnamedvar 
+The final tag string is ReturnBoolean="1" UnnamedVar="1" With="1" CondNum="3" RelNum="0" 
+Your answer: 
+Correct answer: 
+148 - comment
+prog_line n1, n2;
+Select n1 with n1 = n2
+
+5000
+Evaluating query 148 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" UnnamedVar="1" With="1" CondNum="3" RelNum="0" 
+Your answer: 
+Correct answer: 
+149 - comment
+prog_line n1; stmt s1;
+Select n1 with n1 = s1.stmt#
+
+5000
+Evaluating query 149 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" UnnamedVar="1" With="1" CondNum="3" RelNum="0" 
+Your answer: 
+Correct answer: 
+150 - comment
+prog_line n1; constant c1;
+Select n1 with n1 = c1.value
+
+5000
+Evaluating query 150 - comment
+prog_line is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" UnnamedVar="1" With="1" CondNum="3" RelNum="0" 
+Your answer: 
+Correct answer: 
+157 - comment
+procedure p1; prog_line n1, n2; call c1;
+Select <p1, c1, n1> such that Calls* (p1, "Deletion") and Next* (n1, n2) and Follows (c1, _) with p1.procName = c1.procName
+
+5000
+Evaluating query 157 - comment
+prog_line is an Unnamedvar 
+_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Callsstar="1" Follows="1" Nextstar="1" UnnamedVar="2" SuchThat="1" With="1" CondNum="8" RelNum="3" 
+Your answer: 
+Correct answer: 
+165 - comment
+procedure p1; prog_line n1, n2; call c1; variable v1; assign a1; stmt s1, s2; constant con1;
+Select <p1, c1, a1, v1> such that Calls* (p1, "Deletion") and Next* (n1, n2) and Follows (c1, _) with p1.procName = c1.procName and Modifies (p1, v1) and pattern a1("pears", _) and Uses (a1,v1) and Follows* (s1, s2) with s2.stmt# = con1.value and Affects*(a1, _) and Parent* (c1, s2)
+
+5000
+Evaluating query 165 - comment
+prog_line is an Unnamedvar 
+_ is an Unnamedvar 
+_ is an Unnamedvar 
+The happen is 2
+_ is an Unnamedvar 
+No ReturnBoolean, ReturnTuple=1 
+The final tag string is ReturnTuple="1" Affectsstar="1" Callsstar="1" Follows="1" Followsstar="1" Modifies="1" Nextstar="1" Parentstar="1" UnnamedVar="4" Uses="1" Pattern="1" SuchThat="1" With="2" CondNum="17" RelNum="8" 
+Your answer: 
+Correct answer: 
+End of evaluating Query File.
+AutoTester Completed !

@@ -1,0 +1,206 @@
+procedure Alpha {
+    a = b + 345 - c * d;
+    b = c * d - d * 50 + x;
+	l = chocobo - chocobo;
+		z = z * 5 + x;
+		a = 4; 
+		b = a + a * chocobo;
+		mappy = mario - chunli * condos;
+		ice = antman * chocobo;
+	call Game;
+    if a then{
+        b = b + 5 * a;
+        if c then {
+            z = z * 5 + x;
+            if z then {
+                while d {
+                    a = a - c * d + 5;
+                    b = z * d * c + 5 - c;
+                }
+                x = 10 + y;            }
+            else {
+                z = 12;
+                while x {
+                    t = 5 * z + d;
+                    z = t1;                }}}
+        else {
+            if s then {
+                z = t + z * c;
+                c = s - t * z;            }
+                else {
+                if z then {
+                    c = t - s;            }
+                else {
+                    d = t + s;               }            }        }    }
+    else {
+        if k then {
+            call Beta;
+            s = s + d;        }
+        else {
+            if z then {
+                k = k + 2;            }
+            else {
+                s = s - d * 2;            }        }
+        k = 5 + k + 5 + k * 5;
+        call Gamma;    }
+    s = s + d * 5;}
+
+procedure Beta {
+    s = s - d * 5;
+    x = y + z * u + t - v * k * x;
+    while k {
+        if a then{
+            b = b + 5 * a;
+            if c then {
+                z = z * 5 + x;
+                if z then {
+                    while d {
+                        a = a - c * d + 5;
+						l = chocobo - chocobo;
+						z = z * 5 + x;
+						a = 4; 
+						b = a + a * chocobo;
+						mappy = mario - chunli * condos;
+						ice = antman * chocobo;
+                        b = z * d * c + 5 - c;
+                    }
+                    x = 10 + y;            }
+                else {
+                    z = 12;
+                    while x {
+                        t = 5 * z + d;
+                        z = t1;                }}}
+            else {
+                if s then {
+                    z = t + z * c;
+                    c = s - t * z;            }
+                    else {
+                    if z then {
+                        c = t - s;            }
+                    else {
+                        d = t + s;               }            }        }    }
+        else {
+            if k then {
+                call Gamma;
+                s = s + d;        }
+            else {
+                if z then {
+                    k = k + 2;            }
+                else {
+                    s = s - d * 2;            }        }
+            k = 5 + k + 5 + k * 5;
+            call Gamma;    }
+    }
+    z = k + s;
+}
+
+procedure Gamma {
+	a = 5;
+	while orange {
+		call Game;
+		pears = 132124 + pears + apple;}
+	orange = superman;
+	pears = apples + apple + orange;
+	apple = antman * orange;
+	y = y + 12356;
+	x = x * y +z;
+	if z then {
+		while d {
+			a = a - c * d + 5;
+			b = z * d * c + 5 - c;}
+			x = 10 + y;}
+	else {
+		z = 12;
+		if z then {
+			while d {
+				a = a - c * d + 5;
+				b = z * d * c + 5 - c;}
+			x = 10 + y;}
+		else {
+			z = 12;
+			while x {
+				t = 5 * z + d;
+				z = t1;}}
+    while x {
+        t = 5 * z + d;
+        z = t1;}}
+	orange = antman * orange;
+	l = 100;
+	hawk = 1332;
+}
+procedure Game{
+	batman = mario * pokemon;
+	monopoly = condos * jail;
+	while ice{
+		x = pears + apple * ice;
+			if k then{
+				a = a - c * d + 5;
+				b = z * d * c + 5 - c;
+				while ice{
+						x = pears + apple * ice;
+						if k then{
+							a = a - c * d + 5;
+							b = z * d * c + 5 - c;
+							apple = orange * pears + pikachu;
+							water = ironman * apples + apple;}
+						else{
+							apple = apples;}}}
+			else{
+				apple = apples;}}
+	while mappy{
+		chocobo = a * b - c + k - j;
+		if mog then{
+			l = run * sonic;
+			while x {
+				if fire then{
+					while water{
+					x = ice + fire * ice;
+					while ice{
+						x = pears + apple * ice;
+						if k then{
+							apple = orange * pears + pikachu;
+							water = ironman * apples + apple;}
+						else{
+							apple = apples;}}}}
+				else{
+					water = 2311;
+					while f{
+						y = k * f + l;
+						ice = water * wind;
+						fire = antman * apple;}
+					fire = 3643 * ice;}
+				t = 5 * z + d;
+				z = t1;}}
+		else{
+			streetfighter = ken + ryu + chunli;
+			while m{
+				k = f * c;}
+		k = mog * mario;}
+		l = chocobo - chocobo;
+		z = z * 5 + x;
+		a = 4; 
+		b = a + a * chocobo;
+		mappy = mario - chunli * condos;
+		ice = antman * chocobo;
+		c = a + b + 3 + a; 
+		m = z + 1;
+        if z then {
+            while d {
+                a = a - c * d + 5;
+				l = chocobo - chocobo;
+				z = z * 5 + x;
+				a = 4; 
+				b = a + a * chocobo;
+				mappy = mario - chunli * condos;
+				ice = antman * chocobo;
+                b = z * d * c + 5 - c;}
+            x = 10 + y;}
+        else {
+            z = 12;
+            while x {
+                t = 5 * z + d;
+                z = t1;}}
+		while ken{
+			l = mario * mappy;
+			nemo = nemo;}}
+	bleach = naruto * superman;}

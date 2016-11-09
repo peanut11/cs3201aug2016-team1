@@ -25,15 +25,14 @@ void DesignExtractor::processCallsStar() {
 	size_t size = pkb->getProcTableSize();
 	bool *visited = new bool[size];
 
-	for (size_t i = 0; i < size; i++) {
-		visited[i] = false;
-	}
+	
 
 	for (StmtNumber stmt = 0; stmt < size; stmt++) {
 		std::set<ProcIndex> callList = pkb->getProcsByProc(CALLS,stmt);
+		for (size_t i = 0; i < size; i++) {
+			visited[i] = false;
+		}
 		
-		if (!visited[stmt]) {
-			visited[stmt] = true;
 
 			for (StmtSetIterator callit = callList.begin(); callit != callList.end(); callit++) {
 				ProcIndex call = *callit;
@@ -56,7 +55,7 @@ void DesignExtractor::processCallsStar() {
 					pkb->putVarForProc(indexName, MODIFIES, varName);
 				}
 			}
-		}
+		
 	}
 
 }

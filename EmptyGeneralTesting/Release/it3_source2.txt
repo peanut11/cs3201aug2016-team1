@@ -1,0 +1,207 @@
+procedure First{
+	a = 1;
+	b = c * a;
+	call Second;
+	call Third;
+	call Fourth;}
+procedure Second{
+	l = m * n;
+	while l{
+	call IfElseLoop;
+		k = c - 1 * a;
+		if k then{
+			j = m * n - 1 + c;
+			if j then {
+				t = c * m - c;}
+			else{
+			apple = orange * k - c + 4;
+			if l then{
+				t = pear * mango - apple;}
+			else{
+				apple = 12342;}}
+			if c then{
+				k = 500;}
+			else{
+				p = c * b;}
+		apple = l;}
+		else{
+			while k{
+				c = b * x;
+				y = z;}}
+		z = a * b - y;}
+	call Third;}
+procedure Third {
+  x = 0;
+  i = 5;
+  while i {
+    z = z + x + i;
+    y = z + 2; 
+	while y{
+	l=x+5; 
+	z=x+y;}} 
+	call Fourth;}
+procedure Fourth{
+	call Sixth;
+	call Fifth;
+	apple = orange + pears;
+    apple = 1;
+    while orange {
+		pears = apples + 1 + orange;
+		pears = orange + pears + apple;
+		while orange {
+			pears = apples + 1 + orange;
+			pears = orange + pears + apple;}
+		orange = 83910;
+		orange = antman * orange;
+		c = antman;}
+    orange = 83910;
+	d = a + y; 
+	while z { 
+		x = b + 5 + y + z;
+		pears = apples + doraemon * pikachu;
+		if pears then{
+			a = 4; 
+			b = a + a; 
+			c = a + b + 3 + a; 
+			m = z + 1; } 
+		else{
+			v = d + 40 + 1; } }
+			x = z + 2 + m + v;
+    orange = antman * orange;
+	}
+procedure Fifth{
+	while d{
+		ice = orange + water;
+		while l{
+			while d{
+			if antman then{
+				call Sixth;}
+			else{
+				call Dream;
+				k = c - n;}
+				ice = orange + water;
+				while l{
+					x = water + fire * ice;}
+					water = 231123325;
+					fire = 3654543 * ice;}}}}
+procedure Sixth{
+	a = c;
+	if pears then{
+			a = 4; 
+			b = a + a; 
+			c = a + b + 3 + a; 
+			m = z + 1; } 
+	else{
+		v = d + 40 + 1; } 
+	while d{
+		ice = orange + antman;
+		while l{
+			if fire then{
+				while water{
+					x = ice + fire * ice;
+					while ice{
+						x = pears + apple * ice;}}}
+			else{
+				water = 231123325;
+				fire = 3654543 * ice;}}
+		a = b + c;
+		c = b + a;
+		c = 1341 * 12341;
+		water = ice + fire;
+		ice = water * fire;}		
+	x = z + 2 + m + v;}
+procedure Dream{
+	call Happy;
+	orange = a + pears;
+	m = orange + z;
+	while f{
+		v = v + m;
+		v = m + d + pears;
+		m = d + 500 + m;
+	call Happy;}}
+procedure Happy{
+	h = ice + water * sad;
+	while d{
+		call Sixth;
+		ice = orange + water;
+		while l{
+			if water then{
+				while orange{
+				x = water + fire * ice;}}
+			else{
+				call Allassignment;
+				water = 231123325;
+				fire = 3654543 * ice;}}}}
+procedure Allassignment{
+	a = c * d;
+	b = apple;
+	k = l * m - 12341;
+	y = aasf12341 * c;
+	ice = water - t;
+	v = v + m;
+	v = m + d + pears;
+	m = d + 500 + m;
+	a = b + c;
+	c = b + a;
+	c = 1341 * 12341;
+	water = ice + fire;}
+procedure IfElseLoop{
+	if a then{
+		b = c;
+		if c then{
+			k = m * n;
+			if ice then{
+				water = ice;}
+			else{
+				if k then{
+					n = c * k;
+					antman = ice;}
+				else{
+					doraemon = 900;
+					if doraemon then{
+						c = c * mango;}
+					else{
+						d = l;}
+					n = 3244;
+					n = k;}
+				if pear then{
+					e = ice;}
+				else{
+					apple = apple;}}
+			n = r * c;
+			if c then{
+				n = k;}
+			else{
+				antman = antman;}
+			rice = water * fire;}
+		else{
+			run = leg * leg;
+			k = k * k;}
+		leg = now * now;
+		rice = c;}
+	else{
+		line = a * b - c * k;
+		if z then{
+			line = line + line;
+			k = leg * c - j;}
+		else{
+			mango = now * leg;}
+		line = c * k;
+		q = z * c - n;}
+	if c then {
+		while l{
+			blackwidow = cloud;
+			doraemon = k * z - l;}
+		pears = pineapple - powerranger;}
+	else{
+		while orange {
+			pears = apples + apple + orange;
+			pears = 132124 + pears + apple;}
+		orange = superman;
+		apple = antman * orange;
+		y = y + 1234151256;
+		x = x * y +z;
+		orange = antman * orange;
+		l = 114300000;
+		hawk = 13324123;
+		h3ll0 = 514 * cloud;}}
