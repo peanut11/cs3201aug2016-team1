@@ -22,12 +22,12 @@ namespace UnitTesting
             PKB::getInstance()->clear();
 
 			Frontend frontend = Frontend();
-			frontend.parse("Iteration_1/source1.txt");
+			frontend.parse("it3_source3.txt");
 
 			QueryProcessor *queryProcessor = QueryProcessor::getInstance();
 			PKB* pkb = PKB::getInstance();
 
-			std::string dec = "assign a; variable v;\n";
+			std::string dec = "stmt s1; variable v1;\n";
 			try {
 				std::vector<std::string> res = queryProcessor->evaluate(dec + "Select v such that Parent(3, a) pattern a(v,_\"0\"_)");
 			}
